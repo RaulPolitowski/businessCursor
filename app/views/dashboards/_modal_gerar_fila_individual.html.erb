@@ -1,0 +1,31 @@
+<div id="modal_gerar_fila_individual" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xs">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <i class="fa fa-th-list modal-icon"></i>
+        <h4 class="modal-title">Gerar fila individual</h4>
+      </div>
+      <form class="form-horizontal" id="form_gerar_fila_centro">
+        <div class="modal-body no-padding">
+          <div class="panel-body">
+            <div class="form-group">
+              <div class="field col-sm-12 padding" >
+                <%= label_tag 'Estado', nil %>
+                <%= select_tag 'estado_id', options_for_select(Estado.todos.collect {|p| [ p.sigla, p.id ] }, 1), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}} %>
+              </div>
+              <div class="field col-sm-12 padding" >
+                <%= label_tag 'Empresa Destino', nil %>
+                <%= select_tag 'empresa_destino_id', options_for_select(Empresa.ativas.collect {|p| [ p.razao_social, p.id ] }, nil), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma empresa'}, :include_blank => true} %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnGerarFilaIndividual', :class => 'btn btn-primary ladda-button', data: { data_style: "expand-right" } %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,158 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>PERGUNTAS</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="<%= url_for :controller => 'dashboards', :action => 'painel_vendas' %>">Home</a>
+      </li>
+      <li class="active">
+        <strong>Perguntas</strong>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Cadastros</h5>
+          <div class="ibox-tools">
+            <%= button_to new_pergunta_path, { method: 'get', class: 'btn btn-sm btn-primary' } do %>
+                <i class="fa fa-file" aria-hidden="true"> Nova Pergunta</i>
+            <% end %>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <div class="ibox-content">
+          <div class="tabs-container" id="tabsPergunta" >
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" id="tabAtivo" href="#tabsPergunta-1"> Ativos</a></li>
+              <li class=""><a data-toggle="tab" id="tabInativo" href="#tabsPergunta-2"> Inativos</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="tabsPergunta-1" class="tab-pane active">
+                <div class="panel-body">
+                  <table class="table table-striped table-bordered table-hover table-perguntas-ativas">
+                    <thead>
+                    <tr>
+                      <th>Pergunta</th>
+                      <th>Fechamento</th>
+                      <th>Implantacao</th>
+                      <th>Acompanhamento</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% @perguntas.each do |pergunta| %>
+                        <tr>
+                          <td><%= pergunta.pergunta %></td>
+                          <td><%= human_boolean pergunta.fechamento %></td>
+                          <td><%= human_boolean pergunta.implantacao %></td>
+                          <td><%= human_boolean pergunta.acompanhamento %></td>
+                          <td><%= link_to edit_pergunta_path(pergunta), { class: 'btn btn-sm btn-success', title: 'Editar', 'data-toggle' => 'tooltip', 'data-placement' => 'right' } do %>
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                              <% end %>
+                              <%= link_to desativar_pergunta_path(pergunta), { class: 'btn btn-sm btn-danger', title: 'Desativar', 'data-toggle' => 'tooltip', 'data-placement' => 'right' } do %>
+                                <i class="fa fa-remove" aria-hidden="true"></i>
+                              <% end %>
+                          </td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+              <div id="tabsPergunta-2" class="tab-pane active">
+                <div class="panel-body">
+                  <table class="table table-striped table-bordered table-hover table-perguntas-inativas">
+                    <thead>
+                    <tr>
+                      <th>Pergunta</th>
+                      <th>Fechamento</th>
+                      <th>Implantacao</th>
+                      <th>Acompanhamento</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% @perguntas_inativas.each do |pergunta| %>
+                        <tr>
+                          <td><%= pergunta.pergunta %></td>
+                          <td><%= human_boolean pergunta.fechamento %></td>
+                          <td><%= human_boolean pergunta.implantacao %></td>
+                          <td><%= human_boolean pergunta.acompanhamento %></td>
+                          <td><%= link_to edit_pergunta_path(pergunta), { class: 'btn btn-sm btn-success', title: 'Editar', 'data-toggle' => 'tooltip', 'data-placement' => 'right' } do %>
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                              <% end %>
+                              <%= link_to desativar_pergunta_path(pergunta), { class: 'btn btn-sm btn-primary', title: 'Ativar', 'data-toggle' => 'tooltip', 'data-placement' => 'right' } do %>
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                              <% end %>
+                          </td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            $('.table-perguntas-ativas').DataTable({
+                pageLength: 10,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                "ordering": false,
+                buttons: [
+                    {extend: 'excel', title: 'Perguntas'},
+                    {extend: 'pdf', title: 'Perguntas'}
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                },
+                "columnDefs": [
+                    { "width": "50%", "targets": 0 },
+                    { "width": "10%", "targets": (1,2,3,4) },
+                ],
+
+            });
+
+            $('.table-perguntas-inativas').DataTable({
+                pageLength: 10,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                "ordering": false,
+                buttons: [
+                    {extend: 'excel', title: 'Perguntas'},
+                    {extend: 'pdf', title: 'Perguntas'}
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                },
+                "columnDefs": [
+                    { "width": "50%", "targets": 0 },
+                    { "width": "10%", "targets": (1,2,3,4) },
+                ],
+
+            });
+        });
+    </script>
+<% end %>

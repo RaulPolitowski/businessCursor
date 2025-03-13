@@ -1,0 +1,31 @@
+# Add configuration values here, as shown below.
+
+production:
+  bot_whatsapp_url: "https://api-gzap2.gtech.site"
+  receitaws: "http://consultaws.gtech2.site/cnpj/%s/days/%s"
+  cnpj_ws: "https://comercial2.cnpj.ws/cnpj/%s?token=MT0nMiVUpF4TFIdw5jbhH6zSC1hDHrgnXQwWiOSFaMUM"
+  viacep: "http://viacep.com.br/ws/%s/json/" # API CEP
+  #postmon: "http://api.postmon.com.br/v1/cep/%s" # API CEP | Aparentemente não funciona mais
+  awesome: "https://cep.awesomeapi.com.br/json/%s" # API CEP
+  opencep: https://opencep.com/v1/%s # API CEP
+  business: "https://business2.gtech.site"
+  gerar_db_ip: "127.0.0.1"
+  gerar_db_port: "5432"
+  gerar_db_password: "g2010tech"
+  gerar_db_base: "2base"
+  token_cnpj_ws: "2MT0nMiVUpF4TFIdw5jbhH6zSC1hDHrgnXQwWiOSFaMUM"
+
+development:
+  bot_whatsapp_url: 'https://api2-gzap.gtech.site'
+  receitaws: "http://receitaws.com.br/v1/cnpj2/%s/days/%s"
+  cnpj_ws: "https://comercial2.cnpj.ws/cnpj/%s/?token=MT0nMiVUpF4TFIdw5jbhH6zSC1hDHrgnXQwWiOSFaMUM"
+  viacep: "http://viacep.com.br/ws/%s/json/" # API CEP
+  #postmon: "http://api.postmon.com.br/v1/cep/%s" # API CEP | Aparentemente não funciona mais
+  awesome: "https://cep.awesomeapi.com.br/json/%s" # API CEP
+  opencep: https://opencep.com/v1/%s # API CEP
+  business: "https://business2.gtech.site"
+  gerar_db_ip: "127.0.0.1"
+  gerar_db_port: "5432"
+  gerar_db_password: "g2010tech"
+  gerar_db_base: "base"
+  token_cnpj_ws: "2MT0nMiVUpF4TFIdw5jbhH6zSC1hDHrgnXQwWiOSFaMUM"

@@ -1,0 +1,66 @@
+<div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <div class="ibox-tools">
+            <button type="button" class="btn btn-xs pull-rigth btn-primary" id="openModalNovoBanco"> <i class="fa fa-database" aria-hidden="true"> </i> Nova solicitação</button>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <table class="table table-striped table-bordered table-hover table-banco">
+            <thead>
+                <tr>
+                <th style='width: 30%;'>Cliente</th>
+                <th style='width: 10%;'>Cidade/UF</th>
+                <th style='width: 10%;'>Data/Hora solicitação</th>
+                <th style='width: 10%;'>Data/Hora implantação</th>
+                <th style='width: 10%;'>Status</th>
+                <th style='width: 5%;'>Solicitante</th>
+                <th style='width: 10%;'>Responsável</th>
+                <th style='width: 15%;'></th>
+                </tr>
+            </thead>
+            <tbody style="width:100%" id="tbody_banco">
+            
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-eu.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-euro.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.table-banco').DataTable({
+            pageLength: 10,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            "order": [
+              [2, "desc"]
+            ],
+            "ordering": true,            
+            buttons: [{
+                extend: 'excel',
+                title: 'Solicitações de banco'
+            },
+              {
+                extend: 'pdf', 
+                title: 'Solicitações de banco'
+              }
+
+            ],
+            columnDefs: [ {
+                  type: 'date-eu',
+                  targets:1
+              } ],
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+            }
+        });
+      
+    });
+</script>

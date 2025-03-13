@@ -1,0 +1,125 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>PESQUISAS</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="<%= url_for :controller => 'satisfacao_gruber', :action => 'index' %>">Home</a>
+      </li>
+      <li class="active">
+        <strong>Pesquisas Realizadas</strong>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins border-bottom" style="margin-bottom: 5px;">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+
+            <div class="ibox-tools">
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <%= search_form_for @q, url: satisfacao_gruber_index_path  do |f| %>
+
+            <div class="row">
+              <div class="field col-sm-2">
+                <%= f.label :created_at_gteq, "Data de"   %>
+                <%= f.text_field :created_at_gteq, class:"form-control input-sm" %>
+              </div>
+              <div class="field col-sm-2">
+                <%= f.label :created_at_lteq, "Data de"   %>
+                <%= f.text_field :created_at_lteq, class:"form-control input-sm" %>
+              </div>
+              <div class="field col-sm-2">
+                <%= f.label :tem_avaliacao_negativa_eq, "Aval. Negativa"   %>
+                <%= f.select(:tem_avaliacao_negativa_eq, options_for_select([['Sim', true], ['Não', false]], params[:q].try(:[], :tem_avaliacao_negativa_eq)),{ :include_blank => true }, {class: 'form-control input-sm' }) %>
+              </div>
+              <div class="field col-sm-4">
+                <%= f.label :cliente_nome_cont, "Nome do cliente"   %>
+                <%= f.text_field :cliente_nome_cont, class:"form-control input-sm" %>
+              </div>
+              <div class="col-lg-1">
+                <br>
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarAcompanhamentos', :class => 'btn btn-primary' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Pesquisas</h5>
+          <div class="ibox-tools">
+          </div>
+        </div>
+
+        <div class="ibox-content">
+          <table class="table table-striped table-bordered table-hover table-pesquisas-realizadas-gruber">
+            <thead>
+            <tr>
+              <th>Data</th>
+              <th>Cliente</th>
+              <th>Cidade/UF</th>
+              <th>Avaliação Negativa</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @pesquisas.each do |pesquisa| %>
+                <tr>
+                  <td><%= human_datetime pesquisa.created_at %></td>
+                  <td><%= pesquisa.cliente.razaosocial %></td>
+                  <td><%= pesquisa.cliente.municipio.present? ? pesquisa.cliente.municipio.descricao_completa : '' %></td>
+                  <td><%= human_boolean pesquisa.tem_avaliacao_negativa %></td>
+                  <td><button class="btn btn-sm btn-primary btn-table" title="Visualizar pesquisa" onclick="abrirModalPesquisaGruber(<%= pesquisa.id %>)"><i class="fa fa-check-circle-o" aria-hidden="true"></i></button></td>
+                </tr>
+            <% end %>
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= render 'satisfacao_gruber/modals/modal_pesquisa' %>
+
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-eu.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-euro.js"></script>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            $('.table-pesquisas-realizadas-gruber').DataTable({
+                pageLength: 25,
+                dom: '<"html5buttons"B>lTfgitp',
+                "ordering": true,
+                "order": [[ 0, "desc" ]],
+                buttons: [
+                    {extend: 'excel', title: 'Empresas'},
+                    {extend: 'pdf', title: 'Empresas'}
+                ],
+                columnDefs: [
+                    { type: 'date-eu', targets: 0 },
+                    { type: 'date-euro', targets: 6 }
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                }
+            });
+        });
+    </script>
+<% end %>

@@ -1,0 +1,124 @@
+<div id="modal_campanha_massa" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xs">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <i class="fa fa-th-list modal-icon"></i>
+        <h4 class="modal-title">Nova campanha</h4>
+      </div>
+      <form class="form-horizontal" id="form_exportar_listas">
+        <div class="modal-body no-padding">
+          <div class="tabs-container">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tab-12"> Informações</a></li>
+              <li id="headerTabAbordagemCampanhaMassa"><a data-toggle="tab"  href="#tabAbordagemProgramarCampanhaMassa" > Abordagem</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="tab-12" class="tab-pane active">
+                <div class="panel-body">
+                  <div class="form-group">
+                    <div class="field col-sm-6 padding">
+                      <%= label_tag 'Usuários', nil %>
+                      <%= select_tag 'user_id', options_for_select(
+                        User.joins(:whatsapp_numeros).distinct(:name)
+                          .joins("left join loja_itens li on li.numero = whatsapp_numeros.numero")
+                          .where(whatsapp_numeros: { banido: false, status: 'CONECTADO', is_ocultado: false })
+                          .where("li.status = 'COMPRADO' or (li.id IS NUll AND li.status IS NULL)")
+                          .collect { |p| [p.name, p.id] }.unshift(["TODOS", "TODOS"]),
+                        params[:user_id]
+                      ), 
+                      { class: "form-control input-sm chosen-select", data: { placeholder: 'Selecione um número' }, multiple: true } %>
+                    </div>
+                    <div class="field col-sm-6 padding" >
+                      <%= label_tag 'Quantidade de Números', nil %>
+                      <div id="qtd_numeros"></div>
+                    </div>
+                    <div class="field col-sm-12 padding" >
+                      <%= label_tag 'Empresa', nil %>
+                      <%= select_tag 'empresa_id', options_for_select(Empresa.ativas.collect {|p| [ p.razao_social, p.id ] }, current_empresa.id), 
+                        {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma empresa'}}
+                      %>
+                    </div>
+                    <div class="field col-sm-6 padding">
+                      <%= label_tag 'JOB', nil %>
+                      <%= label_tag 'saldo_job', "(Saldo: 0)" %>
+                      <%= text_field_tag :numero_job, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Job', onkeypress: 'return SomenteNumero(event)' %>
+                    </div>
+                    <div class="field col-sm-6 padding">
+                      <%= label_tag 'Qtd.', nil %>
+                      <%= text_field_tag :quantidade, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Quantidade', onkeypress: 'return SomenteNumero(event)' %>
+                    </div>
+                    <div class="field col-sm-12 paddin d-flex" style="gap: 3px;">
+                      <%= label_tag 'Media Qtd', nil %>
+                      <div id="media_qtd_disparo"></div>
+                    </div>
+                    <div class="col-sm-12 padding">
+                      <div class="field col-sm-6 padding" style="padding-left: 0px !important;">
+                        <%= label_tag 'Tipo de Disparo', nil %>
+                        <%= select_tag 'tipo_disparo', options_for_select([
+                          ['Padrão', '1'],
+                          ['Aleatorio', '2']
+                        ]), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um formato'}}%>
+                      </div>
+                      <div class="field col-sm-6 padding" id='campo_espera' style="padding-right: 0px !important;">
+                        <%= label_tag 'Tempo espera(seg)', nil %>
+                        <%= text_field_tag :tempo_espera, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Tempo espera', onkeypress: 'return SomenteNumero(event)' %>
+                      </div>
+                      <div class="field col-sm-6 padding" id='campo_tempo_total' style="display: none; padding-right: 0px !important;">
+                        <%= label_tag 'Tempo Total(Min)', nil %>
+                        <%= text_field_tag :tempo_total, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Tempo Total de Disparo' %>
+                      </div>
+                    </div>
+                    <div class="field col-sm-6 padding" id='campo_data_disparo'>
+                      <%= label_tag 'Data Disparo', nil, id: 'label_data_disparo'%>
+                      <%= text_field_tag :data_disparo, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Data de inicio dos Disparos' %>
+                    </div>
+                    <div class="field col-sm-6 padding">
+                      <%= label_tag 'Ocultar por (Horas)', nil %>
+                      <%= text_field_tag :tempo_ocultacao, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Ocultar por (Horas)' %>
+                    </div>
+                    <div class="field col-sm-6 padding" style="margin-top: 20px">
+                      <div class="field">
+                        <%= label_tag "selected_value", "", id: "selected_value" %>
+                      </div>
+                      <div class="field padding">
+                        <%= check_box_tag :is_resposta_automatica, 'true', true, id: 'is_resposta_automatica', data: { on_value: true, off_value: false } %>
+                        <%= label_tag 'Resposta Automatica?', nil %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="tabAbordagemProgramarCampanhaMassa" class="tab-pane">
+                <div class="ibox-content padding-5 col-lg-12">
+                  <div class="form-group" style="margin: 0px; margin-bottom: 10px">
+                    <div class="field padding">
+                      <div>
+                          <%= check_box_tag :is_edit_abordagem_especifica, 'true', true, id: 'is_edit_abordagem_especifica', data: { on_value: true, off_value: false } %>
+                          <%= label_tag 'Abordagem Inicial Padrão', nil %>
+                      </div>
+                      <%= text_area_tag :texto_abordagem_padrao_especifica, nil, size: "75x5", disabled: true %>
+                    </div>
+                    <div class="field padding" id="campo_abordagem_resposta_especifica">
+                      <div>
+                          <%= check_box_tag :is_edit_resposta_especifica, 'true', true, id: 'is_edit_resposta_especifica', data: { on_value: true, off_value: false } %>
+                          <%= label_tag 'Resposta Automatica Padrão', nil %>
+                      </div>
+                      <%= text_area_tag :texto_abordagem_resposta_especifica, nil, size: "75x5", disabled: true %>
+                      <%= label_tag 'Palavras Chaves para resposta automática', nil %>
+                      <%= text_area_tag :texto_palavra_chave, nil, size: "75x5", disabled: true, placeholder: 'Palavras Chaves para resposta automática' %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnGerarCampanha', :class => 'btn btn-primary ladda-button', data: { data_style: "expand-right" } %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

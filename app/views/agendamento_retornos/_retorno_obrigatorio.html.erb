@@ -1,0 +1,188 @@
+<div id="modal_retorno" class="modal inmodal" tabindex="-1" role="dialog" data-backdrop="static"  data-keyboard="false" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <h3 class="modal-title">Retorno</h3>
+        <small>Você possui um retorno agendado!</small>
+      </div>
+      <form class="form-horizontal" id="form_retorno">
+        <div class="modal-body">
+          <div class="row">
+            <div class="tabs-container" id="tabsRetorno" >
+              <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" id="tabRetornoObrigatorio1" href="#tabRetornoObrigatorio-1"> Retorno</a></li>
+                <li class=""><a data-toggle="tab" id="tabRetornoObrigatorio2" href="#tabRetornoObrigatorio-2"> Histórico ligações</a></li>
+                <li class=""><a data-toggle="tab" id="tabRetornoObrigatorio3" href="#tabRetornoObrigatorio-3"> Histórico negociação</a></li>
+              </ul>
+              <div class="tab-content">
+                <div id="tabRetornoObrigatorio-1" class="tab-pane active">
+                  <div class="panel-body">
+                      <input type="hidden" id="retorno_obrigatorio_retorno_id" value="">
+                      <input type="hidden" id="retorno_obrigatorio_negociacao_id" value="">
+                      <input type="hidden" id="retorno_obrigatorio_implantacao_id" value="">
+                      <input type="hidden" id="retorno_obrigatorio_acompanhamento_id" value="">
+                      <input type="hidden" id="retorno_obrigatorio_telefone" value="">
+                      <div id="retorno_obrigatorio_painelRetorno">
+                        <div class="form-group margin">
+                          <div class="field">
+                            <%= label_tag 'Retorno', nil, class: 'col-sm-2 control-label padding' %>
+                            <div class="col-sm-10 padding ">
+                              <%= text_field_tag :retorno_obrigatorio_tipo_retorno, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+                              <input type="hidden" id="retorno_obrigatorio_tipo" value="">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group margin">
+                          <div class="field">
+                            <%= label_tag 'Data retorno', nil,  class: 'col-sm-2 control-label padding' %>
+                            <div class="col-sm-6 padding">
+                              <div class="input-group clockpicker" data-autoclose="true">
+                                <%= text_field_tag :retorno_obrigatorio_retorno_data, nil,  class: 'form-control input-sm', autocomplete: "off",  placeholder: 'DD/MM/YYYY HH:mm', readOnly: "off" %>
+                                <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="field">
+                            <!--<div class="small m-b">Canal de atend.:-->
+                            <%= label_tag 'Canal atend.', nil, class: 'col-sm-2 control-label padding' %>
+                            <input class="whats" id="whatsapp-retorno-obrigatorio"  style="margin-right: 10px; margin-left: 10px" type="checkbox" title="Whatsapp">
+                            <input class="telefone" id="telefonePref-retorno-obrigatorio"  type="checkbox" title="Telefone">
+                            <!--</div>-->
+                          </div>
+                        </div>
+                        <div class="form-group margin">
+                          <div class="field">
+                            <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                            <div class="col-sm-10 padding ">
+                              <%= text_field_tag :retorno_obrigatorio_retorno_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+                              <input type="hidden" id="retorno_obrigatorio_reagendar_cliente_id" value="">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group margin">
+                          <div class="field">
+                          <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                          <div class="col-sm-10 padding ">
+                            <%= text_field_tag :retorno_obrigatorio_retorno_empresa, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+                          </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group margin">
+                          <div class="field">
+                            <%= label_tag 'Informações', nil, class: 'col-sm-2 control-label padding' %>
+                            <div class="col-sm-10 padding ">
+                              <%= text_area_tag :retorno_obrigatorio_retorno_observacao, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off" %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="retorno_obrigatorio_painelReagendar"  style="display: none">
+                        <div class="form-group margin">
+                          <div class="pull-center">
+                            <button class="btn btn-primary btn-xs" onclick="setarData(10, $('#modal_retorno #retorno_obrigatorio_retorno_reagendar')); return false;">10min</button>
+                            <button class="btn btn-primary btn-xs" onclick="setarData(20, $('#modal_retorno #retorno_obrigatorio_retorno_reagendar')); return false;">20min</button>
+                            <button class="btn btn-primary btn-xs" onclick="setarData(30, $('#modal_retorno #retorno_obrigatorio_retorno_reagendar')); return false;">30min</button>
+                            <button class="btn btn-primary btn-xs" onclick="setarData(45, $('#modal_retorno #retorno_obrigatorio_retorno_reagendar')); return false;">45min</button>
+                            <button class="btn btn-primary btn-xs" onclick="setarData(60, $('#modal_retorno #retorno_obrigatorio_retorno_reagendar')); return false;">1hora</button>
+                            <button class="btn btn-primary btn-xs" onclick="setarData(120, $('#modal_retorno #retorno_obrigatorio_retorno_reagendar')); return false;">2horas</button>
+                            <button class="btn btn-primary btn-xs" onclick="setarData(240, $('#modal_retorno #retorno_obrigatorio_retorno_reagendar')); return false;">4horas</button>
+                            <button class="btn btn-primary btn-xs" onclick="setarData(1440, $('#modal_retorno #retorno_obrigatorio_retorno_reagendar')); return false;">24horas</button>
+                            <button class="btn btn-primary btn-xs" onclick="setarData(2880, $('#modal_retorno #retorno_obrigatorio_retorno_reagendar')); return false;">48horas</button>
+                            <button class="btn btn-primary btn-xs" onclick="setarData(4320, $('#modal_retorno #retorno_obrigatorio_retorno_reagendar')); return false;">72horas</button>
+                          </div></div>
+                        <div class="form-group margin">
+                          <div class="field">
+                            <%= label_tag 'Retorno', nil,  class: 'col-sm-2 control-label padding' %>
+                            <div class="col-sm-6 padding">
+                              <div class="input-group clockpicker" data-autoclose="true">
+                                <%= text_field_tag :retorno_obrigatorio_retorno_reagendar, nil,  class: 'form-control input-sm', autocomplete: "off",  placeholder: 'DD/MM/YYYY HH:mm' %>
+                                <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group margin">
+                          <div class="field">
+                            <%= label_tag 'Motivo', nil, class: 'col-sm-2 control-label padding' %>
+                            <div class="col-sm-10 padding ">
+                              <%= text_area_tag :retorno_obrigatorio_retorno_reagendar_motivo, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group margin">
+                          <div class="field">
+                            <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                            <div class="col-sm-10 padding ">
+                              <%= text_field_tag :retorno_obrigatorio_retorno_reagendar_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group margin" id=negociadorGroup>
+                        <div class="field">
+                          <%= label_tag 'Negociador', nil,  class: 'col-sm-2 control-label padding' %>
+                          <div class="col-sm-5 padding">
+                            <%= select_tag 'negociador_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um negociador'}, :include_blank => true} %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="tabRetornoObrigatorio-2" class="tab-pane">
+                  <div class="panel-body scroll">
+                    <table id="retorno-table-ligacoes" class="table table-hover">
+                      <thead>
+                      <tr>
+                        <th>Data</th>
+                        <th>Usuário</th>
+                        <th>Status</th>
+                        <th>Status Cliente</th>
+                        <th>Observação Ligação</th>
+                        <th></th>
+                      </tr>
+                      </thead>
+                      <tbody id="body_retorno_table_ligacoes">
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div id="tabRetornoObrigatorio-3" class="tab-pane">
+                  <div class="panel-body scroll" id="modal_content_activities_retorno">
+
+                  </div>
+                </div>                
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= button_tag 'Não perturbe', :id => 'nao_perturbe', :class => 'btn btn-secondary' %>
+          
+          <%= button_tag 'Whats', :id => 'retorno_obrigatorio_btnWhats', :class => 'btn btn-primary'%>
+          <%= submit_tag 'Adiar', :id => 'retorno_obrigatorio_btnAdiar', :class => 'btn btn-warning', :style => "display: none;"%>
+          <%= submit_tag 'Efetuar retorno', :id => 'retorno_obrigatorio_btnEfetuarRetorno', :class => 'btn btn-info', :style => "display: none;" %>
+          <%= submit_tag 'Reagendar', :id => 'retorno_obrigatorio_btnReagendar', :class => 'btn btn-primary' %>
+          <%= submit_tag 'Salvar', :id => 'retorno_obrigatorio_btnSalvarReagendamento', :class => 'btn btn-primary' , :style => "display: none;"%>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<%= render 'users/modo_nao_perturbe' %>
+<style>
+.scroll{
+overflow-y: auto;
+-ms-overflow-style: -ms-autohiding-scrollbar;
+min-height: 200px;
+max-height: 300px;
+}
+#body-no-padding{
+padding: 0px 0px 0px 0px;
+}
+
+
+</style>

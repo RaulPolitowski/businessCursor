@@ -1,0 +1,494 @@
+<div class="row  border-bottom white-bg dashboard-header">
+  <div class="col-sm-12">
+    <h2>EMPRESAS CONTATADAS</h2>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content padding-5">
+  <div class="row animated fadeInDown">
+    <div class="col-lg-12 padding-left-right" >
+        <input type="hidden" id="status_id" value="">
+        <div class="ibox float-e-margins border-bottom">
+          <a class="collapse-link black_link">
+            <div class="ibox-title">
+              <h5>Filtros</h5>
+            </div>
+          </a>
+          <div class="ibox-content" style="display: none;">
+            <form>
+              <div class="row">
+                <div class="field col-sm-4">
+                  <%= label_tag 'Estado', nil, class: 'col-sm-2 control-label padding' %>
+                  <%= select_tag 'estado_financeiro_id', options_for_select( Estado.all.order(:nome).collect{ |u| [u.nome, u.id] }) , {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}, :include_blank => true} %>
+                </div>
+                <%# <div class="col-lg-2">
+                  <%= submit_tag 'Atualizar', :id => 'btnAtualizarContatos', :class => 'btn btn-primary', :style => "margin-top: 20px !important"%
+                </div> %>
+              </div>
+            </form>
+          </div>
+        </div>
+      
+    </div>
+    <div class="panel-body " style="padding: 5px !important;">
+      <div class="col-lg-12 no-padding" >
+        <div class="panel panel-default" style="margin-bottom: 10px !important;">
+          <div class="panel-heading">
+            Contatos
+            <div class="col-sm-2  pull-right" style="margin-top: -6px !important;">
+              <%= select_tag 'usuario', options_for_select(User.where(active: true).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um usuario'}, include_blank: true} %>
+            </div>
+          </div>
+          <div id="fatDiv" class="col-md-3 padding-5">
+            <div id="fatDiv" class="col-lg-12 padding-left-right">
+              <div class="ibox">
+                <div class="ibox-content product-box">
+                  <div class="ibox-title ibox-title-without-border-style">
+                    <h5>Empresas boas</h5>
+                    <span class="label label-info pull-right" id="competencia"></span>
+                  </div>
+                  <div class="ibox-content padding-5" style="height: 55px !important;">
+                    <div class="col-lg-8 no-padding">
+                      <h2 class="pull-left" id="qtd_boas" style="margin-bottom: 3px"></h2>
+                    </div>
+                    <div class="col-lg-4 no-padding">
+                      <div class="col-lg-12 no-padding">
+                        <div class="stat-percent font-bold text-danger" id="percentual_boas"></div>
+                      </div>
+                      <div class="col-lg-12 no-padding">
+                        <div class="pull-right">
+                          <small id="boas_anterior"></small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="fatDiv" class="col-lg-12 padding-left-right">
+              <div class="ibox">
+                <div class="ibox-content product-box">
+                  <div class="ibox-title ibox-title-without-border-style">
+                    <h5>Empresas contatadas</h5>
+                    <span class="label label-info pull-right" id="competencia_cont"></span>
+                  </div>
+                  <div class="ibox-content padding-5" style="height: 55px !important;">
+                    <div class="col-lg-8 no-padding">
+                      <h2 class="pull-left" id="qtd_contatos" style="margin-bottom: 3px"></h2>
+                    </div>
+                    <div class="col-lg-4 no-padding">
+                      <div class="col-lg-12 no-padding">
+                        <div class="stat-percent font-bold text-danger" id="percentual_contatadas"></div>
+                      </div>
+                      <div class="col-lg-12 no-padding">
+                        <div class="pull-right">
+                          <small id="contatos_anterior"></small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="fatDiv" class="col-lg-12 padding-left-right">
+              <div class="ibox">
+                <div class="ibox-content product-box">
+                  <div class="ibox-title ibox-title-without-border-style">
+                    <h5>Saldo</h5>
+                    <span class="label label-info pull-right" id="competencia_res"></span>
+                  </div>
+                  <div class="ibox-content padding-5" style="height: 55px !important;">
+                    <div class="col-lg-8 no-padding">
+                      <h2 class="pull-left" id="resultado_total" style="margin-bottom: 7px"></h2>
+                    </div>
+                    <div class="col-lg-4 no-padding">
+                      <div class="col-lg-12 no-padding">
+                        <div class="stat-percent font-bold text-danger" id="percentual_resultado"></div>
+                      </div>
+                      <div class="col-lg-12 no-padding">
+                        <div class="pull-right">
+                          <small id="resultado_anterior"></small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-body no-padding">
+            <div class="col-lg-8 padding-left-right">
+              <div class="ibox-content padding-5">
+                <div id="contatos_12_meses" style="height: 290px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 padding-left-right">
+      <div class="ibox float-e-margins ">
+        <div class="ibox-title">
+          <h5 id="titulo_rank"><%= mes_extenso((Date.today).month) %></h5>
+        </div>
+        <div class="ibox-content padding-left-right">
+          <div class="row">
+            <div class="col-lg-12">
+              <div id="rank_mes" style="height: 180px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 padding-left-right">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5 id="titulo_rank2"><%= mes_extenso((Date.today - 1.month).month) %></h5>
+        </div>
+        <div class="ibox-content">
+          <div class="row">
+            <div id="rank_mes-1" style="height: 180px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 padding-left-right">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5 id="titulo_rank3"><%= mes_extenso((Date.today - 2.month).month) %></h5>
+        </div>
+        <div class="ibox-content">
+          <div class="row">
+            <div id="rank_mes-2" style="height: 180px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .ibox-title-without-border-style {
+    border-style: none;
+    min-height: 24px !important;
+    padding: 5px !important;
+  }
+  .ibox{
+    margin-bottom: 5px !important;
+  }
+</style>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    google.charts.load('current', {'packages':['corechart','table']});
+    drawChart12Meses();
+    drawTableContatosMes();
+
+    /*setTimeout(function(){
+      google.charts.setOnLoadCallback(drawChart12Meses());
+      setInterval(drawChart12Meses(), 600000);
+
+      google.charts.setOnLoadCallback(drawTableContatosMes());
+      setInterval(drawTableContatosMes(), 600000);
+    }, 500);*/
+
+    $('#usuario').on('change', function () {
+      drawChart12Meses();
+    });
+
+    $('#estado_financeiro_id').on('change', function () {
+      drawChart12Meses();
+    });
+
+  });
+
+  function drawChart12Meses() {
+    $.getJSON("/dashboards/get_contatos_12_meses?estado=" + $('#estado_financeiro_id').val() + "&usuario=" + $('#usuario').val(), function(data) 
+    {
+      var dataArray = [
+          ['Mês', 'Empresas boas', 'Contatos', 'Resultado'],
+      ];
+      for (var i = 0; i < data.length; i++) {
+        var row = [data[i].mes, parseInt(data[i].qtd_boas), parseInt(data[i].qtd_contatos), parseInt(data[i].resultado)];
+        dataArray.push(row);
+      }
+
+      var meses = data;
+      var anterior = null;
+      $.getJSON("/dashboards/get_contatos_12_meses?estado=" + $('#estado_financeiro_id').val() + "&usuario=" + $('#usuario').val() +
+              "&data="+ $('#competencia').text(),  function(ret) {
+        anterior = ret;
+        
+        preencherPainel(parseInt($(meses).get(-13).qtd_boas),
+                        $(meses).get(-1).mes, 
+                        parseInt($(anterior).get(-1).qtd_boas),
+                        parseInt($(meses).get(-13).qtd_contatos),
+                        parseInt($(anterior).get(-1).qtd_contatos),
+                        parseInt($(meses).get(-13).resultado),
+                        parseInt($(anterior).get(-1).resultado),
+         )
+
+      });
+        var options = {
+            'chartArea': {'width': '80%', 'height': '60%'},
+            hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+            seriesType: 'bars',
+            //series: {1: {type: 'line', color: 'black', format: 'short'}},
+            legend: {position: 'top'},
+            vAxis: {viewWindowMode: "explicit", viewWindow: {min: 0}, format: 'short'},
+            animation: { easing: 'in', duration: 500, startup: true, displayLegendValues: false}
+        };
+        var chart = new google.visualization.ComboChart(document.getElementById('contatos_12_meses'));
+
+        function selectHandler() 
+        {
+          var selectedItem = chart.getSelection()[0];
+          if (selectedItem) {
+            var ultimo = selectedItem.row + 1;
+            if(ultimo == 13)
+              ultimo = 12;
+            
+            preencherPainel(parseInt(data.getValue(selectedItem.row, 1)),
+                                        data.getValue(selectedItem.row, 0), 
+                                        parseInt(data.getValue(ultimo, 1)), 
+                                        data.getValue(selectedItem.row, 2), 
+                                        parseInt(data.getValue(ultimo, 2)), 
+                                        data.getValue(selectedItem.row, 3), 
+                                        parseInt(data.getValue(ultimo, 3)));
+            drawTableContatosMes();
+          }else{
+            preencherPainel(parseInt($(meses).get(-1).qtd_boas), 
+                                      $(meses).get(-1).mes, 
+                                      parseInt($(anterior).get(-1).qtd_boas),                                   
+                                      parseInt($(meses).get(-1).qtd_contatos),
+                                      parseInt($(anterior).get(-1).qtd_contatos),
+                                      parseInt($(meses).get(-1).resultado),
+                                      parseInt($(anterior).get(-1).resultado)); 
+          }
+        }
+        google.visualization.events.addListener(chart, 'select', selectHandler);
+
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        chart.draw(data, options);
+
+        view = new google.visualization.DataView(data);
+        view.hideColumns([3]);
+        chart.draw(view, options);
+    });
+  }
+
+  function drawTableContatosMes(){
+    if ($('#competencia').text() != ''){
+      var mes = $('#competencia').text().split('/');
+      mes = mes[0];
+      switch (mes){
+        case '01' :
+          document.getElementById("titulo_rank").innerHTML = "Janeiro";
+          document.getElementById("titulo_rank2").innerHTML = "Dezembro";
+          document.getElementById("titulo_rank3").innerHTML = "Novembro";
+          break;
+        case '02' :
+          document.getElementById("titulo_rank").innerHTML = "Fevereiro";
+          document.getElementById("titulo_rank2").innerHTML = "Janeiro";
+          document.getElementById("titulo_rank3").innerHTML = "Dezembro";
+          break;
+        case '03' :
+          document.getElementById("titulo_rank").innerHTML = "Março";
+          document.getElementById("titulo_rank2").innerHTML = "Fevereiro";
+          document.getElementById("titulo_rank3").innerHTML = "Janeiro";
+          break;
+        case '04' :
+          document.getElementById("titulo_rank").innerHTML = "Abril";          
+          document.getElementById("titulo_rank2").innerHTML = "Março";
+          document.getElementById("titulo_rank3").innerHTML = "Fevereiro";
+          break;
+        case '05' :
+          document.getElementById("titulo_rank").innerHTML = "Maio";
+          document.getElementById("titulo_rank2").innerHTML = "Abril";
+          document.getElementById("titulo_rank3").innerHTML = "Março";
+          break;
+        case '06' :
+          document.getElementById("titulo_rank").innerHTML = "Junho";
+          document.getElementById("titulo_rank2").innerHTML = "Maio";
+          document.getElementById("titulo_rank3").innerHTML = "Abril";
+          break;
+        case '07' :
+          document.getElementById("titulo_rank").innerHTML = "Julho";
+          document.getElementById("titulo_rank2").innerHTML = "Junho";
+          document.getElementById("titulo_rank3").innerHTML = "Maio";
+          break;
+        case '08' :
+          document.getElementById("titulo_rank").innerHTML = "Agosto";
+          document.getElementById("titulo_rank2").innerHTML = "Julho";
+          document.getElementById("titulo_rank3").innerHTML = "Junho";
+          break;
+        case '09' :
+          document.getElementById("titulo_rank").innerHTML = "Setembro";
+          document.getElementById("titulo_rank2").innerHTML = "Agosto";
+          document.getElementById("titulo_rank3").innerHTML = "Julho";
+          break;
+        case '10' :
+          document.getElementById("titulo_rank").innerHTML = "Outubro";
+          document.getElementById("titulo_rank2").innerHTML = "Setembro";
+          document.getElementById("titulo_rank3").innerHTML = "Agosto";
+          break;
+        case '11' :
+          document.getElementById("titulo_rank").innerHTML = "Novembro";
+          document.getElementById("titulo_rank2").innerHTML = "Outubro";
+          document.getElementById("titulo_rank3").innerHTML = "Setembro";
+          break;
+        case '12' :
+          document.getElementById("titulo_rank").innerHTML = "Dezembro";
+          document.getElementById("titulo_rank2").innerHTML = "Novembro";
+          document.getElementById("titulo_rank3").innerHTML = "Outubro";
+          break;          
+      }
+
+    }
+    //=======atual
+    $.getJSON("/dashboards/get_contatos_mes?flag=0&data="+ $('#competencia').text(), function(data) 
+    {      
+      var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', '');
+            datatable.addColumn('string', 'Usuário');
+            datatable.addColumn('number', 'Contatos');
+            datatable.addColumn('number', 'Qtd. dias');
+            datatable.addColumn('number', 'Média');
+
+      for (var i = 0; i < data.length; i++) {
+        var row;
+        i == 0 ? row = ['<%= image_tag("gold.png", size: "16x16") %>', data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)] :
+        i == 1 ? row = ['<%= image_tag("silver.png", size: "16x16") %>', data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)] :
+        i == 2 ? row = ['<%= image_tag("bronze.png", size: "16x16") %>', data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)] :
+        row = [(i+1).toString(), data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)]
+
+        datatable.addRow(row);
+      }      
+
+        var table = new google.visualization.Table(document.getElementById('rank_mes'));          
+          
+        table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'enable'});
+    });
+
+    //=======atual -1
+    $.getJSON("/dashboards/get_contatos_mes?flag=1&data="+ $('#competencia').text(), function(data) 
+    {
+      var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', '');
+            datatable.addColumn('string', 'Usuário');
+            datatable.addColumn('number', 'Contatos');
+            datatable.addColumn('number', 'Qtd. dias');
+            datatable.addColumn('number', 'Média');
+
+      for (var i = 0; i < data.length; i++) {
+        var row;
+        i == 0 ? row = ['<%= image_tag("gold.png", size: "16x16") %>', data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)] :
+        i == 1 ? row = ['<%= image_tag("silver.png", size: "16x16") %>', data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)] :
+        i == 2 ? row = ['<%= image_tag("bronze.png", size: "16x16") %>', data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)] :
+        row = [(i+1).toString(), data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)]
+
+        datatable.addRow(row);
+      }       
+
+      var table = new google.visualization.Table(document.getElementById('rank_mes-1'));          
+        
+      table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'enable'});
+    });
+
+    //=======atual -2
+    $.getJSON("/dashboards/get_contatos_mes?flag=2&data="+ $('#competencia').text(), function(data) 
+    {
+      var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', '');
+            datatable.addColumn('string', 'Usuário');
+            datatable.addColumn('number', 'Contatos');
+            datatable.addColumn('number', 'Qtd. dias');
+            datatable.addColumn('number', 'Média');
+
+      for (var i = 0; i < data.length; i++) {
+        var row;
+        i == 0 ? row = ['<%= image_tag("gold.png", size: "16x16") %>', data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)] :
+        i == 1 ? row = ['<%= image_tag("silver.png", size: "16x16") %>', data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)] :
+        i == 2 ? row = ['<%= image_tag("bronze.png", size: "16x16") %>', data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)] :
+        row = [(i+1).toString(), data[i].name, parseInt(data[i].qtd_contatos), parseInt(data[i].qtd_dias), parseInt(data[i].media)]
+
+        datatable.addRow(row);
+      }        
+
+        var table = new google.visualization.Table(document.getElementById('rank_mes-2'));          
+          
+        table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'enable'});
+    }); 
+    
+  }
+
+  function preencherPainel(empresasBoas, competencia, boas_anterior, contatos, contatosAnterior, resultado, resultadoAnterior) 
+  {
+    $('#competencia').text(competencia);
+    $('#competencia_cont').text(competencia);
+    $('#competencia_res').text(competencia);
+          
+    $('#qtd_boas').text(empresasBoas);
+    $('#boas_anterior').text('Ant. ' + boas_anterior);
+
+    var valor = ((empresasBoas*100 / boas_anterior)-100);
+    $('#percentual_boas').text('');
+    if(valor > 0){
+      $('#percentual_boas').removeClass('text-danger').addClass('text-info');
+      $('#percentual_boas').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+    }else{
+      $('#percentual_boas').removeClass('text-info').addClass('text-danger');
+      $('#percentual_boas').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+    }
+    //---------------------contatos
+    $('#qtd_contatos').text(contatos);
+    $('#contatos_anterior').text('Ant. ' + contatosAnterior);
+    
+    var valor = ((contatos*100 / contatosAnterior)-100);
+    $('#percentual_contatadas').text('');
+    if(valor > 0){
+      $('#percentual_contatadas').removeClass('text-danger').addClass('text-info');
+      $('#percentual_contatadas').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+    }else{
+      $('#percentual_contatadas').removeClass('text-info').addClass('text-danger');
+      $('#percentual_contatadas').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+    }
+    //----------------resultado
+    $('#resultado_total').text(resultado);
+    $('#resultado_anterior').text('Ant. ' + resultadoAnterior);
+    if(resultado > 0){
+      $('#resultado_total').removeClass('text-danger');
+      //$('#resultado_total').append(mascaraValor(resultado.toFixed(2)) + '% <i class="fa fa-level-up"></i>');
+    }else{
+      $('#resultado_total').addClass('text-danger');
+      //$('#resultado_total').append(mascaraValor(resultado.toFixed(2)) +'% <i class="fa fa-level-down"></i>');
+    }
+
+    if(resultadoAnterior > 0){
+      $('#resultado_anterior').removeClass('text-danger');
+    }else{
+      $('#resultado_anterior').addClass('text-danger');
+    }
+
+    if (resultado > 0 && resultadoAnterior < 0) 
+    {
+      var valor = Math.abs(((resultado*100) / resultadoAnterior)-100);    
+    }
+    else {
+      var valor = (((resultado*100) / resultadoAnterior)-100);
+      
+    }
+    
+    $('#percentual_resultado').text('');
+    if(valor > 0){
+      $('#percentual_resultado').removeClass('text-danger').addClass('text-info');
+      $('#percentual_resultado').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+    }else{
+      $('#percentual_resultado').removeClass('text-info').addClass('text-danger');
+      $('#percentual_resultado').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+    }
+    
+  }
+
+</script>
+

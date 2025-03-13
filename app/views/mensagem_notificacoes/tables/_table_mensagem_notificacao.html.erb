@@ -1,0 +1,47 @@
+<div class="panel-body">
+	<table class='<%= "table table-striped table-bordered table-hover #{selector_table}" %>'>
+		<thead>
+			<tr>
+				<th>Tipo</th>
+				<th>Numero Destinatario</th>
+				<th>Numero Notificador</th>
+				<th>Usuario</th>
+				<th>Mensagem</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody id='body_table_mensagem_notificacao'>
+			<% notificacoes.each do |notificacao| %>
+				<tr>
+					<td><%= notificacao.tipo %></td>
+					<td>
+						<% unless notificacao.vendas? %>
+							<%= get_eachs_from_gzap_usuario(notificacao.gzap_usuarios, 'destinatarios') %>
+						<% else %>
+							<%= notificacao.destinatarios.join(' | ') %>
+						<% end %>
+					</td>
+					<td><%= notificacao.numero_notificacao.numero %></td>
+					<td><%= get_eachs_from_gzap_usuario(notificacao.gzap_usuarios, 'name') %></td>
+					<td><%= notificacao.mensagem %></td>
+					<td>
+						<%= link_to edit_mensagem_notificacao_path(notificacao), { class: 'btn btn-sm btn-success', title: 'Editar', 'data-placement': 'right' } do %>
+							<i class="fa fa-pencil" aria-hidden="true"></i>
+						<% end %>
+						<% if notificacao.ativo %>
+							<%= link_to ativar_desativar_mensagem_notificacao_path(notificacao), method: :post, class: 'btn btn-sm btn-danger', title: 'Desativar', 'data-placement': 'right' do %>
+								<i class="fa fa-ban" aria-hidden="true"></i>
+							<% end %>
+						<% else %>
+							<%= link_to ativar_desativar_mensagem_notificacao_path(notificacao), method: :post, class: 'btn btn-sm btn-info', title: 'Ativar', 'data-placement': 'right' do %>
+								<i class="fa fa-power-off" aria-hidden="true"></i>
+							<% end %>
+						<% end %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+		<tfoot>
+		</tfoot>
+	</table>
+</div>

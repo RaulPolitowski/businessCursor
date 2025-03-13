@@ -1,0 +1,31 @@
+<% if select_tipo === 'NUMERO' %>
+  <%= form.label :numero_de_envio, class: 'col-sm-2 control-label padding' %>
+  <div class="col-sm-10 padding">
+    <%= select_numero(form, @mensagem_notificacao) %>
+  </div>
+<% elsif select_tipo === 'USUARIO' %>
+  <%= form.label :usuario_gzap, class: 'col-sm-2 control-label padding' %>
+  <div class="col-sm-10 padding">
+    <%= form.hidden_field :name, value: form.object.gzap_usuario_ids %>
+    <%= select_usuario_gzap(form) %>
+  </div>
+<% end %>
+
+<script>
+  $(document).ready(function(){
+
+    $('#mensagem_notificacao_gzap_usuario_ids').on('change', function(){
+      const name = get_username();
+      $('#mensagem_notificacao_name').val(name); 
+    });
+    $('.chosen-select').chosen({width: "100%", allow_single_deselect: true, search_contains: true});
+  });
+  
+
+  function get_username(){
+    let selectElement = document.getElementById("mensagem_notificacao_gzap_usuario_ids");
+    let selectedIndex = selectElement.selectedIndex;
+    let selectedText = selectElement.options[selectedIndex].textContent;
+    return selectedText;
+  }
+</script>

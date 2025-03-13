@@ -1,0 +1,277 @@
+.<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>PAINEL DE NEGOCIAÇÕES</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="<%= url_for :controller => 'dashboards', :action => 'painel_vendas' %>">Home</a>
+      </li>
+      <li class="active">
+        <strong>Negociações</strong>
+      </li>
+    </ol>
+    <small id="textTotal"></small> /
+    <small id="textTotalConfirmacao"></small>
+    <input type="hidden" id="totalNegociacoes" value="0">
+    <input type="hidden" id="totalNegociacoesConfirmacao" value="0">
+  </div>
+</div>
+
+<div class="wrapper wrapper-content">
+  <div class="row">
+    <div class="col-lg-12 padding">
+      <div class="ibox float-e-margins border-bottom" style="margin-bottom: 5px;">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <button class="btn btn-primary btn-xs" id="btnDia">Dia</button>
+              <button class="btn btn-primary btn-xs" id="btnOntem">Ontem</button>
+              <button class="btn btn-primary btn-xs" id="btnSemana">Semana</button>
+              <button class="btn btn-primary btn-xs" id="btnMes">Mês</button>
+              <button class="btn btn-primary btn-xs" id="btnTodas">Todas</button>
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <div class="field col-sm-2">
+                <label for="data_inicio">Data Início</label>
+                <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio">
+              </div>
+              <div class="field col-sm-2">
+                <label for="data_fim">Data Fim</label>
+                <input class="form-control input-sm" type="text" name="data_fim" id="data_fim">
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Operador', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'operador_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }, (current_user.admin? ? nil : current_user.id)), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true, :disabled => (!current_user.admin?)} %>
+              </div>
+              <div class="field col-sm-3">
+                <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                <%= text_field_tag :filtro_cliente, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Digite o nome para buscar' %>
+                <input type="hidden" id="filtro_cliente_id" value="">
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'empresa_id', options_for_select(current_user.empresas.collect {|p| [ p.razao_social, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma empresa'}, :include_blank => true} %>
+              </div>
+              <div class="col-lg-1">
+                <br>
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarNegociacoes', :class => 'btn btn-primary' %>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="tabs-container" >
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1"> Negociações</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-2"> Aguardando Confirmação</a></li>
+        <%if current_user.admin? %>
+        <li class=""><a data-toggle="tab" href="#tab-3"> Tabela de Dados</a></li>
+         <%end %>
+      </ul>
+      <div class="tab-content">
+        <div id="tab-1" class="tab-pane active">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-lg-3 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel0">HOJE</h3>
+                        <input type="hidden" id="total_painel0" value="">
+                      </div>
+                      <div class="col-sm-2">
+                        <button class="btn btn-info btn-xs pull-right" onclick="transferirNegociacoes('hoje', 0)" id="transferirHoje" type="button" title="Transferir todos"><i class="fa fa-exchange"></i></button>
+                      </div>
+                    </div>
+                    <ul class="sortable-list connectList agile-list" id="painel0">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel1">ATRASADAS</h3>
+                        <input type="hidden" id="total_painel1" value="">
+                      </div>
+                      <div class="col-sm-2">
+                        <button class="btn btn-info btn-xs pull-right" onclick="transferirNegociacoes('atrasadas', 0)" id="transferirAtrasadas" type="button" title="Transferir todos"><i class="fa fa-exchange"></i></button>
+                      </div>
+                    </div>
+                    <ul class="sortable-list connectList agile-list" id="painel1">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel2">PROX. 7 DIAS</h3>
+                        <input type="hidden" id="total_painel2" value="">
+                      </div>
+                      <div class="col-sm-2">
+                        <button class="btn btn-info btn-xs pull-right" onclick="transferirNegociacoes('prox', 0)" id="transferirProximo7" type="button" title="Transferir todos"><i class="fa fa-exchange"></i></button>
+                      </div>
+                    </div>
+                    <ul class="sortable-list connectList agile-list" id="painel2">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel3">DEMAIS</h3>
+                        <input type="hidden" id="total_painel3" value="">
+                      </div>
+                      <div class="col-sm-2">
+                        <button class="btn btn-info btn-xs pull-right" onclick="transferirNegociacoes('demais', 0)" id="transferirDemais" type="button" title="Transferir todos"><i class="fa fa-exchange"></i></button>
+                      </div>
+                    </div>
+                    <ul class="sortable-list connectList agile-list" id="painel3">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-2" class="tab-pane">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-lg-3 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel4">HOJE</h3>
+                        <input type="hidden" id="total_painel4" value="">
+                      </div>
+                      <div class="col-sm-2">
+                        <button class="btn btn-info btn-xs pull-right" onclick="transferirNegociacoes('hoje', 1)" id="transferirHojeConfirmacao" type="button" title="Transferir todos"><i class="fa fa-exchange"></i></button>
+                      </div>
+                    </div>
+                    <ul class="sortable-list connectList agile-list" id="painel4">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel5">ATRASADAS</h3>
+                        <input type="hidden" id="total_painel5" value="">
+                      </div>
+                      <div class="col-sm-2">
+                        <button class="btn btn-info btn-xs pull-right" onclick="transferirNegociacoes('atrasadas', 1)" id="transferirAtrasadasConfirmacao" type="button" title="Transferir todos"><i class="fa fa-exchange"></i></button>
+                      </div>
+                    </div>
+                    <ul class="sortable-list connectList agile-list" id="painel5">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel6">PROX. 7 DIAS</h3>
+                        <input type="hidden" id="total_painel6" value="">
+                      </div>
+                      <div class="col-sm-2">
+                        <button class="btn btn-info btn-xs pull-right" onclick="transferirNegociacoes('prox', 1)" id="transferirProximo7Confirmacao" type="button" title="Transferir todos"><i class="fa fa-exchange"></i></button>
+                      </div>
+                    </div>
+                    <ul class="sortable-list connectList agile-list" id="painel6">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel7">DEMAIS</h3>
+                        <input type="hidden" id="total_painel7" value="">
+                      </div>
+                      <div class="col-sm-2">
+                        <button class="btn btn-info btn-xs pull-right" onclick="transferirNegociacoes('demais', 1)" id="transferirDemaisConfirmacao" type="button" title="Transferir todos"><i class="fa fa-exchange"></i></button>
+                      </div>
+                    </div>
+                    <ul class="sortable-list connectList agile-list" id="painel7">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       <%if current_user.admin?  %>
+        <div id="tab-3" class="tab-pane">
+          <div class="col-md-12 padding-5">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-content padding-5">
+                  <div id="tabela_consultor"  style="height: 300px !important;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       <%end %>
+        </div>
+    </div>
+  </div>
+</div>
+<%= render 'negociacoes/modals/transferir_negociacao' %>
+<%= render 'negociacoes/modals/novo_comentario' %>
+<%= render 'negociacoes/modals/reagendar_retorno' %>
+<div id="modal_activities_negociacao" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn" id="modal_content_activities">
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .scroll{
+    overflow-y: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    min-height: 200px;
+    max-height: 500px;
+  }
+  #body-no-padding{
+    padding: 0px 0px 0px 0px;
+  }
+
+
+</style>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>

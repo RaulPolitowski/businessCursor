@@ -1,0 +1,67 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>RELATÓRIO ANÁLISE DE COLABORADORES</h2>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+          <h5>Filtros</h5>
+          <%= form_tag('/relatorios/analise_vendedor_print', method: :post) do %>
+            <div class="row">
+              <div class="field col-sm-2">
+                <label for="data_inicio">Data Início</label>
+                <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio" autocomplete="off" required>
+              </div>
+              <div class="field col-sm-2">
+                <label for="data_fim">Data Fim</label>
+                <input class="form-control input-sm" type="text" name="data_fim" id="data_fim" autocomplete="off" required>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Agrupar', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag  'group_by', options_for_select([
+                                                                       ['Consultor', 'VENDEDOR'],
+                                                                       ['Implantador', 'IMPLANTADOR'],
+                                                                       ['Acompanhamento', 'ACOMPANHADOR']
+                                                               ], ''), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um agrupamento'}} %>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Estado', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'estado_financeiro_id', options_for_select( Financeiro::Estado.order(:nome).collect{ |u| [u.descricao_completa, u.id] }) , {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-4">
+                <%= label_tag 'Consultor comercial', nil, class: 'col-sm-12 control-label padding' %>
+                <%= select_tag 'vendedor', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-4">
+                <%= label_tag 'Implantador', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'implantador', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um implantador'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-4">
+                <%= label_tag 'Acompanhamento', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'acompanhamento', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um acompanhamento'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-4">
+                <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag  'empresas_financeiro_id', options_for_select([
+                                                                                 ['GERMAN TECH (MATRIZ)', 17],
+                                                                                 ['GERMAN TECH (FILIAL)', 3253],
+                                                                                 ['GERMAN SERVIÇOS', 3422]
+                                                                             ], ([17,3253, 3422])), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um status'}, :include_blank => true, :multiple => true} %>
+              </div>
+
+              <div class="col-lg-2">
+                  <br>
+                  <%= submit_tag 'Gerar', :id => 'btnGerarRelatorio', :class => 'btn btn-primary', :formtarget => "_blank" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_include_tag("relatorios_analise_vendedor") %>

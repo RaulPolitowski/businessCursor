@@ -1,0 +1,75 @@
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#tab-1"> Dados</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-1" class="tab-pane active">
+            <div class="panel-body">
+              <fieldset class="form-horizontal">
+                <%= form_for(@empresa, html: { autocomplete: "off" }) do |f| %>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :razao_social, 'Razão Social', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-10">
+                        <%= f.text_field :razao_social, class: 'form-control input-sm' %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :nome_fantasia, 'Nome Fantasia', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-10">
+                        <%= f.text_field :nome_fantasia, class: 'form-control input-sm' %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :cnpj, 'CNPJ', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-4">
+                        <%= f.text_field :cnpj, class: 'form-control input-sm', maxlength: '14', onkeypress: 'return SomenteNumero(event)' %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= f.label :estado, 'ESTADO', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-4">
+                        <%= f.text_field :estado, class: 'form-control input-sm', maxlength: '2' %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :cidade, 'Cidade', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-10">
+                        <%= f.text_field :cidade, class: 'form-control input-sm', :value => @empresa.cidade.present? ? @empresa.cidade.descricao_completa : '' %>
+                        <%= f.hidden_field 'cidade_id', :value => @empresa.cidade.present? ? @empresa.cidade.id : '' %>
+                      </div>
+                    </div>
+                  </div>
+                  <% if @empresa.id.present? %>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :ativo, 'Ativa?' , class: 'col-sm-2 control-label padding'%>
+                        <div class="col-sm-2">
+                          <div class="i-checks">
+                            <%= f.check_box :ativo, class: 'icheckbox_square-green' %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                  <div class="actions aligncenter">
+                    <%= f.submit 'Salvar', :class => 'btn btn-lg btn-success aligncenter' %>
+                  </div>
+                <% end %>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

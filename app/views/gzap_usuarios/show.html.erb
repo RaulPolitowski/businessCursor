@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Destinatarios:</strong>
+  <%= @gzap_usuario.destinatarios %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @gzap_usuario.user_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @gzap_usuario.name %>
+</p>
+
+<%= link_to 'Editar', edit_gzap_usuario_path(@gzap_usuario) %> |
+<%= link_to 'Voltar', gzap_usuarios_path %>

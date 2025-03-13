@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  campanha_id: 
+  cliente_id: 
+  numero: MyString
+  status: MyString
+
+two:
+  campanha_id: 
+  cliente_id: 
+  numero: MyString
+  status: MyString

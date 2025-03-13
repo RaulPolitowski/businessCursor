@@ -1,0 +1,378 @@
+<%= hidden_field_tag 'user_is_admin', current_user.admin? %>
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>AUDITORIA DE DESISTÊNCIAS</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="<%= url_for :controller => 'dashboards', :action => 'painel_vendas' %>">Home</a>
+      </li>
+      <li class="active">
+        <strong>Auditoria de Desistências</strong>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content">
+  <div class="row">
+    <div class="col-lg-12 padding">
+      <div class="ibox float-e-margins border-bottom" style="margin-bottom: 5px;">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <button class="btn btn-primary btn-xs" id="btnDia">Dia</button>
+              <button class="btn btn-primary btn-xs" id="btnOntem">Ontem</button>
+              <button class="btn btn-primary btn-xs" id="btnSemana">Semana</button>
+              <button class="btn btn-primary btn-xs" id="btnMes">Mês</button>
+              <button class="btn btn-primary btn-xs" id="btnTodas">Todas</button>
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <div class="field col-sm-2">
+                <label for="data_inicio">Data Início</label>
+                <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio">
+              </div>
+              <div class="field col-sm-2">
+                <label for="data_fim">Data Fim</label>
+                <input class="form-control input-sm" type="text" name="data_fim" id="data_fim">
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Operador', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'operador_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }, (current_user.admin? ? nil : current_user.id)), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true, :disabled => (!current_user.admin?)} %>
+              </div>
+              <div class="field col-sm-3">
+                <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                <%= text_field_tag :filtro_cliente, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Digite o nome para buscar' %>
+                <input type="hidden" id="filtro_cliente_id" value="">
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'empresa_id', options_for_select(current_user.empresas.collect {|p| [ p.razao_social, p.id ] }, current_empresa.id), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma empresa'}, :include_blank => true, :disabled => (!current_user.admin?)} %>
+              </div>
+              <div class="col-lg-1">
+                <br>
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarNegociacoes', :class => 'btn btn-primary' %>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="tabs-container" >
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" id="tabAcompanhamento" href="#tab-1"> Acompanhamento</a></li>
+        <li class=""><a data-toggle="tab" id="tabImplantacao" href="#tab-2"> Implantações</a></li>
+        <li class=""><a data-toggle="tab" id="tabNegociacao" href="#tab-3"> Negociações</a></li>
+        <li class=""><a data-toggle="tab" id="tabRetorno" href="#tab-4"> Retorno inicial</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab-1">
+          <div class="panel-body">
+            <%= hidden_field_tag 'total_acompanhamento', 0 %>
+            <div class="row" id="sortable-view">
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel1">EM ANDAMENTO</h3>
+                        <input type="hidden" id="total_painel1" value="">
+                      </div>
+                    </div>
+                    <ul class="sortable-list sortable acompanhamentosort connectList agile-list" id="painel1">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel2">STAND BY</h3>
+                        <input type="hidden" id="total_painel2" value="">
+                      </div>
+                    </div>
+                    <ul class="sortable-list sortable acompanhamentosort connectList agile-list" id="painel2">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel3">CONFERIDOS</h3>
+                        <input type="hidden" id="total_painel3" value="">
+                      </div>
+                    </div>
+                    <ul class="sortable-list sortable acompanhamentosort list-conferido-acomp connectList agile-list" id="painel3">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="tab-2">
+          <div class="panel-body">
+            <%= hidden_field_tag 'total_implantacao', 0 %>
+            <div class="row" id="sortable-view">
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel5"> IMPLANTACAÇÕES PRÉ</h3>
+                        <input type="hidden" id="total_painel5" value="">
+                      </div>
+                    </div>
+                    <ul class="sortable-list sortable implantacaosort agile-list" id="painel5">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel6"> IMPLANTACAÇÕES DURANTE</h3>
+                        <input type="hidden" id="total_painel6" value="">
+                      </div>
+                    </div>
+                    <ul class="sortable-list sortable implantacaosort agile-list" id="painel6">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel7">CONFERIDAS</h3>
+                        <input type="hidden" id="total_painel7" value="">
+                      </div>
+                    </div>
+                    <ul class="sortable-list implantacaosort list-conferido-impl connectList agile-list" id="painel7" >
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-3" class="tab-pane">
+          <div class="panel-body">
+            <%= hidden_field_tag 'total_negociacao', 0 %>
+            <div class="row" id="sortable-view">
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel10">NEGOCIAÇÕES</h3>
+                        <input type="hidden" id="total_painel10" value="">
+                      </div>
+                    </div>
+                    <ul class="sortable-list sortable negociacaosort agile-list" id="painel10">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel11"> AGUARDANDO CONFIRMAÇÃO</h3>
+                        <input type="hidden" id="total_painel11" value="">
+                      </div>
+                    </div>
+                    <ul class="sortable-list sortable negociacaosort agile-list" id="painel11">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel12">CONFERIDAS</h3>
+                        <input type="hidden" id="total_painel12" value="">
+                      </div>
+                    </div>
+                    <ul class="sortable-list negociacaosort list-conferidas connectList agile-list" id="painel12" >
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-4" class="tab-pane">
+          <div class="panel-body">
+            <%= hidden_field_tag 'total_retorno', 0 %>
+            <div class="row" id="sortable-view">
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel15"> RETORNOS</h3>
+                        <input type="hidden" id="total_painel15" value="">
+                      </div>
+                    </div>
+                    <ul class="sortable-list sortable retornosort agile-list" id="painel15">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel16"> RETORNOS ATRASADOS</h3>
+                        <input type="hidden" id="total_painel16" value="">
+                      </div>
+                      <div class="col-sm-2">
+
+                      </div>
+                    </div>
+                    <ul class="sortable-list sortable retornosort agile-list" id="painel16">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 padding">
+                <div class="ibox">
+                  <div class="ibox-content"  style="border-width: 1px !important;">
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <h3 class="text-center" id="text-painel17"> CONFERIDOS</h3>
+                        <input type="hidden" id="total_painel17" value="">
+                      </div>
+                    </div>
+                    <ul class="sortable-list retornosort list-conferido-retorno connectList agile-list" id="painel17" >
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= render 'negociacoes/modals/novo_comentario' %>
+<%= render 'negociacoes/modals/recuperar_negociacao' %>
+<%= render 'acompanhamentos/modals/novo_comentario' %>
+<%= render 'acompanhamentos/modals/recuperar_acompanhamento' %>
+<%= render 'implantacoes/modal_comentario' %>
+<%= render 'implantacoes/modals/recuperar_implantacao' %>
+<%= render 'acompanhamentos/modals/voltar_acompanhamento' %>
+<%= render 'implantacoes/modals/voltar_implantacao_negociacao' %>
+
+<%= render 'agendamento_retornos/modals/recuperar_retorno' %>
+
+<div id="modal_activities_negociacao" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn" id="modal_content_activities">
+
+    </div>
+  </div>
+</div>
+
+<div id="modal_activities_acompanhamentos" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn" id="modal_content_activities_acomp">
+
+    </div>
+  </div>
+</div>
+
+<div id="modal_activities_implantacao" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn" id="modal_content_activities_impl">
+
+    </div>
+  </div>
+</div>
+
+<div id="modal_ligacoes_negociacao" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn" id="modal_content_ligacoes">
+      <div class="modal-header">
+        <h3 class="modal-title">Ligações</h3>
+      </div>
+      <div class="modal-body scroll">
+        <input style="display: none;" id="modal_ligacoes_cliente_id">
+        <input style="display: none;" id="modal_ligacoes_tipo">
+        <input style="display: none;" id="modal_ligacoes_modelo_id">
+        <div style="margin-left: 25px" class="col-lg-2">
+          <div class="field">
+            <button class="btn btn-primary btn-xs" style="margin-left: -40px; margin-top: 5px !important;" onclick="$('#modal_ligacoes_negociacao').modal('hide'); recuperar($('#modal_ligacoes_modelo_id').val(), $('#modal_ligacoes_tipo').val())" id="recuperar-act'" type="button" title="Recuperar"><span class="fa fa-recycle">Recuperar</span></button>
+          </div>
+        </div>
+        <div class="col-lg-2">
+          <div class="field">
+            <button class="btn btn-xs btn-primary" style="margin-left: -80px; margin-top: 5px !important;" onclick="$('#modal_ligacoes_negociacao').modal('hide'); conferir($('#modal_ligacoes_modelo_id').val(), $('#modal_ligacoes_tipo').val())" id="conferir-act" type="button" title="Conferido"><span class="fa fa-check"> Conferir</span></button>
+          </div>
+        </div>
+
+        <table id="negociacao-table-ligacoes" class="table table-hover">
+          <thead>
+          <tr>
+            <th>Data</th>
+            <th>Usuário</th>
+            <th>Status</th>
+            <th>Status Cliente</th>
+            <th>Observação Ligação</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody id="negociacao_table_ligacoes">
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .scroll{
+    overflow-y: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    min-height: 200px;
+    max-height: 500px;
+  }
+  #body-no-padding{
+    padding: 0px 0px 0px 0px;
+  }
+
+
+</style>

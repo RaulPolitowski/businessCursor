@@ -1,0 +1,72 @@
+<div id="modal_exportacao_listas" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xs">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <i class="fa fa-th-list modal-icon"></i>
+        <h4 class="modal-title">Exportação Listas(Jobs)</h4>
+      </div>
+      <form class="form-horizontal" id="form_exportar_listas">
+        <div class="modal-body no-padding">
+          <div class="tabs-container">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tabPesquisa"> Informações</a></li>
+              <li class><a data-toggle="tab" href="#tabAbordagem"> Abordagem</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="tabPesquisa" class="tab-pane active">
+                <div class="panel-body">
+                  <div class="form-group">
+                    <div class="field col-sm-12 padding" >
+                      <%= label_tag 'Empresa', nil %>
+                      <%= select_tag 'empresa_id', options_for_select(Empresa.ativas.collect {|p| [ p.razao_social, p.id ] }, current_empresa.id), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma empresa'}, :include_blank => true} %>
+
+                    </div>
+                    <div class="field col-sm-6 padding">
+                      <%= label_tag 'JOB', nil %>
+                      <%= text_field_tag :numero_job, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Job', onkeypress: 'return SomenteNumero(event)' %>
+                    </div>
+                    <div class="field col-sm-6 padding">
+                      <%= label_tag 'Qtd.', nil %>
+                      <%= text_field_tag :quantidade, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Quantidade', onkeypress: 'return SomenteNumero(event)' %>
+                    </div>
+                    <div class="field col-sm-6 padding">
+                      <%= check_box_tag :nono_digito, 'true', true, id: 'nono_digito', data: { on_value: true, off_value: false } %>
+                      <%= label_tag 'Nono Digito', nil %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="tabAbordagem" class="tab-pane">
+                <div class="ibox-content padding-5 col-lg-12">
+                  <div class="form-group" style="margin: 0px; margin-bottom: 10px">
+                    <div class="field">
+                      <label id="error_texto" style="color: red; display: none;">Informe uma mensagem</label>
+                      <textarea autocomplete="off" class="form-control" name="texto_abordagem" id="texto_abordagem" rows="7"></textarea>
+                      <input type="hidden" id="abordagem_id" value="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= label_tag 'Tipo', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding ">
+                        <%= select_tag 'tipo', options_for_select([
+                                                                  ['Naty','NATY'],
+                                                                  ['Desistência','DESISTENCIA'],
+                                                                  ['Captação','CAPTACAO']], 'NATY'),  {:class => "form-control input-sm chosen-select"} %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= button_tag 'Salvar', type: 'button', :id => 'btnGerarListaExportacao', :class => 'btn btn-primary ladda-button' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

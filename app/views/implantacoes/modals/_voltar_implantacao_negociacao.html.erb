@@ -1,0 +1,64 @@
+<div id="modal_voltar_implantacao" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">VOLTAR PRA NEGOCIAÇÃO</h4>
+      </div>
+      <form class="form-horizontal" id="form_recuperar_acompanhamento">
+        <div class="modal-body">
+          <input type="hidden" id="voltar_implantacao_id" value="">
+          <input type="hidden" id="voltar_implantacao_cliente_id" value="">
+            <div class="form-group">
+              <div class="field">
+                <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-10 padding ">
+                  <%= text_field_tag :voltar_implantacao_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+                </div>
+              </div>
+            </div>
+          <div class="form-group">
+            <div class="field">
+              <%= label_tag 'Data retorno', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= text_field_tag :voltar_data_retorno,nil, class:"form-control input-sm", placeholder: 'dd/mm/aaaa hh:mm' %>                
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="field">
+                <%= label_tag 'Vendedor', nil, class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-10 padding ">
+                <%= text_field_tag :voltar_implantacao_vendedor, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="field">
+                <%= label_tag 'Responsável', nil, class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-10 padding ">
+                <%= select_tag 'voltar_implantacao_responsavel', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um responsável'}, :include_blank => true} %>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="field">
+              <%= label_tag 'Motivo', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= text_area_tag :voltar_implantacao_motivo, nil, class: 'form-control input-sm', autocomplete: "off" %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnVoltarImplantacao', :class => 'btn btn-primary' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+

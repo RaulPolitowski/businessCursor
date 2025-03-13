@@ -1,0 +1,159 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>CAMPANHAS</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="<%= url_for :controller => 'dashboards', :action => 'painel_vendas' %>">Home</a>
+      </li>
+      <li class="active">
+        <strong>Campanhas</strong>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12 padding">
+      <div class="ibox float-e-margins border-bottom" style="margin-bottom: 5px;">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <button class="btn btn-primary btn-xs" id="btnDia">Dia</button>
+              <button class="btn btn-primary btn-xs" id="btnOntem">Ontem</button>
+              <button class="btn btn-primary btn-xs" id="btnSemana">Semana</button>
+              <button class="btn btn-primary btn-xs" id="btnMes">Mês</button>
+              <button class="btn btn-primary btn-xs" id="btnTodas">Todas</button>
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <div class="field col-sm-3">
+                <label for="data_inicio">Data Início</label>
+                <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio">
+              </div>
+              <div class="field col-sm-3">
+                <label for="data_fim">Data Fim</label>
+                <input class="form-control input-sm" type="text" name="data_fim" id="data_fim">
+              </div>
+              <div class="field col-sm-3">
+                <label for="data_fim">Job</label>
+                <input class="form-control input-sm" type="text" name="job" id="job">
+              </div>
+              <div class="field col-sm-3">
+                <%= label_tag 'Estado', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'estado_id', options_for_select( Estado.order(:nome).collect{ |u| [u.descricao_completa, u.sigla] }, nil), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-3">
+                <%= label_tag 'Usuário', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'usuario_id', options_for_select(WhatsappNumero.where(banido: false).map{ |wh| wh.user }.compact.uniq.collect {|p| [p.name, p.id]}), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um responsável'}, :include_blank => true, :multiple => true} %>
+              </div>
+              <div class="field col-sm-3">
+                <%= label_tag 'Telefone', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'telefone_id', options_for_select(WhatsappNumero.where(banido: false).collect {|p| [p.numero_usuario_nome, p.id]}), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um número'}, :include_blank => true, :multiple => true} %>
+              </div>
+              <div class="col-lg-1">
+                <br>
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarCampanhas', :class => 'btn btn-primary' %>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <div class="ibox-tools">
+            <button type="button" class="btn btn-xs pull-rigth btn-primary" id="openModalTransferirCampanha"> <i class="fa fa-database" aria-hidden="true"> </i> Transferir campanha</button>
+            <button type="button" class="btn btn-xs pull-rigth btn-primary" id="openModalDisparoMassa"> <i class="fa fa-database" aria-hidden="true"> </i> Disparo em Massa</button>
+            <button type="button" class="btn btn-xs pull-rigth btn-primary" id="openModalPrimeiraCampanha"> <i class="fa fa-database" aria-hidden="true"> </i> Iniciar nova campanha</button>
+            <button type="button" class="btn btn-xs pull-rigth btn-primary" id="openModalCampanha"> <i class="fa fa-database" aria-hidden="true"> </i> Programar fila de campanha</button>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <div class="row">
+            <div class="tabs-container" >
+              <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" id="tab1" href="#tab-1"> Em Andamento (0)</a></li>
+                <li class=""><a data-toggle="tab" id="tab2" href="#tab-2"> Camp. Aguardando (0)</a></li>
+                <li class=""><a data-toggle="tab" id="tab3" href="#tab-3"> Finalizadas (0)</a></li>
+                <li class=""><a data-toggle="tab" id="tab2" href="#tab-4"> Números Aguardando (<%= @standby.count %>)</a></li>
+                <li class=""><a data-toggle="tab" id="tab9" href="#tab-9"> Números Ocultos (<%= @numeros_ocultos.count %>)</a></li>
+                <li class=""><a data-toggle="tab" id="tab11" href="#tab-11"> Números Desconectados (<%= @numeros_desconectados.count %>)</a></li>
+                <li class=""><a data-toggle="tab" id="tab10" href="#tab-10"> Analise de Dados</a></li>
+              </ul>
+              <div class="tab-content">
+                <div id="tab-1" class="tab-pane active">
+                  <div class="panel-body">
+                    <%= render 'campanhas/tabelas/tabela_andamento' %>
+                  </div>
+                </div>
+                <div id="tab-2" class="tab-pane">
+                  <div class="panel-body">
+                    <%= render 'campanhas/tabelas/tabela_aguardando' %>
+                  </div>
+                </div>
+                <div id="tab-3" class="tab-pane">
+                  <div class="panel-body">
+                    <%= render 'campanhas/tabelas/tabela_finalizadas' %>
+                  </div>
+                </div>
+                <div id="tab-4" class="tab-pane">
+                  <div class="panel-body">
+                    <%= render 'campanhas/tabelas/tabela_standby' %>
+                  </div>
+                </div>
+                <div id="tab-9" class="tab-pane">
+                  <div class="panel-body">
+                    <%= render 'campanhas/tabelas/tabela_numeros_ocultos' %>
+                  </div>
+                </div>
+                <div id="tab-11" class="tab-pane">
+                  <div class="panel-body">
+                    <%= render 'campanhas/tabelas/tabela_numeros_desconectados' %>
+                  </div>
+                </div>
+                <div id="tab-10" class="tab-pane">
+                  <div class="panel-body">
+                    <%= render 'campanhas/tabelas/analise_dados' %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= render 'campanhas/modal_campanha'%>
+<%= render 'campanhas/modal_primeira_campanha'%>
+<%= render 'campanhas/modal_campanha_massa'%>
+<%= render 'campanhas/modal_transferir_campanha'%>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<style>
+  .tableHeadCampanha{
+      text-align: center;
+  }
+  .totalTabelaCampanha{
+      font-size: 13px;
+      font-weight: bold;
+  }
+  .disconnected_number{
+      font-weight: bold;
+      color: red;
+  }
+  .connected_number{
+      font-weight: bold;
+      color: green;
+  }
+</style>

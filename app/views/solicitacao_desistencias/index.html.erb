@@ -1,0 +1,100 @@
+<%= hidden_field_tag 'user_is_admin', current_user.admin? %>
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>SOLICITAÇÕES DE DESISTÊNCIA</h2>
+    <ol class="breadcrumb">
+      <li class="active">
+        <strong>Gerenciar</strong>
+      </li>
+      <li>
+        <a href="<%= url_for :controller => 'solicitacao_desistencias', :action => 'new' %>">Lançar</a>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12 padding">
+      <div class="ibox float-e-margins border-bottom" style="margin-bottom: 5px;">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <button class="btn btn-primary btn-xs" id="btnMes">Mês</button>
+              <button class="btn btn-primary btn-xs" id="btn7dias">Semana</button>
+              <button class="btn btn-primary btn-xs" id="btnAno">Ano</button>
+              <button class="btn btn-primary btn-xs" id="btnTodas">Todas</button>
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <div class="field col-sm-2">
+                <label for="data_inicio">Data Início</label>
+                <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio">
+              </div>
+              <div class="field col-sm-2">
+                <label for="data_fim">Data Fim</label>
+                <input class="form-control input-sm" type="text" name="data_fim" id="data_fim">
+              </div>
+              <div class="col-lg-1">
+                <br>
+                <%= submit_tag 'Buscar', :id => 'btnFiltrar', :class => 'btn btn-primary' %>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3 padding">
+      <div class="ibox">
+        <div class="ibox-content">          
+          <h3 class="text-center" id="text-painel0">AGUARDANDO</h3>
+          <ul class="sortable-list sortable dragDropSolicitacaoDesistencia  connectList list-aguardando agile-list" id="painel0">
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 padding">
+      <div class="ibox">
+        <div class="ibox-content">
+          <h3 class="text-center" id="text-painel1">EM ANDAMENTO</h3>
+          <ul class="sortable-list sortable dragDropSolicitacaoDesistencia connectList list-andamento agile-list" id="painel1">
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 padding">
+      <div class="ibox">
+        <div class="ibox-content">
+          <h3 class="text-center" id="text-painel2">RECUPERADOS</h3>
+          <ul class="sortable-list sortable dragDropSolicitacaoDesistencia connectList list-recuperado agile-list" id="painel2">
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 padding">
+      <div class="ibox">
+        <div class="ibox-content">
+          <h3 class="text-center" id="text-painel3">DESISTENTES</h3>
+          <ul class="sortable-list sortable dragDropSolicitacaoDesistencia connectList list-desistente agile-list" id="painel3">
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= render 'solicitacao_desistencias/modals/novo_comentario' %>
+<div id="modal_activities_solicitacao_desistencia" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn" id="modal_content_activities">
+
+    </div>
+  </div>
+</div>
+

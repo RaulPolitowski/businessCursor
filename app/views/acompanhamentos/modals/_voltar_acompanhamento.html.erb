@@ -1,0 +1,156 @@
+<div id="modal_voltar_acompanhamento" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">VOLTAR ACOMPANHAMENTO</h4>
+            </div>
+            <form class="form-horizontal" id="form_voltar_acompanhamento">
+                <div class="modal-body">
+                    <input type="hidden" id="voltar_acompanhamento_id" value="">
+                    <input type="hidden" id="voltar_acompanhamento_cliente_id" value="">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="field col-sm-12">
+                                <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                                <div class="col-sm-10 padding ">
+                                    <%= text_field_tag :voltar_acompanhamento_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="field col-sm-12">
+                                <%= label_tag 'status atual', nil, class: 'col-sm-2 control-label padding' %>
+                                <div class="col-sm-10 padding ">
+                                    <%= text_field_tag :status_atual_acompanhamento,nil, class:"form-control input-sm", autocomplete: "off", readOnly: "off"%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="field col-sm-6">
+                                <%= label_tag 'Voltar pra', nil, class: 'col-sm-4 control-label padding' %>
+                                <div class="col-sm-8 padding ">
+                                    <%= select_tag  'voltar_acompanhamento_etapa', options_for_select([
+                                                                                            ['Negociacao', 1],
+                                                                                            ['Implantacao', 0],                                                                                            
+                                                                                        ]), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma etapa'}, :include_blank => true} %>
+                                </div>
+                            </div> 
+                            <div class="field col-sm-6" id="voltar_status_implantacao">
+                                <%= label_tag 'status', nil, class: 'col-sm-4 control-label padding' %>
+                                <div class="col-sm-8 padding ">
+                                    <%= select_tag  'voltar_acomp_status_implantacao', options_for_select([
+                                                                                            ['Agendado', 0],
+                                                                                            ['Reagendado', 1],
+                                                                                            ['Aguardando terceiros', 2],
+                                                                                            ['em processo de instalação', 3],
+                                                                                            ['Aguardando treinamento', 4],
+                                                                                            ['Em processo de treinamento', 5],
+                                                                                            ['Aguardando terceiros', 6],
+                                                                                        ],0), {:class => "form-control input-sm chosen-select"} %>
+                                </div>
+                            </div>
+                            <div class="field col-sm-6" id="voltar_status_acompanhamento">
+                                <%= label_tag 'status', nil, class: 'col-sm-4 control-label padding' %>
+                                <div class="col-sm-8 padding ">
+                                    <%= select_tag  'voltar_acomp_status_acompanhamento', options_for_select([
+                                                                                            ['Aguardando acompanhamento', 0],
+                                                                                            ['Em andamento', 1],
+                                                                                            ['Stand by', 2],
+                                                                                        ],0), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma etapa'}, :include_blank => true} %>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="field col-sm-12">
+                                <%= label_tag 'Data retorno', nil, class: 'col-sm-2 control-label padding' %>
+                                <div class="col-sm-10 padding ">
+                                    <%= text_field_tag :voltar_acomp_data_retorno,nil, class:"form-control input-sm", placeholder: 'dd/mm/aaaa hh:mm' %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="field col-sm-12">
+                                <%= label_tag 'Vendedor', nil, class: 'col-sm-2 control-label padding' %>
+                                <div class="col-sm-10 padding ">
+                                    <%= text_field_tag :voltar_acompanhamento_vendedor, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="row">-->
+                        <!--<div class="form-group" id="voltar_acomp_vendedor">-->
+                            <!--<div class="field col-sm-12" >-->
+                                <!--<%= label_tag 'Vendedor', nil, class: 'col-sm-2 control-label padding' %>-->
+                                <!--<div class="col-sm-10 padding ">-->
+                                    <!--<%= text_field_tag :voltar_acompanhamento_vendedor, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-group" id="voltar_acomp_implantador">-->
+                            <!--<div class="field col-sm-12" >-->
+                                <!--<%= label_tag 'Implantador', nil, class: 'col-sm-2 control-label padding' %>-->
+                                <!--<div class="col-sm-10 padding ">-->
+                                    <!--<%= text_field_tag :voltar_acompanhamento_implantador, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="field col-sm-12">
+                                <%= label_tag 'Responsável', nil, class: 'col-sm-2 control-label padding' %>
+                                <div class="col-sm-10 padding ">
+                                    <%= select_tag 'voltar_acompanhamento_responsavel', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um responsável'}, :include_blank => true} %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="field col-sm-12">
+                                <%= label_tag 'Motivo', nil, class: 'col-sm-2 control-label padding' %>
+                                <div class="col-sm-10 padding ">
+                                    <%= text_area_tag :voltar_acompanhamento_motivo, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+                    <%= submit_tag 'Salvar', :id => 'btnVoltarAcompanhamento', :class => 'btn btn-primary' %>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $( document ).ready(function() {
+         $('#voltar_status_acompanhamento').hide();  
+        $('#voltar_acompanhamento_etapa').change(function(data){          
+            if(this.value == 0){ //implantacao
+                $('#voltar_status_implantacao').show();
+                $('#voltar_acomp_implantador').show();
+                $('#voltar_status_acompanhamento').hide();  
+            }else if(this.value == 1){ //negociacao
+                $('#voltar_status_implantacao').hide();
+                $('#voltar_status_acompanhamento').hide();  
+                $('#voltar_acomp_implantador').hide();  
+            }else if(this.value == 2){ //acompanhamento
+                $('#voltar_status_implantacao').hide();                
+                $('#voltar_acomp_implantador').hide();
+                $('#voltar_status_acompanhamento').show();  
+            }        
+        })
+    });
+</script>

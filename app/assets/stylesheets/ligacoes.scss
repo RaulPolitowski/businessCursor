@@ -1,0 +1,190 @@
+// Place all the styles related to the ligacoes controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+//= require ladda/ladda-themeless.min.css
+//= require chosen/bootstrap-chosen.css
+//= require sweetalert/sweetalert2.min.css
+//= require datapicker/datepicker3.css
+//= require fullcalendar/fullcalendar.css
+//= require fullcalendar/fullcalendar.css
+//= require qtip/jquery.qtip.min.css
+//= require tagify/tagify.css
+
+.tagify__dropdown{
+  z-index: 9999 !important;
+}
+
+.tagify__input{
+  text-transform: uppercase;
+}
+
+
+.popover{
+  width:275px !important;
+  height:180px;
+  position: absolute;
+}
+
+.panel-body{
+  padding: 7px !important;
+}
+
+
+.btn-bg-ocupado{
+  background-color: #c7beff;
+  border-color: #c7beff;
+  color: #FFFFFF;
+}
+
+.btn-bg-sistema{
+  background-color: #3a3aff;
+  border-color: #ff5454;
+  color: #FFFFFF;
+}
+
+.btn-bg-escritorio{
+  background-color: #827fff;
+  border-color: #d4ff77;
+  color: #FFFFFF;
+}
+
+.btn-bg-enviado-whats{
+  background-color: darkgreen;
+  border-color: #d4ff77;
+  color: #FFFFFF;
+}
+
+.btn-bg-agendar{
+  background-color: #eda807;
+  border-color: #eda807;
+  color: #FFFFFF;
+}
+
+#form_senha_master{
+  z-index: 4000;
+}
+
+.tr-contatos {
+  width: 100%;
+  display: inline-table;
+  table-layout: fixed;
+}
+
+.table-contatos{
+  min-height: 200px;
+  display: -moz-groupbox;
+}
+.tbody-contatos{
+  overflow-y: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  height: 150px;
+  position: absolute;
+}
+
+.tbody-comentarios{
+  overflow-y: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  height: 250px;
+}
+
+.tbody-whats{
+  overflow-y: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  height: 150px;
+  position: absolute;
+}
+
+.whats {
+  visibility:hidden;
+  font-size:15px;
+  cursor:pointer;
+}
+.whats:before {
+  content:url('whats_nao_enviado.ico');
+  position: absolute;
+  visibility:visible;
+}
+.whats:checked:before {
+  content:url('whats_enviado.ico');
+  position: absolute;
+}
+
+.pref {
+  visibility:hidden;
+  font-size:15px;
+  cursor:pointer;
+}
+.pref:before {
+  content:url('star.ico');
+  position: absolute;
+  visibility:visible;
+}
+.pref:checked:before {
+  content:url('star_checked.ico');
+  position: absolute;
+}
+
+.resp-whats {
+  visibility:hidden;
+  font-size:15px;
+  cursor:pointer;
+}
+.resp-whats:before {
+  content:url('nao_respondeu_whats.ico');
+  position: absolute;
+  visibility:visible;
+}
+.resp-whats:checked:before {
+  content:url('whats_enviado.ico');
+  position: absolute;
+}
+
+.message-obs {
+  visibility:hidden;
+  font-size:15px;
+  cursor:pointer;
+  margin: 4px 0 0;
+}
+.message-obs:before {
+  content:url('comment.ico');
+  position: absolute;
+  visibility:visible;
+}
+
+.desativar {
+  visibility:hidden;
+  font-size:15px;
+  cursor:pointer;
+}
+.desativar:before {
+  content:url('remove.ico');
+  position: absolute;
+  visibility:visible;
+}
+
+.tbody_captacao {
+  overflow: auto;
+}
+
+.spinner-border {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 0.15em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+.flex-max-width {
+  display: flex;
+  flex-direction: column;
+  width: min-content;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

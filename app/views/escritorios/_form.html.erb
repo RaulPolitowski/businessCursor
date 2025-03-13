@@ -1,0 +1,221 @@
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <li id="tab1" class="active"><a data-toggle="tab" href="#tab-1"> Dados</a></li>
+          <% if @escritorio.id.present? %>
+            <li id="tab2" class=""><a data-toggle="tab" href="#tab-2"> Empresas</a></li>
+            <li id="tab3" class=""><a data-toggle="tab" href="#tab-3"> Ligações</a></li>
+          <% end %>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-1" class="tab-pane active">
+            <div class="panel-body">
+              <fieldset class="form-horizontal">
+                <%= nested_form_for(@escritorio, html: { autocomplete: "off" }) do |f| %>
+                  <%= f.hidden_field :id %>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :nome_fantasia, 'Nome Fantasia', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-10">
+                        <%= f.text_field :nome_fantasia, class: 'form-control input-sm'%>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :cidade, 'Cidade', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-4">
+                        <%= f.text_field :cidade, class: 'form-control input-sm',placeholder: 'Digite para buscar', :value => @escritorio.cidade.present? ? @escritorio.cidade.descricao_completa : '' %>
+                        <%= f.hidden_field 'cidade_id', :value => @escritorio.cidade.present? ? @escritorio.cidade.id : '' %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= f.label :status, 'Status', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-4">
+                        <%= f.collection_select :status_id, Status.all_tipo_escritorios, :id, :descricao, { :include_blank => true},
+                                                {class: 'form-control input-sm chosen-select'} %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :responsavel, 'Resposável', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-3">
+                        <%= f.text_field :responsavel, class: 'form-control input-sm'%>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= f.label :telefone, 'Telefone', class: 'col-sm-1 control-label' %>
+                      <div class="col-sm-2">
+                        <%= f.text_field :telefone, class: 'form-control input-sm', onkeypress: 'return SomenteNumero(event)'%>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= f.label :tem_interesse_parceria, 'Interesse Parceria', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-2">
+                        <%= f.select :tem_interesse_parceria, options_for_select([
+                                                                              ["Sim", true],
+                                                                              ["Não", false]
+                                                                          ], f.object.tem_interesse_parceria), {}, {class: 'form-control input-sm'} %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :possui_parceria, 'Possui Parceria', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-2">
+                        <%= f.select :possui_parceria, options_for_select([
+                                                                              ["Sim", true],
+                                                                              ["Não", false]
+                                                                          ], f.object.possui_parceria), {}, {class: 'form-control input-sm'} %>
+                      </div>
+                    </div>
+                    <div class="field" id="escritorio_empresa_parceira_field">
+                      <%= f.label :empresa_parceria, 'Empresa Parceira', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-6">
+                        <%= f.text_field :empresa_parceria, class: 'form-control input-sm'%>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" id="escritorio_obs_parceria">
+                    <div class="field">
+                      <%= f.label :parceria_obs, 'Observação Parceria', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-10">
+                        <%= f.text_area :parceria_obs, class: 'form-control input-sm'%>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :observacao, 'Observação', class: 'col-sm-2 control-label' %>
+                      <div class="col-sm-10">
+                        <%= f.text_area :observacao, class: 'form-control input-sm'%>
+                      </div>
+                    </div>
+                  </div>
+                  <label>Contatos Adicionais</label>
+                  <table class="table table-striped table-bordered table-hover table-contatos">
+                    <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>Telefone</th>
+                      <th>Email</th>
+                      <th>Função</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%= f.fields_for :contatos, :wrapper => false do |contato_form| %>
+                      <tr class="fields">
+                        <%= contato_form.hidden_field :id %>
+                        <td><%= contato_form.text_field :nome, class: 'form-control input-sm' %></td>
+                        <td><%= contato_form.text_field :telefone, class: 'form-control input-sm' %></td>
+                        <td><%= contato_form.text_field :email, class: 'form-control input-sm' %></td>
+                        <td><%= contato_form.text_field :funcao,class: 'form-control input-sm' %></td>
+
+                        <td><%= contato_form.link_to_remove 'Remover', class: "btn btn-sm btn-danger" %></td>
+                      </tr>
+                    <% end %>
+                    <tr>
+                      <td><%= f.link_to_add 'Novo Contato', :contatos, class: "btn btn-sm btn-primary" %></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <br>
+                  <br>
+                  <div class="actions aligncenter">
+                    <%= f.submit 'Salvar', :class => 'btn btn-lg btn-success aligncenter' %>
+                  </div>
+                <% end %>
+              </fieldset>
+            </div>
+
+          </div>
+          <% if @escritorio.id.present? %>
+            <div id="tab-2" class="tab-pane">
+              <div class="panel-body">
+                <div class="form-horizontal" id="form_agendamento">
+                <div class="form-group">
+                  <div class="field">
+                    <%= label_tag 'Adicionar Cliente', nil,  class: 'col-sm-2 control-label padding' %>
+                    <div class="col-sm-9 padding">
+                      <%= text_field_tag :cliente, nil, autocomplete: "off",  class: 'form-control input-sm' %>
+                      <%= hidden_field_tag :cliente_id, nil, class: 'form-control input-sm' %>
+                      <%= hidden_field_tag :escritorio_id, @escritorio.id, class: 'form-control input-sm' %>
+                    </div>
+                    <div class="col-sm-1 padding"><%= button_tag 'Adicionar', id: 'addCliente', class: 'btn btn-sm btn-success' %></div>
+                  </div>
+                </div>
+                  <br>
+                  <br>
+                  <table class="table table-striped table-bordered table-hover table-clientes">
+                    <thead>
+                    <tr>
+                      <th>CNPJ</th>
+                      <th>Razão Social</th>
+                      <th>Municipio</th>
+                      <th>CNAE</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% @escritorio.clientes.each do |cliente| %>
+                      <tr id="<%= cliente.id %>">
+                        <td><%= cliente.cnpj unless cliente.cnpj.nil? %></td>
+                        <td><%= cliente.razao_social unless cliente.razao_social.nil? %></td>
+                        <td><%= (cliente.cidade.nome + '-' + cliente.cidade.estado.sigla) unless cliente.cidade.nil? %></td>
+                        <td><%= cliente.cnae.codigo unless cliente.cnae.nil? %></td>
+                        <td><%= link_to edit_cliente_path(cliente), { class: 'btn btn-sm btn-success', title: 'Editar', 'data-toggle' => 'tooltip', 'data-placement' => 'right' } do %>
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                          <% end %></td>
+                        <td><%= button_tag 'Adicionar', id: 'removeCliente', value: cliente.id , class: 'btn btn-sm btn-danger', title: 'Remover', 'data-toggle' => 'tooltip', 'data-placement' => 'right' do %>
+                            <i class="fa fa-remove" aria-hidden="true"></i>
+                          <% end %></td>
+                      </tr>
+                    <% end %>
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+              <div id="tab-3" class="tab-pane">
+                <div class="panel-body">
+                  <div class="form-horizontal">
+                    <br>
+                    <table class="table table-striped table-bordered table-hover table-clientes">
+                      <thead><tr>
+                        <th>Data</th>
+                        <th>Operador</th>
+                        <th>Ligação</th>
+                        <th>Status</th>
+                        <th>Observação</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <% @escritorio.ligacoes.where(ligacao_old: nil).order(data_inicio: :desc).each do |ligacao| %>
+                          <tr id="<%= ligacao.id %>">
+                            <td><%= human_datetime ligacao.data_inicio unless ligacao.data_inicio.nil? %></td>
+                            <td><%= ligacao.user.name unless ligacao.user.name.nil? %></td>
+                            <td><%= ligacao.status_ligacao.descricao %></td>
+                            <td><%= ligacao.status_cliente.descricao unless ligacao.status_cliente.nil? %></td>
+                            <td><%= ligacao.observacao %></td>
+                          </tr>
+                      <% end %>
+                      </tbody>
+                      <tfoot>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

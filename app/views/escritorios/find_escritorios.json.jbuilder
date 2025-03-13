@@ -1,0 +1,1 @@
+json.array! @escritorios, :id, :razao_social

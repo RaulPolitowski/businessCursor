@@ -1,0 +1,51 @@
+<%= form_for :captacao, url: '/ligacoes/enviar_captacao_em_massa',  html: { role: "form", id: "formCaptacaoAutomatizada" }, remote: true do |f| %>
+  <div class="form-group margin-bottom-5">
+    <div class="row">
+      <div class="field col-sm-1">
+        <%= f.label :quantidade, "Quantidade" %>
+        <%= f.text_field :quantidade, class: "form-control input-sm", required: true %>
+      </div>
+      <div class="field col-sm-1" style="width: 12.499999995%">
+        <%= f.label :empresa, "Empresa" %>
+        <%= f.select :empresa, options_for_select(Empresa.ativas.pluck(:estado, :id), 1), {}, { class: "form-control input-sm chosen-select", required: true, data: { placeholder: 'Selecione algumas opções' } } %>
+      </div>
+      <div class="field col-sm-1" style="width: 12.499999995%">
+        <%= f.label :job, "Job" %>
+        <%= f.label :saldo_job, "Saldo: 0" %>
+        <%= f.select :job, options_for_select([
+            ['Job 0', '0'],
+            ['Job 1', '1'],
+            ['Job 2', '2'],
+            ['Job 3', '3'],
+            ['Job 4', '4']], '0'), {}, { class: "form-control input-sm chosen-select", required: true, data: { placeholder: 'Selecione algumas opções' } } %>
+      </div>
+      <div class="field col-sm-2">
+        <%= f.label :responsavel, "Responsável" %>
+        <%= f.select :responsavel, options_for_select(User.ativos_com_telefone.pluck(:name, :id)), {}, { class: "form-control input-sm chosen-select", multiple: true, required: true, include_blank: true, data: { placeholder: 'Selecione algumas opções' }} %>
+      </div>
+      <div class="field col-sm-3">
+        <%= f.label :cnae, "Cnaes" %>
+        <%= f.select :cnae, options_for_select(Cnae.permitidos.pluck(:descricao, :id)), {}, { class: "form-control input-sm chosen-select", multiple: true, include_blank: true, data: { placeholder: 'Selecione algumas opções' } } %>
+      </div>
+      <%# <div class="field col-sm-3">
+        <%= f.label :cidade, "Cidades" 
+        <%= f.select :cidade, options_for_select(@cidades || []) {}, { class: "form-control input-sm", multiple: true }
+      </div> %>
+      <div class="flex-max-width">
+        <%= button_tag(type: 'submit', class: "pull-left ladda-button margin btn btn-success", id: "btnEnviarCaptacaoAutomatizada") do %>
+          <i class="fa fa-play"></i> captações
+        <% end %>
+        <button type="button" onClick="mostrarLigacoes()" class="pull-left ladda-button margin btn btn-info" id="btnMostrarLigacoesFiltradas">
+          <i class="fa fa-search"></i> captações
+        </button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<style>
+  .chosen-choices {
+    max-height: 80px;
+    overflow-y: auto !important;
+  }
+</style>

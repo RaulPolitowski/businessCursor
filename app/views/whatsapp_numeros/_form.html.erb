@@ -1,0 +1,91 @@
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#tab-1"> Dados</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-1" class="tab-pane active">
+            <div class="panel-body">
+              <fieldset class="form-horizontal">
+                <%= form_for(@numero, html: { autocomplete: "off" }) do |f| %>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :numero, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-10 padding">
+                        <%= f.text_field :numero, class: 'form-control input-sm', :value => @numero.numero, disabled: @numero.id.present?, :onkeypress => 'return SomenteNumero(event)' %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :nome, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-10 padding">
+                        <%= f.text_field :nome, class: 'form-control input-sm', :value => @numero.nome %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :user_id, 'Usuário', class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-10 padding">
+                        <%= f.select(:user_id, options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [p.name, p.id]}, @numero.user.present? ? @numero.user.id : nil), { :include_blank => true }, {class: 'form-control input-sm chosen-select', :data => {:placeholder => 'Selecione um usuário' }}) %>
+                      </div>
+                    </div>
+                  </div>
+                  <% if @numero.chat_pro %>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :instancia_id, class: 'col-sm-2 control-label padding' %>
+                        <div class="col-sm-10 padding">
+                          <%= f.text_field :instancia_id, class: 'form-control input-sm', :value => @numero.instancia_id %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :'Token Chat Pro', class: 'col-sm-2 control-label padding' %>
+                        <div class="col-sm-10 padding">
+                          <%= f.text_field :token_chat_pro, class: 'form-control input-sm', :value => @numero.token_chat_pro %>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                  <% if @numero.id.present? %>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :banido, 'Banido' , class: 'col-sm-2 control-label padding'%>
+                        <div class="col-sm-2">
+                          <div class="i-checks">
+                            <%= f.check_box :banido, class: 'icheckbox_square-green' %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :chat_pro, 'ChatPro' , class: 'col-sm-2 control-label padding'%>
+                        <div class="col-sm-2">
+                          <div class="i-checks">
+                            <%= f.check_box :chat_pro, class: 'icheckbox_square-green' %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                  <br>
+                  <br>
+                  <div class="actions aligncenter">
+                    <%= f.submit 'Salvar', :class => 'btn btn-lg btn-success aligncenter' %>
+                  </div>
+                <% end %>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

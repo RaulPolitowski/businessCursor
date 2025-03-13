@@ -1,0 +1,78 @@
+<div class="panel panel-default" style="margin-bottom: 10px !important;">
+  <div class="panel-heading">
+    Média de Notas - Setor RH
+  </div>
+  <div class="panel-body no-padding">
+    <div class="col-lg-6 padding-left-right">
+      <div class="ibox-content padding-5">
+        <div id="media_nota_setores_rh" style="height: 290px !important;"></div>
+      </div>
+    </div>
+    <div class="col-lg-6 padding-left-right">
+      <div class="ibox-title">
+        <h5 id="titulo_rank3">Tabela</h5>
+      </div>
+        <div class="ibox-content">
+          <div class="row">
+            <div id="media_nota_setores_rh_tabela" style="height: 180px"></div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+    function drawChartMediaSetoresRh() {
+        $.getJSON("/satisfacao_gruber/media_setores_rh?data_inicial="+ $('#data_inicio').val() + "&data_final="+ $('#data_fim').val(), function(data)
+        {
+            var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Equipe');
+            datatable.addColumn('number', 'Qtd. Pesquisas');
+            datatable.addColumn('number', 'Média');
+
+            var colors = ["#b87333", "silver", "gold", "#363636", "#000080", "#6495ED", "#4682B4", "#7FFFD4", "#00FF00", "#8B4513", "#F5DEB3", "#9400D3", "#DA70D6", "#F08080", "#FF8C00"];
+
+            var dataArray = [
+                ['Setor', 'Média Nota', {type: 'string', role: 'annotation'}, { role: "style" }],
+            ];
+
+            if(data.length > 0) {
+              for (var i = 0; i < data.length; i++) {
+                  var row = [data[i].setor_financeiro_nome, parseInt(data[i].qtd_pesquisas), parseFloat(data[i].nota)]
+                  datatable.addRow(row);
+
+                  var row2 = [data[i].setor_financeiro_nome, parseFloat(data[i].nota), parseFloat(data[i].nota), colors[i]];
+                  dataArray.push(row2);
+              }
+            }else{
+                var row = ["Sem informações", parseFloat("0"), parseFloat("0"), colors[0]];
+                dataArray.push(row);
+            }
+
+            var table = new google.visualization.Table(document.getElementById('media_nota_setores_rh_tabela'));
+
+            table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'enable'});
+
+            var options = {
+                'chartArea': {'width': '80%', 'height': '60%'},
+                seriesType: 'bars',
+                isStacked: true,
+                //series: {1: {type: 'line', color: 'black', format: 'short'}},
+                legend: {position: 'none'},
+                vAxis: {title: 'Nota'},
+                hAxis: {title: 'Equipes', textStyle: {fontSize: 9}},
+                animation: { easing: 'inAndOut', duration: 500, startup: true, displayLegendValues: false}
+            };
+
+            var chart = new google.visualization.ComboChart(document.getElementById('media_nota_setores_rh'));
+            var data = google.visualization.arrayToDataTable(dataArray);
+            chart.draw(data, options);
+            view = new google.visualization.DataView(data);
+            chart.draw(view, options);
+
+        });
+    }
+
+
+
+</script>
+

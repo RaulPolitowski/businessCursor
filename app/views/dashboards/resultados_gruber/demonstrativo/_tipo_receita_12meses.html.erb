@@ -1,0 +1,274 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading" style="height: 39px">
+      <div class="col-sm-2  pull" style="margin-top: -6px !important; padding-left: 0px" id="categoria_tabela">
+        <%= select_tag  'filtro_categoria', options_for_select([
+                                                              ['Receitas', 1],
+                                                              ['Despesas', 2],
+                                                              ['Resultado', 3]
+                                                              ], 3), {:class => "form-control input-sm chosen-select"} %>
+      </div>
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div id="fatReceita" class="col-md-12 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">            
+              <div class="ibox-content padding-5">
+                <div id="desc_receitas"  style="height: 500px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="fatDespesa" class="col-md-12 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">            
+              <div class="ibox-content padding-5"  style="Font:10px">
+                <div id="desc_despesas"  style="height: 500px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="fatResultado" class="col-md-12 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">            
+              <div class="ibox-content padding-5"  style="Font:10px">
+                <div id="resultado"  style="height: 300px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+    .greencolor{
+        color: green;
+    }
+    .google-visualization-table-table {
+        font-size: 11px !important;
+    }
+    .h25{
+        height: 25px !important;
+    }
+    .h0{
+        line-height: 1px !important;
+    }
+    .bold-green-font {
+        line-height: 1px !important;
+        font-weight: bold;
+        color: green;
+        background: #f7f7cb;
+    }
+
+    .h82{
+        height: 82px !important;
+    }
+
+    .h57{
+        height: 57px !important;
+    }
+
+    .h80{
+        height: 80px !important;
+    }
+    .blackcolor{
+        font-weight: bold !important;
+        color: black !important;
+        width: 300px; !important;
+    }
+    .bold{
+        line-height: 1px !important;
+        font-weight: bold !important;
+        background-color: #f7f7cb;
+    }
+</style>
+
+<script>
+$('#categoria_tabela').on('click', function () { 
+  if ($('#filtro_categoria').val() == 1){    
+    $('#fatDespesa').hide();
+    $('#fatResultado').hide();
+    $('#fatReceita').show();
+    drawTable12MesesReceitaGruber();    
+  }else if ($('#filtro_categoria').val() == 2){    
+    $('#fatReceita').hide();
+    $('#fatResultado').hide();
+    $('#fatDespesa').show();    
+    drawTable12MesesDespesaGruber();
+  }else if ($('#filtro_categoria').val() == 3){    
+    $('#fatReceita').hide();
+    $('#fatDespesa').hide();    
+    $('#fatResultado').show(); 
+    drawTable12MesesResultadoGruber();
+  }
+});
+
+function drawTable12MesesReceitaGruber() {
+  $('#fat_sistema').hide();
+  $('#fatDespesa').hide();
+  $.getJSON("/dashboards/get_receita_12_meses_gruber?empresa=" + $('#empresas_financeiro_id').val() + "&script=SOMAR_RECEITA", function(data) 
+  {
+    var datatable = new google.visualization.DataTable();
+
+    var now = new Date;
+    monName = new Array ("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro")
+    
+    datatable.addColumn('string', 'Tipo receita')
+    for (var j = 0; j < 12; j++ ){
+      var ref = now.getMonth() +1 + j; //getMOnth retorna considerando jan como mês 0
+      var ano = now.getFullYear() -1; //ano anterior
+      
+      if (ref > 11 ){
+        ref = ref - 12;
+        ano = now.getFullYear();
+      }
+      datatable.addColumn('number', monName [ref] + '/' + ano);
+    }
+
+    for (var i = 0; i < data.length; i++) {
+      datatable.addRow([data[i].nomecobranca, parseFloat(data[i].m0),parseFloat(data[i].m1),parseFloat(data[i].m2),parseFloat(data[i].m3), parseFloat(data[i].m4),
+                      parseFloat(data[i].m5), parseFloat(data[i].m6), parseFloat(data[i].m7), parseFloat(data[i].m8), parseFloat(data[i].m9), parseFloat(data[i].m10),
+                      parseFloat(data[i].m11)]);
+    }
+
+    //datatable.sort({column: 1, desc: true});
+    for (var i = 0; i < data.length; i++) {
+      datatable.setRowProperty(i, 'className', 'h82');
+    }
+    datatable.setRowProperty(data.length-1, 'className', 'bold h82');
+
+    var table = new google.visualization.Table(document.getElementById('desc_receitas'));
+
+    var formatter = new google.visualization.NumberFormat(
+              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+    for (var k = 1; k < 13; k++) {
+      formatter.format(datatable, k);
+    }    
+
+    table.draw(datatable, {allowHtml: true, width:'100%',height: '100%', frozenColumns:1});
+  });
+}
+
+function drawTable12MesesDespesaGruber() {
+  $.getJSON("/dashboards/get_receita_12_meses?empresa=" + $('#empresas_financeiro_id').val() + "&script=SOMAR_DESPESA", function(data) 
+  {
+    var datatable = new google.visualization.DataTable();
+
+    var now = new Date;
+    monName = new Array ("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro")
+    
+    datatable.addColumn('string', 'Tipo despesa');
+    for (var j = 0; j < 12; j++ ){
+      var ref = now.getMonth() +1 + j; //getMOnth retorna considerando jan como mês 0
+      var ano = now.getFullYear() -1; //ano anterior
+      
+      if (ref > 11 ){
+        ref = ref - 12;
+        ano = now.getFullYear();
+      }
+      datatable.addColumn('number', monName [ref] + '/' + ano);
+    }
+
+    for (var i = 0; i < data.length; i++) {
+      datatable.addRow([data[i].nomecobranca, parseFloat(data[i].m0),parseFloat(data[i].m1),parseFloat(data[i].m2),parseFloat(data[i].m3), parseFloat(data[i].m4),
+                      parseFloat(data[i].m5), parseFloat(data[i].m6), parseFloat(data[i].m7), parseFloat(data[i].m8), parseFloat(data[i].m9), parseFloat(data[i].m10), 
+                      parseFloat(data[i].m11)]);
+    }
+    
+    //datatable.sort({column: 1, desc: true});
+    for (var i=0; i< data.length; i++){
+      datatable.setRowProperty(i, 'className', 'h82');
+    }
+    datatable.setRowProperty(data.length-1, 'className', 'bold h82');
+
+    var table = new google.visualization.Table(document.getElementById('desc_despesas'));
+
+    var formatter = new google.visualization.NumberFormat(
+              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+    for (var k = 1; k < 13; k++) {
+      formatter.format(datatable, k);
+    }    
+
+    table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', frozenColumns:1});
+  });
+}
+
+function drawTable12MesesResultadoGruber() {
+  $('#fatReceita').hide();
+  $('#fatDespesa').hide(); 
+  $.getJSON("/dashboards/get_resultado_12_meses?empresa=" + $('#empresas_financeiro_id').val(), function(data) 
+  {
+    var datatable = new google.visualization.DataTable();
+      console.log(data)
+    var now = new Date;
+    monName = new Array ("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro")
+    
+    datatable.addColumn('string', 'Tipo despesa');
+    for (var j = 0; j < 12; j++ ){
+      var ref = now.getMonth() +1 + j; //getMOnth retorna considerando jan como mês 0
+      var ano = now.getFullYear() -1; //ano anterior
+      
+      if (ref > 11 ){
+        ref = ref - 12;
+        ano = now.getFullYear();
+      }
+      datatable.addColumn('string', monName [ref] + '/' + ano);
+    }
+
+      for (var i = 0; i < 2; i++) {
+          datatable.addRow([data[i].tipo, parseFloat(data[i].m0).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),parseFloat(data[i].m1).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),
+              parseFloat(data[i].m2).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),parseFloat(data[i].m3).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),
+              parseFloat(data[i].m4).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[i].m5).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),
+              parseFloat(data[i].m6).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[i].m7).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),
+              parseFloat(data[i].m8).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[i].m9).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),
+              parseFloat(data[i].m10).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),parseFloat(data[i].m11).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})]);
+      }
+
+      datatable.addRow(['RESULTADOS', '','','','', '','','','' ,'' ,'' ,'', '']);
+      datatable.setCell(2, 1, parseFloat(data[2].m0).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m0).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m0) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(2, 2, parseFloat(data[2].m1).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m1).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m1) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(2, 3, parseFloat(data[2].m2).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m2).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m2) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(2, 4, parseFloat(data[2].m3).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m3).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m3) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(2, 5, parseFloat(data[2].m4).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m4).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m4) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(2, 6, parseFloat(data[2].m5).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m5).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m5) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(2, 7, parseFloat(data[2].m6).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m6).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m6) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(2, 8, parseFloat(data[2].m7).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m7).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m7) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(2, 9, parseFloat(data[2].m8).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m8).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m8) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(2, 10, parseFloat(data[2].m9).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m9).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m9) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(2, 11, parseFloat(data[2].m10).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m10).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m10) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(2, 12, parseFloat(data[2].m11).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].m11).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), (parseFloat(data[2].m11) < 0  ? {'className':'redcolor'} : {}));
+
+      datatable.addRow(['MARGEM LÍQUIDA', '','','','', '','','','' ,'' ,'' ,'', '']);
+      datatable.setCell(3, 1, data[3].m0.toFixed(2) + '%', data[3].m0.toFixed(2) + '%', (parseFloat(data[3].m0) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(3, 2, data[3].m1.toFixed(2) + '%', data[3].m1.toFixed(2) + '%', (parseFloat(data[3].m1) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(3, 3, data[3].m2.toFixed(2) + '%', data[3].m2.toFixed(2) + '%', (parseFloat(data[3].m2) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(3, 4, data[3].m3.toFixed(2) + '%', data[3].m3.toFixed(2) + '%', (parseFloat(data[3].m3) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(3, 5, data[3].m4.toFixed(2) + '%', data[3].m4.toFixed(2) + '%', (parseFloat(data[3].m4) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(3, 6, data[3].m5.toFixed(2) + '%', data[3].m5.toFixed(2) + '%', (parseFloat(data[3].m5) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(3, 7, data[3].m6.toFixed(2) + '%', data[3].m6.toFixed(2) + '%', (parseFloat(data[3].m6) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(3, 8, data[3].m7.toFixed(2) + '%', data[3].m7.toFixed(2) + '%', (parseFloat(data[3].m7) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(3, 9, data[3].m8.toFixed(2) + '%', data[3].m8.toFixed(2) + '%', (parseFloat(data[3].m8) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(3, 10, data[3].m9.toFixed(2) + '%', data[3].m9.toFixed(2) + '%', (parseFloat(data[3].m9) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(3, 11, data[3].m10.toFixed(2) + '%', data[3].m10.toFixed(2) + '%', (parseFloat(data[3].m10) < 0  ? {'className':'redcolor'} : {}));
+      datatable.setCell(3, 12, data[3].m11.toFixed(2) + '%', data[3].m11.toFixed(2) + '%', (parseFloat(data[3].m11) < 0  ? {'className':'redcolor'} : {}));
+
+      datatable.setRowProperty(0, 'className', 'h57');
+      datatable.setRowProperty(1, 'className', 'h57');
+      datatable.setRowProperty(2, 'className', 'bold h57');
+      datatable.setRowProperty(3, 'className', 'h57');
+      var table = new google.visualization.Table(document.getElementById('resultado'));
+
+    var formatter = new google.visualization.NumberFormat(
+              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+    for (var k = 1; k < 13; k++) {
+      formatter.format(datatable, k);
+    }    
+
+    table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', frozenColumns:1});
+  });
+}
+
+</script>

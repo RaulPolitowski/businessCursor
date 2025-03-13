@@ -1,0 +1,88 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>RELATÓRIO CONFERÊNCIA DE ASSINATURA DE CONTRATOS</h2>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+          <h5>Filtros</h5>
+          <%= form_tag('/relatorios/contratos_assinados_print', method: :post) do %>
+            <div class="row">
+              <div class="field col-sm-2">
+                <label for="data_inicio">Data Início</label>
+                <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio" autocomplete="off" required>
+              </div>
+              <div class="field col-sm-2">
+                <label for="data_fim">Data Fim</label>
+                <input class="form-control input-sm" type="text" name="data_fim" id="data_fim" autocomplete="off" required>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Considerar', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag  'tipo', options_for_select([
+                                                                       ['Todos', 0],
+                                                                       ['Aguardando', 1],
+                                                                       ['Em andamento', 2],
+                                                                       ['Concluído', 3]
+                                                               ], 0), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um tipo'}} %>
+              </div>
+              <div class="field col-sm-3">
+                <%= label_tag 'Consultor', nil, class: 'col-sm-12 control-label padding' %>
+                <%= select_tag 'vendedor', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-3">
+                <%= label_tag 'Implantador', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'implantador', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um implantador'}, :include_blank => true} %>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field col-sm-2">
+                <br>
+                <label >
+                  <%=  check_box_tag 'efetivos', 'true', true, class: 'form-control input-sm icheckbox_square-green i-checks' %>
+                  Exibir apenas efetivos
+                </label>                
+              </div>
+
+              <div class="col-lg-2">
+                  <br>
+                  <%= submit_tag 'Gerar', :id => 'btnGerarRelatorio', :class => 'btn btn-primary', :formtarget => "_blank" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%# <%= javascript_include_tag("relatorios_analise_desistencia") %>
+
+<script>
+  $(document).ready(function(){
+
+    var date = new Date();
+    $('#data_inicio').datepicker({
+        todayBtn: "linked",
+        keyboardNavigation: false,
+        forceParse: false,
+        calendarWeeks: true,
+        autoclose: true,
+        format: 'dd/mm/yyyy'
+    });
+    $("#data_inicio").datepicker("setDate", new Date(date.getFullYear(), date.getMonth() -2, 1));
+
+    $('#data_fim').datepicker({
+        todayBtn: "linked",
+        keyboardNavigation: false,
+        forceParse: false,
+        calendarWeeks: true,
+        autoclose: true,
+        format: 'dd/mm/yyyy'
+    });
+    $("#data_fim").datepicker("setDate", new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+
+  })
+</script>

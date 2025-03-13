@@ -1,0 +1,196 @@
+<div id="periodo_inerte_avaliacao" class="modal inmodal" tabindex="-1" role="dialog" data-backdrop="static"  data-keyboard="false" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <i class="fa fa-exclamation-triangle modal-icon"></i>
+        <h4 class="modal-title">Periodo Inerte</h4>
+      </div>
+      <form class="form-horizontal" id="form_periodo_inerte">
+        <div class="modal-body no-padding">
+          <div class="tabs-container">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tabInfoPeriodoInerteAvaliacao"> Informações</a></li>
+              <li><a data-toggle="tab" href="#tabHistoricoPeriodoInerteAvaliacao"> Histórico</a></li>
+              <li><a data-toggle="tab" href="#tabAvaliacoesPeriodoInerteAvaliacao"> Avaliações</a></li>
+              <li><a data-toggle="tab" href="#tabFinanceiroPeriodoInerteAvaliacao"> Financeiro</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="tabInfoPeriodoInerteAvaliacao" class="tab-pane active">
+                <div class="panel-body">
+                  <div class="form-group">
+                    <div class="field col-sm-4 padding" >
+                      <%= label_tag 'Cliente', nil %>
+                      <%= text_field_tag :periodo_inerte_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                      <%= hidden_field_tag 'periodo_inerte_cliente_id', nil, class: 'form-control input-sm' %>
+                      <%= hidden_field_tag 'periodo_inerte_id', nil, class: 'form-control input-sm' %>
+                    </div>
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'CNPJ', nil %>
+                      <%= text_field_tag :periodo_inerte_cliente_cnpj, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-1 padding">
+                      <%= label_tag 'Pend. Fin.', 'Pend. Fin.' %>
+                      <%= text_field_tag :periodo_inerte_pendencia_financeira, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'Status Fin.', 'Status Fin.' %>
+                      <%= text_field_tag :periodo_inerte_status_financeiro, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-3 padding">
+                      <%= label_tag 'Cidade-UF', "Cidade-UF" %>
+                      <%= text_field_tag :periodo_inerte_cliente_cidade, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'Sistema', nil %>
+                      <%= text_field_tag :periodo_inerte_sistema, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'Versão', nil %>
+                      <%= text_field_tag :periodo_inerte_versao, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'Data', nil %>
+                      <%= text_field_tag :periodo_inerte_data, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'Últ. login', nil %>
+                      <%= text_field_tag :periodo_inerte_last_login, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-1 padding">
+                      <%= label_tag 'Tempo', nil %>
+                      <%= text_field_tag :periodo_inerte_tempo_inerte, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-3 padding">
+                      <label for="periodo_inerte_ignorar_inerte_ate">Ignorar inerte até</label>
+                      <input class="form-control input-sm" type="text" name="ignorar_inerte_ate" id="ignorar_inerte_ate" >
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field col-sm-12 padding">
+                      <%= label_tag 'Feedback', nil %>
+                      <textarea class="form-control" type="text" rows="5" name="periodo_inerte[feedback]" id="periodo_inerte_feedback" disabled></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field col-sm-12 padding">
+                      <%= label_tag 'Avaliação', nil %>
+                      <textarea class="form-control" type="text" rows="7" name="periodo_inerte[avaliacao]" id="periodo_inerte_avaliacao"></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= label_tag 'Resultado', nil , class: 'col-sm-1 control-label'%>
+                      <div class="col-sm-2 padding">
+                        <input class="confirm-agenda" type="checkbox" onclick="setValueInAvaliacao()" checked id="periodo_inerte_positivo" title="Resultado?" value="true" style="margin-left: 10px;">
+                        <small style="margin-left: 15px;" id="text-avaliacao">- Positiva</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="tabHistoricoPeriodoInerteAvaliacao" class="tab-pane">
+                <div class="panel-body scroll-table">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="ibox-content tbody-periodo-inerte">
+                        <table id="table-periodo-inerte-modal" class="table table-hover">
+                          <thead>
+                          <tr>
+                            <th style="width: 15%">Data</th>
+                            <th style="width: 10%">Tempo</th>
+                            <th>Feedback</th>
+                            <th></th>
+                          </tr>
+                          </thead>
+                          <tbody id="body_periodo_inerte_modal">
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="tabAvaliacoesPeriodoInerteAvaliacao" class="tab-pane">
+                <div class="panel-body scroll-table">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="ibox-content tbody-periodo-inerte">
+                        <table id="table-periodo-inerte-avaliado-modal" class="table table-hover">
+                          <thead>
+                          <tr>
+                            <th style="width: 15%">Data</th>
+                            <th style="width: 10%">Positivo</th>
+                            <th>Avaliação</th>
+                            <th></th>
+                          </tr>
+                          </thead>
+                          <tbody id="body_periodo_inerte_avaliado_modal">
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="tabFinanceiroPeriodoInerteAvaliacao" class="tab-pane">
+                <div class="panel-body scroll-table">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="ibox-content tbody-periodo-inerte">
+                        <table id="table-periodo-inerte-financeiro-modal" class="table table-hover">
+                          <thead>
+                          <tr>
+                            <th>Descrição</th>
+                            <th>Vencimento</th>
+                            <th>Status</th>
+                            <th>Valor</th>
+                          </tr>
+                          </thead>
+                          <tbody id="body_periodo_inerte_financeiro_modal">
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" onclick="openContatosGeral()">Contatos</button>
+          <button type="button" class="btn btn-info" onclick="openClienteAvaliacao()">Cliente</button>
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnRegistrarAvaliacao', :class => 'btn btn-primary ladda-button' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+    function openClienteAvaliacao(){
+        window.open('https://business.gtech.site/clientes/' + $('#periodo_inerte_avaliacao #periodo_inerte_cliente_id').val()+ '/editar', '_blank');
+    }
+
+    function openContatosGeral(){
+        window.open('http://contatos.gtech.site/contatos?cnpj=' + $('#periodo_inerte_avaliacao #periodo_inerte_cliente_cnpj').val(), '_blank');
+    }
+
+    function setValueInAvaliacao() {
+        var value = $('#periodo_inerte_avaliacao #periodo_inerte_positivo').val();
+        var bool = value == 'true';
+        $('#periodo_inerte_avaliacao #periodo_inerte_positivo').val(!bool)
+
+        if(!bool){
+            $('#text-avaliacao').text('- Positiva');
+        }else{
+            $('#text-avaliacao').text('- Negativa');
+        }
+    }
+</script>

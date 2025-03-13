@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  pergunta: 
+  fechamento: false
+  implantacao: false
+  acompanhamento: false
+
+two:
+  pergunta: 
+  fechamento: false
+  implantacao: false
+  acompanhamento: false

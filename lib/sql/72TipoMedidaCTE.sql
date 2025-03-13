@@ -1,0 +1,11 @@
+INSERT INTO cte.tipomedidacte (descricao, empresa_id) values ('PESO', 1);
+INSERT INTO cte.tipomedidacte (descricao, empresa_id) values ('PESO AFERIDO', 1);
+INSERT INTO cte.tipomedidacte (descricao, empresa_id) values ('PESO AFORADO', 1);
+INSERT INTO cte.tipomedidacte (descricao, empresa_id) values ('PESO BASE DE CÁLCULO', 1);
+INSERT INTO cte.tipomedidacte (descricao, empresa_id) values ('PESO BRUTO', 1);
+INSERT INTO cte.tipomedidacte (descricao, empresa_id) values ('PESO CUBADO', 1);
+INSERT INTO cte.tipomedidacte (descricao, empresa_id) values ('PESO DECLARADO', 1);
+INSERT INTO cte.tipomedidacte (descricao, empresa_id) values ('LITRAGEM', 1);
+INSERT INTO cte.tipomedidacte (descricao, empresa_id) values ('CAIXAS', 1);
+INSERT INTO cte.tipomedidacte (descricao, empresa_id) values ('METROS CÚBICOS', 1);
+INSERT INTO cte.tipomedidacte (descricao, empresa_id) values ('FARDOS', 1);

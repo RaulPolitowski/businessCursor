@@ -1,0 +1,198 @@
+<input type="hidden" id="empresa_id" value="">
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce padding-top-10">
+  <div class="ibox-content">
+    <div class="tabs-container">
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1"> Informações</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-2"> Solicitação cancelamento</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-3"> Contatos</a></li>
+      </ul>
+      <div class="tab-content">
+        <div id="tab-1" class="tab-pane active">
+          <div class="panel-body">
+            <form role="form" id="formCliente">
+              <div class="form-group margin-bottom-5">
+                <div class="row">
+                  <div class="field col-sm-3">
+                    <label for="cliente_cnpj">CNPJ</label>
+                    <label id="error_cnpj" style="color: red; display: none;">Campo obrigatório!</label>
+                    <div class="input-group m-b" style="margin-bottom: 0px;">
+                      <input class="form-control input-sm" type="text" name="cliente[cnpj]" id="cliente_cnpj"  autocomplete="off"  maxlength="14" onkeypress="return SomenteNumero(event)" size="14"  >
+                      <span class="input-group-addon padding-0">
+                        <button type="button" class="btn btn-sm btn-info btn-table" onclick="buscarCliente()" title="Buscar" data-toggle="tooltip" data-placement="right">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="field col-sm-6">
+                    <label for="cliente_razao_social">Cliente</label>
+                    <div class="input-group col-sm-12" style="margin-bottom: 0px;">
+                      <input class="form-control input-sm" type="text" name="cliente[razao_social]" id="cliente_razao_social" readOnly="off">
+                    </div>
+                  </div>
+                  <div class="field col-sm-3">
+                    <label for="cliente_cidade">Cidade/UF</label>
+                    <input class="form-control input-sm" type="text" name="cliente[cidade]" id="cliente_cidade" readOnly="off">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group margin-bottom-5">
+                <div class="row">
+                  <div class="field col-sm-3">
+                    <label for="vendedor">Vendedor</label>
+                    <input class="form-control input-sm" type="text" name="vendedor" id="vendedor" readOnly="off">
+                  </div>
+                  <div class="field col-sm-3">
+                    <label for="tecnico">Responsável técnico</label>
+                    <input class="form-control input-sm" type="text" name="tecnico" id="tecnico" readOnly="off">
+                  </div>
+                  <div class="field col-sm-3">
+                    <label for="sistema">Sistema</label>
+                    <input class="form-control input-sm" type="text" name="sistema" id="sistema" readOnly="off">
+                  </div>
+                  <div class="field col-sm-3">
+                    <label for="mensalidade">Mensalidade</label>
+                    <input class="form-control input-sm" type="text" name="mensalidade" id="mensalidade" readOnly="off">
+                  </div>                
+                </div>
+              </div>
+              <div class="form-group margin-bottom-5">
+                <div class="row">
+                  <div class="field col-sm-4">
+                    <label for="implantador">Implantador</label>
+                    <input class="form-control input-sm" type="text" name="implantador" id="implantador" readOnly="off">
+                  </div>
+                  <div class="field col-sm-2">
+                    <label for="dias_cliente">Dias como cliente</label>
+                    <input class="form-control input-sm" type="text" name="dias_cliente" id="dias_cliente" readOnly="off">
+                  </div>
+                  <div class="field col-sm-2">
+                    <label for="ultimo_acesso">Último acesso</label>
+                    <input class="form-control input-sm" type="text" name="ultimo_acesso" id="ultimo_acesso" readOnly="off">
+                  </div>     
+                  <div class="field col-sm-4">
+                    <label for="status">Status</label>
+                    <input class="form-control input-sm" type="text" name="status" id="status" readOnly="off">
+                  </div>            
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="tab-2" class="tab-pane">
+          <div class="panel-body">
+            <%= form_for(@solicitacao_desistencia) do |f| %>
+              <%= f.hidden_field :cliente_id, id:"cliente_id" %>
+              <%= f.hidden_field :cnpj, id:"cnpj" %>
+              <div class="form-group margin-bottom-5">
+                <div class="row">
+                  <div class="field col-sm-3">
+                    <%= f.label :data_solicitacao %><br>
+                    <%= f.text_field :data_solicitacao, value: Time.now.strftime("%d/%m/%Y %H:%M"), class:"form-control input-sm", readOnly: true %>
+                  </div>
+                  <div class="field col-sm-3">
+                    <label for="user">Colaborador</label>
+                    <input class="form-control input-sm" value="<%= current_user.name %>" type="text" name="colaborador" id="colaborador" readOnly="off">
+                  </div>
+                  <div class="field col-sm-3">
+                    <%= f.label :solicitante %><br>
+                    <%= f.text_field :solicitante, class:"form-control input-sm", id:"solicitante", autocomplete:"off" %>
+                  </div>    
+                  <div class="field col-sm-3">
+                    <%= f.label :telefone %>
+                    <div class="input-group m-b" style="margin-bottom: 0px;">
+                      <%= f.text_field :telefone, class:"form-control input-sm", id:"telefone", autocomplete:"off" %>
+                      <span class="input-group-addon padding-0">
+                        <button type="button" class="btn btn-sm btn-info btn-table" onclick="openWhats()" title="Whatsapp" data-toggle="tooltip" data-placement="right">
+                            <i class="fa fa-whatsapp" aria-hidden="true"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>            
+                </div>
+                <div class="row">
+                  <div class="field col-sm-10">
+                    <%= f.label :motivo_solicitacao, 'Motivo desistência' %><br>
+                    <%= f.text_area :motivo_solicitacao, rows: 4, class:"form-control input-sm" %>
+                  </div>  
+                  <div class="field col-sm-2" style="margin-top: 50px">
+                    <button name="button" class="pull-left ladda-button btn btn-success btn-rounded">
+                      <i class="fa fa-save"></i> Salvar
+                    </button>
+                  </div> 
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div id="tab-3" class="tab-pane">
+          <div class="panel-body">
+            <div class="col-lg-6">
+              <table id="table-contatos-cliente-whats" class="table table-hover table-contatos">
+                <thead>
+                <tr>
+                  <th style="width: 65%">Nome</th>
+                  <th style="width: 30%">Telefone</th>
+                  <th style="width: 15%"></th>
+                </tr>
+                </thead>
+                <tbody class="tbody-whats" id="body-table-contatos-whats">
+
+                </tbody>
+              </table>
+            </div>
+            <div class="col-lg-6">
+              <table id="table-contatos-cliente-whats2" class="table table-hover table-contatos2">
+                <thead>
+                <tr>
+                  <th style="width: 65%">Nome</th>
+                  <th style="width: 30%">Telefone</th>
+                  <th style="width: 15%"></th>
+                </tr>
+                </thead>
+                <tbody class="tbody-whats" id="body-table-contatos-whats2">
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    $('#btnCopyCliente').on('click', function(){
+        $.getJSON('/solicitacao_desistencias/montar_msg?cliente_id=' + $('#cliente_id').val()+
+            '&tipo=DESISTENCIA', function(data) {
+            const texto = data.texto;
+            let inputTest = document.createElement("textarea");
+            inputTest.value = texto;
+            //Anexa o elemento ao body
+            document.body.appendChild(inputTest);
+            //seleciona todo o texto do elemento
+            inputTest.select();
+            //executa o comando copy
+            document.execCommand('copy');
+            //remove o elemento
+            document.body.removeChild(inputTest);
+            exibirMsg("Abordagem copiada");
+        });
+        return false;
+    });
+
+
+
+  function openWhats() {
+    var telefone = $('#telefone').val();
+    if(telefone == '' || telefone == null)
+        return false;
+    window.open('https://api.whatsapp.com/send?phone=55' + apenasNumeros(telefone), '_blank');
+  }
+</script>
+

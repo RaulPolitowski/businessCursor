@@ -1,0 +1,186 @@
+<div class="wrapper wrapper-content padding-5">
+  <div class="row animated fadeInDown">
+    <div class="col-lg-12 padding-left-right" >
+      <div class="ibox float-e-margins border-bottom">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <div class="field col-sm-6">
+                <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag  'empresas_financeiro_id', options_for_select([
+                                                                                 ['GRUBER CONTABILIDADE', 42],
+                                                                                 ['RG CONTABILIDADE', 1706],
+                                                                                 ['BIO APOIO EMPRESARIAL', 3936]
+                                                                             ], [42,1706,3936]), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma empresa'}, :multiple => true} %>
+              </div>
+              <div class="field col-sm-2" style="display: none">
+                <%= label_tag 'Estado', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'estado_financeiro_id', options_for_select( Financeiro::Estado.order(:nome).collect{ |u| [u.descricao_completa, u.id] }) , {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}, :include_blank => true} %>
+              </div>
+              <div class="col-lg-2">
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarPaineis', :class => 'btn btn-primary', :style => "margin-top: 20px !important"%>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="tabs-container" >
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1" id="tabClientes"> Clientes</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-2" id="tabFechamento"> Faturamento</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-4" id="tabDemonstrativo"> Demonstrativos</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-3" id="tabProjecao"> Projeções</a></li>
+      </ul>
+      <div class="tab-content" style="margin-bottom: 50px">
+        <div id="tab-1" class="tab-pane active">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/resultados_gruber/clientes/cliente_ativos' %>
+            <%= render 'dashboards/resultados_gruber/clientes/efetivacoes_desistencias' %>
+          </div>
+        </div>
+        <div id="tab-2" class="tab-pane">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/resultados_gruber/faturamento/faturamento' %>
+            <%= render 'dashboards/resultados_gruber/faturamento/primeira_parcela' %>
+            <%= render 'dashboards/resultados_gruber/faturamento/inadimplencia' %>
+          </div>
+        </div>
+        <div id="tab-3" class="tab-pane">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/resultados_gruber/projecao/projecao_faturamento' %>
+            <%= render 'dashboards/resultados_gruber/projecao/projecao_clientes' %>
+            <%= render 'dashboards/resultados_gruber/projecao/projecao_honorario' %>
+          </div>
+        </div>
+        <div id="tab-4" class="tab-pane">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/resultados_gruber/demonstrativo/receitas_despesas' %>
+            <%= render 'dashboards/resultados_gruber/demonstrativo/tipo_receita_12meses' %>
+            <%= render 'dashboards/resultados_gruber/demonstrativo/despesas_com_pessoal' %>
+            <%= render 'dashboards/resultados_gruber/demonstrativo/resumo_5_ultimos_anos_gruber' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .ibox-title-without-border-style {
+    border-style: none;
+    min-height: 24px !important;
+    padding: 5px !important;
+  }
+  .ibox{
+    margin-bottom: 5px !important;
+  }
+  .google-visualization-table-th {
+     text-align: center !important;
+   }
+  .google-visualization-table-td {
+    text-align: center !important;
+  }
+</style>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        google.charts.load('current', {'packages':['corechart','table']});
+
+        setTimeout(function(){
+            google.charts.setOnLoadCallback(drawClientes12Meses);
+            google.charts.setOnLoadCallback(drawEfetivacoesDesativacoes);
+        }, 200);
+
+        $('#tabClientes').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            drawClientes12Meses();
+            drawEfetivacoesDesativacoes();
+        });
+
+        $('#tabFechamento').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            drawFaturamento12Meses();
+            drawPrimeiraParcela12Meses();
+            drawInadimplencia12Meses();
+        });
+
+        $('#tabProjecao').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            drawProjecaoHonorario12Meses();
+            drawProjecaoFaturamento6Meses();
+            drawProjecaoClientes6Meses();
+        });
+
+        $('#tabDemonstrativo').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            drawDemonstrativoGruber12Meses();
+            drawTable12MesesResultadoGruber();
+            drawTableResumoAnualGruber();
+            drawTableDespesasComPessoal();
+        });
+
+        $('#btnAtualizarPaineis').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            atualizarPaineis();
+            return false;
+        });
+
+        $('#tipo_analise_projecao_faturamento').on('change', function(){
+            drawProjecaoFaturamento6Meses();
+        });
+
+        $('#qtd_meses_analise_faturamento').on('change', function(){
+            drawProjecaoFaturamento6Meses();
+        });
+
+        $('#qtd_meses_analise_clientes').on('change', function(){
+            drawProjecaoClientes6Meses();
+        });
+    });
+
+    function atualizarPaineis() {
+        var tab = $('.tab-content .active').attr('id');
+        if(tab == "tab-1"){
+            drawClientes12Meses();
+            drawEfetivacoesDesativacoes();
+        }else if(tab == "tab-2"){
+            drawFaturamento12Meses();
+            drawPrimeiraParcela12Meses();
+            drawInadimplencia12Meses();
+        }else if(tab == "tab-3"){
+            drawProjecaoHonorario12Meses();
+            drawProjecaoFaturamento6Meses();
+            drawProjecaoClientes6Meses();
+        }else if(tab == "tab-4"){          
+            drawDemonstrativoGruber12Meses();
+            drawTable12MesesResultadoGruber();
+        }
+        
+    }
+
+</script>
+

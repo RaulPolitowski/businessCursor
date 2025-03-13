@@ -1,0 +1,128 @@
+<div class="row border-bottom">
+    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " id="minimize_menu" href="#"><i class="fa fa-bars"></i> </a>
+          <div role="search" class="navbar-form-custom">
+              <div class="form-group">
+                <input type="text" placeholder="Buscar histórico cliente..." class="form-control" name="top-search" id="top-search"/>
+              </div>
+          </div>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+          <% if current_user.admin? %>
+            <li>
+              <span class="m-r-sm text-muted welcome-message" >Projeção: Qtd: <b id="qtdTotalProjecaoTopnavbar">0</b> Valor: <b id="valorTotalProjecaoTopnavbar">R$ 0,00</b> / Qtd. Pago:  <b id="qtdTotalPagoProjecaoTopnavbar">0</b> Valor Pago: <b id="valorTotalPagoProjecaoTopnavbar">R$ 0,00</b></span>
+            </li>
+          <% end %>
+          <li class="dropdown">
+            <a class="dropdown-toggle count-info" id="notificacoes_fechamento" title="Notificações de fechamento" data-toggle="dropdown" href="#">
+              <i class="fa fa-money"></i>  <span class="label label-primary" id="qtd_notificacoes_fechamento"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts" id="alerts_fechamento">
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a class="dropdown-toggle count-info" id="notificacoes_implantacoes" title="Notificação de implantação" data-toggle="dropdown" href="#">
+              <i class="fa fa-check "></i>  <span class="label label-primary" id="qtd_notificacoes_implantacoes"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts" id="alerts_implantacoes">
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a class="dropdown-toggle count-info" id="notificacoes_efetivacoes" title="Notificações de efetivação" data-toggle="dropdown" href="#">
+              <i class="fa fa-handshake-o"></i>  <span class="label label-primary" id="qtd_notificacoes_efetivacoes"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts" id="alerts_efetivacoes">
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a class="dropdown-toggle count-info" id="notificacoes_desativacoes" title="Notificação de desistência" data-toggle="dropdown" href="#">
+              <i class="fa fa-thumbs-o-down "></i>  <span class="label label-primary" id="qtd_notificacoes_desativacoes"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts" id="alerts_desativacoes">
+            </ul>
+          </li>
+          <% if current_user.admin? %>
+          <li class="dropdown">
+            <a class="dropdown-toggle count-info" id="notificacoes_solicitacoes_desativacoes" title="Notificação de Solicitação de desistência" data-toggle="dropdown" href="#">
+              <i class="fa fa-warning "></i>  <span class="label label-primary" id="qtd_notificacoes_solicitacoes_desativacoes"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts" id="alerts_notificacao_desativacoes">
+            </ul>
+          </li>
+            <%end %>
+          <li class="dropdown">
+            <a class="dropdown-toggle count-info" id="notificacoes" title="Notificações de agenda" data-toggle="dropdown" href="#">
+              <i class="fa fa-calendar"></i>  <span class="label label-primary" id="qtd_notificacoes"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts" id="alerts">
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a class="dropdown-toggle count-info" id="notificacoes_arquivo_retorno" title="Notificações de arquivo de retorno" data-toggle="dropdown" href="#">
+              <i class="fa fa-university"></i>  <span class="label label-primary" id="qtd_notificacoes_arquivo_retorno"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts" id="alerts_arquivo_retorno">
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a class="dropdown-toggle count-info" id="notificacoes_centro_distribuicao" title="Notificações de Centro de Distribuição" data-toggle="dropdown" href="#">
+              <i class="fa fa-circle-o"></i>  <span class="label label-primary" id="qtd_notificacoes_centro_distribuicao"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts" id="alerts_centro_distribuicao">
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a class="dropdown-toggle count-info" id="notificacoes_numeros_desconectados" title="Números desconectados" data-toggle="dropdown" href="#">
+              <i class="fa fa-whatsapp"></i>  <span class="label label-primary" id="qtd_notificacoes_numeros_desconectados"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts" id="alerts_numeros_desconectados">
+            </ul>
+          </li>
+          <% if current_user.ocupado? %>
+            <li>
+              <a class="dropdown-toggle count-info" id="desativar_nao_perturbe" title="Modo não perturbe" data-toggle="dropdown">            
+                <i class="fa fa-toggle-on" ></i>
+              </a>
+            </li>
+          <% else %>
+            <li >
+              <a class="dropdown-toggle count-info" id="nao_perturbe" title="Modo não perturbe" data-toggle="dropdown">
+                <i class="fa fa-toggle-off"></i>
+              </a>
+            </li>
+          <% end %>
+
+          <li>
+              <%= link_to destroy_user_session_path, method: :delete do %>
+                <i class="fa fa-sign-out"></i>Log out
+              <% end %>
+        </li>
+
+    </ul>
+</nav>
+</div>
+<%= render 'users/modo_nao_perturbe' %>
+<style>
+.fa-toggle-on{
+  color: green
+}
+
+</style>
+
+<script>
+    $(document).ready(function(){
+
+        <% if current_user.admin? %>
+          $.getJSON('/relatorios/projecao_clientes_novos_json?data_inicial='+ moment().startOf('month').format("YYYY-MM-DD") +
+              '&data_final=' + moment().endOf('month').format("YYYY-MM-DD") +
+              '&empresa=17,3422,3253&totalizado=true', function(data) {
+              $('#qtdTotalProjecaoTopnavbar').text(data['total']);
+              $('#valorTotalProjecaoTopnavbar').text(formatarValorMonetario(data['valor']));
+              $('#qtdTotalPagoProjecaoTopnavbar').text(data['totalpago']);
+              $('#valorTotalPagoProjecaoTopnavbar').text(formatarValorMonetario(data['valortotalpago']));
+          });
+        <% end %>
+
+    });
+</script>

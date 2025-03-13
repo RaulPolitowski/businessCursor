@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  data_fim: 2020-04-20 13:54:41
+
+two:
+  user_id: 
+  data_fim: 2020-04-20 13:54:41

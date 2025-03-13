@@ -1,0 +1,110 @@
+<div class="wrapper wrapper-content padding-5">
+  <div class="row animated fadeInDown">
+    <div class="col-lg-12 padding-left-right padding" >
+      <div class="col-lg-12 padding">
+      <input type="hidden" id="status_id" value="">
+      <input type="hidden" id="sistema_id" value="">
+      <input type="hidden" id="usuario_id" value="">
+      <div class="ibox float-e-margins border-bottom">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <small class="pull-left" id="quantity" style="padding-left: 10px"></small>
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+
+
+              <div class="field col-sm-3">
+                <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                <%= text_field_tag :filtro_cliente, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Digite o nome para buscar' %>
+                <input type="hidden" id="filtro_cliente_id" value="all">
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Vendedor', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'filtro_vendedor_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }, 'all'), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'filtro_empresa_id', options_for_select(@empresas.collect {|p| [ p.razao_social, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma empresa'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Status', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'filtro_status', options_for_select([
+                                                                       ['Todas', 0],
+                                                                       ['Ativas', true],
+                                                                       ['Canceladas', false]
+                                                                   ], true), {:class => "form-control input-sm chosen-select" } %>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Confirmação', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'filtro_confirmado', options_for_select([
+                                                                       ['Todas', 0],
+                                                                       ['Confirmado', true],
+                                                                       ['Não confirmado', false]
+                                                                   ], 0), {:class => "form-control input-sm chosen-select" } %>
+              </div>
+              <div class="col-lg-1">
+                <br>
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarAgenda', :class => 'btn btn-primary', :formtarget => "_blank" %>
+              </div>
+
+              <div class="field col-sm-12">
+                <br>
+                <label id="sem_tecnico" >
+                  <%=  check_box_tag 'somente_sem_tecnico', '0', false, class: 'form-control input-sm icheckbox_square-green i-checks' %>
+                  Visualizar empresas sem técnico
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="col-lg-12 padding-left-right padding" >
+    <div class="col-lg-2 padding">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Atendentes</h5>
+        </div>
+        <div class="ibox-content">
+          <div id='external-events'>
+          </div>
+        </div>
+      </div>
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Legenda</h5>
+        </div>
+        <div class="ibox-content">
+          <div id='external-events-legenda'>
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="user_id_selector" value="all">
+    <input type="hidden" id="tipo_id_selector" value="all">
+    <div class="col-lg-10 padding">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Agenda</h5>
+          <div class="ibox-tools">
+            <button class="btn btn-sm btn-primary" id="btnNovoEvento">
+              <i class="fa fa-file" aria-hidden="true"> Novo Agendamento</i>
+            </button>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

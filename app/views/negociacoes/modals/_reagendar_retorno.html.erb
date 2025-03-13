@@ -1,0 +1,61 @@
+<div id="negociacao_reagendar_retorno" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">REAGENDAR</h4>
+      </div>
+      <form class="form-horizontal" id="form_reagendar_retorno">
+        <div class="modal-body">
+          <input type="hidden" id="reagendar_negociacao_retorno_id" value="">
+          <input type="hidden" id="reagendar_negociacao_negociacao_id" value="">
+            <div class="form-group">
+              <div class="field">
+                <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-10 padding ">
+                  <%= text_field_tag :reagendar_negociacao_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="field">
+                <%= label_tag 'Retorno', nil,  class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-6 padding">
+                  <div class="input-group clockpicker" data-autoclose="true">
+                    <%= text_field_tag :reagendar_negociacao_nova_data, nil,  class: 'form-control input-sm', autocomplete: "off",  placeholder: 'DD/MM/YYYY HH:mm' %>
+                    <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div class="form-group margin">
+            <div class="pull-center">
+              <button class="btn btn-primary btn-xs" id="btn10" onclick="setarData(10, $('#negociacao_reagendar_retorno #reagendar_negociacao_nova_data')); return false;">10min</button>
+              <button class="btn btn-primary btn-xs" id="btn30" onclick="setarData(30, $('#negociacao_reagendar_retorno #reagendar_negociacao_nova_data')); return false;">30min</button>
+              <button class="btn btn-primary btn-xs" id="btn45" onclick="setarData(45, $('#negociacao_reagendar_retorno #reagendar_negociacao_nova_data')); return false;">45min</button>
+              <button class="btn btn-primary btn-xs" id="btn1" onclick="setarData(60, $('#negociacao_reagendar_retorno #reagendar_negociacao_nova_data')); return false;">1hora</button>
+              <button class="btn btn-primary btn-xs" id="btn2" onclick="setarData(120, $('#negociacao_reagendar_retorno #reagendar_negociacao_nova_data')); return false;">2horas</button>
+              <button class="btn btn-primary btn-xs" id="btn4" onclick="setarData(240, $('#negociacao_reagendar_retorno #reagendar_negociacao_nova_data')); return false;">4horas</button>
+              <button class="btn btn-primary btn-xs" id="btn24" onclick="setarData(1440, $('#negociacao_reagendar_retorno #reagendar_negociacao_nova_data')); return false;">24horas</button>
+              <button class="btn btn-primary btn-xs" id="btn48" onclick="setarData(2880, $('#negociacao_reagendar_retorno #reagendar_negociacao_nova_data')); return false;">48horas</button>
+              <button class="btn btn-primary btn-xs" id="btn72" onclick="setarData(4320, $('#negociacao_reagendar_retorno #reagendar_negociacao_nova_data')); return false;">72horas</button>
+            </div></div>
+            <div class="form-group">
+              <div class="field">
+                <%= label_tag 'Motivo', nil, class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-10 padding ">
+                  <%= text_area_tag :reagendar_negociacao_motivo, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnReagendarRetorno', :class => 'btn btn-primary' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+

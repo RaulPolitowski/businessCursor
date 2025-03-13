@@ -1,0 +1,115 @@
+$(document).ready(function() {
+    getAcompanhamentosRetornoVencidos();
+    setInterval(function() {
+        getAcompanhamentosRetornoVencidos();
+    }, 600000);
+
+    getAcompanhamentosRetornoAviso();
+    setInterval(function() {
+        getAcompanhamentosRetornoAviso();
+    }, 600000);
+
+    setInterval(function() {
+        getNotificacoes();
+    }, 300000);
+
+    if(!window.location.href.includes("&notificacoes=")){
+        getNotificacoes();
+    }
+});
+
+function getPermission () {
+    return new Promise(function(resolve, reject) {
+        Notification.requestPermission().then(function(status){
+            if (status == 'granted') {
+                resolve();
+            }else{
+                reject(status);
+            }
+        });
+    });
+}
+
+function getBody(aviso, value) {
+    if(aviso){
+        return 'Você possui um retorno agendado para o acompanhamento da empresa ' + value['razao_social'] + ' nos próximos 5 minutos.'
+    }else{
+        return 'Você possui um retorno vencido para o acompanhamento da empresa ' + value['razao_social'] + ', por favor verifique!'
+    }
+}
+
+function getAcompanhamentosRetornoVencidos() {
+    $.getJSON('/acompanhamentos/get_acompanhamentos_retorno_notificacao?aviso=false', function(data) {
+        if(data.length > 0){
+            getPermission().then(function(){
+                $.each(data, function(k, v) {
+                    if(!window.location.href.includes("/acompanhamentos/" + v['id'])){
+                        Push.create("Acompanhamento!", {
+                            body: getBody(false, v),
+                            icon: "<%= asset_path('favicon-3.png') %>",
+//                    timeout: 4000,
+                            onClick: function () {
+                                window.open('/acompanhamentos/' + v['id'], '_blank');
+                                this.close();
+                            }
+                        });
+                    }
+                });
+            }).catch(function(status){
+                exibirErro('Você tem notificações pendentes mas está sem permissão para recebe-las, verifique!');
+            });
+        }
+    });
+}
+
+function getAcompanhamentosRetornoAviso() {
+    $.getJSON('/acompanhamentos/get_acompanhamentos_retorno_notificacao?aviso=true', function(data) {
+        if(data.length > 0){
+            getPermission().then(function(){
+                $.each(data, function(k, v) {
+                    if(!window.location.href.includes("/acompanhamentos/" + v['id'])) {
+                        Push.create("Acompanhamento!", {
+                            body: getBody(true, v),
+                            icon: "<%= asset_path('favicon-3.png') %>",
+                            onClick: function () {
+                                window.open('/acompanhamentos/' + v['id'], '_blank');
+                                this.close();
+                            }
+                        });
+                    }
+                });
+            }).catch(function(status){
+                exibirErro('Você tem notificações pendentes mas está sem permissão para recebe-las, verifique!');
+            });
+        }
+    });
+}
+
+function getNotificacoes() {
+    $.getJSON('/notificacoes/notificacoes_nao_lidas', function(data) {
+        if(data.length > 0){
+            getPermission().then(function(){
+                $.each(data, function(k, v) {
+                      Push.create(v['title'], {
+                          body: v['observacao'],
+                          icon: "<%= asset_path('favicon-3.png') %>",
+                          onClick: function () {
+                              $.getJSON('/notificacoes/marcar_lido?notificacao_id='+ v['id'], function(data) {
+                                  if(v['path'] != null){
+                                      var caminho = v['path'];
+                                      if(['IMPLANTACAO_ATRASADA_20', 'IMPLANTACAO_ATRASADA_30'].includes(v['tipo']) ){
+                                          caminho = caminho + '&notificacoes=false'
+                                      }
+                                      window.open(caminho, '_blank');
+                                  }
+                              });
+                              this.close();
+                          }
+                      });
+                });
+            }).catch(function(status){
+                exibirErro('Você tem notificações pendentes mas está sem permissão para recebe-las, verifique!');
+            });
+        }
+    });
+}

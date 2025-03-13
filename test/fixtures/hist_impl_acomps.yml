@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  impl_id: 1
+  acomp_id: 1
+  tipo: MyString
+
+two:
+  impl_id: 1
+  acomp_id: 1
+  tipo: MyString

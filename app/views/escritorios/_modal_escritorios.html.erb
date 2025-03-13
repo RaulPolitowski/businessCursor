@@ -1,0 +1,79 @@
+<div id="escritorio" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Escritório Contábil</h4>
+      </div>
+      <form class="form-horizontal" id="form_escritorio" >
+        <div class="modal-body" id="novo_escritorio">
+          <div class="form-group">
+            <div class="field">
+              <%= label_tag 'Nome Fantasia', nil , class: 'col-sm-2 control-label padding'%>
+              <div class="col-sm-5 padding">
+                <%= text_field_tag :escritorio_nome_fantasia, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                <%= hidden_field_tag :escritorio_id, nil %>
+              </div>
+            </div>
+            <div class="field">
+              <%= label_tag 'Empresa', nil , class: 'col-sm-1 control-label padding'%>
+              <div class="col-sm-4 padding">
+                <%= select_tag 'escritorio_empresa_id', options_for_select( Empresa.ativas.collect{ |u| [u.razao_social, u.id] }, current_empresa.id) , {:class => "form-control input-sm chosen-select", :include_blank => true} %>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="field">
+              <%= label_tag 'Cidade', nil , class: 'col-sm-2 control-label padding'%>
+              <div class="col-sm-10 padding">
+                <%= text_field_tag :escritorio_cidade, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: "Digite para filtrar..." %>
+                <%= hidden_field_tag :escritorio_cidade_id, nil %>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="field">
+              <%= label_tag 'Responsável', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-3 padding ">
+                <%= text_field_tag :escritorio_responsavel, nil, class: 'form-control input-sm', autocomplete: "off" %>
+              </div>
+            </div>
+            <div class="field">
+              <%= label_tag 'Telefone', nil, class: 'col-sm-1 control-label padding' %>
+              <div class="col-sm-2 padding ">
+                <%= text_field_tag :escritorio_telefone, nil, class: 'form-control input-sm', autocomplete: "off" %>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="field">
+              <%= label_tag 'Observação', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= text_area_tag :escritorio_observacao, nil, class: 'form-control input-sm', autocomplete: "off" %>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" id="novoTelefone">
+            <div class="field">
+              <%= label_tag 'Novo telefone', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-3 padding ">
+                <div class="input-group m-b">
+                  <%= text_field_tag :escritorio_novo_telefone, nil, class: 'form-control input-sm', autocomplete: "off", onkeypress: 'return SomenteNumero(event)' %>
+                  <span class="input-group-addon padding-0">
+                  <button id="btnAdicionarNovoTelefone"  class="btn btn-sm btn-info btn-table" title="Adicionar novo telefone"  data-toggle="tooltip" data-placement="right">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                  </button>
+                </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" id="footer-novo-escritorio">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnSalvarNovoEscritorio', :class => 'btn btn-primary' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

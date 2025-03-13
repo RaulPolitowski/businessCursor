@@ -1,0 +1,9 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2><%= @cliente.present? ? @cliente.razao_social : "CLIENTE" %></h2>
+  </div>
+</div>
+
+<%= render 'form' %>
+
+

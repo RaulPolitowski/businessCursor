@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  servico_id: 
+  setor_id: 
+  gruberpesquisa_id: 
+  nota: 1
+  motivo: MyString
+
+two:
+  servico_id: 
+  setor_id: 
+  gruberpesquisa_id: 
+  nota: 1
+  motivo: MyString

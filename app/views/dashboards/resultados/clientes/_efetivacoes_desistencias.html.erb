@@ -1,0 +1,976 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading" style="height: 39px">
+      <div class="col-sm-2  pull" style="margin-top: -6px !important; padding-left: 0px" id="tipo_grafico">
+        <%= select_tag  'filtro_tipo_grafico', options_for_select([
+                                                              ['Efetivações x Desistências', 1],
+                                                              ['Pgto. 2º honorário', 3],
+                                                              ['Pgto. 3º honorário', 4],
+                                                              ['Novos honorários x honorários baixados', 2]
+                                                              ], 1), {:class => "form-control input-sm chosen-select"} %>
+      </div>
+      <div class="col-sm-2  pull-right" style="margin-top: -6px !important;" id="grafico_por_efet_des">
+        <%= select_tag  'filtro_grafico_efet_des', options_for_select([
+                                                              ['Por cidade', 1],
+                                                              ['Por UF', 6],
+                                                              ['Efetivações por sistema', 2],
+                                                              ['Desistências por sistema', 3],
+                                                              ['Efetivações por sis. - Tabela', 4],
+                                                              ['Desativações. por sis. - Tabela', 5]
+                                                              ], 4), {:class => "form-control input-sm chosen-select"} %>
+      </div>
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div class="col-md-3 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoEfetivacoesFinanceiro()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Efetivações</h5>
+                  <span class="label label-info pull-right" id="compentencia_cliente_efetivacoes"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-left" id="efetivacoes_quantidade"></h2>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-right" id="efetivacoes_valor" style="margin-bottom: 3px"></h2>
+                    <small class="pull-right" id="media_efetivacoes"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoDesistenciasFinanceiro()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Desistências</h5>
+                  <span class="label label-info pull-right" id="compentencia_cliente_desativacoes"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-left" id="desativacoes_quantidade"></h2>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-right" id="desativacoes_valor" style="margin-bottom: 3px"></h2>
+                    <small class="pull-right" id="desativacoes_valor_media"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Saldo</h5>
+                  <span class="label label-info pull-right" id="compentencia_cliente_saldo"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-left" id="saldo_quantidade"></h2>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-right" id="saldo_valor" style="margin-bottom: 3px"></h2>
+                    <small class="pull-right" id="saldo_media"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5 id="titulo_grafico_bars">Efetivações x Desistências</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="efetivacoes_desistencias_12_meses" style="height: 222px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                  <span class="label label-info pull-right" id="desc_compt_eft_dest">Atual </span>
+                  <h5 id="titulo_grafico">Clientes por Cidade</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="cliente_cidade"  style="height: 222px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%= render 'dashboards/resultados/clientes/tabela/tabela_efetivacoes' %>
+      <%= render 'dashboards/resultados/clientes/tabela/tabela_desistencias' %>
+    </div>
+  </div>
+</div>
+
+<style>
+  .redcolor{
+    color: red;
+  }
+</style>
+
+<script>
+  $(document).ready(function() {
+    $('#tipo_grafico').on('click', function () { 
+      if ($('#filtro_tipo_grafico').val() == 1){
+        document.getElementById("titulo_grafico_bars").innerHTML = "Efetivações x Desistências";
+        drawEfetivacoesDesativacoesReal();  
+      }else if ($('#filtro_tipo_grafico').val() == 3){
+        document.getElementById("titulo_grafico_bars").innerHTML = "Pagamento 2º honorário";
+        drawEfetivacoesDesativacoes2meses(2); 
+      }else if ($('#filtro_tipo_grafico').val() == 4){
+        document.getElementById("titulo_grafico_bars").innerHTML = "Pagamento 3º honorário";
+        drawEfetivacoesDesativacoes2meses(3);  
+      }else{
+        document.getElementById("titulo_grafico_bars").innerHTML = "Novos honorários x honorários baixados";
+        drawEfetivacoesDesativacoes();
+      }
+
+      if ($('#filtro_grafico_efet_des').val() == 1){
+          document.getElementById("titulo_grafico").innerHTML = "Clientes por cidade";
+          document.getElementById("desc_compt_eft_dest").innerHTML = "Atual";
+          drawTableClientesCidades();
+        }else if ($('#filtro_grafico_efet_des').val() == 2) {
+          document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+          document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+          if ($('#filtro_tipo_grafico').val() == 1)
+            drawChartDesistenciasReal("ATIVAS");
+          else
+            drawChartDesistencias("ATIVAS");
+        }else if ($('#filtro_grafico_efet_des').val() == 3) {
+          document.getElementById("titulo_grafico").innerHTML = "Desistências";
+          document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+          if ($('#filtro_tipo_grafico').val() == 1)
+            drawChartDesistenciasReal("INATIVAS");
+          else
+            drawChartDesistencias("INATIVAS");
+        }else if ($('#filtro_grafico_efet_des').val() == 4) {
+          document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+          document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+          if ($('#filtro_tipo_grafico').val() == 1)
+            drawTabelaEfetivacoesDesistenciasReal("ATIVAS");
+          else
+            drawTabelaEfetivacoesDesistencias("ATIVAS");
+        }else if ($('#filtro_grafico_efet_des').val() == 6) {
+          document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+          document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+          if ($('#filtro_tipo_grafico').val() == 1)
+            drawEfetivacoesDesistenciasPorUF(2);
+          else
+            drawEfetivacoesDesistenciasPorUF(4);
+        }else{
+          document.getElementById("titulo_grafico").innerHTML = "Desistências";
+          document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+          if ($('#filtro_tipo_grafico').val() == 1)
+            drawTabelaEfetivacoesDesistenciasReal("INATIVAS");
+          else
+            drawTabelaEfetivacoesDesistencias("INATIVAS");
+        }
+    });
+
+    $('#grafico_por_efet_des').on('click', function () {
+      if ($('#filtro_grafico_efet_des').val() == 1){
+        document.getElementById("titulo_grafico").innerHTML = "Clientes por cidade";
+        document.getElementById("desc_compt_eft_dest").innerHTML = "Atual";
+        drawTableClientesCidades();
+      }else if ($('#filtro_grafico_efet_des').val() == 2) {
+        document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+        document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+        if ($('#filtro_tipo_grafico').val() == 1)
+          drawChartDesistenciasReal("ATIVAS");
+        else
+          drawChartDesistencias("ATIVAS");
+      }else if ($('#filtro_grafico_efet_des').val() == 3) {
+        document.getElementById("titulo_grafico").innerHTML = "Desistências";
+        document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+        if ($('#filtro_tipo_grafico').val() == 1)
+          drawChartDesistenciasReal("INATIVAS");
+        else
+          drawChartDesistencias("INATIVAS");
+      }else if ($('#filtro_grafico_efet_des').val() == 4) {
+        document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+        document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+        if ($('#filtro_tipo_grafico').val() == 1)
+          drawTabelaEfetivacoesDesistenciasReal("ATIVAS");
+        else
+          drawTabelaEfetivacoesDesistencias("ATIVAS");
+      }else if ($('#filtro_grafico_efet_des').val() == 6) {
+        document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+        document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+        if ($('#filtro_tipo_grafico').val() == 1)
+          drawEfetivacoesDesistenciasPorUF(2);
+        else
+          drawEfetivacoesDesistenciasPorUF(4);
+      }else{
+        document.getElementById("titulo_grafico").innerHTML = "Desistências";
+        document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+        if ($('#filtro_tipo_grafico').val() == 1)
+          drawTabelaEfetivacoesDesistenciasReal("INATIVAS");
+        else
+          drawTabelaEfetivacoesDesistencias("INATIVAS");
+      }
+    });
+
+  });
+
+    function drawTableClientesCidades() {
+        $.getJSON("/dashboards/get_clientes_ativos_cidade?order=QTD&empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val(), function(data) {
+            var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Nome');
+            datatable.addColumn('number', 'Quant.');
+
+            for (var i = 0; i < data.length; i++) {
+                datatable.addRow([data[i].nome, parseInt(data[i].quantidade)]);
+            }
+
+            var table = new google.visualization.Table(document.getElementById('cliente_cidade'));
+
+            table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+        });
+    }
+
+    function drawEfetivacoesDesativacoes() {
+
+        $.getJSON("/dashboards/get_efetivacoes_desativacoes?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val(), function(data) {
+            var dataArray = [
+                ['Mês', 'Efetivações', {type: 'string', role: 'annotation'}, 'Desistencias',
+                    {type: 'string', role: 'annotation'}, 'Valor Efetivações', 'Média Efetivações',
+                    'Valor Desistências', 'Média Desistências', 'Valor Saldo', 'Quantidade Saldo', 'Média Saldo'],
+            ];
+
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseInt(data[i].quantidadeefetivacoes), parseInt(data[i].quantidadeefetivacoes),
+                    parseInt(data[i].quantidadeinativos), parseInt(data[i].quantidadeinativos),  parseFloat(data[i].valorefetivacoes),
+                    parseFloat(data[i].mediaefetivacoes), parseFloat(data[i].valorinativos), parseFloat(data[i].mediainativos),
+                    parseFloat(data[i].saldo_total), parseInt(data[i].saldo_quantidade), parseFloat(data[i].saldo_media)];
+                dataArray.push(row);
+            }
+
+            if(data.length > 0){
+                preencherEfetivacoesDesistencias($(data).get(-1).data, $(data).get(-1).quantidadeefetivacoes, mascaraValor($(data).get(-1).valorefetivacoes),
+                    mascaraValor($(data).get(-1).mediaefetivacoes), $(data).get(-1).quantidadeinativos, mascaraValor($(data).get(-1).valorinativos),
+                    mascaraValor($(data).get(-1).mediainativos), $(data).get(-1).saldo_quantidade, mascaraValor($(data).get(-1).saldo_total),
+                    mascaraValor($(data).get(-1).saldo_media));
+            }else{
+                preencherEfetivacoesDesistencias('', 0, mascaraValor('0.00'),
+                    mascaraValor('0.00'), 0, mascaraValor('0.00'),
+                    mascaraValor('0.00'), 0, mascaraValor('0.00'),
+                    mascaraValor('0.00'));
+            }
+
+            var options = {
+                'chartArea': {'width': '85%', 'height': '70%'},
+                vAxis: {title: 'Quant.'},
+                hAxis: {title: 'Mês', textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                isStacked: true,
+                legend: {position: 'top'},
+                animation: { easing: 'inAndOut', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('efetivacoes_desistencias_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                $('#bloco_efetivacoes_financeiro').hide();
+                if (selectedItem) {
+                    preencherEfetivacoesDesistencias(data.getValue(selectedItem.row, 0), data.getValue(selectedItem.row, 1), mascaraValor(data.getValue(selectedItem.row, 5).toFixed(2)),
+                        mascaraValor(data.getValue(selectedItem.row, 6).toFixed(2)), data.getValue(selectedItem.row, 4), mascaraValor(data.getValue(selectedItem.row, 7).toFixed(2)),
+                        mascaraValor(data.getValue(selectedItem.row, 8).toFixed(2)), data.getValue(selectedItem.row, 10), mascaraValor(data.getValue(selectedItem.row, 9).toFixed(2)),
+                        mascaraValor(data.getValue(selectedItem.row, 11).toFixed(2)));
+                  
+                  if(selectedItem['column'] == 1 && ($('#filtro_grafico_efet_des').val() == 2 || $('#filtro_grafico_efet_des').val() == 3)) { //grafico
+                    drawChartDesistencias("ATIVAS");
+                    $('#filtro_grafico_efet_des').val(2);
+                    document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+                  }else if(selectedItem['column'] == 1 && ($('#filtro_grafico_efet_des').val() == 1 || $('#filtro_grafico_efet_des').val() == 4 || $('#filtro_grafico_efet_des').val() == 5)) { //tabela
+                    drawTabelaEfetivacoesDesistencias("ATIVAS");
+                    $('#filtro_grafico_efet_des').val(4);
+                    document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+                  }else if(selectedItem['column'] == 1 && $('#filtro_grafico_efet_des').val() == 6) { //tabela por uf efetivacoes
+                    drawEfetivacoesDesistenciasPorUF(4);
+                    document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+                  }
+                  else if($('#filtro_grafico_efet_des').val() == 1 || $('#filtro_grafico_efet_des').val() == 4 || $('#filtro_grafico_efet_des').val() == 5) { //tabela
+                    drawTabelaEfetivacoesDesistencias("INATIVAS");
+                    $('#filtro_grafico_efet_des').val(4);
+                    document.getElementById("titulo_grafico").innerHTML = "Desistências";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+                  }else if($('#filtro_grafico_efet_des').val() == 6) { //tabela por uf desativacoes
+                    drawEfetivacoesDesistenciasPorUF(5);
+                    document.getElementById("titulo_grafico").innerHTML = "Desistências";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+                  }else{ //grafico
+                    drawChartDesistencias("INATIVAS");
+                    $('#filtro_grafico_efet_des').val(3);
+                    document.getElementById("titulo_grafico").innerHTML = "Desistências";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();}
+                }else{
+                    preencherEfetivacoesDesistencias(data.getValue(data.jc.length-1, 0), data.getValue(data.jc.length-1, 1), mascaraValor(data.getValue(data.jc.length-1, 5).toFixed(2)),
+                        mascaraValor(data.getValue(data.jc.length-1, 6).toFixed(2)), data.getValue(data.jc.length-1, 4), mascaraValor(data.getValue(data.jc.length-1, 7).toFixed(2)),
+                        mascaraValor(data.getValue(data.jc.length-1, 8).toFixed(2)), data.getValue(data.jc.length-1, 10), mascaraValor(data.getValue(data.jc.length-1, 9).toFixed(2)),
+                        mascaraValor(data.getValue(data.jc.length-1, 11).toFixed(2)));
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([5,6,7,8,9,10,11]);
+            chart.draw(view, options);
+        });
+    }
+
+    function drawChartDesistencias(tipo) {
+      $.getJSON("/dashboards/get_efetivacoes_desativacoes_sistema?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&data=" + $('#compentencia_cliente_desativacoes').text() +
+            "&tipo=" + tipo, function(data) {
+            
+        var dataArray = [
+            ['Sistema', 'Quantidade'],
+        ];
+        dataArray.push(['Manager', parseInt(data["manager"])]);
+        dataArray.push(['Light', parseInt(data["light"])]);
+        dataArray.push(['Emissor', parseInt(data["emissor"])]);
+        //dataArray.push(['Fiscal', parseInt(data["fiscal"])]);
+        dataArray.push(['Gourmet', parseInt(data["gourmet"])]);
+        dataArray.push(['Pró vendas', parseInt(data["pro"])]);
+        dataArray.push(['Athus', parseInt(data["athus"])]);
+        datatable.push(['Trade', parseInt(data["trade"])]);
+        datatable.push(['Emissor WEB', parseInt(data["emissor_web"])]);
+        dataArray.push(['Híbridos', parseInt(data["hibridos"])]);
+        dataArray.push(['Sem sistemas', parseInt(data["sem_sistema"])]); 
+
+        var options = {
+            'chartArea': {'width': '100%', 'height': '80%'},
+            pieStartAngle: 50,
+            legend: {position: 'bottom'},
+            is3D: true
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('cliente_cidade'));
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        chart.draw(data, options);
+      });
+    }
+
+    function preencherEfetivacoesDesistencias(competencia, quantidadeEfetivacoes, valorEfetivacoes, mediaEfetivacoes, quantidadeDesistencia,
+                                              valorDesistencia, mediaDesistencia, quantidadeSaldo, valorSaldo, mediaSaldo) {
+        $('#efetivacoes_quantidade').text('Total ' + quantidadeEfetivacoes);
+        $('#efetivacoes_valor').text(valorEfetivacoes);
+        $('#media_efetivacoes').text('Média ' + mediaEfetivacoes);
+        $('#compentencia_cliente_efetivacoes').text(competencia);
+
+        $('#desativacoes_quantidade').text('Total ' + quantidadeDesistencia);
+        $('#desativacoes_valor').text(valorDesistencia);
+        $('#desativacoes_valor_media').text('Média ' + mediaDesistencia);
+        $('#compentencia_cliente_desativacoes').text(competencia);
+
+        $('#saldo_quantidade').text('Total ' + quantidadeSaldo);
+        $('#saldo_valor').text(valorSaldo);
+        $('#saldo_media').text('Média ' + mediaSaldo);
+        $('#compentencia_cliente_saldo').text(competencia);
+        if(valorSaldo.includes('-')){
+            $('#saldo_quantidade').addClass('redcolor');
+            $('#saldo_valor').addClass('redcolor');
+            $('#saldo_media').addClass('redcolor');
+        }else{
+            $('#saldo_quantidade').removeClass('redcolor');
+            $('#saldo_valor').removeClass('redcolor');
+            $('#saldo_media').removeClass('redcolor');
+        }
+    }
+
+    function carregarInfoEfetivacoesFinanceiro() {
+        $('#bloco_desistencias_financeiro').hide();
+        if($('#bloco_efetivacoes_financeiro').is(':visible')){
+            $('#bloco_efetivacoes_financeiro').hide();
+        }else if ($('#filtro_tipo_grafico').val() == 2) {
+            $.getJSON("/dashboards/table_efetivacoes_financeiro?empresa=" + $('#empresas_financeiro_id').val() +
+                "&qtd_debito=1" +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#compentencia_cliente_efetivacoes').text(), function(data) {
+                $('#bloco_efetivacoes_financeiro').show();
+                var table = $('.table-efetivacoes-financeiro').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datainicial']).format("DD/MM/YYYY"),
+                        val['dias_sem_uso'],
+                        val['razaosocial'],
+                        val['municipio'] + '-' + val['sigla'],
+                        val['sistema'],
+                        val['vendedor'],
+                        val['implantador'],
+                        mascaraValor(val['valor'])
+                    ] ).draw( false );
+                });
+            });
+        }else if ($('#filtro_tipo_grafico').val() == 1) {
+            $.getJSON("/dashboards/table_efetivacoes_financeiroReal?empresa=" + $('#empresas_financeiro_id').val() +
+                "&qtd_debito=1" +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#compentencia_cliente_efetivacoes').text(), function(data) {
+                $('#bloco_efetivacoes_financeiro').show();
+                var table = $('.table-efetivacoes-financeiro').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datavencimento']).format("DD/MM/YYYY"),
+                        val['dias_sem_uso'],
+                        val['razaosocial'],
+                        val['estado'],
+                        val['sistema'], //sistema
+                        val['vendedor'],
+                        val['implantador'],
+                        mascaraValor(val['valormensalidade'])
+                    ] ).draw( false );
+                });
+            });
+        }else if ($('#filtro_tipo_grafico').val() == 3) {
+            $.getJSON("/dashboards/table_efetivacoes_financeiroReal?empresa=" + $('#empresas_financeiro_id').val() +
+                "&qtd_debito=2" +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#compentencia_cliente_efetivacoes').text(), function(data) {
+                $('#bloco_efetivacoes_financeiro').show();
+                var table = $('.table-efetivacoes-financeiro').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datavencimento']).format("DD/MM/YYYY"),
+                        val['dias_sem_uso'],
+                        val['razaosocial'],
+                        val['estado'],
+                        val['sistema'], //sistema
+                        val['vendedor'],
+                        val['implantador'],
+                        mascaraValor(val['valormensalidade'])
+                    ] ).draw( false );
+                });
+            });
+        }else if ($('#filtro_tipo_grafico').val() == 4) {
+            $.getJSON("/dashboards/table_efetivacoes_financeiroReal?empresa=" + $('#empresas_financeiro_id').val() +
+                "&qtd_debito=3" +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#compentencia_cliente_efetivacoes').text(), function(data) {
+                $('#bloco_efetivacoes_financeiro').show();
+                var table = $('.table-efetivacoes-financeiro').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datavencimento']).format("DD/MM/YYYY"),
+                        val['dias_sem_uso'],
+                        val['razaosocial'],
+                        val['estado'],
+                        val['sistema'], //sistema
+                        val['vendedor'],
+                        val['implantador'],
+                        mascaraValor(val['valormensalidade'])
+                    ] ).draw( false );
+                });
+            });
+        }
+    }
+
+    function carregarInfoDesistenciasFinanceiro() {
+        $('#bloco_efetivacoes_financeiro').hide();
+        if($('#bloco_desistencias_financeiro').is(':visible')){
+            $('#bloco_desistencias_financeiro').hide();
+        }else if ($('#filtro_tipo_grafico').val() == 2) {
+            $.getJSON("/dashboards/table_desistencia_financeiro?empresa=" + $('#empresas_financeiro_id').val() +
+                "&qtd_mes=1" +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#compentencia_cliente_desativacoes').text(), function(data) {
+                $('#bloco_desistencias_financeiro').show();
+                var table = $('.table-desistencias-financeiro').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datainativacao']).format("DD/MM/YYYY"),
+                        val['dias_sem_uso'],
+                        moment(val['datainicial']).format("DD/MM/YYYY"),
+                        val['dias_cliente'],
+                        val['razaosocial'],
+                        val['municipio'] + '-' + val['sigla'],
+                        val['sistema'],
+                        val['vendedor'],
+                        val['implantador'],
+                        mascaraValor(val['valor']),
+                        val['motivo']
+                    ] ).draw( false );
+                });
+            });
+        }else if ($('#filtro_tipo_grafico').val() == 1) {
+            $.getJSON("/dashboards/table_desistencia_financeiroReal?empresa=" + $('#empresas_financeiro_id').val() +
+                "&qtd_mes=1" +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#compentencia_cliente_desativacoes').text(), function(data) {
+                $('#bloco_desistencias_financeiro').show();
+                var table = $('.table-desistencias-financeiro').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datainativacao']).format("DD/MM/YYYY"),
+                        val['dias_sem_uso'],
+                        moment(val['datainicial']).format("DD/MM/YYYY"),
+                        val['dias_cliente'],
+                        val['razaosocial'],
+                        val['municipio'] + '-' + val['sigla'],
+                        val['sistema'],
+                        val['vendedor'],
+                        val['implantador'],
+                        mascaraValor(val['valor']),
+                        val['motivo']
+                    ] ).draw( false );
+                });
+            });
+        }else if ($('#filtro_tipo_grafico').val() == 3) {
+            $.getJSON("/dashboards/table_desistencia_financeiroReal?empresa=" + $('#empresas_financeiro_id').val() +
+                "&qtd_mes=2" +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#compentencia_cliente_desativacoes').text(), function(data) {
+                $('#bloco_desistencias_financeiro').show();
+                var table = $('.table-desistencias-financeiro').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datainativacao']).format("DD/MM/YYYY"),
+                        val['dias_sem_uso'],
+                        moment(val['datainicial']).format("DD/MM/YYYY"),
+                        val['dias_cliente'],
+                        val['razaosocial'],
+                        val['municipio'] + '-' + val['sigla'],
+                        val['sistema'],
+                        val['vendedor'],
+                        val['implantador'],
+                        mascaraValor(val['valor']),
+                        val['motivo']
+                    ] ).draw( false );
+                });
+            });
+        }else if ($('#filtro_tipo_grafico').val() == 4) {
+            $.getJSON("/dashboards/table_desistencia_financeiroReal?empresa=" + $('#empresas_financeiro_id').val() +
+                "&qtd_mes=3" +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#compentencia_cliente_desativacoes').text(), function(data) {
+                $('#bloco_desistencias_financeiro').show();
+                var table = $('.table-desistencias-financeiro').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datainativacao']).format("DD/MM/YYYY"),
+                        val['dias_sem_uso'],
+                        moment(val['datainicial']).format("DD/MM/YYYY"),
+                        val['dias_cliente'],
+                        val['razaosocial'],
+                        val['municipio'] + '-' + val['sigla'],
+                        val['sistema'],
+                        val['vendedor'],
+                        val['implantador'],
+                        mascaraValor(val['valor']),
+                        val['motivo']
+                    ] ).draw( false );
+                });
+            });
+        }
+    }
+
+    function drawTabelaEfetivacoesDesistencias(tipo) {
+      $.getJSON("/dashboards/get_efetivacoes_desativacoes_sistema?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&data=" + $('#compentencia_cliente_desativacoes').text() +
+            "&tipo=" + tipo, function(data) {
+            
+        var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Sistema');
+            datatable.addColumn('number', 'Quantidade');
+
+        datatable.addRow(['Manager', parseInt(data["manager"])]);
+        datatable.addRow(['Light', parseInt(data["light"])]);
+        datatable.addRow(['Emissor', parseInt(data["emissor"])]);
+        //datatable.addRow(['Fiscal', parseInt(data["fiscal"])]);
+        datatable.addRow(['Gourmet', parseInt(data["gourmet"])]);
+        datatable.addRow(['Pró vendas', parseInt(data["pro"])]);
+        datatable.addRow(['Athus', parseInt(data["athus"])]);
+        datatable.addRow(['Trade', parseInt(data["trade"])]);
+        datatable.addRow(['Emissor WEB', parseInt(data["emissor_web"])]);
+
+        datatable.sort({column: 1, desc: true});
+
+        var table = new google.visualization.Table(document.getElementById('cliente_cidade'));
+
+        table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+      });
+    }
+
+    function drawEfetivacoesDesativacoesReal() {
+        $.getJSON("/dashboards/get_efetivacoes_desativacoesReal?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val(), function(data) {
+            var dataArray = [
+                ['Mês', 'Efetivações', {type: 'string', role: 'annotation'}, 'Desistencias',
+                    {type: 'string', role: 'annotation'}, 'Valor Efetivações', 'Média Efetivações',
+                    'Valor Desistências', 'Média Desistências', 'Valor Saldo', 'Quantidade Saldo', 'Média Saldo'],
+            ];
+
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseInt(data[i].quantidadeefetivacoes), parseInt(data[i].quantidadeefetivacoes),
+                    parseInt(data[i].quantidadeinativos), parseInt(data[i].quantidadeinativos),  parseFloat(data[i].valorefetivacoes),
+                    parseFloat(data[i].mediaefetivacoes), parseFloat(data[i].valorinativos), parseFloat(data[i].mediainativos),
+                    parseFloat(data[i].saldo_total), parseInt(data[i].saldo_quantidade), parseFloat(data[i].saldo_media)];
+                dataArray.push(row);
+            }
+
+            if(data.length > 0){
+                preencherEfetivacoesDesistencias($(data).get(-1).data, $(data).get(-1).quantidadeefetivacoes, mascaraValor($(data).get(-1).valorefetivacoes),
+                    mascaraValor($(data).get(-1).mediaefetivacoes), $(data).get(-1).quantidadeinativos, mascaraValor($(data).get(-1).valorinativos),
+                    mascaraValor($(data).get(-1).mediainativos), $(data).get(-1).saldo_quantidade, mascaraValor($(data).get(-1).saldo_total),
+                    mascaraValor($(data).get(-1).saldo_media));
+            }else{
+                preencherEfetivacoesDesistencias('', 0, mascaraValor('0.00'),
+                    mascaraValor('0.00'), 0, mascaraValor('0.00'),
+                    mascaraValor('0.00'), 0, mascaraValor('0.00'),
+                    mascaraValor('0.00'));
+            }
+
+            var options = {
+                'chartArea': {'width': '85%', 'height': '70%'},
+                vAxis: {title: 'Quant.'},
+                hAxis: {title: 'Mês', textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                isStacked: true,
+                legend: {position: 'top'},
+                animation: { easing: 'inAndOut', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('efetivacoes_desistencias_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                $('#bloco_efetivacoes_financeiro').hide();
+                if (selectedItem) {
+                    preencherEfetivacoesDesistencias(data.getValue(selectedItem.row, 0), data.getValue(selectedItem.row, 1), mascaraValor(data.getValue(selectedItem.row, 5).toFixed(2)),
+                        mascaraValor(data.getValue(selectedItem.row, 6).toFixed(2)), data.getValue(selectedItem.row, 4), mascaraValor(data.getValue(selectedItem.row, 7).toFixed(2)),
+                        mascaraValor(data.getValue(selectedItem.row, 8).toFixed(2)), data.getValue(selectedItem.row, 10), mascaraValor(data.getValue(selectedItem.row, 9).toFixed(2)),
+                        mascaraValor(data.getValue(selectedItem.row, 11).toFixed(2)));
+
+                  if(selectedItem['column'] == 1 && ($('#filtro_grafico_efet_des').val() == 2 || $('#filtro_grafico_efet_des').val() == 3)) { //grafico
+                    drawChartDesistenciasReal("ATIVAS");
+                    $('#filtro_grafico_efet_des').val(2);
+                    document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+                  }else if(selectedItem['column'] == 1 && ($('#filtro_grafico_efet_des').val() == 1 || $('#filtro_grafico_efet_des').val() == 4 || $('#filtro_grafico_efet_des').val() == 5)) { //tabela
+                    drawTabelaEfetivacoesDesistenciasReal("ATIVAS");
+                    $('#filtro_grafico_efet_des').val(4);
+                    document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+                  }else if(selectedItem['column'] == 1 && $('#filtro_grafico_efet_des').val() == 6) { //tabela UF ativos
+                    drawEfetivacoesDesistenciasPorUF(2);
+                    document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+                  }else if($('#filtro_grafico_efet_des').val() == 1 || $('#filtro_grafico_efet_des').val() == 4 || $('#filtro_grafico_efet_des').val() == 5) { //tabela
+                    drawTabelaEfetivacoesDesistenciasReal("INATIVAS");
+                    $('#filtro_grafico_efet_des').val(4);
+                    document.getElementById("titulo_grafico").innerHTML = "Desistências";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+                  }else if($('#filtro_grafico_efet_des').val() == 6) { //tabela UF desistentes
+                    drawEfetivacoesDesistenciasPorUF(3);
+                    document.getElementById("titulo_grafico").innerHTML = "Desistências";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+                  }else{ //grafico
+                    drawChartDesistenciasReal("INATIVAS");
+                    $('#filtro_grafico_efet_des').val(3);
+                    document.getElementById("titulo_grafico").innerHTML = "Desistências";
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();}
+                }else{
+                    preencherEfetivacoesDesistencias(data.getValue(data.jc.length-1, 0), data.getValue(data.jc.length-1, 1), mascaraValor(data.getValue(data.jc.length-1, 5).toFixed(2)),
+                        mascaraValor(data.getValue(data.jc.length-1, 6).toFixed(2)), data.getValue(data.jc.length-1, 4), mascaraValor(data.getValue(data.jc.length-1, 7).toFixed(2)),
+                        mascaraValor(data.getValue(data.jc.length-1, 8).toFixed(2)), data.getValue(data.jc.length-1, 10), mascaraValor(data.getValue(data.jc.length-1, 9).toFixed(2)),
+                        mascaraValor(data.getValue(data.jc.length-1, 11).toFixed(2)));
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([5,6,7,8,9,10,11]);
+            chart.draw(view, options);
+        });
+    }
+
+    function drawTabelaEfetivacoesDesistenciasReal(tipo) {
+      $.getJSON("/dashboards/get_efetivacoes_desativacoes_sistema_real?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&data=" + $('#compentencia_cliente_desativacoes').text() +
+            "&tipo=" + tipo, function(data) {
+            
+        var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Sistema');
+            datatable.addColumn('number', 'Quantidade');
+
+        datatable.addRow(['Manager', parseInt(data["manager"])]);
+        datatable.addRow(['Light', parseInt(data["light"])]);
+        datatable.addRow(['Emissor', parseInt(data["emissor"])]);
+        //datatable.addRow(['Fiscal', parseInt(data["fiscal"])]);
+        datatable.addRow(['Gourmet', parseInt(data["gourmet"])]);
+        datatable.addRow(['Pró vendas', parseInt(data["pro"])]);
+        datatable.addRow(['Athus', parseInt(data["athus"])]);
+        datatable.addRow(['Trade', parseInt(data["trade"])]);
+        datatable.addRow(['Emissor WEB', parseInt(data["emissor_web"])]);
+
+        datatable.sort({column: 1, desc: true});
+
+        var table = new google.visualization.Table(document.getElementById('cliente_cidade'));
+
+        table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+      });
+    }
+
+    function drawTabelaEfetivacoesDesistencias2meses(tipo) {
+      $.getJSON("/dashboards/get_efetivacoes_desativacoes_sistema_real?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&data=" + $('#compentencia_cliente_desativacoes').text() +
+            "&tipo=" + tipo + "&pagamento2=true", function(data) {
+            
+        var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Sistema');
+            datatable.addColumn('number', 'Quantidade');
+
+        datatable.addRow(['Manager', parseInt(data["manager"])]);
+        datatable.addRow(['Light', parseInt(data["light"])]);
+        datatable.addRow(['Emissor', parseInt(data["emissor"])]);
+        //datatable.addRow(['Fiscal', parseInt(data["fiscal"])]);
+        datatable.addRow(['Gourmet', parseInt(data["gourmet"])]);
+        datatable.addRow(['Pró vendas', parseInt(data["pro"])]);
+        datatable.addRow(['Athus', parseInt(data["athus"])]);
+        datatable.addRow(['Trade', parseInt(data["trade"])]);
+        datatable.addRow(['Emissor WEB', parseInt(data["emissor_web"])]);
+
+        datatable.sort({column: 1, desc: true});
+
+        var table = new google.visualization.Table(document.getElementById('cliente_cidade'));
+
+        table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+      });
+    }
+
+    function drawChartDesistenciasReal(tipo) {
+      $.getJSON("/dashboards/get_efetivacoes_desativacoes_sistema_real?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&data=" + $('#compentencia_cliente_desativacoes').text() +
+            "&tipo=" + tipo, function(data) {
+            
+        var dataArray = [
+            ['Sistema', 'Quantidade'],
+        ];
+        dataArray.push(['Manager', parseInt(data["manager"])]);
+        dataArray.push(['Light', parseInt(data["light"])]);
+        dataArray.push(['Emissor', parseInt(data["emissor"])]);
+        //dataArray.push(['Fiscal', parseInt(data["fiscal"])]);
+        dataArray.push(['Gourmet', parseInt(data["gourmet"])]);
+        dataArray.push(['Pró vendas', parseInt(data["pro"])]);
+        dataArray.push(['Athus', parseInt(data["athus"])]);
+        datatable.push(['Trade', parseInt(data["trade"])]);
+        datatable.push(['Emissor WEB', parseInt(data["emissor_web"])]);
+        dataArray.push(['Híbridos', parseInt(data["hibridos"])]);
+        dataArray.push(['Sem sistemas', parseInt(data["sem_sistema"])]); 
+
+        var options = {
+            'chartArea': {'width': '100%', 'height': '80%'},
+            pieStartAngle: 50,
+            legend: {position: 'bottom'},
+            is3D: true
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('cliente_cidade'));
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        chart.draw(data, options);
+      });
+    }
+
+    function drawChart2Pagamento(tipo) {
+      $.getJSON("/dashboards/get_efetivacoes_desativacoes_sistema_real?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&data=" + $('#compentencia_cliente_desativacoes').text() +
+            "&tipo=" + tipo + "&pagamento2=true", function(data) {
+            
+        var dataArray = [
+            ['Sistema', 'Quantidade'],
+        ];
+        dataArray.push(['Manager', parseInt(data["manager"])]);
+        dataArray.push(['Light', parseInt(data["light"])]);
+        dataArray.push(['Emissor', parseInt(data["emissor"])]);
+        //dataArray.push(['Fiscal', parseInt(data["fiscal"])]);
+        dataArray.push(['Gourmet', parseInt(data["gourmet"])]);
+        dataArray.push(['Pró vendas', parseInt(data["pro"])]);
+        dataArray.push(['Athus', parseInt(data["athus"])]);
+        datatable.push(['Trade', parseInt(data["trade"])]);
+        datatable.push(['Emissor WEB', parseInt(data["emissor_web"])]);
+        dataArray.push(['Híbridos', parseInt(data["hibridos"])]);
+        dataArray.push(['Sem sistemas', parseInt(data["sem_sistema"])]); 
+
+        var options = {
+            'chartArea': {'width': '100%', 'height': '80%'},
+            pieStartAngle: 50,
+            legend: {position: 'bottom'},
+            is3D: true
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('cliente_cidade'));
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        chart.draw(data, options);
+      });
+    }
+
+    function drawEfetivacoesDesistenciasPorUF(flag) {
+      $.getJSON("/dashboards/get_cliente_UF?empresa=" + $('#empresas_financeiro_id').val() +
+            "&tipo='NORMAL','EM_MANUTENCAO', 'BLOQUEADO'" +
+            "&data=" + $('#compentencia_cliente_desativacoes').text() + "&flag=" + flag, function(data) {         
+        
+        var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Estado');
+            datatable.addColumn('number', 'Quantidade');
+
+        for (var i = 0; i < data.length; i++) {
+          datatable.addRow([data[i].estado, data[i].qtd]);
+        }         
+            
+        datatable.sort({column: 1, desc: true});
+        for (var i=0; i< data.length; i++){
+          datatable.setRowProperty(i, 'className', 'h30');
+        }
+        //datatable.setRowProperty(data.length-1, 'className', 'bold');
+
+        var table = new google.visualization.Table(document.getElementById('cliente_cidade'));          
+          
+        table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+      });
+    }
+
+  function drawEfetivacoesDesativacoes2meses(meses) {
+    $.getJSON("/dashboards/get_efetivacoes_desativacoes_2meses?empresa=" + $('#empresas_financeiro_id').val() +
+        "&estado=" + $('#estado_financeiro_id').val() + "&qtd_mes=" + meses, function(data) {
+          console.log(data);
+        var dataArray = [
+            ['Mês', 'Efetivações', {type: 'string', role: 'annotation'}, 'Desistencias',
+                {type: 'string', role: 'annotation'}, 'Valor Efetivações', 'Média Efetivações',
+                'Valor Desistências', 'Média Desistências', 'Valor Saldo', 'Quantidade Saldo', 'Média Saldo'],
+        ];
+
+        for (var i = 0; i < data.length; i++) {
+            var row = [data[i].data, parseInt(data[i].quantidadeefetivacoes), parseInt(data[i].quantidadeefetivacoes),
+                parseInt(data[i].quantidadeinativos), parseInt(data[i].quantidadeinativos),  parseFloat(data[i].valorefetivacoes),
+                parseFloat(data[i].mediaefetivacoes), parseFloat(data[i].valorinativos), parseFloat(data[i].mediainativos),
+                parseFloat(data[i].saldo_total), parseInt(data[i].saldo_quantidade), parseFloat(data[i].saldo_media)];
+            dataArray.push(row);
+        }
+
+        if(data.length > 0){
+            preencherEfetivacoesDesistencias($(data).get(-1).data, $(data).get(-1).quantidadeefetivacoes, mascaraValor($(data).get(-1).valorefetivacoes),
+                mascaraValor($(data).get(-1).mediaefetivacoes), $(data).get(-1).quantidadeinativos, mascaraValor($(data).get(-1).valorinativos),
+                mascaraValor($(data).get(-1).mediainativos), $(data).get(-1).saldo_quantidade, mascaraValor($(data).get(-1).saldo_total),
+                mascaraValor($(data).get(-1).saldo_media));
+        }else{
+            preencherEfetivacoesDesistencias('', 0, mascaraValor('0.00'),
+                mascaraValor('0.00'), 0, mascaraValor('0.00'),
+                mascaraValor('0.00'), 0, mascaraValor('0.00'),
+                mascaraValor('0.00'));
+        }
+
+        var options = {
+            'chartArea': {'width': '85%', 'height': '70%'},
+            vAxis: {title: 'Quant.'},
+            hAxis: {title: 'Mês', textStyle: {fontSize: 9, color: 'blue'}},
+            seriesType: 'bars',
+            isStacked: true,
+            legend: {position: 'top'},
+            animation: { easing: 'inAndOut', duration: 500, startup: true, displayLegendValues: false}
+        };
+        var chart = new google.visualization.ComboChart(document.getElementById('efetivacoes_desistencias_12_meses'));
+
+        function selectHandler() {
+            var selectedItem = chart.getSelection()[0];
+            $('#bloco_efetivacoes_financeiro').hide();
+            if (selectedItem) {
+                preencherEfetivacoesDesistencias(data.getValue(selectedItem.row, 0), data.getValue(selectedItem.row, 1), mascaraValor(data.getValue(selectedItem.row, 5).toFixed(2)),
+                    mascaraValor(data.getValue(selectedItem.row, 6).toFixed(2)), data.getValue(selectedItem.row, 4), mascaraValor(data.getValue(selectedItem.row, 7).toFixed(2)),
+                    mascaraValor(data.getValue(selectedItem.row, 8).toFixed(2)), data.getValue(selectedItem.row, 10), mascaraValor(data.getValue(selectedItem.row, 9).toFixed(2)),
+                    mascaraValor(data.getValue(selectedItem.row, 11).toFixed(2)));
+
+              if(selectedItem['column'] == 1 && ($('#filtro_grafico_efet_des').val() == 2 || $('#filtro_grafico_efet_des').val() == 3)) { 
+                //efetivações -> grafico por sistema
+                drawChart2Pagamento("ATIVAS");
+                $('#filtro_grafico_efet_des').val(2);
+                document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+                document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+              }else if(selectedItem['column'] == 1 && ($('#filtro_grafico_efet_des').val() == 1 || $('#filtro_grafico_efet_des').val() == 4 || $('#filtro_grafico_efet_des').val() == 5)) { 
+                //efetivações --> tabela por cidade/eft por sistema/des por sistema
+                drawTabelaEfetivacoesDesistencias2meses("ATIVAS");
+                $('#filtro_grafico_efet_des').val(4);
+                document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+                document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+              }else if(selectedItem['column'] == 1 && $('#filtro_grafico_efet_des').val() == 6) { 
+                //efetivações ---> tabela UF ativos
+                drawEfetivacoesDesistenciasPorUF(6);
+                document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+                document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+              }else if($('#filtro_grafico_efet_des').val() == 1 || $('#filtro_grafico_efet_des').val() == 4 || $('#filtro_grafico_efet_des').val() == 5) { //tabela
+                drawTabelaEfetivacoesDesistencias2meses("INATIVAS");
+                $('#filtro_grafico_efet_des').val(4);
+                document.getElementById("titulo_grafico").innerHTML = "Desistências";
+                document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+              }else if($('#filtro_grafico_efet_des').val() == 6) { //tabela UF desistentes
+                drawEfetivacoesDesistenciasPorUF(7);
+                document.getElementById("titulo_grafico").innerHTML = "Desistências";
+                document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+              }else{ //grafico
+                drawChart2Pagamento("INATIVAS");
+                $('#filtro_grafico_efet_des').val(3);
+                document.getElementById("titulo_grafico").innerHTML = "Desistências";
+                document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();}
+            }else{
+                preencherEfetivacoesDesistencias(data.getValue(data.jc.length-1, 0), data.getValue(data.jc.length-1, 1), mascaraValor(data.getValue(data.jc.length-1, 5).toFixed(2)),
+                    mascaraValor(data.getValue(data.jc.length-1, 6).toFixed(2)), data.getValue(data.jc.length-1, 4), mascaraValor(data.getValue(data.jc.length-1, 7).toFixed(2)),
+                    mascaraValor(data.getValue(data.jc.length-1, 8).toFixed(2)), data.getValue(data.jc.length-1, 10), mascaraValor(data.getValue(data.jc.length-1, 9).toFixed(2)),
+                    mascaraValor(data.getValue(data.jc.length-1, 11).toFixed(2)));
+            }
+        }
+
+        google.visualization.events.addListener(chart, 'select', selectHandler);
+
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        chart.draw(data, options);
+
+        view = new google.visualization.DataView(data);
+        view.hideColumns([5,6,7,8,9,10,11]);
+        chart.draw(view, options);
+    });
+  }
+
+</script>

@@ -1,0 +1,616 @@
+<%= hidden_field_tag 'implantacao_id', @implantacao.id %>
+<%= hidden_field_tag 'implantacao_pausada', @implantacao.pausada %>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>IMPLANTAÇÃO</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="<%= url_for :controller => 'dashboards', :action => 'painel_vendas' %>">Home</a>
+            </li>
+            <li>
+                <a href="<%= url_for :controller => 'implantacoes', :action => 'index' %>">Implantações</a>
+            </li>
+            <li class="active">
+                <strong>Lançar</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce padding-top-10">
+    <div class="ibox float-e-margins margin-bottom-10">
+        <div class="ibox-content">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab-1"> Informações</a></li>
+                    <li><a data-toggle="tab" href="#tab-2"> Telefones</a></li>
+                    <li><a data-toggle="tab" href="#tab-3"> Inf. relevantes</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                            <%= hidden_field_tag 'implantacao_andamento_id', current_user.implantacao_id %>
+                            <div class="form-group margin-bottom-5">
+                                <div class="row">
+                                    <div class="field col-sm-4">
+                                        <label for="cliente_razao_social">Cliente</label>
+                                        <%= text_field_tag "cliente_razao_social", @implantacao.cliente.razao_social, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                        <%= hidden_field_tag 'cliente_id', @implantacao.cliente.id %>
+                                    </div>
+                                    <div class="field col-sm-2">
+                                        <label for="cliente_cnpj">CNPJ</label>
+                                        <%= text_field_tag "cliente_cnpj", @implantacao.cliente.cnpj, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                    </div>
+                                    <div class="field col-sm-3">
+                                        <label for="cliente_cnae">CNAE</label>
+                                        <div class="input-group m-b" style="margin-bottom: 0px;">
+                                            <%= text_field_tag "cliente_cnae", @implantacao.cliente.cnae ? @implantacao.cliente.cnae.descricao : '', {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                            <span class="input-group-addon padding-0">
+                                                <button id="btnVerCnaes" class="btn btn-sm btn-info btn-table" title="Ver todos Cnaes" data-toggle="tooltip" data-placement="right">
+                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="field col-sm-3">
+                                        <label for="cliente_email">Email</label>
+                                        <%= text_field_tag "cliente_email", @implantacao.cliente.email, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group margin-bottom-5">
+                                <div class="row">
+                                    <div class="field col-sm-4">
+                                        <label for="cliente_cidade">Cidade</label>
+                                        <%= text_field_tag "cliente_cidade", @implantacao.cliente.cidade.descricao_completa, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                    </div>
+                                    <div class="field col-sm-3">
+                                        <label for="fechamento_vendedor">Vendedor</label>
+                                        <%= text_field_tag "fechamento_vendedor", @implantacao.cliente.fechamento&.user&.name, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                    </div>
+                                    <div class="field col-sm-3">
+                                        <label for="agendamento_contato">Responsável</label>
+                                        <%= text_field_tag "implantacao_responsavel", @implantacao.user.present? ? @implantacao.user.name : 'Sem responsável', {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                        <%= hidden_field_tag 'implantacao_responsavel_id', @implantacao.user.present? ? @implantacao.user.id : nil %>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group margin-bottom-5">
+                                <div class="row">
+                                    <div class="field col-sm-2">
+                                        <label for="agendamento_horario">Agendamento</label>
+                                        <%= text_field_tag "agendamento_horario", @agenda.present? ? human_datetime(@agenda.data_inicio) : 'Sem agenda marcada', {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                        <%= hidden_field_tag 'agenda_id', @agenda.present? ? @agenda.id : ''%>
+                                    </div>
+                                    <div class="field col-sm-2">
+                                        <label for="sistema_nome">Sistema</label>
+                                        <%= text_field_tag "sistema_nome", @implantacao.proposta.pacote.sistema.nome, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                    </div>
+                                    <div class="field col-sm-3">
+                                        <label for="cliente_cnae">Status</label>
+                                        <%= select_tag  'implantacao_status', options_for_select([
+                                                                                 ['Agendado', 0],
+                                                                                 ['Reagendado', 1],
+                                                                                 ['Aguardando terceiros', 2],
+                                                                                 ['Limbo', 10],
+                                                                                 ['Em processo de instalação', 3],
+                                                                                 ['Aguardando treinamento', 4],
+                                                                                 ['Em processo de treinamento', 5],
+                                                                                 ['Aguardando terceiros', 6],
+                                                                                 ['Desistente - Pré instalação', 7],
+                                                                                 ['Desistente - Durante implantação', 8],
+                                                                                 ['Implantação concluída', 9]
+                                                                             ], @implantacao.status), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um status'}, :include_blank => true, disabled: "true"} %>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group margin-bottom-5">
+                                <div class="row">
+                                    <div class="field col-sm-12">
+                                        <label>Observações</label>
+                                        <%= text_area_tag "implantacao_observacoes", @implantacao.observacao, {label: false,  class: "form-control input-sm"} %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <button class="btn btn-xs btn-primary pull-left" id="btnNovoContato">Novo Contato</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <small>Cliente</small>
+                                <table id="table-contatos" class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Telefone</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="body_table_contatos">
+                                        <% if @implantacao.cliente.all_telefones.size > 0 %>
+                                        <% @implantacao.cliente.all_telefones.each do |key, value| %>
+                                        <tr>
+                                            <td><%= value[:contato] %></td>
+                                            <td><%= key %></td>
+                                            <td><input class="pref pref-celular" id="<%= value[:identificador] %>" type="checkbox" onclick="setPref('<%= value[:identificador] %>')" title="Preferencial?" <%= value[:preferencial] ? 'checked' : ''%>></td>
+                                            <td><input class="whats whats-celular" id="whats<%= value[:identificador] %>" type="checkbox" onclick="setWhats('<%= value[:identificador] %>')" title="Enviou whatsapp?" <%= value[:whats] ? 'checked' : ''%>></td>
+                                            <td style="padding-top: 2px;">
+                                                <button id="btnMandarWhats" class="btn btn-sm btn-white btn-table" title="Whatsapp" onclick="chamarApiWhats('<%= key %>')" data-toggle="tooltip" data-placement="right">
+                                                    <%= image_tag("whats_enviado.ico", :alt => "Avatar", :class => "img-circle") %>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-sm-6">
+                                <small>Agenda</small>
+                                <table id="table-contatos" class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Telefone</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="body_table_contatos">
+                                        <% if @agenda.present? %>
+                                        <% if @agenda.telefone.present? %>
+                                        <tr>
+                                            <td><%= @agenda.contato %></td>
+                                            <td><%= @agenda.telefone %></td>
+                                            <td style="padding-top: 2px;">
+
+                                                <button id="btnMandarWhats" class="btn btn-sm btn-white btn-table" title="Whatsapp" onclick="chamarApiWhats('<%= @agenda.telefone %>')" data-toggle="tooltip" data-placement="right">
+                                                    <%= image_tag("whats_enviado.ico", :alt => "Avatar", :class => "img-circle") %>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                        <% if @agenda.telefone2.present? %>
+                                        <tr>
+                                            <td><%= @agenda.responsavel2 %></td>
+                                            <td><%= @agenda.telefone2 %></td>
+                                            <td style="padding-top: 2px;">
+                                                <button id="btnMandarWhats" class="btn btn-sm btn-white btn-table" title="Whatsapp" onclick="chamarApiWhats('<%= @agenda.telefone2 %>')" data-toggle="tooltip" data-placement="right">
+                                                    <%= image_tag("whats_enviado.ico", :alt => "Avatar", :class => "img-circle") %>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body scroll" style="padding: 5px">
+                            <div class="tabs-container">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#tab-10"> Fechamento</a></li>
+                                    <% if @implantacao.is_finalizado? %>
+                                    <li><a data-toggle="tab" href="#tab-20"> Implantação</a></li>
+                                    <% end %>
+                                    <% if @banco.present? %>
+                                    <li><a data-toggle="tab" href="#tab-bd"> Banco de dados</a></li>
+                                    <% end %>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="tab-10" class="tab-pane active">
+                                        <div class="panel-body">
+                                            <% @implantacao.cliente.pergunta_cliente_respostas.where(tipo: 1).each do |resposta| %>
+                                            <div class="form-group">
+                                                <div class="field">
+                                                    <label><%= resposta.pergunta.pergunta %></label>
+                                                    <textarea class="form-control" type="text" id="pergunta_<%= resposta.id %>" disabled><%= resposta.resposta %></textarea>
+                                                </div>
+                                            </div>
+                                            <% end %>
+                                        </div>
+                                    </div>
+                                    <% if @implantacao.is_finalizado? %>
+                                    <div id="tab-20" class="tab-pane">
+                                        <div class="panel-body">
+                                            <% @implantacao.cliente.pergunta_cliente_respostas.where(tipo: 2).each do |resposta| %>
+                                            <div class="form-group">
+                                                <div class="field">
+                                                    <label><%= resposta.pergunta.pergunta %></label>
+                                                    <textarea class="form-control" type="text" id="pergunta_<%= resposta.id %>" disabled><%= resposta.resposta %></textarea>
+                                                </div>
+                                            </div>
+                                            <% end %>
+                                        </div>
+                                    </div>
+                                    <% end %>
+                                    <% if @banco.present? %>
+                                    <div id="tab-bd" class="tab-pane">
+                                        <div class="panel-body">
+                                            <div class="form-group margin-bottom-5">
+                                                <div class="row">
+                                                    <div class="field col-sm-3">
+                                                        <label>Solicitante</label>
+                                                        <%= text_field_tag "solicitante_bd", @banco.user.name, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                                    </div>
+                                                    <div class="field col-sm-2">
+                                                        <label>Data/Hora solicitação</label>
+                                                        <%= text_field_tag "data_solicitacao_bd", human_datetime(@banco.created_at), {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                                    </div>
+                                                    <div class="field col-sm-2">
+                                                        <label>Data/Hora implantacao</label>
+                                                        <%= text_field_tag "data_implantacao_bd", human_datetime(@implantacao.data_inicio), {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                                    </div>
+                                                    <div class="field col-sm-2">
+                                                        <label>Tipo de banco de dados</label>
+                                                        <%= text_field_tag "tipo_bd", human_tipo_solicitacao_banco(@banco.tipo), {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                                    </div>
+                                                    <% if @banco.responsavel.present? %>
+                                                        <div class="field col-sm-3">
+                                                            <label>Responsável</label>
+                                                            <%= text_field_tag "responsavel_bd", @banco.responsavel.name, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                                        </div>
+                                                    <% else %>
+                                                        <div class="field col-sm-3">
+                                                            <label>Responsável</label>
+                                                            <%= text_field_tag "responsavel_bd", 'Sem responsável', {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                                        </div>
+                                                    <% end %>
+                                                </div>
+                                            </div>
+                                            <div class="form-group margin-bottom-5">
+                                                <div class="row">
+                                                    <div class="field col-sm-3">
+                                                        <label>Status</label>
+                                                        <%= text_field_tag "status_bd", @banco.status, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                                    </div>
+                                                    <div class="field col-sm-2">
+                                                        <label>Banco</label>
+                                                        <%= text_field_tag "local_bd", human_local_banco(@banco.local_banco), {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                                    </div>
+                                                    <div class="field col-sm-7">
+                                                        <label>Link request</label>
+                                                        <%= link_to @banco.link_request, @banco.link_request, :target => "_blank", disabled: 'true', class: "form-control input-sm", style: "cursor:pointer" %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% if @banco.motivo_solicitacao.present? %>
+                                                <div class="form-group margin-bottom-5">
+                                                    <div class="row">
+                                                        <div class="field col-sm-12">
+                                                            <label>Motivo solicitação</label>
+                                                            <%= text_area_tag "motivo_solicitacao_bd", @banco.motivo_solicitacao, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <% end %>
+                                            <div class="form-group margin-bottom-5">
+                                                <div class="row">
+                                                    <div class="field col-sm-12">
+                                                        <label>Observações</label>
+                                                        <%= text_area_tag "observacao_bd", @banco.observacao, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% end %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <% if @cliente.hist_acomp_id.present? || @cliente.hist_impl_id.present?%>
+                            <li><a data-toggle="tab" href="#tab-7"> Histórico Anterior</a></li>
+                        <% end %>
+                        <li class="active"><a data-toggle="tab" href="#tab-4"> Histórico</a></li>
+                        <li><a data-toggle="tab" href="#tab-5"> Propostas</a></li>
+                        <li><a data-toggle="tab" href="#tab-6"> Histórico ligações</a></li>
+                        <li><a data-toggle="tab" href="#tab-anexos"> Anexos </a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-4" class="tab-pane active">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="ibox-content tbody-contatos">
+                                        <button class="ladda-button btn btn-sm btn-info" id="btnNovoComentario" onclick="abrirModalComentario()"><i class="fa fa-plus"></i> Comentário</button>
+                                        <% @activities.each do |activity| %>
+                                        <div class="activity">
+                                            <%=  render_activity activity %>
+                                        </div>
+                                        <% end %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-5" class="tab-pane">
+                            <div class="ibox-content">
+                                <button class="ladda-button btn btn-sm btn-success" id="btnNovaProposta" onclick="abrirModalProposta(null)">Nova Proposta</button>
+                                <table id="table-proposta" class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Sistema</th>
+                                            <th>Usuário</th>
+                                            <th>Mensalidade</th>
+                                            <th>Tipo Implantação</th>
+                                            <th>Implantação</th>
+                                            <th>Forma Pagamento</th>
+                                            <th>Ativa</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="body_table_proposta">
+                                        <% @propostas.each do |proposta| %>
+                                        <tr>
+                                            <td><%= human_date proposta.data %></td>
+                                            <td><%= proposta.pacote.sistema.nome %></td>
+                                            <td><%= proposta.user.name unless proposta.user.nil? %></td>
+                                            <td><%= human_currency proposta.valor_mensalidade %></td>
+                                            <td><%= proposta.tipo_implantacao %></td>
+                                            <td><%= human_currency proposta.valor_implantacao %></td>
+                                          <td><%= proposta.formas_pagamento_id.present? ? Formapagamento.find(proposta.formas_pagamento_id).descricao : "" %></td>
+                                            <td><input class="pref pref-celular" type="checkbox" title="Ativa?" id="propostaAtiva-<%= proposta.id %>" onclick="setPropostaAtiva(<%= proposta.id %>)" <%= proposta.ativa ? 'checked' : ''%>></td>
+                                            <td><button class="btn btn-sm btn-primary" onclick="abrirModalProposta(<%= proposta.id %>)"><i class="fa fa-eye" aria-hidden="true"></i></button></td>
+                                        </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="tab-6" class="tab-pane">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="ibox-content tbody-contatos">
+                                        <table id="table-ligacoes" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 15%">Data</th>
+                                                    <th>Usuário</th>
+                                                    <th>Status</th>
+                                                    <th>Status Cliente</th>
+                                                    <th>Observação Ligação</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="body_table_ligacoes">
+                                                <% @ligacoes.each do |ligacao| %>
+                                                <tr>
+                                                    <td><%= human_datetime ligacao.data_inicio %></td>
+                                                    <td><%= ligacao.user.name %></td>
+                                                    <td><%= ligacao.status_ligacao.present? ? ligacao.status_ligacao.descricao : '' %></td>
+                                                    <td><%= ligacao.status_cliente.present? ? ligacao.status_cliente.descricao : '' %></td>
+                                                    <td><%= ligacao.observacao %></td>
+                                                </tr>
+                                                <% end %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-7" class="tab-pane">
+                            <div class="ibox-content">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="tabs-container">
+                                            <ul class="nav nav-tabs">
+                                                <li class="active"><a data-toggle="tab" href="#tab-8"> ligações</a></li>
+                                                <li><a data-toggle="tab" href="#tab-9"> Implantação</a></li>
+                                                <li><a data-toggle="tab" href="#tab-Acomp"> Acompanhamento</a></li>
+                                            </ul>
+                                            <div class="tab-content">
+                                                <div id="tab-8" class="tab-pane active">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="ibox-content tbody-contatos">
+                                                                <table id="table-ligacoes" class="table table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th style="width: 15%">Data</th>
+                                                                            <th>Usuário</th>
+                                                                            <th>Status</th>
+                                                                            <th>Status Cliente</th>
+                                                                            <th>Observação Ligação</th>
+                                                                            <th></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="body_table_ligacoes">
+                                                                        <% @ligacoes_old.each do |ligacao| %>
+                                                                        <tr>
+                                                                            <td><%= human_datetime ligacao.data_inicio %></td>
+                                                                            <td><%= ligacao.user.name %></td>
+                                                                            <td><%= ligacao.status_ligacao.present? ? ligacao.status_ligacao.descricao : '' %></td>
+                                                                            <td><%= ligacao.status_cliente.present? ? ligacao.status_cliente.descricao : '' %></td>
+                                                                            <td><%= ligacao.observacao %></td>
+                                                                        </tr>
+                                                                        <% end %>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="tab-9" class="tab-pane">
+                                                    <div class="ibox-content tbody-contatos">
+                                                        <% if @activities_impl.count.eql? 0 %>
+                                                            <h3> Nenhum Histórico Anterior há ser exibido </h3>
+                                                        <% end %>
+                                                        <% @activities_impl.each do |activity| %>
+                                                            <div class="activity">
+                                                                <%=  render_activity activity %>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </div>
+                                                <div id="tab-Acomp" class="tab-pane">
+                                                    <div class="ibox-content tbody-contatos">
+                                                        <% if @activities_acomp.count.eql? 0 %>
+                                                            <h3> Nenhum Histórico Anterior há ser exibido </h3>
+                                                        <% end %>
+                                                        <% @activities_acomp.each do |activity| %>
+                                                            <div class="activity">
+                                                                <%=  render_activity activity %>
+                                                            </div>
+                                                        <% end %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-anexos" class="tab-pane">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="ibox-content tbody-contatos">
+                                        <form action="/upload" id="mediadropzone" class="dropzone" enctype="multipart/form-data">
+                                            <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>" />
+                                            <%= hidden_field_tag 'cliente', @cliente.id %>
+                                            <DIV class="dz-message">    
+                                            Arraste os arquivos ou clique para fazer upload
+                                            </DIV>
+                                            <div class="fallback">
+                                            <input name="media" type="file" multiple />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="ibox-content tbody-contatos">
+                                        <div class="row" style="font-size:25px;">
+                                            <input type="checkbox" class="js-switch" id="contrato_assinado"/> Contrato assinado?
+                                        </div>
+                                        <div class="row">
+                                            <h3><i class="fa fa-paperclip"> </i> Anexos do cliente</h3>
+                                            <% @anexos.each do |att|%>
+                                                <div id="anexo-<%=att.id%>">
+                                                    <i class="fa fa-file-text-o"></i> <%= link_to File.basename(att.file.path), {action: 'download_file', id: att.id, controller: 'upload'}, target: '_blank'  %>
+                                                    <button type="button" class="btn btn-danger" onclick="remover_anexo('<%= att.id %>')" ><i class="fa fa-trash"></i> </button>                                                    
+                                                    
+                                                    <br />
+                                                </div>
+                                            <% end %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="pull-center" id="groupLigacaoIniciada">
+
+                <p class="pull-center">
+                    <button name="button" class="btn-lg ladda-button btn btn-info" onclick="GerarContratoEmpresa(<%= @implantacao.id %>)"> Contrato </button>
+
+                    <a href="/contratos/emitir_contrato?id='+data['id'] + '&local=acompanhamento"> </a>
+                    <% if ![7,8,9].include? @implantacao.status %>
+                        <a href="#" data-toggle="modal" data-target="#modal_desistir_implantacao" class="btn-lg ladda-button btn btn-danger">Desistente</a>
+                    <% end %>
+                                        
+                    <% if ![3,5,7,8,9].include? @implantacao.status %>
+                        <button name="button" class="btn-lg ladda-button btn btn-warning" id="btnReagendar" onclick="reagendarImplantacao(8)">
+                            Agendar/Reagendar
+                        </button>
+                    <% end %>
+                    <% if !@implantacao.is_aguardando? && (![7,8,9].include? @implantacao.status) %>
+                        <% if current_user.admin? %>
+                            <a href="#" data-toggle="modal" data-target="#modal_pausar_continuar_implantacao" class="btn-lg ladda-button btn btn-info"><%= @implantacao.pausada? ? 'Continuar' : 'Pausar' %></a>
+                        <% elsif @implantacao.pausada?%>
+                            <%= link_to 'Continuar', pausar_continuar_implantacao_path(@implantacao, redir:'noredir'), {method: :patch, class: 'btn-lg ladda-button btn btn-info'} %>
+                        <% else %>
+                            <a href="#" data-toggle="modal" data-target="#modal_pausar_continuar_implantacao" class="btn-lg ladda-button btn btn-info">Pausar</a>
+                        <% end %>
+                    <% end %>
+                    <% if @implantacao.is_aguardando? && (![7,8,9,10].include? @implantacao.status) %>
+                        <%= link_to 'Limbo', limbo_implantacao_path(@implantacao, redir:'noredir'), {method: :post, class: 'btn-lg ladda-button btn btn-info'} %>
+                    <% end %>
+                    <% if @implantacao.is_aguardando? %>
+                        <% if current_user.admin? %>
+                            <a href="#" data-toggle="modal" data-target="#modal_usuario_inicio_implantacao" class="btn-lg ladda-button btn btn-primary">Iniciar</a>
+                        <% else %>
+                            <%= link_to 'Iniciar', iniciar_implantacao_path(@implantacao, redir:'noredir'), {method: :patch, class: 'btn-lg ladda-button btn btn-primary'} %>
+                        <% end %>
+                    <% end %>
+                    <% if !@implantacao.pausada? && (@implantacao.status.eql? 3) %>
+                        <% if current_user.admin? %>
+                            <a href="#" data-toggle="modal" data-target="#modal_usuario_fim_instalacao_implantacao" class="btn-lg ladda-button btn btn-primary">Finalizar Instalação</a>
+                        <% else %>
+                            <%= link_to 'Finalizar Instalação', finalizar_instalacao_implantacao_path(@implantacao, redir:'noredir'), {method: :patch, class: 'btn-lg ladda-button btn btn-primary'} %>
+                        <% end %>
+                    <% end %>
+                    <% if @implantacao.status.eql? 4 %>
+                        <a href="#" data-toggle="modal" data-target="#modal_usuario_inicio_treinamento_implantacao" class="btn-lg ladda-button btn btn-primary">Iniciar Treinamento</a>
+                    <% end %>
+                    <% if !@implantacao.pausada? && (@implantacao.status.eql? 5) %>
+                        <a href="#" data-toggle="modal" data-target="#modal_usuario_finalizar_implantacao" class="btn-lg ladda-button btn btn-primary">Finalizar Implantação</a>
+                    <% end %>
+                    <% if !@implantacao.pausada? && (@implantacao.status.eql? 5) %>
+                        <a href="#" data-toggle="modal" data-target="#modal_usuario_alterar_treinamento_implantacao" class="btn-lg ladda-button btn btn-info">Alterar Treinamento</a>
+                    <% end %>
+                    
+                    <!-- <% if  @implantacao.user != current_user %>
+                    <%= link_to 'Assumir responsabilidade', assumir_responsabilidade_implantacao_path(@implantacao, redir:'noredir'), {method: :put, class: 'btn-lg ladda-button btn btn-primary'} %>
+                    <% end %> -->
+                    <% if Acompanhamento.where(cliente_id: @implantacao.cliente_id).first %>
+                    <%= link_to 'Abrir acompanhamento', acompanhamento_path(Acompanhamento.where(cliente_id: @implantacao.cliente_id).first.id), {class: 'btn-lg ladda-button btn btn-primary'} %>
+                    <% end %>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<%= render 'propostas/modal_proposta' %>
+<%= render 'ligacoes/modal_agenda' %>
+<%= render 'motivo' %>
+<%= render 'modal_comentario' %>
+<%= render 'implantacoes/modals/usuario_inicio_implantacao' %>
+<%= render 'implantacoes/modals/usuario_fim_instalacao_implantacao' %>
+<%= render 'implantacoes/modals/usuario_inicio_treinamento_implantacao' %>
+<%= render 'implantacoes/modals/usuario_finalizou_implantacao' %>
+<%= render 'implantacoes/modals/usuario_alterar_treinamento_implantacao' %>
+<%= render 'implantacoes/modals/desistente' %>
+<%= render 'implantacoes/modals/pausar_continuar_implantacao' %>
+<%= render 'clientes/adicionar_contato' %>
+<%= render 'cnaes/cnaes_cliente' %>
+
+<script>
+    $(document).ready(function(){        
+        var checkboxContrato = document.querySelector('.js-switch');
+        var init = new Switchery(checkboxContrato);
+
+        if(<%= @cliente.assinou_contrato %> && !checkboxContrato.checked)
+          $('#contrato_assinado').trigger('click');
+
+        checkboxContrato.onchange = function(){
+            $.ajax({
+                url: '/clientes/assinar_contrato',
+                data: { info: checkboxContrato.checked,
+                    cliente_id: $('#cliente').val()},
+                type: 'GET',
+                success: function(data) {
+                    exibirMsg("Status do contrato alterado.");     
+                },
+                error: function(data) {
+                    exibirErro(data);
+                }
+            });
+        }
+    })
+</script>

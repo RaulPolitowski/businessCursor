@@ -1,0 +1,18 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Mensalidades") do |sheet|
+  # Create the header row
+  if @tipo.eql? '1'
+    sheet.add_row ["Cliente", "Cpf/Cnpj", "Cidade - UF", "Sistema", "Vendedor", "Mensalidade", "Região", "Comissão"]
+  elsif ['3', '5', '6', '7', '8', '9', '10'].include? @tipo
+    sheet.add_row ["Cliente", "Cpf/Cnpj", "Cidade - UF", "Sistema", "Mensalidade", "% Comissão", "Valor comissão", "Tipo comissão"]
+  end
+  # Create entries for each item
+  @hash.each do |empresa|
+    if @tipo.eql? '1'
+        sheet.add_row [empresa['razaosocial'], "'#{empresa['cpfcnpj'].to_s}", empresa['cidade'], empresa['sistema'], empresa['vendedor'], empresa['mensalidade'], empresa['regiao_desc'], empresa['comissao'] ]
+    elsif ['3', '5', '6', '7', '8', '9', '10'].include? @tipo
+        sheet.add_row [empresa['razaosocial'], "'#{empresa['cpfcnpj'].to_s}", empresa['cidade'], empresa['sistema'], empresa['mensalidade'], empresa['percentual_comissao'], empresa['comissao'], empresa['tipo_comissao'] ]
+    end
+  end
+end

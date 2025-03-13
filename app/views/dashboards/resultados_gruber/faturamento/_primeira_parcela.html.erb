@@ -1,0 +1,280 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Primeira parcela
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div class="col-md-3 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoTabelaPrimeiraParcelaMensalidade()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>1ª Parc. Honorário</h5>
+                  <span class="label label-info pull-right" id="competencia_primeira_honorario"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-left" id="qtd_primeira_honorario_valor" style="margin-bottom: 2px !important;"></h2>
+                    </div>
+                    <small class="pull-left" id="media_primeira_honorario"></small>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-right" id="valor_primeira_honorario_valor" style="margin-bottom: 2px"></h2>
+                    </div>
+                    <div class="stat-percent font-bold text-danger" id="percentual_primeira_honorario"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoTabelaPrimeiraParcelaMensalidadeAtrasada()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>1ª Parc. Honorário. Atrasada</h5>
+                  <span class="label label-info pull-right" id="competencia_primeira_honorario_pend"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important; background-color: #ffe8e8;">
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-left" id="qtd_primeira_honorario_pend" style="margin-bottom: 3px !important;"></h2>
+                    </div>
+                    <small class="pull-left" id="media_primeira_honorario_pend"></small>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-right" id="valor_primeira_honorario_pend" style="margin-bottom: 2px"></h2>
+                    </div>
+                    <div class="stat-percent font-bold text-danger" id="percentual_primeira_honorario_pend"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5>Parcelas (12 meses)</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="primeira_parcela_12_meses" style="height: 260px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%= render 'dashboards/resultados_gruber/faturamento/tabela/tabela_primeira_honorario' %>
+      <%= render 'dashboards/resultados_gruber/faturamento/tabela/tabela_primeira_honorario_atrasada' %>
+    </div>
+  </div>
+</div>
+<%= render 'dashboards/resultados/faturamento/modal_cobrancas' %>
+<script>
+    function drawPrimeiraParcela12Meses() {
+        $.getJSON("/dashboards/get_total_primeira_honorario?empresa=" + $('#empresas_financeiro_id').val(), function(data) {
+            var dataArray = [
+                ['Mês', 'Honorário', 'Honorário', 'Quant. Honorário', 'Média Honorário',
+                    'Quant. Pendente Honorário', 'Valor Pendente Honorário',
+                    'Média Honorário Pendente']
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseFloat(data[i].valorhonorario), parseFloat(data[i].valorhonorario),
+                    parseFloat(data[i].quantidadehonorario),
+                    parseFloat(data[i].mediahonorario), parseFloat(data[i].quantidadependentehonorario),
+                    parseFloat(data[i].valorpendendehonorario), parseFloat(data[i].mediahonorariopend)];
+                dataArray.push(row);
+            }
+
+            var meses = data;
+            var result = null;
+            $.getJSON("/dashboards/get_total_primeira_honorario_mes_anterior?empresa=" + $('#empresas_financeiro_id').val(), function(ret) {
+                result = ret;
+                preencherPainelPrimeiraParcela($(meses).get(-1).data, parseFloat($(meses).get(-1).valorhonorario),
+                    parseFloat($(meses).get(-1).quantidadehonorario), parseFloat($(meses).get(-1).mediahonorario),
+                    parseFloat($(meses).get(-1).quantidadependentehonorario),parseFloat($(meses).get(-1).valorpendendehonorario),
+                    parseFloat($(meses).get(-1).mediahonorariopend), parseFloat($(result).get(-1).valorhonorario),
+                    parseFloat($(result).get(-1).valorpendentehonorario));
+            });
+
+            var options = {
+                'chartArea': {'width': '80%', 'height': '60%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                series: {1: {type: 'line', color: 'black', format: 'short'}},
+                legend: 'none',
+                vAxis: { title: 'Valor', viewWindowMode: "explicit", viewWindow: {min: 0}, format: 'short'},
+                animation: { easing: 'in', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('primeira_parcela_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    var ultimo = selectedItem.row-1;
+                    if(ultimo == -1)
+                        ultimo = 0;
+                    preencherPainelPrimeiraParcela(data.getValue(selectedItem.row, 0), parseFloat(data.getValue(selectedItem.row, 2)),
+                        data.getValue(selectedItem.row, 3), parseFloat(data.getValue(selectedItem.row, 4)),
+                        data.getValue(selectedItem.row, 5), parseFloat(data.getValue(selectedItem.row, 6)),
+                        parseFloat(data.getValue(selectedItem.row, 7)),
+                        parseFloat(data.getValue(ultimo, 2)), parseFloat(data.getValue(ultimo, 6)));
+                }else{
+                    preencherPainelPrimeiraParcela($(meses).get(-1).data, parseFloat($(meses).get(-1).valorhonorario),
+                        parseFloat($(meses).get(-1).quantidadehonorario), parseFloat($(meses).get(-1).mediahonorario),
+                        parseFloat($(meses).get(-1).quantidadependentehonorario),parseFloat($(meses).get(-1).valorpendendehonorario),
+                        parseFloat($(meses).get(-1).mediahonorariopend), parseFloat($(result).get(-1).valorhonorario),
+                        parseFloat($(result).get(-1).valorpendentehonorario));
+                }
+                $('#bloco_primeira_parcela_mensalidade').hide();
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+            formatter.format(data, 1);
+            formatter.format(data, 2);
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([3,4,5,6,7,]);
+            chart.draw(view, options);
+        });
+    }
+
+    function preencherPainelPrimeiraParcela(competencia, valorHonorario, quantidadeHonorario, mediaHonorario,
+                                            quantPendenteHonorario, valorPendenteHonorario, mediaHonorarioPendente,
+                                            valorHonorarioAnterior, valorHonorarioPendenteAnterior) {
+
+        $('#competencia_primeira_honorario').text(competencia);
+        $('#competencia_primeira_honorario_pend').text(competencia);
+
+        $('#qtd_primeira_honorario_valor').text('Total ' + quantidadeHonorario);
+
+        $('#valor_primeira_honorario_valor').text(mascaraValor(valorHonorario.toFixed(2)));
+        $('#media_primeira_honorario').text('Média ' + mascaraValor(mediaHonorario.toFixed(2)));
+
+        $('#qtd_primeira_honorario_pend').text('Total ' + quantPendenteHonorario);
+
+        $('#valor_primeira_honorario_pend').text(mascaraValor(valorPendenteHonorario.toFixed(2)));
+
+        $('#media_primeira_honorario_pend').text('Média ' + mascaraValor(mediaHonorarioPendente.toFixed(2)));
+
+        var valor = ((valorHonorario*100 / valorHonorarioAnterior)-100);
+        $('#percentual_primeira_honorario').text('');
+        if(valorHonorarioAnterior == 0){
+            $('#percentual_primeira_honorario').removeClass('text-danger').addClass('text-info');
+            $('#percentual_primeira_honorario').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else if(valor >= 0){
+            $('#percentual_primeira_honorario').removeClass('text-danger').addClass('text-info');
+            $('#percentual_primeira_honorario').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_primeira_honorario').removeClass('text-info').addClass('text-danger');
+            $('#percentual_primeira_honorario').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        var valor = ((valorPendenteHonorario*100 / valorHonorarioPendenteAnterior)-100);
+        $('#percentual_primeira_honorario_pend').text('');
+//        if(valor >= 0){
+            $('#percentual_primeira_honorario_pend').removeClass('text-danger').addClass('text-info');
+            $('#percentual_primeira_honorario_pend').append('0.00'+'% <i class="fa fa-level-up"></i>');
+//        }else{
+//            $('#percentual_primeira_mensalidade_pend').removeClass('text-info').addClass('text-danger');
+//            $('#percentual_primeira_mensalidade_pend').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+//        }
+
+
+    }
+
+    function carregarInfoTabelaPrimeiraParcelaMensalidade() {
+        $('#bloco_primeira_parcela_honorario_atrasada').hide();
+        if($('#bloco_primeira_parcela_honorario').is(':visible')){
+            $('#bloco_primeira_parcela_honorario').hide();
+        }else{
+            $('body').lmask('show');
+            $.getJSON("/dashboards/table_primeira_parcela_honorario?empresa=" + $('#empresas_financeiro_id').val() +
+                "&tipo=1" +
+                "&data=" + $('#competencia_primeira_honorario').text(), function(data) {
+                $('#bloco_primeira_parcela_honorario').show();
+                var table = $('.table-primeira-honorario').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datapagamento']).format("DD/MM/YYYY"),
+                        val['razaosocial'],
+                        val['cidade'],
+                        mascaraValor(val['valorpago'])
+                    ] ).draw( false );
+                });
+                $('body').lmask('hide');
+            });
+        }
+    }
+
+    function carregarInfoTabelaPrimeiraParcelaMensalidadeAtrasada() {
+        $('#bloco_primeira_parcela_mensalidade').hide();
+
+        if($('#bloco_primeira_parcela_honorario_atrasada').is(':visible')){
+            $('#bloco_primeira_parcela_honorario_atrasada').hide();
+        }else{
+            $('body').lmask('show');
+            $.getJSON("/dashboards/table_primeira_parcela_honorario?empresa=" + $('#empresas_financeiro_id').val() +
+                "&tipo=2" +
+                "&data=" + $('#competencia_primeira_honorario_pend').text(), function(data) {
+                $('#bloco_primeira_parcela_honorario_atrasada').show();
+                var table = $('.table-primeira-honorario-atrasada').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datavencimento']).format("DD/MM/YYYY"),
+                        val['qtd_dias'],
+                        val['razaosocial'],
+                        val['cidade'],
+                        mascaraValor(val['valor']),
+                        val['ultima_ligacao'],
+                        val['historico'],
+                        val['usuario_ligacao'],
+                        val['clifor_id'],
+                        val['dataretorno']
+                    ] ).draw( false );
+                });
+                $('body').lmask('hide');
+            });
+        }
+    }
+
+    function abrirModalCobranca(id, razao_social) {
+        $.getJSON("/dashboards/table_historico_cobranca_cliente?empresa=" + $('#empresas_financeiro_id').val() +
+            "&cliente_id=" + id, function(data) {
+            $("#tbody_cobranca tr").remove();
+            $('#modal_cobrancas #empresa').val(razao_social)
+            $.each(data, function( key, value) {
+                var newRow = $("<tr style='height: 10px'>");
+                var cols = "";
+                cols += '<td style="width: 15%">' + value['data'] + '</td>';
+                cols += '<td style="width: 10%">' + humanBoolean(value['conseguiucontato']) + '</td>';
+                cols += '<td style="width: 10%">' + value['nome'] + '</td>';
+                cols += '<td style="width: 20%">' + value['contato'] + '</td>';
+                cols += '<td style="width: 30%">' + value['historico'] + '</td>';
+                cols += '<td style="width: 15%">' + value['dataretorno'] + '</td>';
+
+                newRow.append(cols);
+
+                $("#table-cobrancas").append(newRow);
+            })
+
+
+            $('#modal_cobrancas').modal('show');
+        });
+    }
+
+</script>

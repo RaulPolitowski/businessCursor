@@ -1,0 +1,306 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Receitas x Despesas
+      <div class="col-sm-2  pull-right" style="margin-top: -6px !important;" id="dem_grafico_por">
+        <%= select_tag  'filtro_grafico_demonstrativo', options_for_select([
+                                                              ['Receitas', 1],
+                                                              ['Despesas', 2]
+                                                              ], 1), {:class => "form-control input-sm chosen-select"} %>
+      </div>
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div id="fatDiv" class="col-md-3 padding-5">
+          <div id="fatDiv" class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Faturamento total</h5>
+                  <span class="label label-info pull-right" id="compentencia"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="receitas_total" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_receitas_total"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="receita_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="fatDiv" class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Despesas total</h5>
+                  <span class="label label-info pull-right" id="competencia_des"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="despesas_total" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_despesas"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="despesas_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="fatDiv" class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Resultado</h5>
+                  <span class="label label-info pull-right" id="competencia_rec"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="resultado_total" style="margin-bottom: 7px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_resultado"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="resultado_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5>Receitas x Despesas</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="demonstrativo_12_meses" style="height: 222px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right" id="competencia_tabela"></span>
+                <h5 id="titulo_tabela">Receitas</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="demonstrativo_por_tipo"  style="height: 222px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$('#dem_grafico_por').on('click', function () { 
+  if ($('#filtro_grafico_demonstrativo').val() == 1){
+    document.getElementById("titulo_tabela").innerHTML = "Receitas";
+    drawTableReceitasDespesasGruber('RECEITA');
+  }else{
+    document.getElementById("titulo_tabela").innerHTML = "Despesas";
+    drawTableReceitasDespesasGruber('DESPESA');
+  }
+
+});
+
+function drawDemonstrativoGruber12Meses() {
+  $.getJSON("/dashboards/get_demonstrativo_12_meses_gruber?empresa=" + $('#empresas_financeiro_id').val() + "&estado=" + $('#estado_financeiro_id').val(), function(data) 
+  {
+    var dataArray = [['Mês', 'Total Receitas', 'Total Despesas', 'Resultado']];
+
+    for (var i = 0; i < data.length; i++) {
+      var row = [data[i].data, parseFloat(data[i].total_receitas), parseFloat(data[i].total_despesas), parseFloat(data[i].resultado)];
+      dataArray.push(row);
+    }
+
+    var meses = data;
+    var result = null;
+    $.getJSON("/dashboards/get_demonstrativo_mes_anterior?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() + "&data="+ $('#competencia').text(), function(ret) {
+      result = ret;
+      preencherPainelDemonstrativo(parseFloat($(meses).get(-1).total_receitas), 
+                                  $(meses).get(-1).data, 
+                                  parseFloat($(result).get(-1).total_receitas),                                   
+                                  parseFloat($(meses).get(-1).total_despesas),
+                                  parseFloat($(result).get(-1).total_despesas),
+                                  parseFloat($(meses).get(-1).resultado),
+                                  parseFloat($(result).get(-1).resultado)); 
+      drawTableReceitasDespesasGruber('RECEITA');
+    });       
+    $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+            
+    var options = {
+                'chartArea': {'width': '90%', 'height': '60%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                legend: {position: 'top'},
+                vAxis: {tile: 'Valor', viewWindowMode: "explicit", viewWindow: {min: 0}, format: 'short'},
+                animation: { easing: 'in', duration: 500, startup: true, displayLegendValues: false}
+    };
+    var chart = new google.visualization.ComboChart(document.getElementById('demonstrativo_12_meses'));
+
+    function selectHandler() 
+    {
+      var selectedItem = chart.getSelection()[0];
+      if (selectedItem) {
+        var ultimo = selectedItem.row-1;
+        if(ultimo == -1)
+          ultimo = 0;
+        
+        preencherPainelDemonstrativo(parseFloat(data.getValue(selectedItem.row, 1)),
+                                    data.getValue(selectedItem.row, 0),
+                                    parseFloat(data.getValue(ultimo, 1)),
+                                    data.getValue(selectedItem.row, 2),
+                                    parseFloat(data.getValue(ultimo, 2)), 
+                                    data.getValue(selectedItem.row, 3),
+                                    parseFloat(data.getValue(ultimo, 3)));
+        if (selectedItem['column'] == 1) {
+          document.getElementById("titulo_tabela").innerHTML = "Receitas";
+          drawTableReceitasDespesasGruber('RECEITA');
+        }else{
+          document.getElementById("titulo_tabela").innerHTML = "Despesas";
+          drawTableReceitasDespesasGruber('DESPESA');
+        }
+                   
+        $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês inteiro."});
+      }else{
+        preencherPainelDemonstrativo(parseFloat($(meses).get(-1).total_receitas), 
+                                  $(meses).get(-1).data, 
+                                  parseFloat($(result).get(-1).total_receitas),                                   
+                                  parseFloat($(meses).get(-1).total_despesas),
+                                  parseFloat($(result).get(-1).total_despesas),
+                                  parseFloat($(meses).get(-1).resultado),
+                                  parseFloat($(result).get(-1).resultado));  
+        drawTableReceitasDespesasGruber('RECEITA');           
+        $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+      }
+    }
+
+    google.visualization.events.addListener(chart, 'select', selectHandler);
+
+    var data = google.visualization.arrayToDataTable(dataArray);
+
+    var formatter = new google.visualization.NumberFormat({prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+    formatter.format(data, 1); // Apply formatter to second column
+    formatter.format(data, 2);
+
+    chart.draw(data, options);
+
+    view = new google.visualization.DataView(data);
+    view.hideColumns([3]);
+    chart.draw(view, options);
+  });
+}
+
+function preencherPainelDemonstrativo(valorFaturamento, competencia, faturamentoAnterior, valorDespesas, despesasAnterior, resultado, resultadoAnterior) 
+{
+  $('#compentencia').text(competencia);
+  $('#competencia_rec').text(competencia);
+  $('#competencia_des').text(competencia);
+  $('#competencia_tabela').text(competencia);
+        
+  $('#receitas_total').text(mascaraValor(valorFaturamento.toFixed(2)));
+  $('#receita_anterior').text('Ant. ' + mascaraValor(faturamentoAnterior.toFixed(2)));
+
+  var valor = ((valorFaturamento*100 / faturamentoAnterior)-100);
+  $('#percentual_receitas_total').text('');
+  if(valor > 0){
+    $('#percentual_receitas_total').removeClass('text-danger').addClass('text-info');
+    $('#percentual_receitas_total').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+  }else{
+    $('#percentual_receitas_total').removeClass('text-info').addClass('text-danger');
+    $('#percentual_receitas_total').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+  }
+  //---------------------despesas
+  $('#despesas_total').text(mascaraValor(valorDespesas.toFixed(2)));
+  $('#despesas_anterior').text('Ant. ' + mascaraValor(despesasAnterior.toFixed(2)));
+  
+  var valor = ((valorDespesas*100 / despesasAnterior)-100);
+  $('#percentual_despesas').text('');
+  if(valor > 0){
+    $('#percentual_despesas').removeClass('text-danger').addClass('text-info');
+    $('#percentual_despesas').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+  }else{
+    $('#percentual_despesas').removeClass('text-info').addClass('text-danger');
+    $('#percentual_despesas').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+  }
+  //----------------resultado
+  $('#resultado_total').text(mascaraValor(resultado.toFixed(2)));
+  $('#resultado_anterior').text('Ant. ' + mascaraValor(resultadoAnterior.toFixed(2)));
+  if(resultado > 0){
+    $('#resultado_total').removeClass('text-danger');
+    //$('#resultado_total').append(mascaraValor(resultado.toFixed(2)) + '% <i class="fa fa-level-up"></i>');
+  }else{
+    $('#resultado_total').addClass('text-danger');
+    //$('#resultado_total').append(mascaraValor(resultado.toFixed(2)) +'% <i class="fa fa-level-down"></i>');
+  }
+
+  if(resultadoAnterior > 0){
+    $('#resultado_anterior').removeClass('text-danger');
+  }else{
+    $('#resultado_anterior').addClass('text-danger');
+  }
+
+  var valor = ((resultado*100 / resultadoAnterior)-100);
+  $('#percentual_resultado').text('');
+  if(valor > 0){
+    $('#percentual_resultado').removeClass('text-danger').addClass('text-info');
+    $('#percentual_resultado').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+  }else{
+    $('#percentual_resultado').removeClass('text-info').addClass('text-danger');
+    $('#percentual_resultado').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+  }
+  
+}
+
+function drawTableReceitasDespesasGruber(categoria) {
+  $.getJSON("/dashboards/get_tabela_receitas?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() + "&data="+ $('#compentencia').text() + "&categoria="+categoria, function(data) 
+  {
+    var datatable = new google.visualization.DataTable();
+    datatable.addColumn('string', 'Nome');
+    datatable.addColumn('number', 'Quant.');
+
+    for (var i = 0; i < data.length; i++) {
+      datatable.addRow([data[i].nomecobranca, parseFloat(data[i].valorpago)]);
+    }
+    
+    datatable.sort({column: 1, desc: true});
+
+    var table = new google.visualization.Table(document.getElementById('demonstrativo_por_tipo'));
+    var formatter = new google.visualization.NumberFormat(
+              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+    formatter.format(datatable, 1);
+
+    table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+  });
+}
+</script>

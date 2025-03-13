@@ -1,0 +1,33 @@
+
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>Cadastro de Notificação via Whatsapp</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="<%= url_for :controller => 'mensagem_notificacoes', :action => 'index' %>">Back</a>
+      </li>
+      <li class="active">
+        <strong>Nova Notificação</strong>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#tab-1"> Dados</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-1" class="tab-pane active">
+            <div class="panel-body">
+              <%= render 'form' %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

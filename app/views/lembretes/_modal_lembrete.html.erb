@@ -1,0 +1,58 @@
+<div id="lembrete" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Lembrete</h4>
+      </div>
+      <form class="form-horizontal" id="form_lembrete" >
+        <div class="modal-body">
+          <div class="form-group">
+            <%= hidden_field_tag 'lembrete_id', nil, class: 'form-control input-sm' %>
+            <div class="field">
+              <%= label_tag 'Data', nil,  class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-4 padding">
+                <div class="input-group clockpicker" data-autoclose="true">
+                  <%= text_field_tag :lembrete_data, nil,  class: 'form-control input-sm', autocomplete: "off",  placeholder: 'DD/MM/YYYY HH:mm' %>
+                  <span class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </span>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <%= label_tag 'Privado',  nil,  class: 'col-sm-2 control-label padding'%>
+              <div class="col-sm-4">
+                <%= select_tag :lembrete_privado, options_for_select([
+                                                                                          ["Sim", true],
+                                                                                          ["Não", false]], true), {:class => "form-control input-sm chosen-select"}  %>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="field">
+              <%= label_tag 'Responsável', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= text_field_tag :lembrete_user_lembrete, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Digite o nome para buscar' %>
+                <%= hidden_field_tag 'lembrete_user_lembrete_id', nil, class: 'form-control input-sm' %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="field">
+              <%= label_tag 'Observação', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= text_area_tag :lembrete_observacao, nil, class: 'form-control input-sm', autocomplete: "off" %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnSalvarLembrete', :class => 'btn btn-primary' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: 
+  cliente: 
+  tipo: 1
+  status: 1
+  finalizado: 2020-07-13 17:54:30
+  motivo_solicitacao: MyString
+  observacao: MyString
+  motivo_desativacao: MyString
+  ativo: false
+
+two:
+  user: 
+  cliente: 
+  tipo: 1
+  status: 1
+  finalizado: 2020-07-13 17:54:30
+  motivo_solicitacao: MyString
+  observacao: MyString
+  motivo_desativacao: MyString
+  ativo: false

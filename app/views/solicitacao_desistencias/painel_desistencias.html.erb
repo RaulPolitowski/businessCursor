@@ -1,0 +1,194 @@
+<div class="wrapper wrapper-content">
+  <div class="row">
+    <div class="col-lg-12 padding-left-right">
+      <div class="ibox float-e-margins border-bottom" style="margin-bottom: 5px;">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <button class="btn btn-primary btn-xs" id="btnMesPainel">Mês</button>
+              <button class="btn btn-primary btn-xs" id="btn7diasPainel">Semana</button>
+              <button class="btn btn-primary btn-xs" id="btnAnoPainel">Ano</button>
+              <button class="btn btn-primary btn-xs" id="btnTodasPainel">Todas</button>
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <div class="field col-sm-2">
+                <label for="data_inicio_painel">Data Início</label>
+                <input class="form-control input-sm" type="text" name="data_inicio_painel" id="data_inicio_painel">
+              </div>
+              <div class="field col-sm-2">
+                <label for="data_fim_painel">Data Fim</label>
+                <input class="form-control input-sm" type="text" name="data_fim_painel" id="data_fim_painel">
+              </div>
+              <div class="col-lg-1">
+                <br>
+                <%= submit_tag 'Buscar', :id => 'btnFiltrarTags', :class => 'btn btn-primary' %>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12  padding-left-right">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Motivo desistências</h5>
+        </div>
+        <div class="ibox-content">
+          <div class="row">
+            <div class="col-lg-6 text-center">
+              <span> <%= Date.today.beginning_of_month.strftime("%d/%m/%Y") %> á <%= Date.today.end_of_month.strftime("%d/%m/%Y")%> </span>
+              <div id="chart_tags" style="min-height: 340px;"></div>
+              <h3 id="totalizar"></h3>
+            </div>
+            <div class="col-lg-6 text-center">
+              <span> <%= (Date.today - 1.month).beginning_of_month.strftime("%d/%m/%Y") %> á <%= (Date.today - 1.month).end_of_month.strftime("%d/%m/%Y")%> </span>
+              <div id="chart_tags_anterior" style="min-height: 340px;"></div>
+              <h3 id="totalizar_anterior"></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+  $(document).ready(function(){
+    var date = new Date();
+    $('#data_inicio_painel').datepicker({
+        todayBtn: "linked",
+        keyboardNavigation: false,
+        forceParse: false,
+        calendarWeeks: true,
+        autoclose: true,
+        format: 'dd/mm/yyyy'
+    });
+    $("#data_inicio_painel").datepicker("setDate", new Date(date.getFullYear(), date.getMonth(), 1));
+
+    $('#data_fim_painel').datepicker({
+        todayBtn: "linked",
+        keyboardNavigation: false,
+        forceParse: false,
+        calendarWeeks: true,
+        autoclose: true,
+        format: 'dd/mm/yyyy'
+    });
+    $("#data_fim_painel").datepicker("setDate",  new Date(date.getFullYear(), date.getMonth() + 1, 0));
+
+    $('#btn7diasPainel').on('click', function () {
+        $("#data_inicio_painel").datepicker("setDate",  addDays(new Date(), -7));
+        $("#data_fim_painel").datepicker("setDate",  new Date());
+
+        drawChartTags();
+        return false;
+    });
+
+    $('#btnMesPainel').on('click', function () {
+        $("#data_inicio_painel").datepicker("setDate",  new Date(date.getFullYear(), date.getMonth(), 1));
+        $("#data_fim_painel").datepicker("setDate",  new Date(date.getFullYear(), date.getMonth() + 1, 0));
+
+        drawChartTags();
+        return false;
+    });
+
+    $('#btnAnoPainel').on('click', function () {
+        $("#data_inicio_painel").datepicker("setDate",  null);
+        $("#data_fim_painel").datepicker("setDate",  null);
+
+        drawChartTags();
+        return false;
+    });
+
+    $('#btnTodasPainel').on('click', function () {
+        $("#data_inicio_painel").datepicker("setDate",  new Date(date.getFullYear(), 0, 1));
+        $("#data_fim_painel").datepicker("setDate",  new Date(date.getFullYear(), 12, 0));
+
+        drawChartTags();
+        return false;
+    });
+    
+    $('#btnFiltrarTags').on('click', function () {
+        drawChartTags();
+        return false;
+    });
+
+    drawChartTags();
+    drawChartTagsAnterior();
+    google.charts.load('current', {'packages':['corechart','table']});
+  });
+
+  function drawChartTags(){
+    $.getJSON("/solicitacao_desistencias/get_estatisticas_tags?data_inicio=" + $('#data_inicio_painel').val() + "&data_fim=" + $('#data_fim_painel').val(), function(data) {
+
+      var dataArray = [
+          ['Tag', 'Quantidade'],
+      ];
+      for (var i = 0; i < data.length; i++) {
+        var row = [data[i]['descricao'], parseInt(data[i]['qtd'])];
+        dataArray.push(row);
+      }
+      var options = {
+          'chartArea': {'width': '100%', 'height': '80%'},
+          pieStartAngle: 50
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('chart_tags'));
+
+      //totalizador
+      var total = 0;
+      for (var i = 0; i < data.length; i++) {
+        total += parseInt(data[i]['qtd']);
+      }
+
+      document.getElementById("totalizar").innerHTML = total + " desistências";
+
+      //google.visualization.events.addListener(chart, 'select', selectHandler);
+
+      var data = google.visualization.arrayToDataTable(dataArray);
+
+      chart.draw(data, options);
+    });
+  }
+
+  function drawChartTagsAnterior(){
+    $.getJSON("/solicitacao_desistencias/get_estatisticas_tags", function(data) {
+
+      var dataArray = [
+          ['Tag', 'Quantidade'],
+      ];
+      for (var i = 0; i < data.length; i++) {
+        var row = [data[i]['descricao'], parseInt(data[i]['qtd'])];
+        dataArray.push(row);
+      }
+      var options = {
+          'chartArea': {'width': '100%', 'height': '80%'},
+          pieStartAngle: 50
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('chart_tags_anterior'));
+
+      //totalizador
+      var total = 0;
+      for (var i = 0; i < data.length; i++) {
+        total += parseInt(data[i]['qtd']);
+      }
+
+      document.getElementById("totalizar_anterior").innerHTML = total + " desistências";
+
+      var data = google.visualization.arrayToDataTable(dataArray);
+
+      chart.draw(data, options);
+    });
+  }
+
+</script>

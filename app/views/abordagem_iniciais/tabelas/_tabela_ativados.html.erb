@@ -1,0 +1,24 @@
+<table class="table table-striped table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>Ordem</th>
+      <th>Mensagem</th>
+      <th>Tipo</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @abordagem_ativa.each do |abordagem| %>
+      <tr>
+        <div class="row padding">
+          <td> <%= abordagem.fila %> </td>
+          <td> <%= abordagem.texto %> </td>
+        </div>
+        <td> <span class="btn btn-success btn-xs" style="background-color: #2aca76" > <%= abordagem.tipo %></span> </td>
+        <td> <button class="btn btn-success btn-xs" type="button" onclick="editarAbordagem(<%= abordagem.id %>)" >Editar</button> </td> 
+        <td> <button class="btn btn-danger btn-xs" type="button" onclick="desativarAbordagem(<%= abordagem.id %>)" >Desativar</button> </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

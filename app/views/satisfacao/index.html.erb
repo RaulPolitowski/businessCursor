@@ -1,0 +1,200 @@
+<div class="text-center  animated fadeInDown" style="height: 100%">
+  <div>
+    <div>
+      <img alt="image" style="width: 300px; padding-bottom: 20px; padding-top: 30px" src="<%= image_url 'logo_gruber_nova.png' %>"/>
+    </div>
+    <br>
+    <h2 style="font-weight: bold;">PESQUISA DE SATISFAÇÃO</h2>
+    <h4>Sua opinião é muito importante! <br> A Gruber Contabilidade irá doar para cada pesquisa respondida, o valor de R$ 3,00 a alguma instituição beneficente que você indicar!</h4>
+    <div class="ibox-content" id="pesquisaSatisfacao"  >
+      <div class="tabs-container">
+        <form role="form" id="formCliente" >
+          <div class="form-group margin-bottom-5">
+            <br>
+            <div class="row" >
+              <div class="field col-sm-4 col-lg-3 col-md-3">
+                <label for="data_solicitacao">Data/hora</label>
+                <input class="form-control input-sm fieldPesquisa" type="text" name="data_solicitacao" id="data_solicitacao" readOnly="off" value="<%= Time.now.strftime("%d/%m/%y %H:%M") %>" style="text-align: center">
+              </div>
+              <div class="field col-sm-8 col-lg-3 col-md-3">
+                <label for="cliente_cnpj">CNPJ</label>
+                <div class="input-group m-b" style="margin-bottom: 0px;">
+                  <input class="form-control input-sm fieldPesquisa" type="text" name="cliente[cnpj]" id="cliente_cnpj" autocomplete="off" maxlength="14" size="14" value="<%= @cpfcnpj.present? ? @cpfcnpj : "" %>">
+                  <input type="hidden" id="cliente_id" value="">
+                  <span class="input-group-addon padding-0">
+                          <button type="button" class="btn btn-sm btn-table" onclick="buscarCliente()" title="Buscar" data-toggle="tooltip" data-placement="right" style="height: 38px;">
+                              <i class="fa fa-search" aria-hidden="true"></i>
+                          </button>
+                      </span>
+                </div>
+                <label id="error_cnpj" style="color: red; display: none;">Campo obrigatório!</label>
+              </div>
+              <div class="field col-lg-6 col-sm-12 col-md-6">
+                <label for="nome">Nome</label>
+                <input class="form-control input-sm fieldPesquisa" type="text" name="nome" id="nome">
+                <label id="error_nome_solicitante" style="color: red; display: none;">Campo obrigatório!</label>
+              </div>
+              <div class="field col-lg-3 col-sm-6 col-md-3">
+                <label for="telefone">Telefone/Celular</label>
+                <input class="form-control input-sm fieldPesquisa" type="text" name="telefone" id="telefone" maxlength="14" onkeypress="return SomenteNumero(event)" size="14">
+                <label id="error_telefone_parceiro" style="color: red; display: none;">Informe um telefone!</label>
+              </div>
+              <div class="field col-lg-3 col-sm-6 col-md-3">
+                <label for="email">Email</label>
+                <input class="form-control input-sm fieldPesquisa" type="text" name="email" id="email">
+                <label id="error_email_solicitante" style="color: red; display: none;">Campo obrigatório!</label>
+              </div>
+              <div class="field col-lg-6 col-sm-12 col-md-6">
+                <label for="parceiro_razao_social">Razão social</label>
+                <input class="form-control input-sm fieldPesquisa" type="text" name="parceiro[razao_social]" id="parceiro_razao_social" readOnly="off">
+              </div>
+            </div>
+<!--            <div class="row" id="dados_empresa" style="margin-top: 15px">-->
+<!--              <div class="field col-sm-3">-->
+<!--                <label for="equipe_contabel">Equipe contábil</label>-->
+<!--                <input class="form-control input-sm" type="text" name="equipe_contabel" id="equipe_contabel" readOnly="off">-->
+<!--              </div>-->
+<!--              <div class="field col-sm-3">-->
+<!--                <label for="atendente_externo">Atendente externo</label>-->
+<!--                <input class="form-control input-sm" type="text" name="atendente_externo" id="atendente_externo" readOnly="off">-->
+<!--              </div>-->
+<!--              <div class="field col-sm-3" >-->
+<!--                <label for="responsavel_rh">Responsável RH</label>-->
+<!--                <input class="form-control input-sm" type="text" name="responsavel_rh" id="responsavel_rh" readOnly="off">-->
+<!--              </div>-->
+<!--            </div>-->
+
+            <div id="servicos">
+              <hr class="no-padding">
+              <div class="row">
+                <h3 class="pull-center">Avalie nossos serviços</h3>
+              </div>
+
+              <div class="row">
+                <% @set_servicos.each do |i| %>
+                <div id="servico-<%= i.id %>" style="display: none;">
+                  <div class="field col-sm-12">
+                    <hr class="no-padding">
+                  </div>
+                  <div class="field col-sm-12" id="setor-question">
+                    <div class="field col-sm-4 col-xs-12">
+                      <label style="width: 100%;"><%= i.nome_servico %></label>
+                      <select class="form-control input-sm fieldPesquisa" id="select-servico-<%= i.id %>" style="width: 100%" placeholder="Dê uma nota de 0 a 10 para o setor">
+                        <option value="" disabled selected>Dê uma nota de 0 a 10</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                    </div>
+                    <div class="field col-sm-8 col-xs-12">
+                      <textarea style="resize: none; height: 65px; font-size: 15px;" class="form-control input-sm"  placeholder="Deixe sua opinião sobre o serviço" rows="2" name="<%= i.id %>" id="servico_textarea_<%= i.id %>" maxlength="201"></textarea>
+                      <label id="error_servico_textarea_<%= i.id %>" style="color: red; display: none;">Informe o motivo para a nota</label>
+                    </div>
+                  </div>
+                </div>
+                <% end %>
+              </div>
+            </div>
+
+            <div id="setores">
+              <hr class="no-padding">
+              <div class="row">
+                <h3 class="pull-center">Avalie nossos setores</h3>
+              </div>
+
+              <div class="row">
+                <% @set_setores.each do |i| %>
+                  <div class="field col-sm-12">
+                    <hr class="no-padding">
+                  </div>
+                  <div class="field col-sm-12" id="setor-question">
+                    <div class="field col-md-4 col-sm-6 col-xs-12">
+                        <label style="width: 100%;"><%= i.nome_setor %></label>
+                        <select class="form-control input-sm fieldPesquisa" id="select-setor-<%= i.id %>" style="width: 100%" placeholder="Dê uma nota de 0 a 10 para o setor">
+                          <option value="" disabled selected>Dê uma nota de 0 a 10</option>
+                          <option value="0">0</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                        </select>
+                      </div>
+                    <div class="field col-md-8 col-sm-6 col-xs-12">
+                      <textarea style="resize: none; height: 65px; font-size: 15px;" class="form-control input-sm"  placeholder="Deixe sua opinião sobre o serviço (Opcional)" rows="2" name="<%= i.id %>" id="setor_textarea_<%= i.id %>" maxlength="201"></textarea>
+                      <label id="error_setor_textarea_<%= i.id %>" style="color: red; display: none;">Informe o motivo para a nota</label>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+            <div class=row id="instituicao_div" style="margin-top: 15px; display: none">
+              <div class="col-sm-12">
+                <div class="col-sm-12 col-md-3 col-lg-3"></div>
+                <div class="field col-sm-12 col-md-6 col-lg-6">
+                  <label for="instituicao">Instituição Beneficente</label>
+                  <input class="form-control input-sm fieldPesquisa" type="text" name="instituicao" id="instituicao">
+                </div>
+                <div class="col-sm-12 col-md-3 col-lg-3"></div>
+              </div>
+            </div>
+
+            <div class=row id="btn_salvar" style="display: none">
+              <hr class="no-padding">
+              <div class="field col-sm-12" style="margin-top: 10px">
+                <button name="button" class="ladda-button btn btn-success btn-rounded" id="btnLancarPesquisa" style="width: 180px; height: 40px; font-size: 20px;font-weight: bold;">
+                  Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="msgSucesso" class="ibox-content" style="display: none">
+      <h2>
+      Sua pesquisa foi enviada com sucesso!</br>
+        Agradecemos sua colaboração
+      </h2>
+    </div>
+    <div id="msgClienteNaoEncontrato" class="ibox-content" style="display: none">
+      <h2>
+        Desculpe, não localizamos o seus dados em nosso sistema. </br>
+        Entre em contato com a gente para verificar o que aconteceu!
+      </h2>
+      <button class="btn" onClick="voltarPesquisa()">Voltar</button>
+    </div>
+  </div>
+  <%= render 'modal_erro_buscar_empresa' %>
+
+<div class="footerPesquisa">
+  <div>
+    <a target="_blank" href="https://www.instagram.com/grubercontabilidade" style="color: #676a6c"><i class="fa fa-instagram" aria-hidden="true" style="font-size: 30px;"></i></a>
+    <a target="_blank" href="https://www.facebook.com/grubercontabilidade" style="color: #676a6c"><i class="fa fa-facebook-official" aria-hidden="true" style="font-size: 30px; padding-left: 10px"></i></a>
+    <a target="_blank" href="https://wa.me/554530569099" style="color: #676a6c"><i class="fa fa-whatsapp" aria-hidden="true" style="font-size: 30px; padding-left: 10px"></i></a>
+    <br>
+    <strong><a target="_blank" href="https://gruber.com.br">www.gruber.com.br</a></strong><br>
+    <strong>Copyright</strong> Gruber Contabilidade &copy;2022
+  </div>
+</div>
+</div>
+<script>
+    var setor = <%= raw @set_setores.to_json %>;
+    var servicos = <%= raw @set_servicos.to_json %>;
+</script>
+
+
+

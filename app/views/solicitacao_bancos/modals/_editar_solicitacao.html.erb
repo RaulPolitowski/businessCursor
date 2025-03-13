@@ -1,0 +1,256 @@
+<div id="modalEditarBanco" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content  animated fadeIn" style="width: 750px;">
+      <div class="modal-header">
+        <h2 class="modal-title">Solicitação de Banco de Dados</h2>
+      </div>
+      <div class="modal-body" style="padding: 0px;">
+        <div class="tabs-container">
+          <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tab-1"> Dados</a></li>
+            <li><a data-toggle="tab" href="#tab-2"> Módulos/Usuário</a></li>
+            <li><a data-toggle="tab" href="#tab-3"> Observações</a></li>
+            <li><a data-toggle="tab" href="#tab-4"> Informações parceiro</a></li>
+          </ul>
+          <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <%= hidden_field_tag 'solicitacao_id', nil, class: 'form-control input-sm' %>
+                <div class="form-group margin-bottom-5">
+                  <div class="row">
+                    <div class="field col-sm-8">
+                      <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>            
+                      <%= text_field_tag :solicitar_banco_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>              
+                      <%= hidden_field_tag 'cliente_id', nil, class: 'form-control input-sm' %>
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Cidade', nil, class: 'col-sm-2 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_cidade, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                  </div>
+                  <div class="row" style="padding-top:15px;">  
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Data/Hora solicitação', nil, class: 'col-sm-12 control-label padding' %>              
+                      <%= text_field_tag :solicitar_banco_created_at, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>              
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Data/Hora implantação', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_implantacao, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Solicitante', nil, class: 'col-sm-2 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_solicitante, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+
+                  </div>
+                  <div class="row" style="padding-top:15px;">  
+                    <div class="field col-sm-3">
+                      <%= label_tag 'Sistema', nil, class: 'col-sm-2 control-label padding' %>              
+                      <%= text_field_tag :solicitar_banco_sistema, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>              
+                    </div>
+                    <div class="field col-sm-3">
+                      <%= label_tag 'Banco', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= select_tag 'solicitar_banco_tipo_banco', options_for_select([['Local',1],
+                                                            ['Em nuvem', 2]
+                                                            ]), {:class => "form-control input-sm chosen-select"} %>
+                    </div>
+                    <div class="field col-sm-3">
+                      <%= label_tag 'Contrib. ICMS', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= select_tag 'solicitar_banco_contribuinte_icms', options_for_select([['Contribuinte',0],
+                                                                              ['Isento', 1],
+                                                                              ['Não contribuinte', 2],
+                                                                             ],0), {:class => "form-control input-sm chosen-select"} %>
+                    </div>
+                    <div class="field col-sm-3">
+                      <%= label_tag 'Ins. Estadual', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_inscricao_estadual, nil, class: 'form-control input-sm', autocomplete: "off"%>
+                    </div>
+                  </div>
+                  
+                  <div class="row" style="padding-top:15px;">
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Tipo de banco', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_tipo, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Responsável', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= select_tag 'solicitar_banco_responsavel', options_for_select(User.where(active: true).order("name").collect {|p| [ p.name, p.id ] }, current_user.id), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um responsável'}} %>             
+                    </div>            
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Status', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= select_tag 'solicitar_banco_status', options_for_select([['Pendente','PENDENTE'],
+                                                            ['Em construção', 'EM CONSTRUÇÃO'],
+                                                            ['Criado', 'CRIADO'],
+                                                            ],'PENDENTE'), {:class => "form-control input-sm chosen-select", disabled: true} %>
+                    </div>
+                  </div>
+                  <div class="row" style="padding-top:15px;">          
+                    <div class="field col-sm-12" id="motivo">
+                      <%= label_tag 'Motivo da solicitação', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_area_tag :motivo_solicitacao, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab-2" class="tab-pane">
+              <div class="panel-body">
+                <div class="ibox float-e-margins">
+                  <div class="ibox-title">
+                    Módulos
+                  </div>
+                  <div class="ibox-content">
+                    <div class="row">
+                      <div class="field col-sm-4">
+                        <label >
+                          <%=  check_box_tag 'solicitar_banco_nota_fiscal_modulo', '0', true, class: 'icheckbox_square-green i-checks' %>
+                          Nota Fiscal
+                        </label>
+                      </div>
+                      <div class="field col-sm-4">
+                        <label >
+                          <%=  check_box_tag 'solicitar_banco_nota_fiscal_consumidor_modulo', '0', true, class: 'icheckbox_square-green i-checks' %>
+                          Nota Fiscal Consumidor
+                        </label>
+                      </div>
+                      <div class="field col-sm-4">
+                        <label >
+                          <%=  check_box_tag 'solicitar_banco_conhecimento_transporte_modulo', '0', true, class: 'icheckbox_square-green i-checks' %>
+                          Conhecimento de Transporte
+                        </label>
+                      </div>
+                      <div class="field col-sm-4">
+                        <label >
+                          <%=  check_box_tag 'solicitar_banco_manifesto_eletronico_modulo', '0', true, class: 'icheckbox_square-green i-checks' %>
+                          Manifesto Eletrônico
+                        </label>
+                      </div>
+                      <div class="field col-sm-4">
+                        <label >
+                          <%=  check_box_tag 'solicitar_banco_nota_fiscal_servico_modulo', '0', true, class: 'icheckbox_square-green i-checks' %>
+                          Nota Fiscal de Serviço
+                        </label>
+                      </div>
+                      <div class="field col-sm-4">
+                        <label >
+                          <%=  check_box_tag 'solicitar_banco_cupom_fiscal_modulo', '0', true, class: 'icheckbox_square-green i-checks' %>
+                          Cupom Fiscal
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="ibox float-e-margins">
+                  <div class="ibox-title">
+                    Usuário
+                  </div>
+                  <div class="ibox-content">
+                    <div class="row">
+                      <div class="field col-sm-4">
+                        <%= label_tag 'Nome Usuário', nil, class: 'col-sm-12 control-label padding' %>
+                        <%= text_field_tag :solicitar_banco_nome_usuario, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                      </div>
+                      <div class="field col-sm-4">
+                        <%= label_tag 'Login', nil, class: 'col-sm-12 control-label padding' %>
+                        <%= text_field_tag :solicitar_banco_username, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                      </div>
+                      <div class="field col-sm-4">
+                        <%= label_tag 'Senha', nil, class: 'col-sm-12 control-label padding' %>
+                        <%= text_field_tag :solicitar_banco_password, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab-3" class="tab-pane">
+              <div class="panel-body">
+                <div class="row" style="padding-top:15px;">
+                  <div class="field col-sm-12">
+                    <%= label_tag 'Observações', nil, class: 'col-sm-12 control-label padding' %>
+                    <%= text_area_tag :solicitar_banco_obs, nil, rows: 10, class: 'form-control input-sm', autocomplete: "off" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab-4" class="tab-pane">
+              <div class="panel-body">
+                <div class="form-group margin-bottom-5">
+                  <div class="row">
+                    <div class="field col-sm-6">
+                      <%= label_tag 'Nome solicitante', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_parceiro, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                    <div class="field col-sm-6">
+                      <%= label_tag 'Telefone solicitante', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_telefone_parceiro, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                  </div>
+                  <div class="row" style="padding-top:15px;"> 
+                    <div class="field col-sm-12">
+                      <%= label_tag 'Email solicitante', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_email_parceiro, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                  </div>
+                  <div class="row" style="padding-top:15px;">                    
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Sócio administrador', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_socio, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>                
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Telefone 1', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_telefone1, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Telefone 2', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_telefone2, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                  </div>
+                  <div class="row" style="padding-top:15px;"> 
+                    <div class="field col-sm-12">
+                      <%= label_tag 'Email cliente', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_email_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                  </div>
+                  <div class="row" style="padding-top:15px;">
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Regime', nil, class: 'col-sm-2 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_regime, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Sistema', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_sistema_p, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Valor mensalidade', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_mensalidade_parceiro, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>                    
+                  </div>
+                  <div class="row" style="padding-top:15px;">                    
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Valor implantação', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_implantacao_parceiro, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Data de implantação', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_data_impl, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Data de vencimento', nil, class: 'col-sm-12 control-label padding' %>
+                      <%= text_field_tag :solicitar_banco_data, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" onclick="abrirGuiaCliente()">Cliente</button>
+        <button type="button" class="btn btn-primary" id="btnUpdateBanco">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>

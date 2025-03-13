@@ -1,0 +1,70 @@
+<div id="retorno_recuperar" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">RECUPERAR</h4>
+      </div>
+      <form class="form-horizontal" id="form_recuperar_retorno">
+        <div class="modal-body">
+          <input type="hidden" id="recuperar_retorno_id" value="">
+            <div class="form-group">
+              <div class="field">
+                <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-10 padding ">
+                  <%= text_field_tag :recuperar_retorno_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="field">
+                <%= label_tag 'Retorno', nil,  class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-6 padding">
+                  <div class="input-group clockpicker" data-autoclose="true">
+                    <%= text_field_tag :recuperar_retorno_data, nil,  class: 'form-control input-sm', autocomplete: "off",  placeholder: 'DD/MM/YYYY HH:mm' %>
+                    <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div class="form-group margin">
+            <div class="pull-center">
+              <button class="btn btn-primary btn-xs" onclick="setarData(30, $('#retorno_recuperar #recuperar_retorno_data')); return false;">30min</button>
+              <button class="btn btn-primary btn-xs" onclick="setarData(60, $('#retorno_recuperar #recuperar_retorno_data')); return false;">60min</button>
+              <button class="btn btn-primary btn-xs" onclick="setarData(120, $('#retorno_recuperar #recuperar_retorno_data')); return false;">2h</button>
+              <button class="btn btn-primary btn-xs" onclick="setarData(240, $('#retorno_recuperar #recuperar_retorno_data')); return false;">4h</button>
+              <button class="btn btn-primary btn-xs" onclick="setarData(360, $('#retorno_recuperar #recuperar_retorno_data')); return false;">6h</button>
+              <button class="btn btn-primary btn-xs" onclick="setarData(1440, $('#retorno_recuperar #recuperar_retorno_data')); return false;">24h</button>
+              <button class="btn btn-primary btn-xs" onclick="setarData(2880, $('#retorno_recuperar #recuperar_retorno_data')); return false;">48h</button>
+              <button class="btn btn-primary btn-xs" onclick="setarData(4320, $('#retorno_recuperar #recuperar_retorno_data')); return false;">72h</button>
+              <button class="btn btn-primary btn-xs" onclick="setarData(5760, $('#retorno_recuperar #recuperar_retorno_data')); return false;">96h</button>
+              <button class="btn btn-primary btn-xs" onclick="setarData(8640, $('#retorno_recuperar #recuperar_retorno_data')); return false;">144h</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="field">
+                <%= label_tag 'Responsável', nil, class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-10 padding ">
+                <%= select_tag 'recuperar_retorno_responsavel', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um responsável'}, :include_blank => true} %>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="field">
+              <%= label_tag 'Comentário', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= text_area_tag :recuperar_retorno_comentario, nil, class: 'form-control input-sm', autocomplete: "off" %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnRecuperarRetorno', :class => 'btn btn-primary' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+

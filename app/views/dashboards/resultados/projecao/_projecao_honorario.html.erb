@@ -1,0 +1,237 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Projeção Honorário
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div class="col-md-3 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Quantidade</h5>
+                  <span class="label label-info pull-right" id="compentencia_qtd_projecao_honorario"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 51px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="qtd_projecao_honorario" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_qtd_projecao_honorario"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="qtd_anterior_projecao_honorario"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Valor Total</h5>
+                  <span class="label label-info pull-right" id="competencia_total_projecao_honorario"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 51px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="total_projecao_honorario" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_total_projecao_honorario"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="total_anterior_projecao_honorario"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Média</h5>
+                  <span class="label label-info pull-right" id="competencia_media_projecao_honorario"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 51px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="media_projecao_honorario" style="margin-bottom: 7px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_media_projecao_honorario"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="media_anterior_projecao_honorario"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5>Projeção Honorário</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="projecao_honorario_12_meses" style="height: 210px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function drawProjecaoHonorario12Meses() {
+        $.getJSON("/dashboards/get_projecao_honorario_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
+            "&tipo_cobranca=16" +
+            "&estado=" + $('#estado_financeiro_id').val(), function(data) {
+            var dataArray = [
+                ['Mês', 'Valor', 'Quantidade', 'Média'],
+            ];
+
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseFloat(data[i].valortotal), parseInt(data[i].qtd), parseFloat(data[i].media)];
+                dataArray.push(row);
+            }
+
+            var meses = data;
+            preencherPainelProjecaoHonorario($(meses).get(-1).data, parseFloat($(meses).get(-1).valortotal), parseFloat($(meses).get(-2).valortotal),
+                                            $(meses).get(-1).qtd, $(meses).get(-2).qtd, parseFloat($(meses).get(-1).media), parseFloat($(meses).get(-2).media));
+
+            var options = {
+                'chartArea': {'width': '80%', 'height': '60%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                series: {1: {type: 'line', color: 'black', format: 'short'}},
+                legend: 'none',
+                vAxis: {viewWindowMode: "explicit", viewWindow: {min: 0}, format: 'short'},
+                animation: { easing: 'in', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('projecao_honorario_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    var ultimo = selectedItem.row-1;
+                    if(ultimo == -1)
+                        ultimo = 0;
+
+                    preencherPainelProjecaoHonorario(data.getValue(selectedItem.row, 0), parseFloat(data.getValue(selectedItem.row, 1)),
+                        parseFloat(data.getValue(ultimo, 1)),
+                        data.getValue(selectedItem.row, 2),data.getValue(ultimo, 2), parseFloat(data.getValue(selectedItem.row, 3)),
+                        parseFloat(data.getValue(ultimo, 3)));
+
+                }else{
+                    preencherPainelProjecaoHonorario($(meses).get(-1).data, parseFloat($(meses).get(-1).valortotal), parseFloat($(meses).get(-2).valortotal),
+                        $(meses).get(-1).qtd, $(meses).get(-2).qtd, parseFloat($(meses).get(-1).media), parseFloat($(meses).get(-2).media));
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+            formatter.format(data, 1); // Apply formatter to second column
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([2,3]);
+            chart.draw(view, options);
+        });
+    }
+
+    function preencherPainelProjecaoHonorario(competencia, valor, valorAnterior, qtd, qtdAnterior, media, mediaAnterior) {
+        $('#compentencia_qtd_projecao_honorario').text(competencia);
+        $('#competencia_total_projecao_honorario').text(competencia);
+        $('#competencia_media_projecao_honorario').text(competencia);
+
+        $('#qtd_projecao_honorario').text('Total ' + qtd);
+        $('#qtd_anterior_projecao_honorario').text('Ant. ' + qtdAnterior);
+
+        var mediaCalc = ((qtd*100 / qtdAnterior)-100);
+        $('#percentual_qtd_projecao_honorario').text('');
+        if(qtdAnterior == 0){
+            $('#percentual_qtd_projecao_honorario').removeClass('text-danger').addClass('text-info');
+            $('#percentual_qtd_projecao_honorario').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        } else if(mediaCalc > 0){
+            $('#percentual_qtd_projecao_honorario').removeClass('text-danger').addClass('text-info');
+            $('#percentual_qtd_projecao_honorario').append(mediaCalc.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_qtd_projecao_honorario').removeClass('text-info').addClass('text-danger');
+            $('#percentual_qtd_projecao_honorario').append(mediaCalc.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#total_projecao_honorario').text(mascaraValor(valor.toFixed(2)));
+        $('#total_anterior_projecao_honorario').text('Ant. ' + mascaraValor(valorAnterior.toFixed(2)));
+        mediaCalc = ((valor*100 / valorAnterior)-100);
+        $('#percentual_total_projecao_honorario').text('');
+        if(valorAnterior == 0){
+            $('#percentual_total_projecao_honorario').removeClass('text-danger').addClass('text-info');
+            $('#percentual_total_projecao_honorario').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        } else if(mediaCalc > 0){
+            $('#percentual_total_projecao_honorario').removeClass('text-danger').addClass('text-info');
+            $('#percentual_total_projecao_honorario').append(mediaCalc.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_total_projecao_honorario').removeClass('text-info').addClass('text-danger');
+            $('#percentual_total_projecao_honorario').append(mediaCalc.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#media_projecao_honorario').text(mascaraValor(media.toFixed(2)));
+        $('#media_anterior_projecao_honorario').text('Ant. ' + mascaraValor(mediaAnterior.toFixed(2)));
+        mediaCalc = ((media*100 / mediaAnterior)-100);
+        $('#percentual_media_projecao_honorario').text('');
+        if(valorAnterior == 0){
+            $('#percentual_media_projecao_honorario').removeClass('text-danger').addClass('text-info');
+            $('#percentual_media_projecao_honorario').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        } else if(mediaCalc > 0){
+            $('#percentual_media_projecao_honorario').removeClass('text-danger').addClass('text-info');
+            $('#percentual_media_projecao_honorario').append(mediaCalc.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_media_projecao_honorario').removeClass('text-info').addClass('text-danger');
+            $('#percentual_media_projecao_honorario').append(mediaCalc.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+    }
+//
+//    function faturamentoPorTipo(mensalidade, instalacao, outros) {
+//        var dataArray = [
+//            ['Tipo', 'Valor'],
+//        ];
+//        dataArray.push(['Mensalidade', parseFloat(mensalidade)]);
+//        dataArray.push(['Instalação', parseFloat(instalacao)]);
+//        dataArray.push(['Outros', parseFloat(outros)]);
+//        var options = {
+//            'chartArea': {'width': '100%', 'height': '80%'},
+//            pieStartAngle: 50,
+//            legend: {position: 'bottom'},
+//            is3D: true
+//        };
+//
+//        var chart = new google.visualization.PieChart(document.getElementById('faturamento_por_tipo'));
+//        var data = google.visualization.arrayToDataTable(dataArray);
+//
+//        chart.draw(data, options);
+//    }
+
+</script>

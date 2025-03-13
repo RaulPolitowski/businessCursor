@@ -1,0 +1,1 @@
+json.array! @status, :id, :descricao

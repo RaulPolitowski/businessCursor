@@ -1,0 +1,40 @@
+<div id="modal_transferir_campanha" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xs">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <i class="fa fa-th-list modal-icon"></i>
+        <h4 class="modal-title">Transferir campanha</h4>
+      </div>
+      <form class="form-horizontal" id="form_exportar_listas">
+        <div class="modal-body no-padding">
+          <div class="tabs-container">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tabCampanha"> Informações</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="tabCampanha" class="tab-pane active">
+                <div class="panel-body">
+                  <div class="form-group">
+                    <div class="field col-sm-12 padding" >
+                      <%= label_tag 'Campanha', nil %>
+                      <%= select_tag 'campanha_id', options_for_select(Campanha.distinct.where(status: ['ANDAMENTO', 'ENVIADA', 'FINALIZADO']).joins("LEFT JOIN whatsapp_numeros wn ON wn.numero = campanhas.numero").where("wn.status = 'DESCONECTADO' AND wn.banido = false AND DATE(campanhas.updated_at) = ?", Date.current).collect {|p| [ "#{p.numero} - #{p.nome_whatsapp} - Qtd.: #{p.qtd_total}", p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma campanha'}} %>
+                    </div>
+                    <div class="field col-sm-12 padding" >
+                      <%= label_tag 'Número Whatsapp', nil %>
+                      <%= select_tag 'whatsapp_numero_id', options_for_select(WhatsappNumero.distinct.where(banido: false, status: 'CONECTADO').collect {|p| [ p.numero_nome, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um número'}} %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnTransferirCampanha', :class => 'btn btn-primary ladda-button', data: { data_style: "expand-right" } %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

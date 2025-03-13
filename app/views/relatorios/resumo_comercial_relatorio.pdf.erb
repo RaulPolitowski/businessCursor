@@ -1,0 +1,78 @@
+
+<div class="row no-margins">
+  <h5><b>Período</b> <%= @data_inicial.strftime("%d/%m/%Y") %> <b> até</b>  <%= @data_final.strftime("%d/%m/%Y") %></h5>
+</div>
+<meta charset="utf-8" />
+<%= render 'relatorios/resumo/concluidas_teste' %>
+<%= render 'relatorios/resumo/concluidas_efetivo' %>
+<%= render 'relatorios/resumo/andamento' %>
+<%= render 'relatorios/resumo/efetivadas' %>
+<%= render 'relatorios/resumo/desistentes_pre' %>
+<%= render 'relatorios/resumo/desistentes_durante' %>
+<%= render 'relatorios/resumo/desistentes_acompanhamento' %>
+
+<style>
+  body {
+    font-family: 'OpenSansRegular';
+    /*font-size: 12px !important;*/
+  }
+  .padding{
+    padding: 5px !important;
+    line-height: 1 !important;
+  }
+  .text-center{
+    text-align: center;
+  }
+  .text-right{
+    text-align: right;
+  }
+  .row{
+    padding: 7px;
+  }
+  .pull-right {
+    float: right !important;
+  }
+  .border{
+    min-height:30px;
+    border:solid 1px;
+  }
+
+  body{
+    line-height: 0.5 !important;
+    background-color: #ffffff !important;
+    color: black !important;
+  }
+
+  table {
+    font-family: 'OpenSansRegular';
+    font-size: 10px !important;
+  }
+
+  thead { display: table-header-group }
+  tfoot { display: table-footer-group }
+  tr { page-break-inside: avoid }
+
+  table.linhasAlternadas {
+    border-collapse: collapse; /* CSS2 */
+    background: #fffff0;
+  }
+
+  table.linhasAlternadas tr:nth-child(even) /* CSS3 */ {
+    background: #d8d8d6;
+  }
+
+  table.comBordaSimples {
+    border-collapse: collapse; /* CSS2 */
+    background: #FFFFF0;
+  }
+
+  table.comBordaSimples td {
+    border: 1px solid black;
+  }
+
+  table.comBordaSimples th {
+    border: 1px solid black;
+    background: #F0FFF0;
+  }
+</style>
+<%= wicked_pdf_stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>

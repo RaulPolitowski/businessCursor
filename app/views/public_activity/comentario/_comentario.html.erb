@@ -1,0 +1,27 @@
+<% if activity.trackable %>
+<br>
+<div class="row" >
+  <div class="col-lg-12 end">
+    <div class="col-sm-1 col-lg-1">
+      <%= image_tag(avatar_user_users_path(id: activity.owner.id), :alt => "Avatar", :class => "img-circle") %>
+    </div>
+    <div class="col-lg-11">
+      <div style="padding-left: 5px">
+        <div class="tip comment-left text-justify">
+          <span class="comment"><%= render_comment activity.trackable %></span>
+        </div>
+      </div>
+      <div class="col-lg-2">
+        <div class="delete-comment" onclick="deleteComentario(<%= activity.trackable.id %>)">× deletar</div>
+      </div>
+      <div class="col-lg-4">
+        <div><%= "Próx. retorno às #{activity.parameters[:data_retorno]}" unless activity.parameters[:data_retorno].nil? %></div>
+      </div>
+      <div class="col-lg-6">
+        <div class="pull-right"><%= time_ago_in_words activity.created_at %> atrás</div>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+

@@ -1,0 +1,89 @@
+<div class="col-lg-12" id="bloco_clientes_bloqueados" style="display: none">
+  <div class="ibox">
+    <div class="ibox-content product-box" style="border: 1px solid #bfca95;">
+      <div class="ibox-title ibox-title-without-border-style">
+        <h5>Clientes</h5>
+      </div>
+      <div class="ibox-content padding-5" id="table-tab-3">
+        <table class="table table-striped table-bordered table-hover table-clientes-bloqueados">
+          <thead>
+          <tr>
+            <td>Data bloqueio</td>
+            <td>Dias bloqueados</td>
+            <td>Dias sem uso</td>
+            <td>Dias como cliente</td>
+            <td>Razão social</td>
+            <td>Cidade - UF</td>
+            <td>Sistema</td>
+            <td>Mensalidade R$</td>
+            <td></td>
+          </tr>
+          </thead>
+          <tbody style="width:100%" id="tbody_clientes_bloqueados">
+
+          </tbody>
+          <tfoot>
+          </tfoot>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-eu.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-euro.js"></script>
+
+<script>
+    $(document).ready(function() {
+        var table = $('.table-clientes-bloqueados').DataTable({
+            pageLength: 10,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            "ordering": true,
+            "autoWidth": false,
+            buttons: [
+                {
+                    extend: 'excel',
+                    title: 'Clientes'
+                },
+                {extend: 'pdf', title: 'Clientes'}
+
+            ],
+            "order": [[2, "asc"]],
+            "columnDefs": [ { type: 'date-eu', targets: 0 },
+            {
+                "targets": -1,
+                "data": null,
+                "defaultContent": "<i class=\"fa fa-search\"></i>"
+            }],
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+            },
+            "fnDrawCallback": function (oSettings) {
+                $('.table-clientes-bloqueados tbody tr').each(function () {
+                    var data = table.row(this).data();
+                    var sTitle = "";
+                    moment.locale('pt-br');
+                    if(data != undefined){
+                        if(data[8] != null){
+                            sTitle = sTitle +"<p>" + data[8] +"</p>";
+                        }
+                        else sTitle = 'Sem informações';
+                    }
+
+                    var nTds = $('td', this);
+                    if (nTds[8] != undefined) {
+                        nTds[8].setAttribute('rel', 'tooltip');
+                        nTds[8].setAttribute('title', sTitle);
+                        nTds[8].setAttribute('data-placement', 'left');
+                        $(nTds[8]).addClass("text-center");
+                        $(nTds[8]).tooltip({
+                            html: true
+                        });
+                        $(nTds[8]).removeAttr( "title" );
+                    }
+                });
+            }
+        });
+    });
+</script>

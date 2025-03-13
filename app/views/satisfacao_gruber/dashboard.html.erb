@@ -1,0 +1,114 @@
+<div class="row  border-bottom white-bg dashboard-header">
+  <div class="col-sm-12">
+    <h2>Pesquisas de Satisfação Gruber</h2>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content padding-5">
+  <div class="row animated fadeInDown">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins border-bottom">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <div class="field col-sm-2">
+                <label for="data_inicio">Data Início</label>
+                <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio">
+              </div>
+              <div class="field col-sm-2">
+                <label for="data_fim">Data Fim</label>
+                <input class="form-control input-sm" type="text" name="data_fim" id="data_fim">
+              </div>
+              <div class="col-lg-2">
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarPaineis', :class => 'btn btn-primary', :style => "margin-top: 20px !important" %>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-body " style="padding: 5px !important; margin-bottom: 30px">
+      <div class="row no-padding">
+        <div class="col-lg-6 ">
+          <%= render 'media_setores' %>
+        </div>
+        <div class="col-lg-6 ">
+          <%= render 'media_servicos' %>
+        </div>
+      </div>
+      <div class="row no-padding">
+        <div class="col-lg-12">
+          <%= render 'media_setores_contabil' %>
+        </div>
+<!--        <div class="col-lg-12">-->
+          <%#= render 'media_setores_rh' %>
+<!--        </div>-->
+        <div class="col-lg-12">
+          <%= render 'media_setores_externo' %>
+        </div>
+        <div class="col-lg-6">
+          <%= render 'ultima_pesquisa' %>
+        </div>
+        <div class="col-lg-6">
+          <%= render 'rh_atendimento' %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+    .ibox-title-without-border-style {
+        border-style: none;
+        min-height: 24px !important;
+        padding: 5px !important;
+    }
+
+    .ibox {
+        margin-bottom: 5px !important;
+    }
+</style>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var date = new Date();
+        $('#data_inicio').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: 'dd/mm/yyyy'
+        });
+        $("#data_inicio").datepicker("setDate", new Date(date.getFullYear(), date.getMonth(), 1));
+
+        $('#data_fim').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: 'dd/mm/yyyy'
+        });
+        $("#data_fim").datepicker("setDate", new Date(date.getFullYear(), date.getMonth() + 1, 0));
+
+        google.charts.load("current", {packages: ['corechart', 'table']});
+        google.charts.setOnLoadCallback(drawChartMediaSetores);
+        google.charts.setOnLoadCallback(drawChartMediaServicos);
+        google.charts.setOnLoadCallback(drawChartMediaSetoresContabil);
+        // google.charts.setOnLoadCallback(drawChartMediaSetoresRh);
+        google.charts.setOnLoadCallback(drawChartMediaSetoresExterno);
+        google.charts.setOnLoadCallback(drawChartMediaSetoresFinanceiro);
+        google.charts.setOnLoadCallback(drawChartMediaSetoresAtendimento);
+
+    });
+</script>
+

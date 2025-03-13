@@ -1,0 +1,120 @@
+<div class="row  border-bottom white-bg dashboard-header">
+  <div class="col-sm-12">
+    <h2>Funil</h2>
+  </div>
+</div>
+<div class="wrapper wrapper-content padding-5">
+  <div class="row animated fadeInDown">
+    <div class="ibox float-e-margins border-bottom">
+      <a class="collapse-link black_link">
+        <div class="ibox-title">
+          <h5>Filtros</h5>
+          <div class="ibox-tools">
+            <i class="fa fa-chevron-up"></i>
+          </div>
+        </div>
+      </a>
+      <div class="ibox-content" style="display: none;">
+        <form>
+          <div class="row">
+            <div class="field col-sm-8">
+              <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+              <%= select_tag  'empresas_financeiro_id', options_for_select([
+                                                                               ['GERMAN TECH (MATRIZ)', 17],
+                                                                               ['GERMAN TECH (FILIAL)', 3253],
+                                                                               ['GERMAN SERVIÇOS', 3422]
+                                                                           ], ([17,3253, 3422])), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um status'}, :include_blank => true, :multiple => true} %>
+            </div>
+            <div class="field col-sm-2">
+              <%= label_tag 'Estado', nil, class: 'col-sm-2 control-label padding' %>
+              <%= select_tag 'estado_financeiro_id', options_for_select( Financeiro::Estado.order(:nome).collect{ |u| [u.descricao_completa, u.id] }) , {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}, :include_blank => true} %>
+            </div>
+            <div class="col-lg-2">
+              <%= submit_tag 'Atualizar', :id => 'btnAtualizarPaineis', :class => 'btn btn-primary', :style => "margin-top: 20px !important"%>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="tabs-container" >
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1" id="tabEmpresa"> Empresa</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-2" id="tabEquipeComercial"> Consultores</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-3" id="tabEquipeCaptadores"> Captadores</a></li>
+      </ul>
+      <div class="tab-content" style="margin-bottom: 50px">
+        <div id="tab-1" class="tab-pane active">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/funil/empresa' %>
+          </div>
+        </div>
+        <div id="tab-2" class="tab-pane">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/funil/consultores' %>
+          </div>
+        </div>
+        <div id="tab-3" class="tab-pane">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/funil/captadores' %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+  $(document).ready(function() {
+      $('body').lmask('show');
+      google.charts.load('current', {'packages':['corechart','table']});
+      $('#btnAtualizarPaineis').on('click', function () {
+          if($('#empresas_financeiro_id').val() == '') {
+            exibirWarning('Selecione pelo menos uma empresa');
+            return false;
+          }
+
+          var tab = $('.tab-content .active').attr('id');
+          if(tab == "tab-1"){
+              drawTabEmpresa();
+          }else if(tab == "tab-2"){
+              drawFunisConsultores();
+          }else if(tab == "tab-3"){
+              drawFunisCaptadores();
+          }
+          return false;
+      });
+
+      drawTabEmpresa();
+
+      $('#tabEmpresa').on('click', function () {
+          if($('#empresas_financeiro_id').val() == '') {
+              exibirWarning('Selecione pelo menos uma empresa');
+              return false;
+          }
+          drawTabEmpresa();
+      });
+
+      $('#tabEquipeComercial').on('click', function () {
+          if($('#empresas_financeiro_id').val() == '') {
+              exibirWarning('Selecione pelo menos uma empresa');
+              return false;
+          }
+          drawFunisConsultores();
+      });
+
+      $('#tabEquipeCaptadores').on('click', function () {
+          if($('#empresas_financeiro_id').val() == '') {
+              exibirWarning('Selecione pelo menos uma empresa');
+              return false;
+          }
+          drawFunisCaptadores();
+      });
+  })
+  function calcularPercentual(total, valor){
+      if(total == 0)
+        return 0;
+      return ((valor / total) * 100).toFixed(2);
+  }
+
+</script>

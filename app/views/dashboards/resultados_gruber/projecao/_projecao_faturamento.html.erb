@@ -1,0 +1,91 @@
+<div class="col-lg-6 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Projeção Faturamento
+      <div class="col-sm-3  pull-right" style="margin-top: -6px !important;">
+        <%= select_tag  'tipo_analise_projecao_faturamento', options_for_select([
+                                                                                    ['Recebimento', 'RECEBIMENTO'],
+                                                                                    ['Faturamento', 'FATURAMENTO']
+                                                                                ], 'RECEBIMENTO'), {:class => "form-control input-sm chosen-select"} %>
+      </div>
+      <div class="col-sm-3  pull-right" style="margin-top: -6px !important;">
+        <%= select_tag  'qtd_meses_analise_faturamento', options_for_select([
+                                                                                ['2 Meses', 2],
+                                                                                ['3 Meses', 3],
+                                                                                ['4 Meses', 4],
+                                                                                ['5 Meses', 5],
+                                                                                ['6 Meses', 6],
+                                                                                ['7 Meses', 7],
+                                                                                ['8 Meses', 8],
+                                                                                ['9 Meses', 9],
+                                                                                ['10 Meses', 10],
+                                                                                ['11 Meses', 11],
+                                                                                ['12 Meses', 12]
+                                                                            ], 12), {:class => "form-control input-sm chosen-select"} %>
+      </div>
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div class="col-md-12 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">6 Meses</span>
+                <h5>Projeção faturamento</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="projecao_faturamento_6_meses" style="height: 271px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function drawProjecaoFaturamento6Meses() {
+        $.getJSON("/dashboards/get_projecao_faturamento?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&qtd_meses_analise_faturamento=" + $('#qtd_meses_analise_faturamento').val() +
+            "&tipo_analise_projecao_faturamento=" + $('#tipo_analise_projecao_faturamento').val(), function(data) {
+            var dataArray = [
+                ['Mês', 'Valor', 'Valor', 'Percentual médio'],
+            ];
+            var percentual;
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseFloat(data[i].valor), parseFloat(data[i].valor),
+                    parseFloat(data[i].percentual)];
+                dataArray.push(row);
+                percentual = parseFloat(data[i].percentual);
+            }
+
+            var options = {
+                'chartArea': {'width': '80%', 'height': '60%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                title: ('Variação de ' + percentual + '%'),
+                series: {1: {type: 'line', color: 'black', format: 'short'}},
+                legend: 'none',
+                vAxis: {viewWindowMode: "explicit", viewWindow: {min: 0}, format: 'short'},
+                animation: { easing: 'in', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('projecao_faturamento_6_meses'));
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+            formatter.format(data, 1); // Apply formatter to second column
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([3]);
+            chart.draw(view, options);
+        });
+    }
+
+
+
+</script>

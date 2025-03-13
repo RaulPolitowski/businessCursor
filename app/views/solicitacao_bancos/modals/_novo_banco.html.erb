@@ -1,0 +1,82 @@
+<div id="modalNovoBanco" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content  animated fadeIn" style="width: 750px;">
+      <div class="modal-header">
+        <h2 class="modal-title">Solicitação de Banco de Dados</h2>
+      </div>
+      <div class="modal-body">
+        <div class="form-group margin-bottom-5">
+          <div class="row" >
+            <div class="field col-sm-12">
+              <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>      
+              <label id="error_cliente" style="color: red; display: none;"> Obrigatório informar um cliente.</label>        
+              <%= text_field_tag :solicitar_banco_cliente, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Digite o nome para buscar'%>              
+              <%= hidden_field_tag 'cliente_id', nil, class: 'form-control input-sm' %>
+            </div>
+          </div>
+          <div class="row"  style="padding-top:15px;">
+            <div class="field col-sm-8">
+              <%= label_tag 'Sócio administrador', nil, class: 'col-sm-4 control-label padding' %>      
+              <label id="error_socio" style="color: red; display: none;"> Obrigatório informar um sócio administrador.</label>        
+              <%= text_field_tag :solicitar_banco_socio, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Digite o nome para buscar'%>          
+            </div>
+            <div class="field col-sm-4">
+              <%= label_tag 'Cidade', nil, class: 'col-sm-2 control-label padding' %>
+              <%= text_field_tag :solicitar_banco_cidade, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+            </div>
+          </div>
+          <div class="row" style="padding-top:15px;">  
+            <div class="field col-sm-8">
+              <%= label_tag 'Sistema', nil, class: 'col-sm-2 control-label padding' %>              
+              <%= text_field_tag :solicitar_banco_sistema, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>              
+            </div>
+            <div class="field col-sm-4">
+              <%= label_tag 'Data/Hora implantação', nil, class: 'col-sm-12 control-label padding' %>
+              <%= text_field_tag :solicitar_banco_implantacao, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+            </div>
+          </div>
+          <div class="row" style="padding-top:15px;">              
+            <div class="field col-sm-8">
+              <%= label_tag 'Solicitante', nil, class: 'col-sm-2 control-label padding' %>
+              <%= text_field_tag :solicitar_banco_solicitante, current_user.name, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+            </div>
+            <div class="field col-sm-4">
+              <%= label_tag 'Banco', nil, class: 'col-sm-12 control-label padding' %>
+              <%= select_tag 'solicitar_banco_tipo_banco', options_for_select([['Local',1],
+                                                     ['Em nuvem', 2]
+                                                     ],1), {:class => "form-control input-sm chosen-select"} %>
+            </div>
+          </div>
+          <div class="row" style="padding-top:15px;">
+            <div class="field col-sm-4">
+              <%= label_tag 'Tipo de banco', nil, class: 'col-sm-12 control-label padding' %>
+              <%= select_tag 'solicitar_banco_tipo', options_for_select([['Novo banco de dados',1],
+                                                     ['Agrupamento de bancos', 2],
+                                                     ['Agrupamento de bancos com migração', 3],
+                                                     ],1), {:class => "form-control input-sm chosen-select"} %>
+            </div>
+            <div class="field col-sm-4">
+              <%= label_tag 'Responsável', nil, class: 'col-sm-12 control-label padding' %>
+                <%= select_tag :responsavel, options_for_select(User.where(active: true).order("name").collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um responsável'}, :include_blank => true} %>             
+            </div>            
+            <div class="field col-sm-4">
+              <%= label_tag 'Status', nil, class: 'col-sm-12 control-label padding' %>
+              <%= text_field_tag :solicitar_banco_status, 'PENDENTE', class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+            </div>
+          </div>
+          <div class="row" style="padding-top:15px;">
+            <div class="field col-sm-12">
+              <%= label_tag 'Motivo', nil, class: 'col-sm-12 control-label padding' %>
+              <label id="error_motivo" style="color: red; display: none;"> Obrigatório informar o motivo da solicitação não estar sendo feita pelo fechamento.</label>
+              <%= text_area_tag :solicitar_banco_motivo, nil, class: 'form-control input-sm', required: true, autocomplete: "off" %>            
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnNovoBancoAvulso">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<div id="modalDesativarBanco" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content  animated fadeIn" style="width: 750px;">
+      <div class="modal-header">
+        <h2 class="modal-title">Desativar solicitação de Banco de Dados</h2>
+      </div>
+      <div class="modal-body">
+        <%= hidden_field_tag 'solicitacao_id', nil, class: 'form-control input-sm' %>
+        <div class="form-group margin-bottom-5">
+          <div class="row">
+            <div class="field col-sm-8">
+              <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>            
+              <%= text_field_tag :solicitar_banco_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>              
+              <%= hidden_field_tag 'cliente_id', nil, class: 'form-control input-sm' %>
+            </div>
+            <div class="field col-sm-4">
+              <%= label_tag 'Cidade', nil, class: 'col-sm-2 control-label padding' %>
+              <%= text_field_tag :solicitar_banco_cidade, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+            </div>
+          </div>
+          <div class="row" style="padding-top:15px;">  
+            <div class="field col-sm-6">
+              <%= label_tag 'Data/Hora solicitação', nil, class: 'col-sm-12 control-label padding' %>              
+              <%= text_field_tag :solicitar_banco_created_at, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>              
+            </div>
+            <div class="field col-sm-6">
+              <%= label_tag 'Data/Hora implantação', nil, class: 'col-sm-12 control-label padding' %>
+              <%= text_field_tag :solicitar_banco_implantacao, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+            </div>
+          </div>
+          <div class="row" style="padding-top:15px;">  
+            <div class="field col-sm-4">
+              <%= label_tag 'Sistema', nil, class: 'col-sm-2 control-label padding' %>              
+              <%= text_field_tag :solicitar_banco_sistema, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>              
+            </div>
+            <div class="field col-sm-4">
+              <%= label_tag 'Solicitante', nil, class: 'col-sm-2 control-label padding' %>
+              <%= text_field_tag :solicitar_banco_solicitante, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+            </div>
+            <div class="field col-sm-4">
+              <%= label_tag 'Banco', nil, class: 'col-sm-12 control-label padding' %>
+              <%= text_field_tag :solicitar_banco_tipo_banco, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+            </div>
+          </div>
+          <div class="row" style="padding-top:15px;">
+            <div class="field col-sm-4">
+              <%= label_tag 'Tipo de banco', nil, class: 'col-sm-12 control-label padding' %>
+              <%= text_field_tag :solicitar_banco_tipo, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+            </div>
+            <div class="field col-sm-4">
+              <%= label_tag 'Responsável', nil, class: 'col-sm-12 control-label padding' %>
+              <%= text_field_tag :solicitar_banco_responsavel, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+            </div>            
+            <div class="field col-sm-4">
+              <%= label_tag 'Status', nil, class: 'col-sm-12 control-label padding' %>
+              <%= text_field_tag :solicitar_banco_status, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"%>
+            </div>
+          </div>
+          <div class="row" style="padding-top:15px;">
+            <div class="field col-sm-12">
+              <%= label_tag 'Motivo da desativação', nil, class: 'col-sm-12 control-label padding' %>
+              <label id="error_motivo" style="color: red; display: none;"> Obrigatório informar o motivo da desativação.</label>
+              <%= text_area_tag :solicitar_banco_motivo, nil, class: 'form-control input-sm', required: true, autocomplete: "off" %>            
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnDesativarBanco">Desativar</button>
+      </div>
+    </div>
+  </div>
+</div>

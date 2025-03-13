@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Nome:</strong>
+  <%= @receitaws_conta.nome %>
+</p>
+
+<p>
+  <strong>Chave:</strong>
+  <%= @receitaws_conta.chave %>
+</p>
+
+<p>
+  <strong>Qtd disponivel:</strong>
+  <%= @receitaws_conta.qtd_disponivel %>
+</p>
+
+<p>
+  <strong>Qtd usada:</strong>
+  <%= @receitaws_conta.qtd_usada %>
+</p>
+
+<p>
+  <strong>Dia renovacao:</strong>
+  <%= @receitaws_conta.dia_renovacao %>
+</p>
+
+<%= link_to 'Edit', edit_receitaws_conta_path(@receitaws_conta) %> |
+<%= link_to 'Back', receitaws_contas_path %>

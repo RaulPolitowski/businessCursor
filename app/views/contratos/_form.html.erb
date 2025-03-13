@@ -1,0 +1,68 @@
+<%= tinymce_assets %>
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#tab-1"> Dados</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-1" class="tab-pane active">
+            <div class="panel-body">
+              <fieldset class="form-horizontal">
+
+                <%= form_for(@contrato) do |f| %>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :nome, class:'col-sm-2 control-label' %>
+                        <div class="col-sm-5">
+                          <%= f.text_field :nome, class: 'form-control input-sm' %>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :descricao, class:'col-sm-2 control-label' %>
+                        <div class="col-sm-10">
+                          <%= f.text_area :descricao, class: 'form-control input-sm' %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="field col-sm-2">
+                        <%= f.label :tags , :style => "margin:10px;"%>
+                        <ul id="optionsList" style="cursor: pointer">
+                          <% @opcoes.each do |opcao| %>
+                              <li value="<%= opcao[:valor] %>"><%= opcao[:descricao] %></li>
+                          <% end %>
+                        </ul>
+                      </div>
+                      <div class="field col-sm-10">
+                        <%= f.text_area :texto,:class => "tinymce", :rows => 40, :cols => 120 %>
+                      </div>
+                    </div>
+                    <div class="actions aligncenter">
+                      <%= f.submit 'Salvar', :class => 'btn btn-lg btn-success aligncenter ladda-button' %>
+                    </div>
+                <% end %>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<%= tinymce %>
+<script type="text/javascript">
+    $(document).ready( function() {
+        $('#optionsList li').click(function(data) {
+            tinymce.activeEditor.execCommand('mceInsertContent', false, '{{'+data.target.attributes[0].value+'}}');
+
+            return false
+        });
+    });
+</script>

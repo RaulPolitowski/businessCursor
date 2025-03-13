@@ -1,0 +1,84 @@
+<div class="col-lg-12" id="bloco_desistencia_implantacao_pre" style="display: none" >
+  <div class="ibox">
+    <div class="ibox-content product-box" style="border: 1px solid #bfca95;">
+      <div class="ibox-title ibox-title-without-border-style">
+        <h5>Clientes</h5>
+      </div>
+      <div class="ibox-content padding-5" id="table-tab-3">
+        <table class="table table-striped table-bordered table-hover table_desistencia_implantacao_pre">
+          <thead>
+          <tr>
+            <td>Dta. desist.</td>
+            <td>Dta. Fech.</td>
+            <td>Dias aguar.</td>
+            <td>Razão social</td>
+            <td>Cidade- UF</td>
+            <td>Sistema</td>
+            <td>Vendedor</td>
+            <td>Mensalidade R$</td>
+            <td>Implantação R$</td>
+            <td>Motivo</td>
+          </tr>
+          </thead>
+
+          <tfoot>
+          </tfoot>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-eu.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-euro.js"></script>
+<script>
+    $(document).ready(function() {
+        var table = $('.table_desistencia_implantacao_pre').DataTable({
+            pageLength: 10,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                {
+                    extend: 'excel',
+                    title: 'Clientes'
+                },
+                {extend: 'pdf', title: 'Clientes'}
+
+            ],
+            "ordering": true,
+            "order": [[ 0, "desc" ]],
+            "autoWidth": false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+            },
+            "columnDefs": [ 
+              { type: 'date-euro', targets: 0 },{
+                "targets": -1,
+                "data": null,
+                "defaultContent": "<i class=\"fa fa-search\"></i>"
+            } ],
+            "fnDrawCallback": function (oSettings) {
+                $('.table_desistencia_implantacao_pre tbody tr').each(function () {
+                  var sTitle = '';
+                  var nTds = $('td', this);
+                  var data = table.row(this).data();
+                  if(data != undefined){
+                      sTitle = "<h5>"+data[9]+"</h5>"
+                  }
+
+                  if(nTds[9] != undefined){
+                      nTds[9].setAttribute('rel', 'tooltip');
+                      nTds[9].setAttribute('title', sTitle);
+                      nTds[9].setAttribute('data-placement', 'left');
+                      $(nTds[9]).addClass("text-center");
+                      $(nTds[9]).tooltip({
+                          html: true
+                      });
+                      $(nTds[9]).removeAttr( "title" )
+                  }
+                });
+            }
+        });
+    });
+</script>

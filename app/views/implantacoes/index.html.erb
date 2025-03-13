@@ -1,0 +1,157 @@
+<%= hidden_field_tag 'user_is_admin', current_user.admin? %>
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>Implantações</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="<%= url_for :controller => 'dashboards', :action => 'painel_vendas' %>">Home</a>
+      </li>
+      <li class="active">
+        <strong>Implantações</strong>
+      </li>
+      <li>
+        <a href="<%= url_for :controller => 'implantacoes', :action => 'lancar' %>">Lançar</a>
+      </li>
+    </ol>
+  </div>
+</div>
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12 padding">
+      <div class="ibox float-e-margins border-bottom" style="margin-bottom: 5px;">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+
+            <div class="ibox-tools">
+              <button class="btn btn-white btn-xs" id="btnFechamentos" value="false">Fechamentos do período</button>
+              <input type="hidden" id="fechamentosMes" value="false">
+              <button class="btn btn-white btn-xs" id="btnNovas" value="false">Novas</button>
+              <input type="hidden" id="novos" value="false">
+              <button class="btn btn-primary btn-xs" id="btnDia">Dia</button>
+              <button class="btn btn-primary btn-xs" id="btnOntem">Ontem</button>
+              <button class="btn btn-primary btn-xs" id="btnSemana">Semana</button>
+              <button class="btn btn-primary btn-xs" id="btnMes">Mês</button>
+              <button class="btn btn-primary btn-xs" id="btnTodas">Todas</button>
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <div class="field col-sm-2">
+                <label for="data_inicio">Data Início</label>
+                <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio">
+              </div>
+              <div class="field col-sm-2">
+                <label for="data_fim">Data Fim</label>
+                <input class="form-control input-sm" type="text" name="data_fim" id="data_fim">
+              </div>
+              <div class="field col-sm-4">
+                <%= label_tag 'Vendedor', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'vendedor_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-4">
+                <%= label_tag 'Implantador', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'implantador_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um implantador'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-4">
+                <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                <%= text_field_tag :filtro_cliente, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Digite o nome para buscar' %>
+                <input type="hidden" id="filtro_cliente_id" value="">
+              </div>
+              <div class="field col-sm-4">
+                <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag  'empresa_id', options_for_select([
+                                                                         ['German Tech Sistemas (PR)', 1],
+                                                                         ['Pró Vendas', 11],
+                                                                         ['Centro de Distribuição', 20]
+                                                                 ], (get_codigo_empresa(current_empresa.id))), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma empresa'}, :include_blank => true, :multiple => true} %>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Estado', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'estado_financeiro_id', options_for_select( Financeiro::Estado.order(:nome).collect{ |u| [u.descricao_completa, u.id] }) , {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}, :include_blank => true} %>
+              </div>
+
+              <div class="col-lg-1">
+                <br>
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarImplantacoes', :class => 'btn btn-primary' %>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3 padding">
+      <div class="ibox">
+        <div class="ibox-content">
+          <%= select_tag  'implantacao_status_aguardando', options_for_select([
+                                                                                  ['Boas', 'boas',],
+                                                                                  ['Atrasadas', 'atrasadas'],
+                                                                                  ['Com agendamento', 'comagenda'],
+                                                                                  ['Sem agendamento', 'semagenda'],
+                                                                                  ['Aguardando terceiros', 'aguardando'],
+                                                                                  ['Limbo', 'limbo']
+                                                                              ]), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Todos'}, :include_blank => true} %>
+          <h3 class="text-center" id="text-painel0"></h3>
+          <ul class="sortable-list connectList agile-list" id="painel0">
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 padding">
+      <div class="ibox">
+        <div class="ibox-content">
+          <%= select_tag  'implantacao_status_andamento', options_for_select([
+                                                                                 ['Com agendamento', 'comagenda'],
+                                                                                 ['Sem agendamento', 'semagenda'],
+                                                                                 ['Em processo de instalação', 3],
+                                                                                 ['Aguardando treinamento', 4],
+                                                                                 ['Em processo de treinamento', 5],
+                                                                                 ['Aguardando terceiros', 6]
+                                                                             ]), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Todos'}, :include_blank => true} %>
+          <h3 class="text-center" id="text-painel1"></h3>
+          <ul class="sortable-list connectList agile-list" id="painel1">
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 padding">
+      <div class="ibox">
+        <div class="ibox-content">
+          <%= select_tag  'implantacao_status_desistente', options_for_select([
+                                                                                  ['Desistente - Pré instalação', 7],
+                                                                                  ['Desistente - Durante implantação', 8]
+                                                                              ]), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Todos'}, :include_blank => true} %>
+          <h3 class="text-center" id="text-painel2"></h3>
+          <ul class="sortable-list connectList agile-list" id="painel2">
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 padding">
+      <div class="ibox">
+        <div class="ibox-content">
+          <br><br>
+          <h3 class="text-center" id="text-painel3"></h3>
+          <ul class="sortable-list connectList agile-list" id="painel3">
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="modal_activities_implantacao" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn" id="modal_content_activities">
+
+    </div>
+  </div>
+</div>
+<%= render 'implantacoes/modals/transferir_implantacao' %>
+<%= render 'implantacoes/modal_comentario' %>
+<%= render 'implantacoes/modals/voltar_implantacao_negociacao' %>
+<%= javascript_include_tag("implantacoes_index") %>

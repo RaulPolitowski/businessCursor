@@ -1,0 +1,697 @@
+<div class="wrapper wrapper-content">
+  <div class="row">
+    <div class="col-lg-12 padding-left-right" >
+      <input type="hidden" id="status_id" value="">
+      <input type="hidden" id="sistema_id" value="">
+      <div class="ibox float-e-margins border-bottom">
+        <a class="collapse-link black_link">
+        <div class="ibox-title">
+          <h5>Filtros</h5>
+
+          <div class="ibox-tools">
+              <button class="btn btn-primary btn-xs" id="btnEfetivas">Exibir efetivas</button>
+              <button class="btn btn-primary btn-xs" id="btnDia">Dia</button>
+              <button class="btn btn-primary btn-xs" id="btnOntem">Ontem</button>
+              <button class="btn btn-primary btn-xs" id="btnSemana">Semana</button>
+              <button class="btn btn-primary btn-xs" id="btnMes">Mês</button>
+              <button class="btn btn-primary btn-xs" id="btnTrimestre">Trimestre</button>
+              <i class="fa fa-chevron-up"></i>
+          </div>
+        </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <input type="hidden" id="efetivas" value="false">
+              <div class="field col-sm-2">
+                <label for="data_inicio">Data Início</label>
+                <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio">
+              </div>
+              <div class="field col-sm-2">
+                <label for="data_fim">Data Fim</label>
+                <input class="form-control input-sm" type="text" name="data_fim" id="data_fim">
+              </div>
+                <div class="field col-sm-2">
+                  <%= label_tag 'Vendedor', nil, class: 'col-sm-2 control-label padding' %>
+                  <%= select_tag 'usuario_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true} %>
+                </div>
+                <div class="field col-sm-3">
+                  <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                  <%= select_tag  'empresa_id', options_for_select([
+                                                                           ['German Tech Sistemas (PR)', 1],
+                                                                           ['Pró Vendas', 11],
+                                                                           ['Centro de Distribuição', 20]
+                                                                   ], (get_codigo_empresa(current_empresa.id))), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma empresa'}, :include_blank => true, :multiple => true} %>
+                </div>
+                <div class="field col-sm-2">
+                    <%= label_tag 'Estado', nil, class: 'col-sm-2 control-label padding' %>
+                    <%= select_tag 'estado_financeiro_id', options_for_select( Financeiro::Estado.order(:nome).collect{ |u| [u.descricao_completa, u.id] }) , {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}, :include_blank => true} %>
+                </div>
+
+              <div class="col-lg-1">
+                <br>
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarPainelVendas', :class => 'btn btn-primary' %>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 padding-left-right">
+      <div class="row">
+        <div id="fecDiv" class="col-lg-8 padding-left-right" >
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <span class="label label-info pull-right">Mês</span>
+          <h5>Fechamentos</h5>
+        </div>
+        <div class="ibox-content" style="min-height: 85px">
+          <h1 class="no-margins" id="quantidade" style="cursor: pointer"></h1>
+          <div class="stat-percent font-bold text-danger" id="perc_quantidade"></div>
+          <small id="media_quantidade"></small>
+        </div>
+      </div>
+      </div>
+        <div class="col-lg-4 padding-left-right">
+          <div class="ibox float-e-margins" >
+            <div class="ibox-title">
+              <h5>Dias</h5>
+            </div>
+            <div class="ibox-content" style="min-height: 85px">
+              <h1 class="no-margins" id="dias"></h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div id="menDiv" class="col-lg-12 padding-left-right">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <span class="label label-info pull-right">Mês</span>
+          <h5>Mensalidade total</h5>
+        </div>
+        <div class="ibox-content">
+          <h1 class="no-margins" id="valor_mensalidade"></h1>
+          <div class="stat-percent font-bold text-danger" id="perc_mensalidade"></div>
+          <small id="media_mensalidade"></small>
+        </div>
+      </div>
+        </div>
+      </div>
+      <div class="row">
+        <div id="impDiv"class="col-lg-12 padding-left-right">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <span class="label label-info pull-right">Mês</span>
+          <h5>Implantação total</h5>
+        </div>
+        <div class="ibox-content">
+          <h1 class="no-margins" id="valor_implantacao"></h1>
+          <div class="stat-percent font-bold text-danger" id="perc_implantacao"></div>
+          <small id="media_implantacao"></small>
+        </div>
+      </div>
+    </div>
+      </div>
+    </div>
+    <div class="col-lg-9  padding-left-right">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Fechamentos</h5>
+        </div>
+        <div class="ibox-content">
+          <div class="row">
+            <div class="col-lg-4">
+              <div id="representacao" style="min-height: 340px;" ></div>
+            </div>
+            <div class="col-lg-4">
+              <div id="tipofechamento" style="min-height: 340px;" ></div>
+            </div>
+            <div class="col-lg-4">
+              <div id="fechamento" style="min-height: 340px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4 padding-left-right">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>Top vendas</h5>
+          </div>
+          <div class="ibox-content">
+            <div id="topfechamento" style="height: 150px"></div>
+          </div>
+        </div>
+      </div>
+    <!--<div class="col-lg-4 padding-left-right">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>Top implantacões</h5>
+          </div>
+          <div class="ibox-content">
+            <div id="topimplantacao" style="height: 115px"></div>
+          </div>
+        </div>
+      </div> -->
+    <div class="col-lg-4 padding-left-right">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Top estados</h5>
+        </div>
+        <div class="ibox-content">
+          <div id="topestados" style="height: 150px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 padding-left-right">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>Top mensalidades</h5>
+          </div>
+          <div class="ibox-content">
+            <div id="topmensalidade" style="height: 150px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="row">
+    <div id="bloco_clientes" class="col-lg-12 padding-left-right" style="display: none">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <div id="tabela_clientes_msg" value="">Fechamentos</div>
+        </div>
+        <div class="ibox-content">
+          <table class="table table-striped table-bordered table-hover table-fechamentos">
+            <thead>
+            <tr>
+              <th>Data fechamento</th>
+              <th>Cliente</th>
+              <th>Cidade-UF</th>
+              <th>Vendedor</th>
+              <th>Tipo</th>
+              <th>Canal de fechamento</th>
+              <th>Sistema</th>
+              <th>Implantação</th>
+              <th>Mensalidade</th>
+            </tr>
+            </thead>
+            <tbody style="width:100%">
+
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    $(document).ready(function()
+    {
+    $('#fecDiv').attr({title: "Dados aos quais comparam o fechamento do mesmo periodo do mês anterior."});
+    $('#menDiv').attr({title: "Dados aos quais comparam o fechamento do mesmo periodo do mês anterior."});
+    $('#impDiv').attr({title: "Dados aos quais comparam o fechamento do mesmo periodo do mês anterior."});
+             
+    google.charts.load('current', {'packages':['corechart','table']});
+
+
+    setTimeout(function () {
+        google.charts.setOnLoadCallback(drawChartFechamento);
+        setInterval(drawChartFechamento, 600000);
+
+        google.charts.setOnLoadCallback(drawChartFechamentoSistema);
+        setInterval(drawChartFechamentoSistema, 600000);
+
+        google.charts.setOnLoadCallback(drawChartTipoFechamento);
+        setInterval(drawChartTipoFechamento, 600000);
+
+        getValorTotalMensalidadeImplantacao();
+        setInterval(getValorTotalMensalidadeImplantacao, 600000);
+
+        google.charts.setOnLoadCallback(drawTableTopFechamentos);
+        setInterval(drawTableTopFechamentos, 600000);
+
+        google.charts.setOnLoadCallback(drawTableTopMensalidades);
+
+        setInterval(drawTableTopMensalidades, 600000);
+
+        //google.charts.setOnLoadCallback(drawTableTopImplantacoes);
+        //setInterval(drawTableTopImplantacoes, 600000);
+
+        google.charts.setOnLoadCallback(drawTableTopEstados);
+        setInterval(drawTableTopEstados, 600000);
+    }, 1000);
+
+
+    function drawChartFechamento() {
+
+        $.getJSON("/dashboards/get_fechamentos?data_inicio=" + $('#data_inicio').val() +
+                  "&data_fim=" + $('#data_fim').val() +
+                  "&status_id=" + $('#status_id').val() +
+                  '&user_id=' + $('#usuario_id').val() +
+                  '&estado=' + $('#estado_financeiro_id').val() +
+                  '&empresa_id=' + $('#empresa_id').val() + '&flag=' + $('#efetivas').val(), function(data) {
+
+            var dataArray = [
+                ['Status', 'Total', 'ID'],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].descricao, parseInt(data[i].total), data[i].id];
+                dataArray.push(row);
+            }
+            var options = {
+                'chartArea': {'width': '100%', 'height': '80%'},
+                pieStartAngle: 50,
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('fechamento'));
+
+            function selectHandler() {
+              var selectedItem = chart.getSelection()[0];
+              if (selectedItem) {
+                $('#sistema_id').val(data.getValue(selectedItem.row, 2));
+              }else{
+                $('#sistema_id').val('');
+
+                if($('#status_id').val() == '')
+                  $('#bloco_clientes').hide();
+              }
+              buscarClientes();
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+            var formatter = new google.visualization.NumberFormat({prefix: 'R$'});
+            formatter.format(data, 1);
+            chart.draw(data, options);
+        });
+    }
+
+    function drawChartFechamentoSistema() {
+
+        $.getJSON("/dashboards/get_fechamentos_by_sistemas?data_inicio=" + $('#data_inicio').val() +
+                  "&data_fim=" + $('#data_fim').val() +
+                  "&status_id=" + $('#status_id').val() +
+                  '&user_id=' + $('#usuario_id').val() +
+                  '&estado=' + $('#estado_financeiro_id').val() +
+                  '&empresa_id=' + $('#empresa_id').val() + '&flag=' + $('#efetivas').val(), function(data) {
+
+            var dataArray = [
+                ['Status', 'Quantidade', 'ID'],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].descricao, parseInt(data[i].count), data[i].id];
+                dataArray.push(row);
+            }
+            var options = {
+                'chartArea': {'width': '100%', 'height': '80%'},
+                pieStartAngle: 50
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('representacao'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    $('#sistema_id').val(data.getValue(selectedItem.row, 2));
+                }else{
+                    $('#sistema_id').val('');
+
+                    if($('#status_id').val() == '')
+                        $('#bloco_clientes').hide();
+                }
+                buscarClientes();
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+        });
+    }
+
+    function drawChartTipoFechamento() {
+
+        $.getJSON("/dashboards/get_tipo_fechamento?data_inicio=" + $('#data_inicio').val() +
+                "&data_fim=" + $('#data_fim').val() +
+                "&status_id=" + $('#status_id').val() +
+                '&user_id=' + $('#usuario_id').val() +
+                '&estado=' + $('#estado_financeiro_id').val() +
+                '&empresa_id=' + $('#empresa_id').val() + '&flag=' + $('#efetivas').val(), function(data) {
+
+            var dataArray = [
+                ['Tipo', 'Quantidade', 'ID'],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].descricao, parseInt(data[i].count), data[i].id];
+                dataArray.push(row);
+            }
+            var options = {
+                'chartArea': {'width': '100%', 'height': '80%'},
+                pieStartAngle: 50
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('tipofechamento'));
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+        });
+    }
+
+    function getValorTotalMensalidadeImplantacao(){
+
+        $.getJSON("/dashboards/get_valores_fechamento?data_inicio=" + $('#data_inicio').val() +
+                  "&data_fim=" + $('#data_fim').val() +
+                  '&user_id=' + $('#usuario_id').val() +
+                  '&empresa_id=' + $('#empresa_id').val() +
+                  '&estado=' + $('#estado_financeiro_id').val() + '&flag=' + $('#efetivas').val(), function(data) {
+
+            $('#perc_implantacao').text('');
+            $('#perc_mensalidade').text('');
+            $('#perc_quantidade').text('');
+            $('#valor_mensalidade').text('');
+            $('#valor_implantacao').text('');
+            $('#media_mensalidade').text('');
+            $('#media_implantacao').text('');
+            $('#media_quantidade').text('');
+            $('#quantidade').text('');
+            $('#dias').text('');
+            if(data[0]['mensalidade'] == null) {
+                return;
+            }
+            $('#dias').text(data[0]['qtddias']);
+            $('#valor_mensalidade').text(mascaraValor(data[0]['mensalidade']));
+            $('#valor_implantacao').text(mascaraValor(data[0]['implantacao']));
+            $('#media_mensalidade').text('Média: ' + mascaraValor(data[0]['media_mensalidade']));
+            $('#media_implantacao').text('Média: ' + mascaraValor(data[0]['media_implantacao']));
+            $('#media_quantidade').text('Média: ' + data[0]['media_fechamento']);
+            $('#quantidade').text(data[0]['quantidade']);
+            if(parseFloat(data[0]['implantacao']) > parseFloat(data[0]['mes_anterior_implantacao'])){
+                $('#perc_implantacao').removeClass('text-danger').addClass('text-info');
+                $('#perc_implantacao').append((data[0]['perc_implantacao'])+'% <i class="fa fa-level-up"></i>');
+
+            }else{
+                $('#perc_implantacao').removeClass('text-info').addClass('text-danger');
+                $('#perc_implantacao').append((data[0]['perc_implantacao'])+'% <i class="fa fa-level-down"></i>');
+            }
+            if(parseFloat(data[0]['mensalidade']) > parseFloat(data[0]['mes_anterior_mensalidade'])){
+                $('#perc_mensalidade').removeClass('text-danger').addClass('text-info');
+                $('#perc_mensalidade').append((data[0]['perc_mensalidade'])+'% <i class="fa fa-level-up"></i>');
+            }else{
+                $('#perc_mensalidade').removeClass('text-info').addClass('text-danger');
+                $('#perc_mensalidade').append((data[0]['perc_mensalidade'])+'% <i class="fa fa-level-down"></i>');
+            }
+            if(parseFloat(data[0]['quantidade']) > parseFloat(data[0]['mes_anterior_quantidade'])){
+                $('#perc_quantidade').removeClass('text-danger').addClass('text-info');
+                $('#perc_quantidade').append((data[0]['perc_quantidade'])+'% <i class="fa fa-level-up"></i>');
+            }else{
+                $('#perc_quantidade').removeClass('text-info').addClass('text-danger');
+                $('#perc_quantidade').append((data[0]['perc_quantidade'])+'% <i class="fa fa-level-down"></i>');
+            }
+        });
+    }
+
+
+    function drawTableTopFechamentos() {
+        $.getJSON("/dashboards/get_top_fechamentos?data_inicio=" + $('#data_inicio').val() +
+                  "&data_fim=" + $('#data_fim').val() +
+                  '&empresa_id=' + $('#empresa_id').val() +
+                  '&estado=' + $('#estado_financeiro_id').val() + '&flag=' + $('#efetivas').val(), function(data) {
+            var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', '');
+            datatable.addColumn('string', 'Nome');
+            datatable.addColumn('number', 'Quant.');
+            datatable.addColumn('number', 'Média');
+
+            for (var i = 0; i < data.length; i++) {
+                var row;
+                i == 0 ? row = ['<%= image_tag("gold.png", size: "16x16") %>', data[i].nome, parseInt(data[i].qtd), parseFloat(data[i].media)] :
+                    i == 1 ? row = ['<%= image_tag("silver.png", size: "16x16") %>', data[i].nome, parseInt(data[i].qtd), parseFloat(data[i].media)] :
+                        i == 2 ? row = ['<%= image_tag("bronze.png", size: "16x16") %>', data[i].nome, parseInt(data[i].qtd), parseFloat(data[i].media)] :
+                            row = ['', data[i].nome, parseInt(data[i].qtd), parseFloat(data[i].media)]
+
+                datatable.addRow(row);
+            }
+
+            var table = new google.visualization.Table(document.getElementById('topfechamento'));
+
+            table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'disable'});
+        });
+    }
+
+
+    function drawTableTopMensalidades() {
+        $.getJSON("/dashboards/get_top_mensalidade?data_inicio=" + $('#data_inicio').val() +
+                  "&data_fim=" + $('#data_fim').val() +
+                  '&empresa_id=' + $('#empresa_id').val() +
+                  '&estado=' + $('#estado_financeiro_id').val() + '&flag=' + $('#efetivas').val(), function(data) {
+            var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', '');
+            datatable.addColumn('string', 'Nome');
+            datatable.addColumn('number', 'Valor');
+            datatable.addColumn('number', 'Média');
+
+            for (var i = 0; i < data.length; i++) {
+                var row;
+                i == 0 ? row = ['<%= image_tag("gold.png", size: "16x16") %>', data[i].nome, parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                    i == 1 ? row = ['<%= image_tag("silver.png", size: "16x16") %>', data[i].nome, parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                        i == 2 ? row = ['<%= image_tag("bronze.png", size: "16x16") %>', data[i].nome, parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                            row = ['', data[i].nome, parseFloat(data[i].valor), parseFloat(data[i].media)]
+
+                datatable.addRow(row);
+            }
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: 'R$ '});
+            formatter.format(datatable, 2);
+            formatter.format(datatable, 3);
+
+            var table = new google.visualization.Table(document.getElementById('topmensalidade'));
+
+            table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'disable'});
+        });
+    }
+
+
+    function drawTableTopImplantacoes() {
+        $.getJSON("/dashboards/get_top_implantacao?data_inicio=" + $('#data_inicio').val() +
+                "&data_fim=" + $('#data_fim').val() +
+                '&empresa_id=' + $('#empresa_id').val() +
+                '&estado=' + $('#estado_financeiro_id').val(), function(data) {
+            var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', '');
+            datatable.addColumn('string', 'Nome');
+            datatable.addColumn('number', 'Valor');
+            datatable.addColumn('number', 'Média');
+
+            for (var i = 0; i < data.length; i++) {
+                var row;
+                i == 0 ? row = ['<%= image_tag("gold.png", size: "16x16") %>', data[i].nome, parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                    i == 1 ? row = ['<%= image_tag("silver.png", size: "16x16") %>', data[i].nome, parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                        i == 2 ? row = ['<%= image_tag("bronze.png", size: "16x16") %>', data[i].nome, parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                            row = ['', data[i].nome, parseFloat(data[i].valor), parseFloat(data[i].media)]
+
+                datatable.addRow(row);
+            }
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: 'R$ '});
+            formatter.format(datatable, 2);
+            formatter.format(datatable, 3);
+
+            var table = new google.visualization.Table(document.getElementById('topimplantacao'));
+
+            table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'disable'});
+        });
+    }
+
+    function drawTableTopEstados() {
+        $.getJSON("/dashboards/get_top_estados_vendas?data_inicio=" + $('#data_inicio').val() +
+                "&data_fim=" + $('#data_fim').val() +
+                '&empresa_id=' + $('#empresa_id').val() + '&flag=' + $('#efetivas').val(), function(data) {
+                  
+            var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', '');
+            datatable.addColumn('string', 'UF');
+            datatable.addColumn('number', 'Qtd');
+            datatable.addColumn('number', 'Valor');
+            datatable.addColumn('number', 'Média');
+
+            for (var i = 0; i < data.length; i++) {
+                var row;
+                i == 0 ? row = ['<%= image_tag("gold.png", size: "16x16") %>', data[i].sigla, parseInt(data[i].qtd), parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                    i == 1 ? row = ['<%= image_tag("silver.png", size: "16x16") %>', data[i].sigla, parseInt(data[i].qtd), parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                        i == 2 ? row = ['<%= image_tag("bronze.png", size: "16x16") %>', data[i].sigla, parseInt(data[i].qtd), parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                            row = ['', data[i].sigla, parseInt(data[i].qtd), parseFloat(data[i].valor), parseFloat(data[i].media)]
+
+                datatable.addRow(row);
+            }
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: 'R$ '});
+            formatter.format(datatable, 3);
+            formatter.format(datatable, 4);
+
+            var table = new google.visualization.Table(document.getElementById('topestados'));
+
+            table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'disable'});
+        });
+    }
+
+
+    $('#btnAtualizarPainelVendas').on('click', function () {
+        if($('#empresa_id').val() == ''){
+            exibirWarning("Selecione uma empresa!");
+            return false;
+        }
+            atualizarPaineis();
+            return false;
+    });
+
+      function atualizarPaineis() {
+        $('#status_id').val('');
+        $('#sistema_id').val('');
+        $('#bloco_clientes').hide();
+
+        //drawTableTopImplantacoes();
+        drawTableTopEstados();
+        drawTableTopMensalidades();
+        drawTableTopFechamentos();
+        getValorTotalMensalidadeImplantacao();
+        drawChartFechamentoSistema();
+        drawChartFechamento();
+        drawChartTipoFechamento();
+      }
+
+    function buscarClientes() {
+        $.getJSON("/dashboards/get_fechamentos_table?data_inicio=" + $('#data_inicio').val() +
+                     "&data_fim=" + $('#data_fim').val() +
+                    "&status_id=" + $('#status_id').val() +
+                    '&sistema_id=' + $('#sistema_id').val() +
+                    '&user_id=' + $('#usuario_id').val() +
+                    '&empresa_id=' + $('#empresa_id').val() +
+                    '&estado=' + $('#estado_financeiro_id').val() +
+                    '&flag=' + $('#efetivas').val(), function(data) {
+
+            var table = $('.table-fechamentos').DataTable();
+            table.clear().draw();
+            $('#bloco_clientes').show();
+            var t = $('.table-fechamentos').DataTable();
+            $.each(data,function (i,val){
+                t.row.add( [
+                    moment(val['data_fechamento']).format("DD/MM/YYYY HH:mm"),
+                    val['razao_social'],
+                    val['cidade'],
+                    val['vendedor'],
+                    val['tipo'] ? val['tipo'] : '',
+                    val['tipo_fechamento'],
+                    val['sistema'],
+                    mascaraValor(val['valor_implantacao']),
+                    mascaraValor(val['valor_mensalidade'])
+                ] ).draw( false );
+            });
+        });
+    };
+
+      createTableFechamentos();
+    function createTableFechamentos(){
+        if ($("#DataTables_Table_0_wrapper").length == 0){
+            $('.table-fechamentos').DataTable({
+                pageLength: 10,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        title: 'Fechamentos'
+                    },
+                    {extend: 'pdf', title: 'Fechamentos'}
+
+                ],
+                "ordering": false,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                },
+                "columnDefs": [
+                    { "width": "5%", "targets": [0, 4] },
+                    { "width": "5%", "targets": [5, 4] },
+                    { "width": "50%", "targets": 1 },
+                    { "width": "20%", "targets": [2,3] },
+                    { "width": "5%", "targets": [6, 7] }
+                ],
+            });
+        }
+    }
+
+        $('#quantidade').on('click', function () {
+            $('#status_id').val('');
+            $('#sistema_id').val('');
+            drawChartFechamentoSistema();
+            drawChartFechamento();
+            buscarClientes();
+        });
+
+        $('#btnDia').on('click', function () {
+            $("#data_inicio").datepicker("setDate",  new Date());
+            $("#data_fim").datepicker("setDate",  new Date());
+            
+
+            atualizarPaineis();
+            return false;
+        });
+
+        $('#btnOntem').on('click', function () {
+            $("#data_inicio").datepicker("setDate",  addDays(new Date(), -1));
+            $("#data_fim").datepicker("setDate",  addDays(new Date(), -1));
+            
+
+            atualizarPaineis();
+            return false;
+        });
+
+        $('#btnSemana').on('click', function () {
+            $("#data_inicio").datepicker("setDate",  addDays(new Date(), -7));
+            $("#data_fim").datepicker("setDate",  new Date());
+            
+
+            atualizarPaineis();
+            return false;
+        });
+
+        $('#btnMes').on('click', function () {
+            $("#data_inicio").datepicker("setDate",  new Date(date.getFullYear(), date.getMonth(), 1));
+            $("#data_fim").datepicker("setDate",  new Date(date.getFullYear(), date.getMonth() + 1, 0));
+            
+
+            atualizarPaineis();
+            return false;
+        });
+
+        $('#btnTrimestre').on('click', function () {
+            $("#data_inicio").datepicker("setDate",  new Date(date.getFullYear(), date.getMonth() -2, 1));
+            $("#data_fim").datepicker("setDate",  new Date(date.getFullYear(), date.getMonth() + 1, 0));
+
+            atualizarPaineis();
+            return false;
+        });
+
+        $('#btnEfetivas').on('click', function () {
+          if($('#efetivas').val() == "false")
+            $('#efetivas').val("true");
+          else
+            $('#efetivas').val("false");
+
+          atualizarPaineis();
+          return false;
+        });
+    });
+</script>

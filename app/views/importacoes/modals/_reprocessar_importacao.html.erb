@@ -1,0 +1,30 @@
+<div id="modal_reprocessar_importacao" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Reprocessar importação</h4>
+      </div>
+      <form class="form-horizontal" id="form_reprocessar_importacao">
+        <input type="hidden" id="filtro" value="">
+        <input type="hidden" id="tipo" value="">
+        <div class="modal-body">
+          <div class="form-group">
+            <div class="field">
+              <div class="col-sm-12">
+                <label for="responsavel_novo">Importação</label>
+                <%= select_tag 'importacao_id', options_for_select(Importacao.where(empresa_id: current_empresa.id).order(data_importacao: :desc).collect {|p| [ (human_datetime p.data_importacao), p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma importação'}, :include_blank => true} %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Reprocessar', :id => 'btnReprocessarImportacao', :class => 'btn btn-info'%>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+

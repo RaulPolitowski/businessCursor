@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cliente_id: 
+  empresa_id: 
+  user_id: 
+  status: MyString
+  data_solicitacao: 2021-03-05 08:58:28
+  motivo: MyString
+  solicitante: MyString
+  telefone: MyString
+
+two:
+  cliente_id: 
+  empresa_id: 
+  user_id: 
+  status: MyString
+  data_solicitacao: 2021-03-05 08:58:28
+  motivo: MyString
+  solicitante: MyString
+  telefone: MyString

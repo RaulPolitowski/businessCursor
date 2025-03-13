@@ -1,0 +1,64 @@
+<div id="agendar_retorno" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Data Retorno</h4>
+      </div>
+      <form class="form-horizontal" id="form_agendar_retorno">
+        <div class="modal-body">
+          <div class="form-group" id="ObsLigacaoGroup">
+            <div class="field">
+              <%= label_tag 'Obs. Ligação', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= text_area_tag :retorno_obs_ligacao_retorno, nil, class: 'form-control input-sm', autocomplete: "off" %>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" id="data_1">
+            <div class="field">
+              <%= label_tag 'Data Retorno', nil,  class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding">
+                <div class="input-group clockpicker" data-autoclose="true">
+                  <%= text_field_tag 'retorno_data_agendamento_retorno', nil,  class: 'form-control input-sm', autocomplete: "off", placeholder: 'DD/MM/YYYY HH:mm' %>
+                  <span class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%= hidden_field_tag :status_ligacao, nil, class: 'form-control input-sm' %>
+          <div class="form-group margin">
+            <div class="pull-center">
+              <button class="btn btn-primary btn-xs" id="btn10" onclick="setarData(30, $('#agendar_retorno #retorno_data_agendamento_retorno')); return false;">30min</button>
+              <button class="btn btn-primary btn-xs" id="btn20" onclick="setarData(60, $('#agendar_retorno #retorno_data_agendamento_retorno')); return false;">60min</button>
+              <button class="btn btn-primary btn-xs" id="btn30" onclick="setarData(120, $('#agendar_retorno #retorno_data_agendamento_retorno')); return false;">2h</button>
+              <button class="btn btn-primary btn-xs" id="btn45" onclick="setarData(240, $('#agendar_retorno #retorno_data_agendamento_retorno')); return false;">4h</button>
+              <button class="btn btn-primary btn-xs" id="btn1" onclick="setarData(360, $('#agendar_retorno #retorno_data_agendamento_retorno')); return false;">6h</button>
+              <button class="btn btn-primary btn-xs" id="btn2" onclick="setarData(1440, $('#agendar_retorno #retorno_data_agendamento_retorno')); return false;">24h</button>
+              <button class="btn btn-primary btn-xs" id="btn4" onclick="setarData(2880, $('#agendar_retorno #retorno_data_agendamento_retorno')); return false;">48h</button>
+              <button class="btn btn-primary btn-xs" id="btn24" onclick="setarData(4320, $('#agendar_retorno #retorno_data_agendamento_retorno')); return false;">72h</button>
+              <button class="btn btn-primary btn-xs" id="btn48" onclick="setarData(5760, $('#agendar_retorno #retorno_data_agendamento_retorno')); return false;">96h</button>
+              <button class="btn btn-primary btn-xs" id="btn72" onclick="setarData(8640, $('#agendar_retorno #retorno_data_agendamento_retorno')); return false;">144h</button>
+            </div>
+          </div>
+          <div class="form-group" id="negociadorGroup">
+            <div class="field">
+              <%= label_tag 'Negociador', nil,  class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding">
+                <%= select_tag 'negociador_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um negociador'}, :include_blank => true} %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnSalvarDataRetorno', :class => 'btn btn-primary' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+

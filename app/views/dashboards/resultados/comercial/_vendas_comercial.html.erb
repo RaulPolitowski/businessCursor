@@ -1,0 +1,295 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Vendas
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 no-padding" >
+        <div id="venDiv" class="col-md-3 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Quant. Vendas</h5>
+                  <span class="label label-info pull-right" id="competencia_total_vendas"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="total_vendas_quantidade" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_total_vendas_quantidade"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="quantidade_vendas_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Mensalidade Vendas</h5>
+                  <span class="label label-info pull-right" id="competencia_mensalidade_vendas"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-left" id="mensalidade_vendas" style="margin-bottom: 2px !important;"></h2>
+                    </div>
+                    <small class="pull-left" id="media_mensalidade_vendas"></small>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right" id="mensalidade_vendas_anterior" style="margin-bottom: 7px"></div>
+                    </div>
+                    <div class="stat-percent font-bold text-danger" id="percentual_mensalidade_vendas"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Instalação Vendas</h5>
+                  <span class="label label-info pull-right" id="competencia_instalacao_vendas"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-left" id="instalacao_vendas" style="margin-bottom: 2px !important;"></h2>
+                    </div>
+                    <small class="pull-left" id="media_instalacao_vendas"></small>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right" id="instalacao_vendas_anterior" style="margin-bottom: 7px"></div>
+                    </div>
+                    <div class="stat-percent font-bold text-danger" id="percentual_instalacao_vendas"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5>Vendas</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="vendas_12_meses" style="height: 212px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right" id="compentencia_vendas_sistema"></span>
+                <h5>Por Sistema</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="vendas_sistema"  style="height: 212px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script type="text/javascript">
+    function drawFechamentos12Meses() {
+        $.getJSON("/dashboards/fechamentos_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&vendedor=" + $('#vendedor_id').val(), function(data) {
+
+            var dataArray = [
+                ['Mês', 'Quantidade', 'Quantidade', 'Mensalidade', 'Implantação', 'Média Mensalidade', 'Média Implantação',
+                    'Emissor', 'Gourmet', 'Manager', 'Light', 'Outros']
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseInt(data[i].quantidade), parseInt(data[i].quantidade),
+                    parseFloat(data[i].mensalidade), parseFloat(data[i].implantacao),
+                    parseFloat(data[i].mediamensalidade), parseFloat(data[i].mediaimplantacao),
+                    data[i].emissor, data[i].gourmet, data[i].manager, data[i].light, data[i].outros];
+                dataArray.push(row);
+            }
+
+            var meses = data;
+            var result = null;
+            $.getJSON("/dashboards/fechamentos_12_meses_mes_anterior?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&vendedor=" + $('#vendedor_id').val(), function(ret) {
+
+                result = ret;
+
+                preencherFechamentosQuantidade( $(meses).get(-1).data,
+                                                $(meses).get(-1).quantidade,
+                                                $(result).get(-1).quantidade);
+
+                preencherFechamentosMensalidade($(meses).get(-1).data,
+                                                parseFloat($(meses).get(-1).mensalidade),
+                                                parseFloat($(meses).get(-1).mediamensalidade),
+                                                parseFloat($(result).get(-1).mensalidade));
+
+                preencherFechamentosInstalacao($(meses).get(-1).data,
+                                              parseFloat($(meses).get(-1).implantacao),
+                                              parseFloat($(meses).get(-1).mediaimplantacao),
+                                              parseFloat($(result).get(-1).implantacao));
+            });
+
+            drawChartFechamentoSistema($(meses).get(-1).emissor, $(meses).get(-1).gourmet, $(meses).get(-1).manager, $(meses).get(-1).light, $(meses).get(-1).outros);
+
+            $('#venDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+            
+
+            var options = {
+                'chartArea': {'width': '90%', 'height': '70%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                series: {1: {type: 'line', color: 'black'}},
+                legend: 'none',
+                animation: { easing: 'inAndOut', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('vendas_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    var ultimo = selectedItem.row-1;
+                    if(ultimo == -1)
+                        ultimo = 0;
+
+                    preencherFechamentosQuantidade(data.getValue(selectedItem.row, 0), data.getValue(selectedItem.row, 1), data.getValue(ultimo, 1));
+
+                    preencherFechamentosMensalidade(data.getValue(selectedItem.row, 0), parseFloat(data.getValue(selectedItem.row, 3)), parseFloat(data.getValue(selectedItem.row, 5)),
+                        parseFloat(data.getValue(ultimo, 3)));
+
+                    preencherFechamentosInstalacao(data.getValue(selectedItem.row, 0), parseFloat(data.getValue(selectedItem.row, 4)), parseFloat(data.getValue(selectedItem.row, 6)),
+                        parseFloat(data.getValue(ultimo, 4)));
+
+                    drawChartFechamentoSistema(data.getValue(selectedItem.row, 7), data.getValue(selectedItem.row, 8), data.getValue(selectedItem.row, 9),
+                        data.getValue(selectedItem.row, 10), data.getValue(selectedItem.row, 11));
+                    $('#venDiv').attr({title: "Dados aos quais comparam o fechamento do mês inteiro."});
+            
+                
+                }else{
+                    preencherFechamentosQuantidade( $(meses).get(-1).data,
+                        $(meses).get(-1).quantidade,
+                        $(result).get(-1).quantidade);
+
+                    preencherFechamentosMensalidade($(meses).get(-1).data,
+                        parseFloat($(meses).get(-1).mensalidade),
+                        parseFloat($(meses).get(-1).mediamensalidade),
+                        parseFloat($(result).get(-1).mensalidade));
+
+                    preencherFechamentosInstalacao($(meses).get(-1).data,
+                        parseFloat($(meses).get(-1).implantacao),
+                        parseFloat($(meses).get(-1).mediaimplantacao),
+                        parseFloat($(result).get(-1).implantacao));
+
+                    drawChartFechamentoSistema($(meses).get(-1).emissor, $(meses).get(-1).gourmet, $(meses).get(-1).manager, $(meses).get(-1).light, $(meses).get(-1).outros);
+                    $('#venDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+            
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([3,4,5,6,7,8,9,10,11]);
+            chart.draw(view, options);
+        });
+    }
+
+    function preencherFechamentosQuantidade(competencia, quantidade, quantidadeAnterior) {
+
+        $('#competencia_total_vendas').text(competencia);
+        $('#total_vendas_quantidade').text('Total ' + quantidade);
+        $('#quantidade_vendas_anterior').text('Ant. ' + quantidadeAnterior);
+        var valor = ((quantidade * 100 / quantidadeAnterior) - 100);
+        $('#percentual_total_vendas_quantidade').text('');
+        if (valor > 0) {
+            $('#percentual_total_vendas_quantidade').removeClass('text-danger').addClass('text-info');
+            $('#percentual_total_vendas_quantidade').append(valor.toFixed(2) + '% <i class="fa fa-level-up"></i>');
+        } else {
+            $('#percentual_total_vendas_quantidade').removeClass('text-info').addClass('text-danger');
+            $('#percentual_total_vendas_quantidade').append(valor.toFixed(2) + '% <i class="fa fa-level-down"></i>');
+        }
+    }
+
+    function preencherFechamentosMensalidade(competencia, valorMensalidade, mediaMensalidade, valorAnterior) {
+        $('#competencia_mensalidade_vendas').text(competencia);
+        $('#mensalidade_vendas').text(mascaraValor(valorMensalidade.toFixed(2)));
+        $('#media_mensalidade_vendas').text('Média ' + mascaraValor(mediaMensalidade.toFixed(2)));
+        $('#mensalidade_vendas_anterior').text('Ant. ' + mascaraValor(valorAnterior.toFixed(2)));
+
+        var valor = ((valorMensalidade * 100 / valorAnterior) - 100);
+        $('#percentual_mensalidade_vendas').text('');
+        if (valor > 0) {
+            $('#percentual_mensalidade_vendas').removeClass('text-danger').addClass('text-info');
+            $('#percentual_mensalidade_vendas').append(valor.toFixed(2) + '% <i class="fa fa-level-up"></i>');
+        } else {
+            $('#percentual_mensalidade_vendas').removeClass('text-info').addClass('text-danger');
+            $('#percentual_mensalidade_vendas').append(valor.toFixed(2) + '% <i class="fa fa-level-down"></i>');
+        }
+    }
+
+    function preencherFechamentosInstalacao(competencia, valorImplantacao, mediaImplantacao, valorAnterior) {
+        $('#competencia_instalacao_vendas').text(competencia);
+        $('#instalacao_vendas').text(mascaraValor(valorImplantacao.toFixed(2)));
+        $('#media_instalacao_vendas').text('Média ' + mascaraValor(mediaImplantacao.toFixed(2)));
+        $('#instalacao_vendas_anterior').text('Ant. ' + mascaraValor(valorAnterior.toFixed(2)));
+        var valor = ((valorImplantacao*100 / valorAnterior)-100);
+        $('#percentual_instalacao_vendas').text('');
+        if(valor > 0){
+            $('#percentual_instalacao_vendas').removeClass('text-danger').addClass('text-info');
+            $('#percentual_instalacao_vendas').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_instalacao_vendas').removeClass('text-info').addClass('text-danger');
+            $('#percentual_instalacao_vendas').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+    }
+
+    function drawChartFechamentoSistema(emissor, gourmet, manager, light, outros) {
+        var dataArray = [
+            ['Sistema', 'Quantidade'],
+        ];
+        dataArray.push(['Emissor', parseInt(emissor)]);
+        dataArray.push(['Gourmet', parseInt(gourmet)]);
+        dataArray.push(['Manager', parseInt(manager)]);
+        dataArray.push(['Light', parseInt(light)]);
+        dataArray.push(['Outros', parseInt(outros)]);
+        var options = {
+            'chartArea': {'width': '100%', 'height': '80%'},
+            pieStartAngle: 50,
+            legend: {position: 'bottom'},
+            is3D: true
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('vendas_sistema'));
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        chart.draw(data, options);
+    }
+</script>

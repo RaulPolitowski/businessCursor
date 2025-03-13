@@ -1,0 +1,30 @@
+//= require chosen/bootstrap-chosen.css
+
+.chosen-choices {
+  max-height: 80px;
+  overflow-y: auto !important;
+}
+
+.last-row {
+  font-weight: bold;
+  background-color: #9e0e0e;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+}
+
+.hidden-header {
+  display: none;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.font-weight-bold {
+  font-weight: 800
+}
+
+.no-float {
+  float: none;
+}

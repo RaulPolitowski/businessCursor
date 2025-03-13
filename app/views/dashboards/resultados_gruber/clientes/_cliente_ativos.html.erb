@@ -1,0 +1,162 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Clientes Ativos
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div class="col-md-3 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoClientes()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Quantidade</h5>
+                  <span class="label label-info pull-right" id="compentencia_cliente_total"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-12 no-padding">
+                    <h2 class="pull-left" id="clientes_total"></h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoClientes()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Valor</h5>
+                  <span class="label label-info pull-right" id="compentencia_cliente_total_valor"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-12 no-padding">
+                    <h2 class="pull-left" id="valor_clientes_total" style="margin-bottom: 3px"></h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoClientes()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Média</h5>
+                  <span class="label label-info pull-right" id="compentencia_cliente_total_media"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-12 no-padding">
+                    <h2 class="pull-left" id="media_clientes_total"></h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5>Clientes</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="clientes_12_meses" style="height: 222px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%= render 'dashboards/resultados_gruber/clientes/tabela/tabela_clientes' %>
+    </div>
+  </div>
+</div>
+<script>
+    function drawClientes12Meses() {
+        $('body').lmask('show');
+        $.getJSON("/dashboards/clientes_12_meses_gruber?empresa=" + $('#empresas_financeiro_id').val(), function(data) {
+
+            var dataArray = [
+                ['Mês', 'Quantidade', 'Quantidade', {type: 'string', role: 'annotation'}, 'Valor', 'Média' ],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].final, parseInt(data[i].totalativos), parseInt(data[i].totalativos),
+                    parseInt(data[i].totalativos), parseFloat(data[i].valorativos), parseFloat(data[i].mediaativos)];
+                dataArray.push(row);
+            }
+            if(data.length > 0){
+                preencherClientes($(data).get(-1).final, $(data).get(-1).totalativos, mascaraValor($(data).get(-1).valorativos),
+                    mascaraValor($(data).get(-1).mediaativos));
+
+            }else{
+                preencherClientes('', 0, mascaraValor('0.00'), mascaraValor('0.00'), 0, mascaraValor('0.00'));
+            }
+
+            var options = {
+                'chartArea': {'width': '90%', 'height': '70%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                series: {1: {type: 'line', color: 'black'}},
+                legend: 'none',
+                animation: { easing: 'inAndOut', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('clientes_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    preencherClientes(data.getValue(selectedItem.row, 0), data.getValue(selectedItem.row, 1), mascaraValor(data.getValue(selectedItem.row, 4).toFixed(2)),
+                        mascaraValor(data.getValue(selectedItem.row, 5)));
+                }else{
+                    preencherClientes(data.getValue(data.jc.length-1, 0), data.getValue(data.jc.length-1, 1), mascaraValor(data.getValue(data.jc.length-1, 4).toFixed(2)),
+                        mascaraValor(data.getValue(data.jc.length-1, 5)));
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([4,5,6,7,8,9,10,11]);
+            chart.draw(view, options);
+            $('body').lmask('hide');
+        });
+    }
+
+    function preencherClientes(competencia, totalReal, valorReal, mediaReal) {
+        $('#clientes_total').text('Total ' + totalReal);
+        $('#valor_clientes_total').text(valorReal);
+        $('#media_clientes_total').text(mediaReal);
+        $('#compentencia_cliente_total').text(competencia);
+        $('#compentencia_cliente_total_valor').text(competencia);
+        $('#compentencia_cliente_total_media').text(competencia);
+    }
+
+    function carregarInfoClientes() {
+        if($('#bloco_clientes_ativos').is(':visible')){
+            $('#bloco_clientes_ativos').hide();
+        }else{
+            $('body').lmask('show');
+            $.getJSON("/dashboards/table_clientes_gruber?empresa=" + $('#empresas_financeiro_id').val() +
+                "&data=" + $('#compentencia_cliente_total').text(), function(data) {
+
+                $('#bloco_clientes_ativos').show();
+                var table = $('.table-clientes-ativos').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datavencimento']).format("DD/MM/YYYY"),
+                        val['dias_cliente'],
+                        val['razaosocial'],
+                        val['cidade'],
+                        mascaraValor(val['valor'])
+                    ] ).draw( false );
+                });
+
+                $('body').lmask('hide');
+            });
+        }
+    }
+</script>

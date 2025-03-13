@@ -1,0 +1,323 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Faturamento
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div id="fatDiv" class="col-md-3 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Faturamento total</h5>
+                  <span class="label label-info pull-right" id="compentencia_faturamento_total"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="faturamento_total" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_total"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="faturamento_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Fat. Honorários</h5>
+                  <span class="label label-info pull-right" id="competencia_faturamento_honorario"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="faturamento_honorario" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_honorario"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="faturamento_honorario_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Fat. Balanço Patrimonial</h5>
+                  <span class="label label-info pull-right" id="competencia_faturamento_balanco"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="faturamento_balanco" style="margin-bottom: 7px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_balanco"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="faturamento_balanco_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Fat. Outros</h5>
+                  <span class="label label-info pull-right" id="competencia_faturamento_outros"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="faturamento_outros" style="margin-bottom: 7px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_outros"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="faturamento_outros_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5>Faturamento</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="faturamento_12_meses" style="height: 271px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Atual</span>
+                <h5>Por tipo</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="faturamento_tipo"  style="height: 271px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function drawFaturamento12Meses() {
+        $('body').lmask('show');
+        $.getJSON("/dashboards/get_total_faturamento_12_meses_gruber?empresa=" + $('#empresas_financeiro_id').val(), function(data) {
+            var dataArray = [
+                ['Mês', 'Valor', 'Valor', 'Valor Balanço', 'Valor Honorários',
+                    'Valor Outros'],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseFloat(data[i].totalgeral), parseFloat(data[i].totalgeral),
+                    parseFloat(data[i].valorbalanco), parseFloat(data[i].valorhonorario), parseFloat(data[i].valoroutros)];
+                dataArray.push(row);
+            }
+
+            var meses = data;
+            var result = null;
+            $.getJSON("/dashboards/get_total_faturamento_mes_anterior_gruber?empresa=" + $('#empresas_financeiro_id').val(), function(ret) {
+                result = ret;
+                preencherPainelFaturamentoTotal(  parseFloat($(meses).get(-1).totalgeral),
+                    $(meses).get(-1).data,
+                    parseFloat($(result).get(-1).totalgeral),
+                    parseFloat($(meses).get(-1).valorhonorario),
+                    parseFloat($(result).get(-1).valorhonorario),
+                    parseFloat($(meses).get(-1).valorbalanco),
+                    parseFloat($(result).get(-1).valorbalanco),
+                    parseFloat($(meses).get(-1).valoroutros),
+                    parseFloat($(result).get(-1).valoroutros));
+            });
+
+            faturamentoPorTipo($(meses).get(-1).data)
+
+            $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+            
+
+            var options = {
+                'chartArea': {'width': '90%', 'height': '60%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                series: {1: {type: 'line', color: 'black', format: 'short'}},
+                legend: 'none',
+                vAxis: {viewWindowMode: "explicit", viewWindow: {min: 0}, format: 'short'},
+                animation: { easing: 'in', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('faturamento_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    var ultimo = selectedItem.row-1;
+                    if(ultimo == -1)
+                        ultimo = 0;
+
+                    preencherPainelFaturamentoTotal(parseFloat(data.getValue(selectedItem.row, 1)),
+                        data.getValue(selectedItem.row, 0),
+                        parseFloat(data.getValue(ultimo, 1)),
+                        parseFloat(data.getValue(selectedItem.row, 4)),
+                        parseFloat(data.getValue(ultimo, 4)),
+                        parseFloat(data.getValue(selectedItem.row, 3)),
+                        parseFloat(data.getValue(ultimo, 3)),
+                        parseFloat(data.getValue(selectedItem.row, 5)),
+                        parseFloat(data.getValue(ultimo, 5)));
+
+                    faturamentoPorTipo(data.getValue(selectedItem.row, 0));
+                    $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês inteiro."});
+            
+                }else{
+
+                    preencherPainelFaturamentoTotal(  parseFloat($(meses).get(-1).totalgeral),
+                        $(meses).get(-1).data,
+                        parseFloat($(result).get(-1).totalgeral),
+                        parseFloat($(meses).get(-1).valorhonorario),
+                        parseFloat($(result).get(-1).valorhonorario),
+                        parseFloat($(meses).get(-1).valorbalanco),
+                        parseFloat($(result).get(-1).valorbalanco),
+                        parseFloat($(meses).get(-1).valoroutros),
+                        parseFloat($(result).get(-1).valoroutros));
+
+                    faturamentoPorTipo($(meses).get(-1).data);
+                    $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+            
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+            formatter.format(data, 1); // Apply formatter to second column
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([3,4,5]);
+            chart.draw(view, options);
+            $('body').lmask('hide');
+        });
+    }
+
+    function preencherPainelFaturamentoTotal(valorFaturamento, competencia, valorAnterior, valorHonorario, honorarioAnterior,
+                                             valorBalanco, balancoAnterior, valorOutros, outrosAnterior) {
+        $('#compentencia_faturamento_total').text(competencia);
+        $('#compentencia_faturamento_tipo').text(competencia);
+        $('#faturamento_total').text(mascaraValor(valorFaturamento.toFixed(2)));
+        $('#faturamento_anterior').text('Ant. ' + mascaraValor(valorAnterior.toFixed(2)));
+
+        var valor = ((valorFaturamento*100 / valorAnterior)-100);
+        $('#percentual_faturamento_total').text('');
+        if(valor > 0){
+            $('#percentual_faturamento_total').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_total').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_faturamento_total').removeClass('text-info').addClass('text-danger');
+            $('#percentual_faturamento_total').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#faturamento_honorario').text(mascaraValor(valorHonorario.toFixed(2)));
+        $('#faturamento_honorario_anterior').text('Ant. ' + mascaraValor(honorarioAnterior.toFixed(2)));
+        var valor = ((valorHonorario*100 / honorarioAnterior)-100);
+        $('#percentual_faturamento_honorario').text('');
+        if(honorarioAnterior == 0){
+            $('#percentual_faturamento_honorario').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_honorario').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else if(valor > 0){
+            $('#percentual_faturamento_honorario').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_honorario').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_faturamento_honorario').removeClass('text-info').addClass('text-danger');
+            $('#percentual_faturamento_honorario').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#faturamento_balanco').text(mascaraValor(valorBalanco.toFixed(2)));
+        $('#faturamento_balanco_anterior').text('Ant. ' + mascaraValor(balancoAnterior.toFixed(2)));
+        var valor = ((valorBalanco*100 / balancoAnterior)-100);
+        $('#percentual_faturamento_balanco').text('');
+        if(balancoAnterior == 0){
+            $('#percentual_faturamento_balanco').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_balanco').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else if(valor > 0){
+            $('#percentual_faturamento_balanco').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_balanco').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_faturamento_balanco').removeClass('text-info').addClass('text-danger');
+            $('#percentual_faturamento_balanco').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#faturamento_outros').text(mascaraValor(valorOutros.toFixed(2)));
+        $('#faturamento_outros_anterior').text('Ant. ' + mascaraValor(outrosAnterior.toFixed(2)));
+        var valor = ((valorOutros*100 / outrosAnterior)-100);
+        $('#percentual_faturamento_outros').text('');
+        if(outrosAnterior == 0){
+            $('#percentual_faturamento_outros').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_outros').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else if(valor > 0){
+            $('#percentual_faturamento_outros').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_outros').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_faturamento_outros').removeClass('text-info').addClass('text-danger');
+            $('#percentual_faturamento_outros').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+    }
+
+    function faturamentoPorTipo(data) {
+        $.ajax({
+            url: "/dashboards/get_faturamento_por_tipo?empresa=" + $('#empresas_financeiro_id').val() +"&data=" + data,
+            async: false,
+            success: function(data) {
+                var datatable = new google.visualization.DataTable();
+                datatable.addColumn('string', 'Nome');
+                datatable.addColumn('string', 'Valor');
+
+                for (var i = 0; i < data.length; i++) {
+                    datatable.addRow([data[i].nomecobranca, mascaraValor(parseFloat(data[i].totalgeral).toFixed(2))]);
+                }
+
+                var table = new google.visualization.Table(document.getElementById('faturamento_tipo'));
+
+                table.draw(datatable, {allowHtml: true, width: '100%', height: '100%'});
+            }
+      });
+    }
+
+</script>

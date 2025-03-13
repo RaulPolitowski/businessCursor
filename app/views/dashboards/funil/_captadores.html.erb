@@ -1,0 +1,187 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Funil
+      <div class="col-sm-2 pull" style="margin-top: -6px !important;">
+        <%= select_tag  'tipo_filtro6', options_for_select([
+                                                            ['Funil por etapa', 1],
+                                                            ['Funil padrão', 2]
+                                                                ], 1), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um ano'}} %>
+      </div>
+      <div class="col-sm-2  pull-right" style="margin-top: -6px !important;">
+        <%= select_tag  'ano_filtro_funil6', options_for_select([       ['2025', 2025],
+                                                                        ['2024', 2024],
+                                                                        ['2023', 2023],
+                                                                        ['2022', 2022],
+                                                                        ['2021', 2021],
+                                                                        ['2020', 2020],
+                                                                        ['2019', 2019],
+                                                                        ['2018', 2018],
+                                                                        ['2017', 2017]
+                                                                ], (Time.now - 4.month).year), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um ano'}} %>
+      </div>
+      <div class="col-sm-2  pull-right" style="margin-top: -6px !important;">
+        <%= select_tag  'mes_filtro_funil6', options_for_select([
+                                                                        ['Janeiro', 1],
+                                                                        ['Fevereiro', 2],
+                                                                        ['Março', 3],
+                                                                        ['Abril', 4],
+                                                                        ['Maio', 5],
+                                                                        ['Junho', 6],
+                                                                        ['Julho', 7],
+                                                                        ['Agosto', 8],
+                                                                        ['Setembro', 9],
+                                                                        ['Outubro', 10],
+                                                                        ['Novembro', 11],
+                                                                        ['Dezembro', 12]
+                                                                ], (Time.now - 4.month).month), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um mês'}} %>
+      </div>
+      <div class="col-sm-2  pull-right" style="margin-top: -6px !important;">
+        <%= select_tag 'usuario_filtro_funil6', options_for_select(User.where(active: true, permissao_id: 7).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um captador'}} %>
+      </div>
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div class="col-lg-6 padding-left-right padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right" id="equipe_comercialcompentencia_faturamento_total"></span>
+              </div>
+              <div class="ibox-content padding-5" style="height: 310px !important;">
+                <div id="funil6" style="height: 300px; width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 padding-left-right padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right" id="compentencia_faturamento_total"></span>
+              </div>
+              <div class="ibox-content padding-5" style="height: 310px !important;">
+                <div id="tableFunil6" style="height: 300px; width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+    .ibox-title-without-border-style {
+        border-style: none;
+        min-height: 24px !important;
+        padding: 5px !important;
+    }
+    .ibox{
+        margin-bottom: 5px !important;
+    }
+    .google-visualization-table-th {
+        text-align: center !important;
+    }
+    .google-visualization-table-td {
+        text-align: center !important;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('#usuario_filtro_funil6').on('change', function () {
+            drawFunisCaptadores();
+        });
+
+        $('#mes_filtro_funil6').on('change', function () {
+            drawFunisCaptadores();
+        });
+
+        $('#ano_filtro_funil6').on('change', function () {
+            drawFunisCaptadores();
+        });
+
+         $('#tipo_filtro6').on('change', function () {
+            drawFunil6();
+        });
+    });
+
+    function drawFunisCaptadores(){
+        drawFunil6();
+        drawTable6();
+    }
+
+        function drawFunil6() {
+            var dataPoints = [];
+            var chart = new CanvasJS.Chart("funil6",{
+                animationEnabled: false,
+                theme: "light2", //"light1", "light2", "dark1", "dark2"
+                data: [{
+                    type: "funnel",
+                    toolTipContent: "<b>{label}</b>: {qtd} <b>({percentage}%)</b>",
+                    indexLabel: "{label} ({percentage}%)",
+                    dataPoints: dataPoints,
+                    click: function(e){
+                    }
+                }]
+            });
+
+            $.getJSON("/dashboards/get_dados_funil_captacao?empresa=" + $('#empresas_financeiro_id').val() +
+                    "&estado=" + $('#estado_financeiro_id').val() +
+                    "&mes=" + $('#mes_filtro_funil6').val() +
+                    "&usuario=" + $('#usuario_filtro_funil6').val() +
+                    "&ano=" + $('#ano_filtro_funil6').val(), function(data) {
+
+                $.each(data, function(key, value){
+                    dataPoints.push({label: value['tipo'], y: parseInt(value['perc']), qtd: parseInt(value['qtd'])});
+                });
+                calculatePercentage();
+                chart.render();
+            });
+
+            function calculatePercentage() {
+                var total = dataPoints[0].qtd;
+                for (var i = 0; i < dataPoints.length; i++) {
+                    if (i == 0) {
+                        dataPoints[i].percentage = 100;
+                    } else {
+                      if ($('#tipo_filtro6').val() == 1)
+                        dataPoints[i].percentage = ((dataPoints[i].qtd / dataPoints[i-1].qtd) * 100).toFixed(2);
+                      else
+                        dataPoints[i].percentage = ((dataPoints[i].qtd / total) * 100).toFixed(2);
+                    }
+                    if(total == 0){
+                        dataPoints[i].percentage = 0;
+                    }
+                }
+            }
+        }
+
+    function drawTable6() {
+        $('body').lmask('show');
+        $.getJSON("/dashboards/get_empresas_funil_status_captacao?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&mes=" + $('#mes_filtro_funil6').val() +
+                "&ano=" + $('#ano_filtro_funil6').val() +
+                "&usuario=" + $('#usuario_filtro_funil6').val(), function(data) {
+
+
+            var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Etapa');
+            datatable.addColumn('string', 'Total');
+            datatable.addColumn('string', 'Descartado');
+            datatable.addColumn('string', 'Em Andamento');
+            datatable.addColumn('string', 'Finalizado');
+            for (var i = 0; i < data.length; i++) {
+                var row;
+                row = [data[i].tipo, data[i].total, data[i].descartado + ' (' + calcularPercentual(data[i].total, data[i].descartado) + '%)', data[i].em_andamento + ' (' + calcularPercentual(data[i].total, data[i].em_andamento) + '%)', data[i].finalizado + ' (' + calcularPercentual(data[i].total, data[i].finalizado) + '%)' ]
+                datatable.addRow(row);
+            }
+
+            var table = new google.visualization.Table(document.getElementById('tableFunil6'));
+
+            table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'disable'});
+            $('body').lmask('hide');
+        });
+    }
+</script>

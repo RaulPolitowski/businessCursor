@@ -1,0 +1,28 @@
+<div id="modal_desistir_acompanhamento" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Motivo</h4>
+      </div>
+      <%= form_for @acompanhamento, :url => desistente_acompanhamento_path do |f| %>
+        <div class="modal-body" style="height: 200px;">
+          <div class="form-group">
+            <div class="field">
+              <div class="col-sm-12">
+                <label id="error_motivo" style="color: red; display: none;">Informe o motivo!</label>
+                <%= text_area(:acompanhamento, :motivo, cols: 40, rows: 5, class: 'form-control input-sm', required: true)%>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal" id="btnFechar">Fechar</button>
+          <%= f.submit 'Salvar', :class => 'btn btn-info ladda-button'%>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,92 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>GERAR CONTRATO</h2>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+          <div class="tab-content">
+              <%= form_tag('emitir', method: 'get') do %>
+                <div class="panel-body" style="padding: 0px;">
+                      <div class="col-sm-5">
+                        <label>Cliente</label>
+                        <input name="cliente" class='form-control input-sm' value='<%= @cliente.razao_social %>' disabled="true">
+                      </div>
+                      <div class="col-sm-2">
+                        <label>CNPJ</label>
+                        <input name="cnpj" class='form-control input-sm' value='<%= @cliente.cnpj %>' disabled="true">
+                      </div>
+                      <div class="col-sm-3">
+                        <label>Cidade</label>
+                        <input name="cidade" class='form-control input-sm' value='<%= @cidade.nome %>-<%= @estado.sigla %>' disabled="true">
+                      </div>
+                  </div>
+                  <div class="panel-body" style="padding: 0px;">
+                    <div class="col-sm-5">
+                      <label>Contrato</label>
+                      <%= select_tag 'contrato_id', options_for_select(Contrato.where(ativo: true).collect { |u| [u.nome, u.id] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um contrato'}} %>
+                    </div>
+                    <div class="col-sm-2">
+                      <label>Data fechamento</label>
+                      <input name="data_fechamento" class='form-control input-sm' value='<%= @cliente.fechamento.present? ? (human_datetime @cliente.fechamento.data_fechamento) : '' %>' disabled="true">
+                    </div>
+                    <div class="col-sm-3">
+                      <label>Sistema</label>
+                      <input name="sistema" class='form-control input-sm' value='<%= @proposta.pacote.sistema.nome %>' disabled="true">
+                    </div>
+                    <div class="col-sm-2">
+                      <label>Implantado</label>
+                      <input name="implantado" class='form-control input-sm' value='<%= human_datetime @cliente.implantacao.data_fim %>' disabled="true">
+                    </div>
+                  </div>
+                  <div class="panel-body" style="padding: 0px;">
+                    <div class="col-sm-7">
+                      <label>Descrição</label>
+                      <input name="descricao" class='form-control input-sm' value='<%= @info.observacao %>' disabled="true">
+                    </div>
+                    <div class="col-sm-3">
+                      <label>Status</label>
+                      <%= hidden_field_tag :local, @local %>
+                      <%= hidden_field_tag :i, @info.id %>
+                      <% if @local.eql? 'acompanhamento' %>
+                          <%= select_tag 'acompanhamento_status', options_for_select([
+                                                                                             ['Aguardando acompanhamento', 0],
+                                                                                             ['Em andamento', 1],
+                                                                                             ['Stand by', 2],
+                                                                                             ['Desistente - Pós instalação', 3],
+                                                                                             ['Desistente - Durante acompanhamento', 4],
+                                                                                             ['Acompanhamento concluído', 5]
+                                                                                     ], @info.status), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um status'}, :include_blank => true, disabled: "true"} %>
+                      <% else %>
+                          <%= select_tag 'implantacao_status', options_for_select([
+                                                                                          ['Agendado', 0],
+                                                                                          ['Reagendado', 1],
+                                                                                          ['Aguardando terceiros', 2],
+                                                                                          ['Limbo', 10],
+                                                                                          ['Em processo de instalação', 3],
+                                                                                          ['Aguardando treinamento', 4],
+                                                                                          ['Em processo de treinamento', 5],
+                                                                                          ['Aguardando terceiros', 6],
+                                                                                          ['Desistente - Pré instalação', 7],
+                                                                                          ['Desistente - Durante implantação', 8],
+                                                                                          ['Implantação concluída', 9]
+                                                                                  ], @info.status), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um status'}, :include_blank => true, disabled: "true"} %>
+                      <% end %>
+                    </div>
+                  </div>
+                  <div class="panel-body" style="padding: 0px;">
+                    <div class="pull-right" style="margin:15px;">
+                      <%= link_to "Fechar", :back, :class => 'btn btn-secondary ladda-button' %>
+                      <%= submit_tag "Emitir", :id => 'btnEmitirContrato', :class => 'btn btn-info ladda-button' %>
+                    </div>
+                  </div>
+              <% end %>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,221 @@
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#tab-1"> Dados</a></li>
+          <% if @user.admin? %>
+            <li><a data-toggle="tab" href="#tab-2"> Notificações</a></li>
+          <% end %>
+        </ul>
+        <%= form_for(@user, html: { autocomplete: "off" }) do |f| %>
+          <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <fieldset class="form-horizontal">
+
+                  <% if @user.id.nil? %>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :email, 'E-mail' , class: 'col-sm-2 control-label'%>
+                        <div class="col-sm-10">
+                          <%= f.email_field :email, autofocus: true , class: 'form-control input-sm'%>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :name, 'Nome' , class: 'col-sm-2 control-label'%>
+                      <div class="col-sm-10">
+                        <%= f.text_field :name, class: 'form-control input-sm' %>
+                      </div>
+                    </div>
+                  </div>
+                  <% if current_user.admin? %>
+                    <% if @user.id.present? %>
+                      <div class="form-group">
+                        <div class="field">
+                          <%= f.label :active, 'Ativo' , class: 'col-sm-2 control-label'%>
+                          <div class="col-sm-1">
+                            <div class="i-checks">
+                              <%= f.check_box :active %>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="field">
+                          <%= f.label :admin, 'Admin' , class: 'col-sm-1 control-label'%>
+                          <div class="col-sm-2">
+                            <div class="i-checks">
+                              <%= f.check_box :admin, class: 'icheckbox_square-green' %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <% end %>
+                  <% end %>
+                  <% if [3,4].include? current_empresa.id %>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :job_id, 'Job', class: 'col-sm-2 control-label'  %>
+                        <div class="col-sm-10">
+                              <%= f.select :job_id, options_for_select([
+                                                                          ['Job 1', 1],
+                                                                          ['Job 2', 2]
+                                                                      ], f.object.job_id), {:include_blank => true}, {class: 'form-control input-sm chosen-select', :data => {:placeholder => 'Selecione um job'}} %>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :avatar, 'Avatar', class: 'col-sm-2 control-label'  %>
+                      <div class="col-sm-2">
+                        <%= f.file_field :avatar, class: 'form-control input-sm' %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= f.label :color, 'Cor', class: 'col-sm-1 control-label'  %>
+                      <div class="col-sm-2">
+                        <div class="input-group" data-autoclose="true">
+                          <span class="input-group-addon">
+                            <%= f.select :color, options_for_select([
+                                                                        ['Black','rgb(10,10,10)','data-color' => 'rgb(10,10,10)'],
+                                                                        ['teste','rgb(100,100,100)','data-color' => 'rgb(100,100,100)'],
+                                                                        ['teste','rgb(240,128,128)','data-color' => 'rgb(240,128,128)'],
+                                                                        ['teste','rgb(199,21,133)','data-color' => 'rgb(199,21,133)'],
+                                                                        ['Indigo','rgb(75,0,130)','data-color' => 'rgb(75,0,130)'],
+                                                                        ['Purple','rgb(128,0,128)','data-color' => 'rgb(128,0,128)'],
+                                                                        ['Navy','rgb(0,0,128)','data-color' => 'rgb(0,0,128)'],
+                                                                        ['Blue','rgb(0,0,255)','data-color' => 'rgb(0,0,255)'],
+                                                                        ['DimGray','rgb(105,105,105)','data-color' => 'rgb(105,105,105)'],
+                                                                        ['Crimson','rgb(220,20,60)','data-color' => 'rgb(220,20,60)'],
+                                                                        ['Maroon','rgb(128,0,0)','data-color' => 'rgb(128,0,0)'],
+                                                                        ['Red','rgb(255,0,0)','data-color' => 'rgb(255,0,0)'],
+                                                                        ['Teal','rgb(0,128,128)','data-color' => 'rgb(0,128,128)'],
+                                                                        ['OrangeRed','rgb(255,69,0)','data-color' => 'rgb(255,69,0)'],
+                                                                        ['DarkGreen','rgb(0,100,0)','data-color' => 'rgb(0,100,0)'],
+                                                                        ['Olive','rgb(128,128,0)','data-color' => 'rgb(128,128,0)'],
+                                                                        ['DarkGoldenrod','rgb(184,134,11)','data-color' => 'rgb(184,134,11)'],
+                                                                        ['SaddleBrown','rgb(139,69,19)','data-color' => 'rgb(139,69,19)'],
+                                                                        ['Lime','rgb(0,255,0)','data-color' => 'rgb(0,255,0)'],
+                                                                        ['Yellow','rgb(255,255,0)','data-color' => 'rgb(255,255,0)']
+                                                                    ], f.object.color), {}, {class: 'form-control input-sm'} %>
+                          </span>
+                          <%= text_field_tag :color_text, @user.color.present? ? @user.color : nil, class: 'form-control input-sm', readonly: 'true' %>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="field">
+                          <%= f.label :telefone, 'Telefone' , class: 'col-sm-1 control-label'%>
+                          <div class="col-sm-3">
+                            <%= f.text_field :telefone, class: 'form-control input-sm' %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <% if @user.id.nil? || current_user.admin? || (current_user.id.eql? @user.id) %>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :password, 'Senha' , class: 'col-sm-2 control-label' %>
+                        <div class="col-sm-4">
+                          <%= f.password_field :password, class: 'form-control input-sm' %>
+                        </div>
+                      </div>
+                      <div class="field">
+                        <%= f.label :password_confirmation, 'Confirmação Senha' , class: 'col-sm-2 control-label'%>
+                        <div class="col-sm-4">
+                          <%= f.password_field :password_confirmation, class: 'form-control input-sm' %>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                  <% if current_user.admin? %>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :empresa_ids, 'Empresas' , class: 'col-sm-2 control-label'%>
+                        <div class="col-sm-10">
+                          <%= f.collection_select :empresa_ids, Empresa.ativas, :id, :razao_social, {},
+                                                  {:multiple => true, class: 'form-control input-sm chosen-select'} %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :permissao_id, 'Permissão' , class: 'col-sm-2 control-label'%>
+                        <div class="col-sm-4">
+                          <%= f.collection_select :permissao_id, Permissao.all, :id, :descricao, {},
+                                                  {class: 'form-control input-sm chosen-select'} %>
+                        </div>
+                      </div>
+                      <div class="field">
+                        <%= f.label :tipo_comissao, 'Tipo comissão', class: 'col-sm-2 control-label'  %>
+                        <div class="col-sm-4">
+                          <%= f.select :tipo_comissao, options_for_select([
+                                                                           ['Comissão 40%', 1],
+                                                                           ['Comissão 30%', 2],
+                                                                           ['Acompanhamento', 3],
+                                                                           ['Consultor meta', 4],
+                                                                           ['Implantador meta', 6],
+                                                                           ['Estágio 20%', 5],
+                                                                           ['Venda/Implantação', 7],
+                                                                           ['Venda/Acompanhamento', 8],
+                                                                           ['Marketing Digital', 9],
+                                                                   ], f.object.tipo_comissao), {:include_blank => true}, {class: 'form-control input-sm chosen-select', :data => {:placeholder => 'Selecione um tipo'}} %>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                  <div class="actions aligncenter">
+                    <%= f.submit 'Salvar', :class => 'btn btn-lg btn-success aligncenter' %>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+            <div id="tab-2" class="tab-pane">
+              <div class="panel-body">
+                <fieldset class="form-horizontal">
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :notificacao_agenda_cancelada, 'Agendamentos cancelados?' , class: 'col-sm-2 control-label'%>
+                      <div class="col-sm-10">
+                        <div class="i-checks">
+                          <%= f.check_box :notificacao_agenda_cancelada, class: 'icheckbox_square-green' %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :notificacao_implantacao, 'Implantações?' , class: 'col-sm-2 control-label'%>
+                      <div class="col-sm-10">
+                        <div class="i-checks">
+                          <%= f.check_box :notificacao_implantacao, class: 'icheckbox_square-green' %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :notificacao_implantacao_atraso, 'Implantações em atraso?' , class: 'col-sm-2 control-label'%>
+                      <div class="col-sm-10">
+                        <div class="i-checks">
+                          <%= f.check_box :notificacao_implantacao_atraso, class: 'icheckbox_square-green' %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+
+
+
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+

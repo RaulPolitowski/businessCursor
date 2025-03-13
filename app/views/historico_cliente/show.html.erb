@@ -1,0 +1,729 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>HISTÓRICO CLIENTE</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="<%= url_for :controller => 'dashboards', :action => 'painel_vendas' %>">Home</a>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce padding-top-10">
+  <div class="ibox float-e-margins margin-bottom-10">
+    <div class="ibox-content">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#tab-1"> Informações</a></li>
+          <li><a data-toggle="tab" href="#tab-2"> Telefones</a></li>
+          <li><a data-toggle="tab" href="#tab-3"> Inf. relevantes</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-1" class="tab-pane active">
+            <div class="panel-body">
+              <form role="form" id="formCliente">
+                <div class="form-group margin-bottom-5">
+                  <div class="row">
+                    <div class="field col-sm-4">
+                      <label for="cliente_razao_social">Cliente</label>
+                      <%= text_field_tag "cliente_razao_social", @cliente.razao_social, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                      <%= hidden_field_tag 'cliente_id', @cliente.id %>
+                    </div>
+                    <div class="field col-sm-2">
+                      <label for="cliente_cnpj">CNPJ</label>
+                      <%= text_field_tag "cliente_cnpj", @cliente.cnpj, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                    </div>
+                    <div class="field col-sm-3">
+                      <label for="cliente_cnae">CNAE</label>
+                      <div class="input-group m-b" style="margin-bottom: 0px;">
+                        <%= text_field_tag "cliente_cnae", @cliente.cnae.descricao, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                        <span class="input-group-addon padding-0">
+                          <button id="btnVerCnaes"  class="btn btn-sm btn-info btn-table" title="Ver todos Cnaes"  data-toggle="tooltip" data-placement="right">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="field col-sm-3">
+                      <label for="cliente_email">Email</label>
+                      <%= text_field_tag "cliente_email", @cliente.email, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group margin-bottom-5">
+                  <div class="row">
+                    <div class="field col-sm-4">
+                      <label for="cliente_cidade">Cidade</label>
+                      <%= text_field_tag "cliente_cidade", @cliente.cidade.descricao_completa, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                    </div>
+                    <div class="field col-sm-2">
+                      <label for="fechamento_vendedor">Vendedor</label>
+                      <%= text_field_tag "fechamento_vendedor", (@fechamento.present? ? @fechamento.user.name : ''), {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                    </div>
+                    <div class="field col-sm-2">
+                      <label for="acompanhamento_data_fechamento">Data Fechamento</label>
+                      <%= text_field_tag "fechamento_data_fechamento", @fechamento.present? ? human_datetime(@fechamento.data_fechamento) : '', {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                    </div>
+                    <div class="field col-sm-2">
+                      <label for="sistema_nome">Sistema</label>
+                      <%= text_field_tag "fechamento_sistema_nome",@fechamento.present? ? @fechamento.proposta.pacote.sistema.nome : '', {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                    </div>                  
+                  </div>
+                </div>
+                <div class="form-group margin-bottom-5">
+                  <div class="row">
+                    <div class="field col-sm-2">
+                      <label for="acompanhamento_implantador">Implantador</label>
+                      <%= text_field_tag "implantacao_implantador", @implantacao.present? && @implantacao.user.present? ?  @implantacao.user.name : '', {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                    </div>
+                    <div class="field col-sm-2">
+                      <label for="acompanhamento_implantado">Implantado</label>
+                      <%= text_field_tag "implantacao_data_implantacao", @implantacao.present? && @implantacao.data_fim.present? ? human_datetime(@implantacao.data_fim) : '', {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                    </div>
+                    <div class="field col-sm-3">
+                      <label for="acompanhamento_responsavel">Responsável acompanhamento</label>
+                      <%= text_field_tag "acompanhamento_responsavel", (@acompanhamento.present? && @acompanhamento.user.present? ? @acompanhamento.user.name : ''), {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                      <%= hidden_field_tag 'acompanhamento_responsavel_id', (@acompanhamento.present? && @acompanhamento.user.present? ? @acompanhamento.user.id : nil) %>
+                    </div>
+                    <div class="field col-sm-3">
+                      <label for="cliente_status">Status</label>
+                      <%= select_tag  'cliente_status', options_for_select(Status.all.collect {|p| [ p.descricao, p.id ] }, @cliente.status_id), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um status'}, :include_blank => true, disabled: "true"} %>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div id="tab-2" class="tab-pane">
+            <div class="panel-body">
+              <div class="col-sm-12">
+                <small>Cliente</small>
+                <table id="table-contatos" class="table table-hover">
+                  <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                  </tr>
+                  </thead>
+                  <tbody id="body_table_contatos">
+                  <% if @cliente.all_telefones.size > 0 %>
+                      <% @cliente.all_telefones.each do |key, value| %>
+                          <tr>
+                            <td><%= value[:contato] %></td>
+                            <td><%= key %></td>
+                            <td><input class="pref pref-celular" type="checkbox" title="Preferencial?" <%= value[:preferencial] ? 'checked' : ''%> disabled="disabled"></td>
+                            <td><input class="whats whats-celular"  type="checkbox" title="Enviou whatsapp?" <%= value[:whats] ? 'checked' : ''%> disabled="disabled"></td>
+                            <td style="padding-top: 2px;">
+                              <button id="btnMandarWhats"  class="btn btn-sm btn-white btn-table" title="Whatsapp" onclick="chamarApiWhats('<%= key %>')"  data-toggle="tooltip" data-placement="right">
+                                <%= image_tag("whats_enviado.ico", :alt => "Avatar", :class => "img-circle") %>
+                              </button>
+                            </td>
+                          </tr>
+                      <% end %>
+                  <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div id="tab-3" class="tab-pane">
+            <div class="panel-body scroll" style="padding: 5px">
+              <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                  <li class="active"><a data-toggle="tab" href="#tab-20"> Fechamento</a></li>
+                  <li><a data-toggle="tab" href="#tab-21"> Implantação</a></li>
+                  <li><a data-toggle="tab" href="#tab-22"> Acompanhamento</a></li>
+                </ul>
+                <div class="tab-content">
+                  <div id="tab-20" class="tab-pane active">
+                    <div class="panel-body">
+                      <% @cliente.pergunta_cliente_respostas.where(tipo: 1).each do |resposta| %>
+                          <div class="form-group">
+                            <div class="field">
+                              <label><%= resposta.pergunta.pergunta %></label>
+                              <textarea class="form-control" type="text" id="pergunta_<%= resposta.id %>" disabled><%= resposta.resposta %></textarea>
+                            </div>
+                          </div>
+                      <% end %>
+                    </div>
+                  </div>
+                  <div id="tab-21" class="tab-pane active">
+                    <div class="panel-body">
+                      <% @cliente.pergunta_cliente_respostas.where(tipo: 2).each do |resposta| %>
+                          <div class="form-group">
+                            <div class="field">
+                              <label><%= resposta.pergunta.pergunta %></label>
+                              <textarea class="form-control" type="text" id="pergunta_<%= resposta.id %>" disabled><%= resposta.resposta %></textarea>
+                            </div>
+                          </div>
+                      <% end %>
+                    </div>
+                  </div>
+                  <div id="tab-22" class="tab-pane">
+                     <div class="panel-body">
+                        <% @cliente.pergunta_cliente_respostas.where(tipo: 3).each do |resposta| %>
+                            <div class="form-group">
+                              <div class="field">
+                                <label><%= resposta.pergunta.pergunta %></label>
+                                <textarea class="form-control" type="text" id="pergunta_<%= resposta.id %>" disabled><%= resposta.resposta %></textarea>
+                              </div>
+                            </div>
+                        <% end %>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <% if @cliente.hist_acomp_id.present? || @cliente.hist_impl_id.present?%>
+            <li><a data-toggle="tab" href="#tab-Ant"> Histórico anterior</a></li>
+          <% end %>
+          <li class="active"><a data-toggle="tab" href="#tab-9"> Histórico ligações</a></li>
+          <li><a data-toggle="tab" href="#tab-11"> Histórico negociação</a></li>
+          <li><a data-toggle="tab" href="#tab-10"> Propostas</a></li>
+          <li><a data-toggle="tab" href="#tab-8"> Histórico implantação</a></li>
+          <li><a data-toggle="tab" href="#tab-7"> Histórico acompanhamento</a></li>
+          <li><a data-toggle="tab" href="#tab-6"> Pesquisas de satisfação</a></li>
+          <li><a data-toggle="tab" href="#tab-5"> Periodos inertes</a></li>
+          <li><a data-toggle="tab" href="#tab-4"> Comentários</a></li>
+          <li><a data-toggle="tab" href="#tab-anexos"> Anexos</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-9" class="tab-pane active">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content tbody-contatos">
+                  <table id="table-ligacoes" class="table table-hover">
+                    <thead>
+                    <tr>
+                      <th style="width: 15%">Data</th>
+                      <th>Usuário</th>
+                      <th>Status</th>
+                      <th>Status Cliente</th>
+                      <th>Observação Ligação</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="body_table_ligacoes">
+                    <% @ligacoes.each do |ligacao| %>
+                        <tr>
+                          <td><%= human_datetime ligacao.data_inicio %></td>
+                          <td><%= ligacao.user.name %></td>
+                          <td><%= ligacao.status_ligacao.present? ? ligacao.status_ligacao.descricao : '' %></td>
+                          <td><%= ligacao.status_cliente.present? ? ligacao.status_cliente.descricao : '' %></td>
+                          <td><%= ligacao.observacao %></td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-11" class="tab-pane">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content tbody-contatos">
+                  <% if @activities_negociacao.present? %>
+                      <% @activities_negociacao.each do |activity| %>
+                          <div class="activity">
+                            <%=  render_activity activity %>
+                          </div>
+                      <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-10" class="tab-pane">
+            <div class="ibox-content">
+              <table id="table-proposta" class="table table-hover">
+                <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Sistema</th>
+                  <th>Usuário</th>
+                  <th>Mensalidade</th>
+                  <th>Tipo Implantação</th>
+                  <th>Implantação</th>
+                  <th>Forma Pagamento</th>
+                  <th>Ativa</th>
+                  <!--<th></th>-->
+                </tr>
+                </thead>
+                <tbody id="body_table_proposta">
+                <% @propostas.each do |proposta| %>
+                    <tr>
+                      <td><%= human_date proposta.data %></td>
+                      <td><%= proposta.pacote.sistema.nome %></td>
+                      <td><%= proposta.user.name unless proposta.user.nil? %></td>
+                      <td><%= human_currency proposta.valor_mensalidade %></td>
+                      <td><%= proposta.tipo_implantacao %></td>
+                      <td><%= human_currency proposta.valor_implantacao %></td>
+                      <td><%= proposta.formas_pagamento_id.present? ? Formapagamento.find(proposta.formas_pagamento_id).descricao : "" %></td>
+                      <td><input class="pref pref-celular"  type="checkbox" title="Ativa?" id="propostaAtiva-<%= proposta.id %>" onclick="setPropostaAtiva(<%= proposta.id %>)" <%= proposta.ativa ? 'checked' : ''%>  disabled></td>
+                      <td><button class="btn btn-sm btn-primary" onclick="abrirModalProposta(<%= proposta.id %>)"><i class="fa fa-eye" aria-hidden="true"></i></button></td>
+                    </tr>
+                <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="tab-8" class="tab-pane">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content tbody-contatos">
+                  <% if @activities_implantacao.present? %>
+                      <% @activities_implantacao.each do |activity| %>
+                          <div class="activity">
+                            <%=  render_activity activity %>
+                          </div>
+                      <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-7" class="tab-pane">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content tbody-contatos">
+                  <% if @activities_acompanhamento.present? %>
+                      <% @activities_acompanhamento.each do |activity| %>
+                          <div class="activity">
+                            <%=  render_activity activity %>
+                          </div>
+                      <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-6" class="tab-pane">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content tbody-pesquisa">
+                  <table id="table-pesquisa" class="table table-hover">
+                    <thead>
+                    <tr>
+                      <th  style="width: 15%">Data</th>
+                      <th  style="width: 60%">Cliente</th>
+                      <th>Usuário</th>
+                      <th>Avaliação</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="body_periodo_inerte">
+                    <% @pesquisas.each do |pesquisa| %>
+                        <tr>
+                          <td><%= human_datetime pesquisa.data_pesquisa %></td>
+                          <td><%= pesquisa.cliente.razao_social %></td>
+                          <td><%= pesquisa.user.name unless pesquisa.user.nil? %></td>
+                          <td><%= human_boolean_positivo pesquisa.positivo %></td>
+                          <td><button class="btn btn-sm btn-primary btn-table" onclick="abrirModalPesquisaHistorico(<%= pesquisa.id %>)"><i class="fa fa-eye" aria-hidden="true"></i></button></td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-5" class="tab-pane">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content tbody-periodo-inerte">
+                  <table id="table-periodo-inerte" class="table table-hover">
+                    <thead>
+                    <tr>
+                      <th  style="width: 15%">Data</th>
+                      <th  style="width: 60%">Cliente</th>
+                      <th>Tempo</th>
+                      <th>Avaliação</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="body_periodo_inerte">
+                    <% @inertes.each do |inerte| %>
+                        <tr>
+                          <td><%= human_date inerte.data %></td>
+                          <td><%= inerte.cliente.razao_social %></td>
+                          <td><%= inerte.tempo_inerte %></td>
+                          <td><%= human_boolean_positivo inerte.positivo %></td>
+                          <td><button class="btn btn-sm btn-primary btn-table" onclick="abrirModalPeriodoHistorico(<%= inerte.id %>)"><i class="fa fa-eye" aria-hidden="true"></i></button></td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-4" class="tab-pane">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content tbody-contatos">
+                  <button class="btn btn-sm btn-info" id="btnNovoComentario" onclick="abrirModalComentario()"><i class="fa fa-plus"></i> Comentário</button>
+                  <% if @activities.present? %>
+                    <% @activities.each do |activity| %>
+                        <div class="activity">
+                          <%=  render_activity activity %>
+                        </div>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-Ant" class="tab-pane">
+            <div class="ibox-content">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a data-toggle="tab" href="#tab-Lig"> Ligações</a></li>
+                      <li><a data-toggle="tab" href="#tab-Impl"> Implantação</a></li>
+                      <li><a data-toggle="tab" href="#tab-Acomp"> Acompanhamento</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div id="tab-Lig" class="tab-pane active">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="ibox-content tbody-contatos">
+                              <table id="table-ligacoes" class="table table-hover">
+                                <thead>
+                                  <tr>
+                                    <th style="width: 15%">Data</th>
+                                    <th>Usuário</th>
+                                    <th>Status</th>
+                                    <th>Status Cliente</th>
+                                    <th>Observação Ligação</th>
+                                    <th></th>
+                                  </tr>
+                                </thead>
+                                <tbody id="body_table_ligacoes">
+                                  <% @ligacoes_old.each do |ligacao| %>
+                                    <tr>
+                                      <td><%= human_datetime ligacao.data_inicio %></td>
+                                      <td><%= ligacao.user.name %></td>
+                                      <td><%= ligacao.status_ligacao.present? ? ligacao.status_ligacao.descricao : '' %></td>
+                                      <td><%= ligacao.status_cliente.present? ? ligacao.status_cliente.descricao : '' %></td>
+                                      <td><%= ligacao.observacao %></td>
+                                    </tr>
+                                  <% end %>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="tab-Impl" class="tab-pane">
+                        <div class="ibox-content tbody-contatos">
+                          <% if @activities_impl.count.eql? 0 %>
+                            <h3> Nenhum Histórico Anterior há ser exibido </h3>
+                          <% end %>
+                          <% @activities_impl.each do |activity| %>
+                            <div class="activity">
+                              <%=  render_activity activity %>
+                            </div>
+                          <% end %>
+                        </div>
+                      </div>
+                      <div id="tab-Acomp" class="tab-pane">
+                        <div class="ibox-content tbody-contatos">
+                          <% if @activities_acomp.count.eql? 0 %>
+                            <h3> Nenhum Histórico Anterior há ser exibido </h3>
+                          <% end %>
+                          <% @activities_acomp.each do |activity| %>
+                            <div class="activity">
+                              <%=  render_activity activity %>
+                            </div>
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-anexos" class="tab-pane">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="ibox-content tbody-contatos">
+                  <form action="/upload" id="mediadropzone" class="dropzone" enctype="multipart/form-data">
+                    <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>" />
+                    <%= hidden_field_tag 'cliente', @cliente.id %>
+                    <DIV class="dz-message">    
+                      Arraste os arquivos ou clique para fazer upload
+                    </DIV>
+                    <div class="fallback">
+                      <input name="media" type="file" multiple />
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="ibox-content tbody-contatos">
+                  <div class="row" style="font-size:25px;">
+                    <input type="checkbox" class="js-switch" id="contrato_assinado"/> Contrato assinado?
+                  </div>
+                  <div class="row">
+                    <h3><i class="fa fa-paperclip"> </i> Anexos do cliente</h3>
+                    <% @anexos.each do |att|%>
+                      <div id="anexo-<%=att.id%>">
+                        <i class="fa fa-file-text-o"></i> <%= link_to File.basename(att.file.path), {action: 'download_file', id: att.id, controller: 'upload'}, target: '_blank'  %>
+                        <button type="button" class="btn btn-danger" onclick="remover_anexo('<%= att.id %>')" ><i class="fa fa-trash"></i> </button>
+                        <br />
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="pull-center" id="groupLigacaoIniciada">
+      <p class="pull-center">
+        <% if (current_user.admin?) && (@acompanhamento.present?) %>
+          <button type="button" class="btn-lg ladda-button btn btn-primary" onclick="openModalvoltarAcompanhamento('<%= @acompanhamento.id %>', '<%= @acompanhamento.status %>')" >Voltar etapa </button>        
+        <% elsif (current_user.admin?) && (@implantacao.present?) %>
+          <button type="button" class="btn-lg ladda-button btn btn-primary" onclick="openModalvoltarImplantacao('<%= @implantacao.id %>')" >Voltar etapa </button>
+        <% end %>
+      </p>
+    </div>
+  </div>
+  </div>
+</div>
+
+<%= render 'historico_cliente/modals/novo_comentario' %>
+<%= render 'historico_cliente/modals/modal_inertes_historico' %>
+<%= render 'historico_cliente/modals/modal_pesquisa_avaliacao' %>
+<%= render 'cnaes/cnaes_cliente' %>
+<%= render 'acompanhamentos/modals/voltar_acompanhamento' %>
+<%= render 'implantacoes/modals/voltar_implantacao_negociacao' %>
+<%= render 'propostas/modal_proposta' %>
+
+<script>
+  $(document).ready(function(){
+    var checkboxContrato = document.querySelector('.js-switch');
+    var init = new Switchery(checkboxContrato);
+
+    $('#modal_voltar_acompanhamento #voltar_acomp_data_retorno').datetimepicker({
+      mask:'39.19.9999 29:59',
+      format: 'dd/mm/yyyy hh:ii',
+      language: 'pt-BR',
+      autoclose: true,
+      todayBtn: true,
+      pickerPosition: "bottom-left"
+    });
+
+    $('#modal_voltar_acompanhamento #btnVoltarAcompanhamento').on('click', function () {
+      voltarAcompanhamento();
+      return false;
+    });
+
+    $('#modal_voltar_implantacao #voltar_data_retorno').datetimepicker({
+      mask:'39.19.9999 29:59',
+      format: 'dd/mm/yyyy hh:ii',
+      language: 'pt-BR',
+      autoclose: true,
+      todayBtn: true,
+      pickerPosition: "bottom-left"
+    });
+
+    $('#modal_voltar_implantacao #btnVoltarImplantacao').on('click', function () {
+          voltarImplantacao();
+          return false;
+    });
+
+    
+    if (<%= @cliente.assinou_contrato%> && !checkboxContrato.checked)
+      $('#contrato_assinado').trigger('click');  
+
+    checkboxContrato.onchange = function(){
+      $.ajax({
+        url: '/clientes/assinar_contrato',
+        data: { info: checkboxContrato.checked,
+            cliente_id: $('#cliente').val()},
+        type: 'GET',
+        success: function(data) {
+            exibirMsg("Status do contrato alterado.");     
+        },
+        error: function(data) {
+            exibirErro(data);
+        }
+      });
+    }
+  })
+
+  function openModalvoltarAcompanhamento(id, status) {
+    $.getJSON("/acompanhamentos/" + id, function(data) {
+      $('#modal_voltar_acompanhamento #form_voltar_acompanhamento')[0].reset();
+      $('#modal_voltar_acompanhamento #voltar_acomp_status_implantacao').val('').trigger("chosen:updated");
+      $('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val('').trigger("chosen:updated");
+
+      $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val(data['id']);
+      $('#modal_voltar_acompanhamento #voltar_acompanhamento_cliente_id').val(data['cliente']['id']);
+      $('#modal_voltar_acompanhamento #voltar_acompanhamento_cliente').val(data['cliente']['razao_social']);
+      
+      if (status == 0){
+        $('#modal_voltar_acompanhamento #status_atual_acompanhamento').val('AGUARDANDO');
+        $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').find('[value="2"]').remove();
+      }else if (status == 1){
+        $('#modal_voltar_acompanhamento #status_atual_acompanhamento').val('EM ANDAMENTO');
+        $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').find('[value="2"]').remove();
+      }else if (status == 2){
+        $('#modal_voltar_acompanhamento #status_atual_acompanhamento').val('STAND BY');
+        $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').find('[value="2"]').remove();
+      }else if (status == 4){
+        $('#modal_voltar_acompanhamento #status_atual_acompanhamento').val('DESISTENTE');
+        $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').find('[value="2"]').remove();
+        $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').append('<option value="'+ 2 + '">' + "Acompanhamento" + '</option>');
+      }else if (status == 5){
+        $('#modal_voltar_acompanhamento #status_atual_acompanhamento').val('CONCLUIDO');  
+        $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').find('[value="2"]').remove();          
+        $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').append('<option value="'+ 2 + '">' + "Acompanhamento" + '</option>');             
+      }
+      $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').val('').trigger("chosen:updated");
+
+      $('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val(data['user'] != null ? data['user']['name'] : '');
+      $('#modal_voltar_acompanhamento #voltar_acompanhamento_vendedor').val(data['cliente']['fechamento']['user']['name']);
+      
+      $('#modal_voltar_acompanhamento').modal('show');
+    });
+  }
+
+  function voltarAcompanhamento() {
+    if($('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').val() == '') {
+      exibirErro("É obrigatório informar uma etapa para voltar.");
+      return false;
+    }
+    if($('#modal_voltar_acompanhamento #voltar_acomp_data_retorno').val() == '') {
+      exibirErro("É obrigatório informar data de retorno.");
+      return false;
+    }
+    if($('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val() == null) {
+      exibirErro("É obrigatório informar um vendedor.");
+      return false;
+    }
+
+    if($('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').val() == 0) {
+      //voltar acompanhamento pra implantacao
+      $.ajax({
+        url: '/acompanhamentos/' + $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val() + '/voltar_acomp_pra_impl',
+        data: { id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val(),
+            responsavel: $('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val(),
+            data_retorno: $('#modal_voltar_acompanhamento #voltar_acomp_data_retorno').val(),
+            cliente_id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_cliente_id').val(),
+            status: parseInt($('#modal_voltar_acompanhamento #voltar_acomp_status_implantacao').val()),
+            motivo: $('#modal_voltar_acompanhamento #voltar_acompanhamento_motivo').val()},
+        type: 'PUT',
+        success: function(data) {
+            $('#modal_voltar_acompanhamento').modal('hide');
+            window.location.reload();
+            exibirMsg("Acompanhamento voltou para implantação.");     
+        },
+        error: function(data) {
+            exibirErro(data);
+        }
+      });
+    }else if($('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').val() == 1){
+        //voltar pra negociacao
+      $.ajax({
+        url: '/acompanhamentos/' + $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val() + '/voltar_negociacao',
+        data: { id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val(),
+            responsavel: $('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val(),
+            data_retorno: $('#modal_voltar_acompanhamento #voltar_acomp_data_retorno').val(),
+            cliente_id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_cliente_id').val(),
+            motivo: $('#modal_voltar_acompanhamento #voltar_acompanhamento_motivo').val()},
+        type: 'PUT',
+        success: function(data) {
+            $('#modal_voltar_acompanhamento').modal('hide');
+            window.location.reload();
+            exibirMsg("Acompanhamento voltou para negociação.");                      
+        },
+        error: function(data) {
+            exibirErro(data);
+        }
+      });
+    }else if($('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').val() == 2){
+      //voltar pra acompanhamento
+      $.ajax({
+        url: '/acompanhamentos/' + $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val() + '/voltar_acomp_pra_acomp',
+        data: { id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val(),
+            responsavel: $('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val(),
+            data_retorno: $('#modal_voltar_acompanhamento #voltar_acomp_data_retorno').val(),
+            cliente_id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_cliente_id').val(),
+            status: parseInt($('#modal_voltar_acompanhamento #voltar_acomp_status_acompanhamento').val()),
+            motivo: $('#modal_voltar_acompanhamento #voltar_acompanhamento_motivo').val()},
+        type: 'PUT',
+        success: function(data) {
+            $('#modal_voltar_acompanhamento').modal('hide');
+            window.location.reload();
+            exibirMsg("Empresa voltou para acompanhamento.")
+        },
+        error: function(data) {
+            exibirErro(data);
+        }
+      });
+    }
+  }
+
+  function openModalvoltarImplantacao(id) {
+    $.getJSON("/implantacoes/" + id, function(data) {
+        $('#modal_voltar_implantacao #form_recuperar_acompanhamento')[0].reset();
+        $('#modal_voltar_implantacao #voltar_implantacao_responsavel').val('').trigger("chosen:updated");
+
+        $('#modal_voltar_implantacao #voltar_implantacao_id').val(data['id']);
+        $('#modal_voltar_implantacao #voltar_implantacao_cliente_id').val(data['cliente']['id']);
+        $('#modal_voltar_implantacao #voltar_implantacao_cliente').val(data['cliente']['razao_social']);
+        $('#modal_voltar_implantacao #voltar_implantacao_vendedor').val(data['cliente']['fechamento']['user']['name']);
+        $('#modal_voltar_implantacao #voltar_implantacao_responsavel').val(data['user'] != null ? data['user']['name'] : '');
+        ''
+        $('#modal_voltar_implantacao').modal('show');
+    });
+  }
+
+  function voltarImplantacao() {
+    if($('#modal_voltar_implantacao #voltar_implantacao_responsavel').val() == null) {
+        exibirErro("É obrigatório informar um vendedor.");
+        return false;
+    }
+
+    if($('#modal_voltar_implantacao #voltar_data_retorno').val() == '') {
+        exibirErro("É obrigatório informar data de retorno.");
+        return false;
+    }    
+
+    $.ajax({
+        url: '/implantacoes/' + $('#modal_voltar_implantacao #voltar_implantacao_id').val() + '/voltar_negociacao',
+        data: { id: $('#modal_voltar_implantacao #voltar_implantacao_id').val(),
+            responsavel: $('#modal_voltar_implantacao #voltar_implantacao_responsavel').val(),
+            data_retorno: $('#modal_voltar_implantacao #voltar_data_retorno').val(),
+            cliente_id: $('#modal_voltar_implantacao #voltar_implantacao_cliente_id').val(),
+            motivo: $('#modal_voltar_implantacao #voltar_implantacao_motivo').val()},
+        type: 'PUT',
+        success: function(data) {
+            $('#modal_voltar_implantacao').modal('hide');             
+            window.location.reload();
+            exibirMsg("Implantação voltou para negociação.");   
+        },
+        error: function(data) {
+            exibirErro(data);
+        }
+    });
+  }
+</script>

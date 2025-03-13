@@ -1,0 +1,587 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Clientes Ativos x Bloqueados
+      <div class="col-sm-2  pull-right" style="margin-top: -6px !important;" id="grafico_por">
+        <%= select_tag  'filtro_grafico', options_for_select([
+                                                              ['Por sistema - tabela', 5],
+                                                              ['Por sistema', 1],
+                                                              ['Por status', 2],
+                                                              ['Ticket Médio', 3],
+                                                              ['Por UF', 4]
+                                                              ], 5), {:class => "form-control input-sm chosen-select"} %>
+      </div>
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div class="col-md-3 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoClientesAtivos()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Clientes Ativos - Real</h5>
+                  <span class="label label-info pull-right" id="compentencia_cliente"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 50px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-left" id="clientes_ativos_real"></h2>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-right" id="valor_clientes_ativos_real" style="margin-bottom: 3px; margin-top: 0px !important;"></h2>
+                    <small class="pull-right" id="media_clientes_ativos_real"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoClientesBloqueados('BLOQUEADO')">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Bloqueados (+7 dias)</h5>
+                  <span class="label label-info pull-right" id="compentencia_cliente_bloqueados"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 50px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-left" id="clientes_ativos_bloqueados"></h2>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-right" id="valor_clientes_ativos_bloqueados" style="margin-bottom: 3px;  margin-top: 0px !important;"></h2>
+                    <small class="pull-right" id="media_clientes_ativos_bloqueados"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id= "card_bloqueados_atualmente" class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoClientesBloqueadosAtualmente()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Bloqueados (-7 dias)</h5>
+                  <span class="label label-info pull-right" id="compentencia_cliente_bloqueados_atualmente"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 50px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-left" id="clientes_ativos_bloqueados_atualmente"></h2>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-right" id="valor_clientes_ativos_bloqueados_atualmente" style="margin-bottom: 3px;  margin-top: 0px !important;"></h2>
+                    <small class="pull-right" id="media_clientes_ativos_bloqueados_atualmente"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Clientes Total</h5>
+                  <span class="label label-info pull-right" id="compentencia_cliente_total"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 50px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-left" id="clientes_ativos_total"></h2>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-right" id="valor_clientes_ativos_total" style="margin-bottom: 3px;  margin-top: 0px !important;"></h2>
+                    <small class="pull-right" id="media_clientes_ativos_total"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoClientesBloqueados('PARALISADO')">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Clientes Paralisados</h5>
+                  <span class="label label-info pull-right" id="compentencia_cliente_paralisados"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 50px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-left" id="clientes_ativos_paralisados"></h2>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-right" id="valor_clientes_ativos_paralisados" style="margin-bottom: 3px;  margin-top: 0px !important;"></h2>
+                    <small class="pull-right" id="media_clientes_ativos_paralisados"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5>Clientes Ativos</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="clientes_12_meses" style="height: 290px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right" id="competencia_ativos_bloqueados"></span>
+                <h5>Clientes ativos</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="ativos_bloqueados"  style="height: 290px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%= render 'dashboards/resultados/clientes/tabela/tabela_clientes_ativos' %>
+      <%= render 'dashboards/resultados/clientes/tabela/tabela_clientes_bloqueados' %>
+      <%= render 'dashboards/resultados/clientes/tabela/tabela_clientes_bloqueado_atualmente' %>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bold{
+    font-weight: bold !important;    
+  }
+  .h30{
+    height: 30px !important;
+  }
+</style>
+
+<script>
+  $('#grafico_por').on('change', function () {
+    if ($('#filtro_grafico').val() == 2)
+      drawClientes12Meses();
+    else if ($('#filtro_grafico').val() == 3)
+      drawTicketMedioClientesAtivos();
+    else if ($('#filtro_grafico').val() == 4)
+      drawClientesAtivosPorUF();
+    else if ($('#filtro_grafico').val() == 5)
+      drawTabelaAtivosBloqueadosSistema();
+    else //1
+      drawChartAtivosBloqueadosSistema();
+  });
+
+    function drawClientes12Meses() {
+        $.getJSON("/dashboards/get_cliente_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val(), function(data) {
+
+            var meses = data;
+
+            var dataArray = [
+                ['Mês', 'Quantidade', 'Quantidade', {type: 'string', role: 'annotation'}, 'Valor', 'Média',
+                    'Total ativos', 'Valor ativos', 'Média ativos', 'Total bloqueados', 'Valor bloqueados', 'Média bloqueados',
+                    'Total paralisados', 'Valor paralisados', 'Média paralisados'],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [meses[i].final, parseInt(meses[i].totalqtd), parseInt(meses[i].totalqtd),
+                    parseInt(meses[i].totalqtd), parseFloat(meses[i].totalvalor), parseFloat(meses[i].totalmedia),
+                    parseInt(meses[i].normalqtd), parseFloat(meses[i].normalvalor), parseFloat(meses[i].normalmedia),
+                    parseInt(meses[i].bloqueadoqtd), parseFloat(meses[i].bloqueadovalor), parseFloat(meses[i].bloqueadomedia),
+                    parseInt(meses[i].paralisadoqtd), parseFloat(meses[i].paralisadovalor), parseFloat(meses[i].paralisadomedia)];
+                dataArray.push(row);
+            }
+            if(data.length > 0){
+                preencherClientes($(meses).get(-1).final,
+                    $(meses).get(-1).normalqtd, mascaraValor($(meses).get(-1).normalvalor), mascaraValor($(meses).get(-1).normalmedia),
+                    $(meses).get(-1).bloqueadoqtd, mascaraValor($(meses).get(-1).bloqueadovalor), mascaraValor($(meses).get(-1).bloqueadomedia),
+                    $(meses).get(-1).bloqueadoatualmenteqtd, mascaraValor($(meses).get(-1).bloqueadoatualmentevalor), mascaraValor($(meses).get(-1).bloqueadoatualmentemedia),
+                    $(meses).get(-1).totalqtd, mascaraValor($(meses).get(-1).totalvalor), mascaraValor($(meses).get(-1).totalmedia),
+                    $(meses).get(-1).paralisadoqtd, mascaraValor($(meses).get(-1).paralisadovalor), mascaraValor($(meses).get(-1).paralisadomedia));
+                if ($('#filtro_grafico').val() == 2)
+                  drawChartAtivosBloqueados($(meses).get(-1).normalqtd, $(meses).get(-1).bloqueadoqtd, $(meses).get(-1).paralisadoqtd);
+                else if ($('#filtro_grafico').val() == 3)
+                  drawTicketMedioClientesAtivos();
+                else if ($('#filtro_grafico').val() == 5)
+                  drawTabelaAtivosBloqueadosSistema();
+                else
+                  drawChartAtivosBloqueadosSistema();
+            }else{
+                preencherClientes('', 0, mascaraValor('0.00'),
+                    mascaraValor('0.00'), 0, mascaraValor('0.00'),
+                    mascaraValor('0.00'), 0, mascaraValor('0.00'),
+                    mascaraValor('0.00'), 0, mascaraValor('0.00'),
+                    mascaraValor('0.00'));
+                if ($('#filtro_grafico').val() == 2)    
+                  drawChartAtivosBloqueados(0, 0, 0);
+                else if ($('#filtro_grafico').val() == 3)
+                  drawTicketMedioClientesAtivos();
+                else if ($('#filtro_grafico').val() == 5)
+                  drawTabelaAtivosBloqueadosSistema();
+                else
+                  drawChartAtivosBloqueadosSistema();
+            }
+
+            var options = {
+                'chartArea': {'width': '90%', 'height': '70%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                series: {1: {type: 'line', color: 'black'}},
+                legend: 'none',
+                animation: { easing: 'inAndOut', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('clientes_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    preencherClientes($(meses).get(selectedItem.row).final,
+                        $(meses).get(selectedItem.row).normalqtd, mascaraValor($(meses).get(selectedItem.row).normalvalor), mascaraValor($(meses).get(selectedItem.row).normalmedia),
+                        $(meses).get(selectedItem.row).bloqueadoqtd, mascaraValor($(meses).get(selectedItem.row).bloqueadovalor), mascaraValor($(meses).get(selectedItem.row).bloqueadomedia),
+                        $(meses).get(selectedItem.row).bloqueadoatualmenteqtd, mascaraValor($(meses).get(selectedItem.row).bloqueadoatualmentevalor), mascaraValor($(meses).get(selectedItem.row).bloqueadoatualmentemedia),
+                        $(meses).get(selectedItem.row).totalqtd, mascaraValor($(meses).get(selectedItem.row).totalvalor), mascaraValor($(meses).get(selectedItem.row).totalmedia),
+                        $(meses).get(selectedItem.row).paralisadoqtd, mascaraValor($(meses).get(selectedItem.row).paralisadovalor), mascaraValor($(meses).get(selectedItem.row).paralisadomedia));
+                    if ($('#filtro_grafico').val() == 2)    
+                      drawChartAtivosBloqueados($(meses).get(selectedItem.row).normalqtd, $(meses).get(selectedItem.row).bloqueadoqtd, $(meses).get(selectedItem.row).paralisadoqtd);
+                    else if ($('#filtro_grafico').val() == 3)
+                      drawTicketMedioClientesAtivos();
+                    else if ($('#filtro_grafico').val() == 4)
+                      drawClientesAtivosPorUF();
+                    else if ($('#filtro_grafico').val() == 5)
+                      drawTabelaAtivosBloqueadosSistema();
+                    else
+                      drawChartAtivosBloqueadosSistema();
+                    if (selectedItem.row == 13) $('#card_bloqueados_atualmente').show();
+                    else $('#card_bloqueados_atualmente').hide();
+                }else{
+                    preencherClientes($(meses).get(-1).final,
+                        $(meses).get(-1).normalqtd, mascaraValor($(meses).get(-1).normalvalor), mascaraValor($(meses).get(-1).normalmedia),
+                        $(meses).get(-1).bloqueadoqtd, mascaraValor($(meses).get(-1).bloqueadovalor), mascaraValor($(meses).get(-1).bloqueadomedia),
+                        $(meses).get(-1).bloqueadoatualmenteqtd, mascaraValor($(meses).get(-1).bloqueadoatualmentevalor), mascaraValor($(meses).get(-1).bloqueadoatualmentemedia),
+                        $(meses).get(-1).totalqtd, mascaraValor($(meses).get(-1).totalvalor), mascaraValor($(meses).get(-1).totalmedia),
+                        $(meses).get(-1).paralisadoqtd, mascaraValor($(meses).get(-1).paralisadovalor), mascaraValor($(meses).get(-1).paralisadomedia));
+                    if ($('#filtro_grafico').val() == 2)    
+                      drawChartAtivosBloqueados($(meses).get(-1).normalqtd, $(meses).get(-1).bloqueadoqtd, $(meses).get(-1).paralisadoqtd);
+                    else if ($('#filtro_grafico').val() == 3)
+                      drawTicketMedioClientesAtivos();
+                    else if ($('#filtro_grafico').val() == 4)
+                      drawClientesAtivosPorUF();
+                    else if ($('#filtro_grafico').val() == 5)
+                      drawTabelaAtivosBloqueadosSistema();
+                    else
+                      drawChartAtivosBloqueadosSistema();
+                    $('#card_bloqueados_atualmente').show();
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([4,5,6,7,8,9,10,11,12,13,14]);
+            chart.draw(view, options);
+        });
+    }
+
+    function preencherClientes(competencia, totalReal, valorReal, mediaReal, totalBloqueado, valorBloqueado, mediaBloqueado, totalBloqueadoAtualmente,
+                              valorBloqueadoAtualmente, mediaBloqueadoAtualmente, totalGeral, valorGeral, mediaGeral, totalParalisado, valorParalisado, mediaParalisado) {
+        $('#clientes_ativos_real').text('Total ' + totalReal);
+        $('#valor_clientes_ativos_real').text(valorReal);
+        $('#media_clientes_ativos_real').text('Média ' + mediaReal);
+        $('#compentencia_cliente').text(competencia);
+
+        $('#clientes_ativos_bloqueados').text('Total ' + totalBloqueado);
+        $('#valor_clientes_ativos_bloqueados').text(valorBloqueado);
+        $('#media_clientes_ativos_bloqueados').text('Média ' + mediaBloqueado);
+        $('#compentencia_cliente_bloqueados').text(competencia);
+
+        $('#clientes_ativos_bloqueados_atualmente').text('Total ' + totalBloqueadoAtualmente);
+        $('#valor_clientes_ativos_bloqueados_atualmente').text(valorBloqueadoAtualmente);
+        $('#media_clientes_ativos_bloqueados_atualmente').text('Média ' + mediaBloqueadoAtualmente);
+        $('#compentencia_cliente_bloqueados_atualmente').text(competencia);
+
+        $('#clientes_ativos_paralisados').text('Total ' + totalParalisado);
+        $('#valor_clientes_ativos_paralisados').text(valorParalisado);
+        $('#media_clientes_ativos_paralisados').text('Média ' + mediaParalisado);
+        $('#compentencia_cliente_paralisados').text(competencia);
+
+        $('#clientes_ativos_total').text('Total ' + totalGeral);
+        $('#valor_clientes_ativos_total').text(valorGeral);
+        $('#media_clientes_ativos_total').text('Média ' + mediaGeral);
+        $('#compentencia_cliente_total').text(competencia);
+        $('#competencia_ativos_bloqueados').text(competencia);
+
+    }
+
+    function drawChartAtivosBloqueados(ativos, bloqueados, paralisados) {
+        var dataArray = [
+            ['Situação', 'Quantidade'],
+        ];
+        dataArray.push(['Ativos', parseInt(ativos)]);
+        dataArray.push(['Bloqueados', parseInt(bloqueados)]);
+        dataArray.push(['Paralisados', parseInt(paralisados)]);
+        var options = {
+            'chartArea': {'width': '100%', 'height': '80%'},
+            pieStartAngle: 50,
+            legend: {position: 'bottom'},
+            is3D: true
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('ativos_bloqueados'));
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        chart.draw(data, options);
+    }
+
+    function drawChartAtivosBloqueadosSistema() {
+      $.getJSON("/dashboards/get_cliente_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&tipo='NORMAL','EM_MANUTENCAO', 'BLOQUEADO'" +
+            "&data=" + $('#compentencia_cliente').text(), function(data) {
+            
+        var dataArray = [
+            ['Sistema', 'Quantidade'],
+        ];
+        dataArray.push(['Manager', parseInt(data["manager"])]);
+        dataArray.push(['Light', parseInt(data["light"])]);
+        dataArray.push(['Emissor', parseInt(data["emissor"])]);
+        //dataArray.push(['Fiscal', parseInt(data["fiscal"])]);
+        dataArray.push(['Gourmet', parseInt(data["gourmet"])]);
+        dataArray.push(['Pró vendas', parseInt(data["pro"])]);
+        dataArray.push(['Athus', parseInt(data["athus"])]); 
+        dataArray.push(['Trade', parseInt(data["trade"])]);
+        dataArray.push(['Emissor WEB', parseInt(data["emissor_web"])]);
+        dataArray.push(['Sem sistema', parseInt(data["sem_sistema"])]); 
+
+        var options = {
+            'chartArea': {'width': '100%', 'height': '80%'},
+            pieStartAngle: 50,
+            legend: {position: 'bottom'},
+            is3D: true
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('ativos_bloqueados'));
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        chart.draw(data, options);
+      });
+    }
+
+    function drawTabelaAtivosBloqueadosSistema() {
+      $.getJSON("/dashboards/get_cliente_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&tipo='NORMAL','EM_MANUTENCAO', 'BLOQUEADO'" +
+            "&data=" + $('#compentencia_cliente').text(), function(data) {
+          console.log(data);
+        var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Sistema');
+            datatable.addColumn('number', 'Quantidade'); 
+        
+        datatable.addRow(['Manager', parseInt(data["manager"])]);
+        datatable.addRow(['Light', parseInt(data["light"])]);
+        datatable.addRow(['Emissor', parseInt(data["emissor"])]);
+        //datatable.addRow(['Fiscal', parseInt(data["fiscal"])]);
+        datatable.addRow(['Gourmet', parseInt(data["gourmet"])]);
+        datatable.addRow(['Trade', parseInt(data["trade"])]);
+        datatable.addRow(['Pró vendas', parseInt(data["pro"])]);
+        datatable.addRow(['Athus', parseInt(data["athus"])]); 
+        datatable.addRow(['Emissor WEB', parseInt(data["emissor_web"])]);
+        //datatable.addRow(['Sem sistema', parseInt(data["sem_sistema"])]); 
+
+        datatable.sort({column: 1, desc: true});        
+
+        var table = new google.visualization.Table(document.getElementById('ativos_bloqueados'));          
+          
+        table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+      });
+    }
+    
+    function carregarInfoClientesAtivos() {
+        $('#bloco_clientes_bloqueados').hide();
+        $('#bloco_clientes_bloqueados_atualmente').hide();
+        if($('#bloco_clientes_ativos').is(':visible')){
+            $('#bloco_clientes_ativos').hide();
+        }else{
+            $('body').lmask('show');
+            $.getJSON("/dashboards/table_clientes_ativos_bloqueados?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&tipo='NORMAL','EM_MANUTENCAO'" +
+                "&data=" + $('#compentencia_cliente').text(), function(data) {
+
+                $('#bloco_clientes_ativos').show();
+                var table = $('.table-clientes-ativos').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['datavencimento']).format("DD/MM/YYYY"),
+                        val['dias_sem_uso'],
+                        val['dias_cliente'],
+                        val['razaosocial'],
+                        val['cidade'],
+                        val['sistema'],
+                        mascaraValor(val['valor'])
+                    ] ).draw( false );
+                });
+
+                $('body').lmask('hide');
+            });
+        }
+    }
+
+    function carregarInfoClientesBloqueados(tipo) {
+        $('#bloco_clientes_ativos').hide();
+        $('#bloco_clientes_bloqueados_atualmente').hide();
+        if($('#bloco_clientes_bloqueados').is(':visible')){
+            $('#bloco_clientes_bloqueados').hide();
+        }else{
+            $('body').lmask('show');
+            $.getJSON("/dashboards/table_clientes_ativos_bloqueados?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&tipo='" + tipo + "'" +
+                "&data=" + $('#compentencia_cliente').text(), function(data) {
+
+                $('#bloco_clientes_bloqueados').show();
+                var table = $('.table-clientes-bloqueados').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['databloqueio']).format("DD/MM/YYYY"),
+                        val['dias_bloq'],
+                        val['dias_sem_uso'],
+                        val['dias_cliente'],
+                        val['razaosocial'],
+                        val['cidade'],
+                        val['sistema'],
+                        mascaraValor(val['valor']),
+                        val['hist_ligacoes']
+                    ] ).draw( false );
+                });
+
+                $('body').lmask('hide');
+            });
+        }
+    }
+  
+    function carregarInfoClientesBloqueadosAtualmente() {
+        $('#bloco_clientes_ativos').hide();
+        $('#bloco_clientes_bloqueados').hide();
+        if($('#bloco_clientes_bloqueados_atualmente').is(':visible')){
+            $('#bloco_clientes_bloqueados_atualmente').hide();
+        }else{
+            $('body').lmask('show');
+            $.getJSON("/dashboards/table_clientes_bloqueados_atualmente?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#compentencia_cliente').text(), function(data) {
+                $('#bloco_clientes_bloqueados_atualmente').show();
+                var table = $('.table-clientes-bloqueados-atualmente').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['databloqueio']).format("DD/MM/YYYY"),
+                        val['dias_bloq'],
+                        val['dias_sem_uso'],
+                        val['dias_cliente'],
+                        val['razaosocial'],
+                        val['cidade'],
+                        val['sistema'],
+                        mascaraValor(val['valor']),
+                        val['hist_ligacoes']
+                    ] ).draw( false );
+                });
+
+                $('body').lmask('hide');
+            });
+        }
+    }
+
+    function drawTicketMedioClientesAtivos() {
+      $.getJSON("/dashboards/get_cliente_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&tipo='NORMAL','EM_MANUTENCAO', 'BLOQUEADO'" +
+            "&data=" + $('#compentencia_cliente').text(), function(data) {            
+        
+        var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Sistema');
+            datatable.addColumn('number', 'Ticket médio');
+            
+          if (data["media_man"] > 0) 
+            datatable.addRow(['Manager', parseFloat(data["media_man"])]);
+          else
+            {datatable.addRow(['Manager', parseFloat(0)]);}
+          
+          if (data["media_lig"] > 0) 
+            datatable.addRow(['Light', parseFloat(data["media_lig"])]);
+          else
+            datatable.addRow(['Light', parseFloat(0)]);
+
+          if (data["media_emi"] > 0)
+            datatable.addRow(['Emissor', parseFloat(data["media_emi"])]);
+          else
+            datatable.addRow(['Emissor', parseFloat(0)]);
+          
+          // if (data["media_f"] > 0)
+          //   datatable.addRow(['Fiscal', parseFloat(data["media_f"])]);
+          // else
+          //   datatable.addRow(['Fiscal', parseFloat(0)]);
+
+          if (data["media_g"])
+            datatable.addRow(['Gourmet', parseFloat(data["media_g"])]);
+          else 
+            datatable.addRow(['Gourmet', parseFloat(0)]);
+
+          if (data["media_trade"])
+            datatable.addRow(['Trade', parseFloat(data["media_trade"])]);
+          else 
+            datatable.addRow(['Trade', parseFloat(0)]);
+
+          if (data["media_pro"])
+            datatable.addRow(['Pró vendas', parseFloat(data["media_pro"])]);
+          else
+            datatable.addRow(['Pró vendas', parseFloat(0)]);
+
+          if (data["media_athus"])
+            datatable.addRow(['Athus', parseFloat(data["media_athus"])]);
+          else
+            datatable.addRow(['Athus', parseFloat(0)]);
+
+          if (data["media_emissor_web"])
+            datatable.addRow(['Emissor WEB', parseFloat(data["media_emissor_web"])]);
+          else
+            datatable.addRow(['Emissor WEB', parseFloat(0)]);
+            
+          datatable.sort({column: 1, desc: true});
+
+          var table = new google.visualization.Table(document.getElementById('ativos_bloqueados'));
+          var formatter = new google.visualization.NumberFormat(
+              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+          formatter.format(datatable, 1); // Apply formatter to second column
+          
+          table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+      });
+    }
+
+    function drawClientesAtivosPorUF() {
+      $.getJSON("/dashboards/get_cliente_UF?empresa=" + $('#empresas_financeiro_id').val() +
+            "&tipo='NORMAL','EM_MANUTENCAO', 'BLOQUEADO'" +
+            "&data=" + $('#compentencia_cliente').text() + "&flag=1", function(data) {         
+        
+        var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Estado');
+            datatable.addColumn('number', 'Quantidade');
+
+        for (var i = 0; i < data.length; i++) {
+          datatable.addRow([data[i].estado, data[i].qtd]);
+        }         
+            
+        datatable.sort({column: 1, desc: true});
+        for (var i=0; i< data.length; i++){
+          datatable.setRowProperty(i, 'className', 'h30');
+        }
+        //datatable.setRowProperty(data.length-1, 'className', 'bold');
+
+        var table = new google.visualization.Table(document.getElementById('ativos_bloqueados'));          
+          
+        table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+      });
+    }
+
+</script>

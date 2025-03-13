@@ -1,0 +1,572 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Faturamento
+      <div class="col-sm-2  pull-right" style="margin-top: -6px !important;" id="fat_grafico_por">
+        <%= select_tag  'filtro_grafico_faturamento', options_for_select([
+                                                              ['Por sistema', 1],
+                                                              ['Por sistema - Tabela', 4],
+                                                              ['Por tipo', 2],
+                                                              ['Ticket Médio', 3],
+                                                              ['Por UF', 5]
+                                                              ], 4), {:class => "form-control input-sm chosen-select"} %>
+      </div>
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div id="fatDiv" class="col-md-3 padding-5">
+          <div id="fatDiv" class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Faturamento total</h5>
+                  <span class="label label-info pull-right" id="compentencia_faturamento_total"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="faturamento_total" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_total"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="faturamento_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="fatDiv" class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Fat. Mensalidade</h5>
+                  <span class="label label-info pull-right" id="competencia_faturamento_mensalidade"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="faturamento_mensalidade" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_mensalidade"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="faturamento_mensalidade_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="fatDiv" class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Fat. Instalação</h5>
+                  <span class="label label-info pull-right" id="competencia_faturamento_instalacao"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="faturamento_instalacao" style="margin-bottom: 7px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_instalacao"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="faturamento_instalacao_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="fatDiv" class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Fat. Outros</h5>
+                  <span class="label label-info pull-right" id="competencia_faturamento_outros"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="faturamento_outros" style="margin-bottom: 7px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_outros"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="faturamento_outros_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5>Faturamento</h5>
+              </div>
+              <div class="ibox-content padding-2">
+                <div id="faturamento_12_meses" style="height: 271px !important; width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right" id="compentencia_faturamento_tipo"></span>
+                <h5>Faturamento</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="faturamento_por_tipo"  style="height: 271px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.h30{
+    height: 30px !important;
+  }
+</style>
+
+<script>
+
+  $('#fat_grafico_por').on('click', function () {
+    if ($('#filtro_grafico_faturamento').val() == 2)
+      drawFaturamento12Meses();
+    else if ($('#filtro_grafico_faturamento').val() == 3)
+      drawFaturamentoMedio();
+    else if ($('#filtro_grafico_faturamento').val() == 4)
+      drawSistemasTabela();
+    else if ($('#filtro_grafico_faturamento').val() == 5)
+      drawFaturamentoPorUF();
+    else
+      drawChartFaturamentoSistema();
+  });
+
+    function drawFaturamento12Meses() {
+        $.getJSON("/dashboards/get_total_faturamento_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val(), function(data) {
+            var dataArray = [
+                ['Mês', 'Valor', 'Valor', 'Valor Instalação', 'Valor Mensalidade',
+                    'Valor Outros'],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseFloat(data[i].totalgeral), parseFloat(data[i].totalgeral),
+                    parseFloat(data[i].valorinstalacao), parseFloat(data[i].valormensalidade), parseFloat(data[i].valoroutros)];
+                dataArray.push(row);
+            }
+
+            var meses = data;
+            var result = null;
+            $.getJSON("/dashboards/get_total_faturamento_mes_anterior?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val(), function(ret) {
+                result = ret;
+                preencherPainelFaturamentoTotal(  parseFloat($(meses).get(-1).totalgeral),
+                    $(meses).get(-1).data,
+                    parseFloat($(result).get(-1).totalgeral),
+                    parseFloat($(meses).get(-1).valormensalidade),
+                    parseFloat($(result).get(-1).valormensalidade),
+                    parseFloat($(meses).get(-1).valorinstalacao),
+                    parseFloat($(result).get(-1).valorinstalacao),
+                    parseFloat($(meses).get(-1).valoroutros),
+                    parseFloat($(result).get(-1).valoroutros));
+            });
+            if ($('#filtro_grafico_faturamento').val() == 2)
+              faturamentoPorTipo(parseFloat($(meses).get(-1).valormensalidade), parseFloat($(meses).get(-1).valorinstalacao), parseFloat($(meses).get(-1).valoroutros));
+            else if ($('#filtro_grafico_faturamento').val() == 3)
+              drawFaturamentoMedio();
+            else if ($('#filtro_grafico_faturamento').val() == 4)
+              drawSistemasTabela();
+            else
+              drawChartFaturamentoSistema();
+            
+            $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+            
+            var options = {
+                'chartArea': {'width': '80%', 'height': '60%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                series: {1: {type: 'line', color: 'black', format: 'short'}},
+                legend: 'none',
+                vAxis: {viewWindowMode: "explicit", viewWindow: {min: 0}, format: 'short'},
+                animation: { easing: 'in', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('faturamento_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    var ultimo = selectedItem.row-1;
+                    if(ultimo == -1)
+                        ultimo = 0;
+
+                    preencherPainelFaturamentoTotal(parseFloat(data.getValue(selectedItem.row, 1)),
+                        data.getValue(selectedItem.row, 0),
+                        parseFloat(data.getValue(ultimo, 1)),
+                        parseFloat(data.getValue(selectedItem.row, 4)),
+                        parseFloat(data.getValue(ultimo, 4)),
+                        parseFloat(data.getValue(selectedItem.row, 3)),
+                        parseFloat(data.getValue(ultimo, 3)),
+                        parseFloat(data.getValue(selectedItem.row, 5)),
+                        parseFloat(data.getValue(ultimo, 5)));
+                    
+                    if ($('#filtro_grafico_faturamento').val() == 2)
+                      faturamentoPorTipo(parseFloat(data.getValue(selectedItem.row, 4)), parseFloat(data.getValue(selectedItem.row, 3)), parseFloat(data.getValue(selectedItem.row, 5)));
+                    else if ($('#filtro_grafico_faturamento').val() == 3)
+                      drawFaturamentoMedio();
+                    else if ($('#filtro_grafico_faturamento').val() == 4)
+                      drawSistemasTabela();
+                    else if ($('#filtro_grafico_faturamento').val() == 5)
+                      drawFaturamentoPorUF();
+                    else
+                      drawChartFaturamentoSistema();
+                    
+                    $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês inteiro."});
+                }else{
+
+                    preencherPainelFaturamentoTotal(  parseFloat($(meses).get(-1).totalgeral),
+                        $(meses).get(-1).data,
+                        parseFloat($(result).get(-1).totalgeral),
+                        parseFloat($(meses).get(-1).valormensalidade),
+                        parseFloat($(result).get(-1).valormensalidade),
+                        parseFloat($(meses).get(-1).valorinstalacao),
+                        parseFloat($(result).get(-1).valorinstalacao),
+                        parseFloat($(meses).get(-1).valoroutros),
+                        parseFloat($(result).get(-1).valoroutros));
+                    
+                    if ($('#filtro_grafico_faturamento').val() == 2)
+                      faturamentoPorTipo(parseFloat($(meses).get(-1).valormensalidade), parseFloat($(meses).get(-1).valorinstalacao), parseFloat($(meses).get(-1).valoroutros));
+                    else if ($('#filtro_grafico_faturamento').val() == 3)
+                      drawFaturamentoMedio();
+                    else if ($('#filtro_grafico_faturamento').val() == 4)
+                      drawSistemasTabela();
+                    else if ($('#filtro_grafico_faturamento').val() == 5)
+                      drawFaturamentoPorUF();
+                    else
+                      drawChartFaturamentoSistema();
+                    
+                    $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+            formatter.format(data, 1); // Apply formatter to second column
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([3,4,5]);
+            chart.draw(view, options);
+        });
+    }
+
+    function preencherPainelFaturamentoTotal(valorFaturamento, competencia, valorAnterior, valorMensalidade, mensalidadeAnterior,
+                                             valorInstalacao, instalacaoAnterior, valorOutros, outrosAnterior) {
+        $('#compentencia_faturamento_total').text(competencia);
+        $('#compentencia_faturamento_tipo').text(competencia);
+        $('#competencia_faturamento_mensalidade').text(competencia);
+        $('#competencia_faturamento_instalacao').text(competencia);
+        $('#competencia_faturamento_outros').text(competencia);
+        $('#faturamento_total').text(mascaraValor(valorFaturamento.toFixed(2)));
+        $('#faturamento_anterior').text('Ant. ' + mascaraValor(valorAnterior.toFixed(2)));
+
+        var valor = ((valorFaturamento*100 / valorAnterior)-100);
+        $('#percentual_faturamento_total').text('');
+        if(valor > 0){
+            $('#percentual_faturamento_total').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_total').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_faturamento_total').removeClass('text-info').addClass('text-danger');
+            $('#percentual_faturamento_total').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#faturamento_mensalidade').text(mascaraValor(valorMensalidade.toFixed(2)));
+        $('#faturamento_mensalidade_anterior').text('Ant. ' + mascaraValor(mensalidadeAnterior.toFixed(2)));
+        var valor = ((valorMensalidade*100 / mensalidadeAnterior)-100);
+        $('#percentual_faturamento_mensalidade').text('');
+        if(mensalidadeAnterior == 0){
+            $('#percentual_faturamento_outros').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_outros').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else if(valor > 0){
+            $('#percentual_faturamento_mensalidade').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_mensalidade').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_faturamento_mensalidade').removeClass('text-info').addClass('text-danger');
+            $('#percentual_faturamento_mensalidade').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#faturamento_instalacao').text(mascaraValor(valorInstalacao.toFixed(2)));
+        $('#faturamento_instalacao_anterior').text('Ant. ' + mascaraValor(instalacaoAnterior.toFixed(2)));
+        var valor = ((valorInstalacao*100 / instalacaoAnterior)-100);
+        $('#percentual_faturamento_instalacao').text('');
+        if(instalacaoAnterior == 0){
+            $('#percentual_faturamento_instalacao').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_instalacao').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else if(valor > 0){
+            $('#percentual_faturamento_instalacao').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_instalacao').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_faturamento_instalacao').removeClass('text-info').addClass('text-danger');
+            $('#percentual_faturamento_instalacao').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#faturamento_outros').text(mascaraValor(valorOutros.toFixed(2)));
+        $('#faturamento_outros_anterior').text('Ant. ' + mascaraValor(outrosAnterior.toFixed(2)));
+        var valor = ((valorOutros*100 / outrosAnterior)-100);
+        $('#percentual_faturamento_outros').text('');
+        if(outrosAnterior == 0){
+            $('#percentual_faturamento_outros').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_outros').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else if(valor > 0){
+            $('#percentual_faturamento_outros').removeClass('text-danger').addClass('text-info');
+            $('#percentual_faturamento_outros').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_faturamento_outros').removeClass('text-info').addClass('text-danger');
+            $('#percentual_faturamento_outros').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+    }
+
+    function faturamentoPorTipo(mensalidade, instalacao, outros) {
+        var dataArray = [
+            ['Tipo', 'Valor'],
+        ];
+        dataArray.push(['Mensalidade', parseFloat(mensalidade)]);
+        dataArray.push(['Instalação', parseFloat(instalacao)]);
+        dataArray.push(['Outros', parseFloat(outros)]);
+        var options = {
+            'chartArea': {'width': '100%', 'height': '80%'},
+            pieStartAngle: 50,
+            legend: {position: 'bottom'},
+            is3D: true
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('faturamento_por_tipo'));
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        chart.draw(data, options);
+    }
+
+    function drawChartFaturamentoSistema() {
+      $.getJSON("/dashboards/get_total_faturamento_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&data=" + $('#compentencia_faturamento_total').text(), function(data) {
+            
+        var dataArray = [
+            ['Sistema', 'Total'],
+        ];
+        dataArray.push(['Manager', parseInt(data["rs_man"])]);
+        dataArray.push(['Light', parseInt(data["rs_lig"])]);
+        dataArray.push(['Emissor', parseInt(data["rs_emi"])]);
+        //dataArray.push(['Fiscal', parseInt(data["rs_f"])]);
+        dataArray.push(['Gourmet', parseInt(data["rs_g"])]);
+        dataArray.push(['Pró vendas', parseInt(data["rs_pro"])]);
+        dataArray.push(['Athus', parseInt(data["rs_athus"])]);
+        dataArray.push(['Trade', parseInt(data["rs_trade"])]);
+        dataArray.push(['Emissor WEB', parseInt(data["rs_emissor_web"])]);
+        dataArray.push(['Sem sistemas', parseInt(data["rs_sem_sistema"])]); 
+
+        var options = {
+            'chartArea': {'width': '100%', 'height': '80%'},
+            pieStartAngle: 50,
+            legend: {position: 'bottom'},
+            is3D: true
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('faturamento_por_tipo'));
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        var formatter = new google.visualization.NumberFormat(
+          {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+        formatter.format(data, 1); // Apply formatter to second column
+
+        chart.draw(data, options);
+      });
+    }
+
+    function drawFaturamentoMedio() {
+      $.getJSON("/dashboards/get_total_faturamento_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&data=" + $('#compentencia_faturamento_total').text(), function(data) {         
+        
+        var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Sistema');
+            datatable.addColumn('number', 'Ticket médio');
+            
+          if (data["media_man"] > 0) 
+            datatable.addRow(['Manager', parseFloat(data["media_man"])]);
+          else
+            {datatable.addRow(['Manager', parseFloat(0)]);}
+          
+          if (data["media_lig"] > 0) 
+            datatable.addRow(['Light', parseFloat(data["media_lig"])]);
+          else
+            datatable.addRow(['Light', parseFloat(0)]);
+
+          if (data["media_emi"] > 0)
+            datatable.addRow(['Emissor', parseFloat(data["media_emi"])]);
+          else
+            datatable.addRow(['Emissor', parseFloat(0)]);
+          
+          // if (data["media_f"] > 0)
+          //   datatable.addRow(['Fiscal', parseFloat(data["media_f"])]);
+          // else
+          //   datatable.addRow(['Fiscal', parseFloat(0)]);
+
+          if (data["media_g"])
+            datatable.addRow(['Gourmet', parseFloat(data["media_g"])]);
+          else 
+            datatable.addRow(['Gourmet', parseFloat(0)]);
+
+          if (data["media_trade"])
+            datatable.addRow(['Trade', parseFloat(data["media_trade"])]);
+          else 
+            datatable.addRow(['Trade', parseFloat(0)]);
+
+          if (data["media_pro"])
+            datatable.addRow(['Pró vendas', parseFloat(data["media_pro"])]);
+          else
+            datatable.addRow(['Pró vendas', parseFloat(0)]);
+
+          if (data["media_athus"])
+            datatable.addRow(['Athus', parseFloat(data["media_athus"])]);
+          else
+            datatable.addRow(['Athus', parseFloat(0)]);
+
+          if (data["media_emissor_web"])
+            datatable.addRow(['Emissor WEB', parseFloat(data["media_emissor_web"])]);
+          else 
+            datatable.addRow(['Emissor WEB', parseFloat(0)]);
+            
+          datatable.sort({column: 1, desc: true});
+
+          var table = new google.visualization.Table(document.getElementById('faturamento_por_tipo'));
+          var formatter = new google.visualization.NumberFormat(
+              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+          formatter.format(datatable, 1); // Apply formatter to second column
+          
+          table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+      });
+    }
+
+    function drawSistemasTabela() {
+      $.getJSON("/dashboards/get_total_faturamento_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&data=" + $('#compentencia_faturamento_total').text(), function(data) {            
+        
+        var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Sistema');
+            datatable.addColumn('number', 'Total');
+            
+          if (data["rs_man"] > 0) 
+            datatable.addRow(['Manager', parseFloat(data["rs_man"])]);
+          else
+            {datatable.addRow(['Manager', parseFloat(0)]);}
+          
+          if (data["rs_lig"] > 0) 
+            datatable.addRow(['Light', parseFloat(data["rs_lig"])]);
+          else
+            datatable.addRow(['Light', parseFloat(0)]);
+
+          if (data["rs_emi"] > 0)
+            datatable.addRow(['Emissor', parseFloat(data["rs_emi"])]);
+          else
+            datatable.addRow(['Emissor', parseFloat(0)]);
+          
+          // if (data["rs_f"] > 0)
+          //   datatable.addRow(['Fiscal', parseFloat(data["rs_f"])]);
+          // else
+          //   datatable.addRow(['Fiscal', parseFloat(0)]);
+
+          if (data["rs_g"])
+            datatable.addRow(['Gourmet', parseFloat(data["rs_g"])]);
+          else 
+            datatable.addRow(['Gourmet', parseFloat(0)]);
+
+          if (data["rs_pro"])
+            datatable.addRow(['Pró vendas', parseFloat(data["rs_pro"])]);
+          else
+            datatable.addRow(['Pró vendas', parseFloat(0)]);
+
+          if (data["rs_trade"])
+            datatable.addRow(['Trade', parseFloat(data["rs_trade"])]);
+          else
+            datatable.addRow(['Trade', parseFloat(0)]);
+
+          if (data["rs_athus"])
+            datatable.addRow(['Athus', parseFloat(data["rs_athus"])]);
+          else
+            datatable.addRow(['Athus', parseFloat(0)]);
+
+          if (data["rs_emissor_web"])
+            datatable.addRow(['Emissor WEB', parseFloat(data["rs_emissor_web"])]);
+          else
+            datatable.addRow(['Emissor WEB', parseFloat(0)]);
+            
+          datatable.sort({column: 1, desc: true});
+
+          var table = new google.visualization.Table(document.getElementById('faturamento_por_tipo'));
+          var formatter = new google.visualization.NumberFormat(
+              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+          formatter.format(datatable, 1); // Apply formatter to second column
+          
+          table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+      });
+    }
+
+    function drawFaturamentoPorUF() {
+      $.getJSON("/dashboards/get_total_faturamento_UF?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&data=" + $('#compentencia_faturamento_total').text(), function(data) {         
+        
+        var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Estado');
+            datatable.addColumn('number', 'Total');
+
+        for (var i = 0; i < data.length; i++) {
+          datatable.addRow([data[i].sigla, parseFloat(data[i].faturamento)]);
+        }
+        for (var i=0; i< data.length; i++){
+          datatable.setRowProperty(i, 'className', 'h30');
+        }
+        
+        var table = new google.visualization.Table(document.getElementById('faturamento_por_tipo'));
+
+          var formatter = new google.visualization.NumberFormat(
+              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+          formatter.format(datatable, 1); // Apply formatter to second column
+          
+          table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+      });
+    }
+
+</script>

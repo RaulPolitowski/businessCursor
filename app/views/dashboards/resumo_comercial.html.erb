@@ -1,0 +1,139 @@
+<div class="wrapper wrapper-content padding-5">
+  <div class="row animated fadeInDown">
+    <div class="col-lg-12 padding-left-right" >
+      <div class="ibox float-e-margins border-bottom">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <div class="field col-sm-5">
+                <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag  'empresas_financeiro_id', options_for_select([
+                                                                                 ['GERMAN TECH (MATRIZ)', 17],
+                                                                                 ['GERMAN TECH (FILIAL)', 3253],
+                                                                                 ['GERMAN SERVIÇOS', 3422],
+                                                                             ], ([17,3253, 3422])), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um status'}, :include_blank => true, :multiple => true} %>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Estado', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'estado_financeiro_id', options_for_select( Financeiro::Estado.order(:nome).collect{ |u| [u.descricao_completa, u.id] }) , {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Implantador', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'implantador_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um implantador'}, :include_blank => true} %>
+                <!--<%= select_tag 'implantador_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }, (!current_user.admin? ? current_user.id : nil)), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um implantador'}, :include_blank => true, :disabled => (!current_user.admin? ? true : false)} %>-->
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Vendedor', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'vendedor_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true} %>
+              </div>
+              <div class="col-sm-1">
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarPaineis', :class => 'btn btn-primary', :style => "margin-top: 20px !important"%>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 padding-left-right" style="margin-bottom: 30px">
+      <%= render 'dashboards/resultados/comercial/efetivacoes_comercial' %>
+      <%= render 'dashboards/resultados/comercial/implantacoes_comercial' %>
+      <%= render 'dashboards/resultados/comercial/vendas_comercial' %>
+      <%= render 'dashboards/resultados/comercial/desistencias_comercial' %>
+      <%= render 'dashboards/resultados/comercial/vendedores_implantacoes_comercial' %>
+      <%= render 'dashboards/resultados/comercial/vendedores_acompanhamentos_comercial' %>
+      <%= render 'dashboards/resultados/comercial/tabela/tabela_top_implantacoes' %>
+      <%= render 'dashboards/resultados/comercial/tabela/tabela_top_efetivacoes' %>
+    </div>
+  </div>
+</div>
+<style>
+  .ibox-title-without-border-style {
+    border-style: none;
+    min-height: 24px !important;
+    padding: 5px !important;
+  }
+  .ibox{
+    margin-bottom: 5px !important;
+  }
+  .google-visualization-table-th {
+    text-align: center !important;
+  }
+  .google-visualization-table-td {
+    text-align: center !important;
+  }
+</style>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        google.charts.load('current', {'packages':['corechart','table']});
+
+        setTimeout(function(){
+            google.charts.setOnLoadCallback(drawImplantacoes12Meses());
+            google.charts.setOnLoadCallback(drawAcompanhamentos12Meses());
+            google.charts.setOnLoadCallback(drawDesistencias12Meses());
+            google.charts.setOnLoadCallback(drawTableVendedoresImplantacoes());
+            google.charts.setOnLoadCallback(drawTableVendedoresAcompanhamentos());
+            google.charts.setOnLoadCallback(drawFechamentos12Meses());
+        }, 750);
+
+
+        $('#tabComercial').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            atualizarPaineis();
+        });
+
+        $('#btnAtualizarPaineis').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            atualizarPaineis();
+            return false;
+        })
+
+        $('#mes_filtro_implantacao').on('change', function () {
+            $('#bloco_top_implantacoes').hide();
+            drawTableVendedoresImplantacoes();
+        });
+
+        $('#tipo_filtro_implantacao').on('change', function () {
+            $('#bloco_top_implantacoes').hide();
+            drawTableVendedoresImplantacoes();
+        });
+
+        $('#mes_filtro_efetivacao').on('change', function () {
+            $('#bloco_top_implantacoes').hide();
+            drawTableVendedoresAcompanhamentos();
+        });
+
+        $('#tipo_filtro_efetivacao').on('change', function () {
+            $('#bloco_top_implantacoes').hide();
+            drawTableVendedoresAcompanhamentos();
+        });
+
+
+    });
+
+    function atualizarPaineis() {
+        drawImplantacoes12Meses();
+        drawAcompanhamentos12Meses();
+        drawDesistencias12Meses();
+        drawFechamentos12Meses();
+        drawTableVendedoresAcompanhamentos();
+        drawTableVendedoresImplantacoes();
+    }
+
+</script>
+

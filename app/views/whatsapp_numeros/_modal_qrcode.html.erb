@@ -1,0 +1,33 @@
+<div id="qrCodeModal" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">QR CODE</h4>
+      </div>
+        <div class="modal-body" style="text-align: center">
+          <div class="tabs-container">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tab-1"> Gzap</a></li>
+              <li class=""><a data-toggle="tab" href="#tab-2"> ChatPro</a></li>
+              <li id="headerTabAbordagem" style="display: none"><a data-toggle="tab"  href="#tabAbordagem" > Abordagem</a></li>
+            </ul>
+            <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <canvas id="qr"></canvas>
+              </div>
+            </div>
+            <div id="tab-2" class="tab-pane">
+              <div class="panel-body">
+                <img id="qr_chat_pro" src="" style="width: 350px; heigth: 350px; padding: 15px"/>
+              </div>
+            </div>
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Cancelar</button>
+        </div>
+        </div>
+    </div>
+  </div>
+</div>

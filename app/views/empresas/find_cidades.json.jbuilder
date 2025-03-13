@@ -1,0 +1,1 @@
+json.array! @cidades, :id, :nome, :sigla

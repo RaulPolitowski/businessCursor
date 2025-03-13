@@ -1,0 +1,123 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>ESCRITÓRIOS CONTÁBEIS</h2>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Cadastros</h5>
+          <div class="ibox-tools">
+            <%= button_to new_escritorio_path, { method: 'get', class: 'btn btn-sm btn-primary' } do %>
+                <i class="fa fa-file" aria-hidden="true"> Novo Escritório Contábil</i>
+            <% end %>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <h5>Filtros</h5>
+          <%= search_form_for @q do |f| %>
+              <div class="row">
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <%= f.label :razao_social_or_nome_fantasia_cont, "Razão Social/Nome Fantasia"   %>
+                    <%= f.text_field :razao_social_or_nome_fantasia_cont, class: 'input form-control input-sm', placeholder: 'Filtre e pressione Enter', autocomplete: "off" %>
+                  </div>
+                </div>
+                <div class="col-lg-1">
+                  <div class="form-group">
+                    <%= f.label :tem_interesse_parceria_eq, "Interesse?"   %>
+                    <%= f.select(:tem_interesse_parceria_eq, options_for_select([['Sim', true], ['Não', false]], params[:q].try(:[], :tem_interesse_parceria_eq)),{ :include_blank => true }, {class: 'form-control input-sm', onchange: 'this.form.submit();' }) %>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <%= f.label :telefone_cont, "Telefone"   %>
+                    <%= f.text_field :telefone_cont, class: 'input form-control input-sm', placeholder: 'Filtre e pressione Enter', autocomplete: "off" %>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <%= f.label :user_id_eq, "Usuário"   %>
+                    <%= f.collection_select :user_id_eq,  User.includes(:empresas).where("empresas_users.empresa_id" => current_empresa.id), :id, :name, {include_blank: true}, {class: 'chosen-select', :data => {:placeholder => 'Selecione'},} %>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group" id="created_at_q">
+                    <%= f.label :created_at_gteq , "Data registro de"%>
+                    <%= f.text_field :created_at_gteq, class:"form-control input-sm" %>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group" id="created_at_q">
+                    <%=f.label :created_at_lteq, "Data registro até" %>
+                    <%= f.text_field :created_at_lteq, class:"form-control input-sm" %>
+                  </div>
+                </div>
+                <div class="col-lg-1">
+                  <div class="form-group">
+                    <br>
+                    <%= f.submit 'Buscar', class: 'ladda-button btn btn-md btn-success' %>
+                  </div>
+                </div>
+              </div>
+          <% end %>
+        </div>
+        <div class="ibox-content">
+          <table class="table table-striped table-bordered table-hover table-escritorios">
+            <thead>
+            <tr>
+              <th>Razão Social</th>
+              <th>Telefone</th>
+              <th>Responsável</th>
+              <th>Possui parceria?</th>
+              <th>Tem Interesse?</th>
+              <th>Cidade</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @escritorios.each do |escritorio| %>
+                <tr>
+                  <td><%= escritorio.nome %></td>
+                  <td><%= escritorio.telefone %></td>
+                  <td><%= escritorio.responsavel %></td>
+                  <td><%= human_boolean escritorio.possui_parceria %></td>
+                  <td><%= human_boolean escritorio.tem_interesse_parceria %></td>
+                  <td><%= escritorio.cidade.descricao_completa unless escritorio.cidade.nil? %></td>
+                  <td><%= link_to edit_escritorio_path(escritorio), { class: 'btn btn-sm btn-default btn-table', title: 'Editar', 'data-toggle' => 'tooltip', 'data-placement' => 'right' } do %>
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                    <% end %></td>
+                </tr>
+            <% end %>
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            $('.table-escritorios').DataTable({
+                pageLength: 10,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                "ordering": true,
+                buttons: [
+                    {extend: 'excel', title: 'Escritórios Contábeis'},
+                    {extend: 'pdf', title: 'Escritórios Contábeis'}
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                }
+            });
+        });
+    </script>
+<% end %>

@@ -1,0 +1,4 @@
+﻿INSERT INTO grupodespesareceita (id, descricao, numero, empresa_id, ativo, todasempresas, dataalteracao, datacadastro, usuarioalteracao_id, usuariocadastro_id) VALUES (1, 'OUTROS', '1', 1, true, true, null, null, null, null);
+INSERT INTO grupodespesareceita (id, descricao, numero, empresa_id, ativo, todasempresas, dataalteracao, datacadastro, usuarioalteracao_id, usuariocadastro_id) VALUES (2, 'RECEITAS', '2', 1, true, true, null, null, null, null);
+INSERT INTO grupodespesareceita (id, descricao, numero, empresa_id, ativo, todasempresas, dataalteracao, datacadastro, usuarioalteracao_id, usuariocadastro_id) VALUES (3, 'DESPESAS FIXAS', '3', 1, true, true, null, null, null, null);
+INSERT INTO grupodespesareceita (id, descricao, numero, empresa_id, ativo, todasempresas, dataalteracao, datacadastro, usuarioalteracao_id, usuariocadastro_id) VALUES (4, 'DESPESAS VARIÁVEIS', '4', 1, true, true, null, null, null, null);

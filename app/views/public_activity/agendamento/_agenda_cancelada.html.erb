@@ -1,0 +1,17 @@
+<% if activity.trackable %>
+    <br>
+    <div class="row">
+      <div class="col-lg-12 end">
+        <div class="col-sm-1 col-lg-1">
+          <%= image_tag(avatar_user_users_path(id: activity.owner.id), :alt => "Avatar", :class => "img-circle") %>
+        </div>
+        <div class="col-sm-11 col-lg-11">
+          <div class="col-sm-12 col-lg-12">
+            <b><%= activity.owner.name %></b> cancelou o agendamento de <%= activity.trackable.tipo_agendamento.descricao %> para dia <i><%= human_datetime activity.trackable.data_inicio %></i><br>
+            Motivo: <%= activity.parameters[:motivo] %>
+          </div>
+          <div class="pull-right"><%= time_ago_in_words activity.created_at %> atrás</div>
+        </div>
+      </div>
+    </div>
+<% end %>

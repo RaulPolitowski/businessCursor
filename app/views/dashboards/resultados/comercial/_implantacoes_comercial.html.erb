@@ -1,0 +1,317 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Implantações
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 no-padding" >
+        <div id="impDiv" class="col-md-3 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoImplantacoes()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Quant. Implantações</h5>
+                  <span class="label label-info pull-right" id="competencia_total_implantacoes"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="total_implantacoes_quantidade" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_total_implantacoes_quantidade"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="quantidade_implantacoes_total"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoImplantacoes()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Mensalidade Implantações</h5>
+                  <span class="label label-info pull-right" id="competencia_mensalidade_implantacoes"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-left" id="mensalidade_implantacoes" style="margin-bottom: 2px !important;"></h2>
+                    </div>
+                    <small class="pull-left" id="media_mensalidade_implantacoes"></small>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right" id="mensalidade_implantacoes_anterior" style="margin-bottom: 7px"></div>
+                    </div>
+                    <div class="stat-percent font-bold text-danger" id="percentual_mensalidade_implantacoes"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoImplantacoes()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Instalação Implantações</h5>
+                  <span class="label label-info pull-right" id="competencia_instalacao_implantacoes"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-left" id="instalacao_implantacoes" style="margin-bottom: 2px !important;"></h2>
+                    </div>
+                    <small class="pull-left" id="media_instalacao_implantacoes"></small>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right" id="instalacao_implantacao_anterior" style="margin-bottom: 7px"></div>
+                    </div>
+                    <div class="stat-percent font-bold text-danger" id="percentual_instalacao_implantacoes"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5>Implantações Concluídas</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="implantacoes_concluidas_12_meses" style="height: 212px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right" id="compentencia_implantacoes_sistema"></span>
+                <h5>Por Sistema</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="implantacoes_concluidas_sistema"  style="height: 212px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%= render 'dashboards/resultados/comercial/tabela/tabela_implantacoes' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    function drawImplantacoes12Meses() {
+        $.getJSON("/dashboards/implantacoes_conluidas_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&vendedor=" + $('#vendedor_id').val() +
+            "&implantador=" + $('#implantador_id').val() , function(data) {
+            var dataArray = [
+                ['Mês', 'Quantidade', 'Quantidade', 'Implantação', 'Mensalidade', 'Média Implantação', 'Média Mensalidade',
+                    'Emissor', 'Gourmet', 'Manager', 'Light', 'Outros']
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseInt(data[i].quantidade), parseInt(data[i].quantidade),
+                    parseFloat(data[i].implantacao), parseFloat(data[i].mensalidade),
+                    parseFloat(data[i].mediaimplantacao), parseFloat(data[i].mediamensalidade),
+                    data[i].emissor, data[i].gourmet, data[i].manager, data[i].light, data[i].outros];
+                dataArray.push(row);
+            }
+
+            var meses = data;
+            var result = null;
+            $.getJSON("/dashboards/implantacoes_conluidas_12_meses_mes_anterior?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&vendedor=" + $('#vendedor_id').val() +
+                "&implantador=" + $('#implantador_id').val(), function(ret) {
+                result = ret;
+
+                preencherImplantacaoConcluida($(meses).get(-1).data,
+                    $(meses).get(-1).quantidade,
+                    parseFloat($(meses).get(-1).mensalidade),
+                    parseFloat($(meses).get(-1).implantacao),
+                    parseFloat($(meses).get(-1).mediamensalidade),
+                    parseFloat($(meses).get(-1).mediaimplantacao),
+                    $(result).get(-1).quantidade,
+                    parseFloat($(result).get(-1).mensalidade),
+                    parseFloat($(result).get(-1).implantacao));
+            });
+
+            drawChartImplantacaoSistema($(meses).get(-1).emissor, $(meses).get(-1).gourmet, $(meses).get(-1).manager, $(meses).get(-1).light, $(meses).get(-1).outros);
+            
+            $('#impDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+            
+
+            var options = {
+                'chartArea': {'width': '90%', 'height': '70%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                series: {1: {type: 'line', color: 'black'}},
+                legend: 'none',
+                animation: { easing: 'inAndOut', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('implantacoes_concluidas_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    var ultimo = selectedItem.row-1;
+                    if(ultimo == -1)
+                        ultimo = 0;
+
+                    preencherImplantacaoConcluida(data.getValue(selectedItem.row, 0),
+                        data.getValue(selectedItem.row, 1),
+                        data.getValue(selectedItem.row, 4),
+                        data.getValue(selectedItem.row, 3),
+                        data.getValue(selectedItem.row, 6),
+                        data.getValue(selectedItem.row, 5),
+                        data.getValue(ultimo, 1),
+                        data.getValue(ultimo, 4),
+                        data.getValue(ultimo, 3));
+
+                    drawChartImplantacaoSistema(data.getValue(selectedItem.row, 7), data.getValue(selectedItem.row, 8), data.getValue(selectedItem.row, 9), data.getValue(selectedItem.row, 10), data.getValue(selectedItem.row, 11));
+                    $('#impDiv').attr({title: "Dados aos quais comparam o fechamento do mês inteiro."});
+            
+                
+                }else{
+                    preencherImplantacaoConcluida($(meses).get(-1).data,
+                        $(meses).get(-1).quantidade,
+                        parseFloat($(meses).get(-1).mensalidade),
+                        parseFloat($(meses).get(-1).implantacao),
+                        parseFloat($(meses).get(-1).mediamensalidade),
+                        parseFloat($(meses).get(-1).mediaimplantacao),
+                        $(result).get(-1).quantidade,
+                        parseFloat($(result).get(-1).mensalidade),
+                        parseFloat($(result).get(-1).implantacao));
+
+                    drawChartImplantacaoSistema($(meses).get(-1).emissor, $(meses).get(-1).gourmet, $(meses).get(-1).manager, $(meses).get(-1).light, $(meses).get(-1).outros);
+                    $('#impDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+            
+                
+                }
+                $('#bloco_implantacoes').hide();
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([3,4,5,6,7,8,9,10,11]);
+            chart.draw(view, options);
+        });
+    }
+
+    function preencherImplantacaoConcluida(competencia, quantidade, valorMensalidade, valorImplantacao, mediaMensalidade,
+                                           mediaImplantacao, quantidadeAnterior, valorMensalidadeAnterior, valorImplantacaoAnterior){
+
+        $('#competencia_total_implantacoes').text(competencia);
+        $('#competencia_mensalidade_implantacoes').text(competencia);
+        $('#competencia_instalacao_implantacoes').text(competencia);
+
+
+        $('#total_implantacoes_quantidade').text('Total ' + quantidade);
+        $('#quantidade_implantacoes_total').text('Ant. ' + quantidadeAnterior);
+        var valor = ((quantidade*100 / quantidadeAnterior)-100);
+        $('#percentual_total_implantacoes_quantidade').text('');
+        if(valor > 0){
+            $('#percentual_total_implantacoes_quantidade').removeClass('text-danger').addClass('text-info');
+            $('#percentual_total_implantacoes_quantidade').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_total_implantacoes_quantidade').removeClass('text-info').addClass('text-danger');
+            $('#percentual_total_implantacoes_quantidade').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#mensalidade_implantacoes').text(mascaraValor(valorMensalidade.toFixed(2)));
+        $('#media_mensalidade_implantacoes').text('Média ' + mascaraValor(mediaMensalidade.toFixed(2)));
+        $('#mensalidade_implantacoes_anterior').text('Ant. ' + mascaraValor(valorMensalidadeAnterior.toFixed(2)));
+        var valor = ((valorMensalidade*100 / valorMensalidadeAnterior)-100);
+
+        $('#percentual_mensalidade_implantacoes').text('');
+        if(valor > 0){
+            $('#percentual_mensalidade_implantacoes').removeClass('text-danger').addClass('text-info');
+            $('#percentual_mensalidade_implantacoes').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_mensalidade_implantacoes').removeClass('text-info').addClass('text-danger');
+            $('#percentual_mensalidade_implantacoes').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#instalacao_implantacoes').text(mascaraValor(valorImplantacao.toFixed(2)));
+        $('#media_instalacao_implantacoes').text('Média ' + mascaraValor(mediaImplantacao.toFixed(2)));
+        $('#instalacao_implantacao_anterior').text('Ant. ' + mascaraValor(valorImplantacaoAnterior.toFixed(2)));
+        var valor = ((valorImplantacao*100 / valorImplantacaoAnterior)-100);
+        $('#percentual_instalacao_implantacoes').text('');
+        if(valor > 0){
+            $('#percentual_instalacao_implantacoes').removeClass('text-danger').addClass('text-info');
+            $('#percentual_instalacao_implantacoes').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_instalacao_implantacoes').removeClass('text-info').addClass('text-danger');
+            $('#percentual_instalacao_implantacoes').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+    }
+
+    function drawChartImplantacaoSistema(emissor, gourmet, manager, light, outros) {
+        var dataArray = [
+            ['Sistema', 'Quantidade'],
+        ];
+        dataArray.push(['Emissor', parseInt(emissor)]);
+        dataArray.push(['Gourmet', parseInt(gourmet)]);
+        dataArray.push(['Manager', parseInt(manager)]);
+        dataArray.push(['Light', parseInt(light)]);
+        dataArray.push(['Outros', parseInt(outros)]);
+        var options = {
+            'chartArea': {'width': '100%', 'height': '80%'},
+            pieStartAngle: 50,
+            legend: {position: 'bottom'},
+            is3D: true
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('implantacoes_concluidas_sistema'));
+        var data = google.visualization.arrayToDataTable(dataArray);
+
+        chart.draw(data, options);
+    }
+
+    function carregarInfoImplantacoes() {
+        if($('#bloco_implantacoes').is(':visible')){
+            $('#bloco_implantacoes').hide();
+        }else{
+            $.getJSON("/dashboards/table_implantacoes?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#competencia_total_implantacoes').text() +
+                "&vendedor=" + $('#vendedor_id').val() +
+                "&implantador=" + $('#implantador_id').val() , function(data) {
+
+                $('#bloco_implantacoes').show();
+                var table = $('.table-implantacoes').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['data_fim']).format("DD/MM/YYYY HH:mm"),
+                        val['razao_social'],
+                        val['cidade'],
+                        val['sistema'],
+                        val['implantador'],
+                        val['vendedor'],
+                        mascaraValor(val['mensalidade']),
+                        mascaraValor(val['implantacao'])
+                    ] ).draw( false );
+                });
+            });
+        }
+    }
+</script>

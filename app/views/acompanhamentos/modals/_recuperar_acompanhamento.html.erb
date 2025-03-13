@@ -1,0 +1,82 @@
+<div id="acompanhamento_recuperar" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">RECUPERAR</h4>
+      </div>
+      <form class="form-horizontal" id="form_recuperar_acompanhamento">
+        <div class="modal-body">
+          <input type="hidden" id="recuperar_acompanhamento_id" value="">
+            <div class="form-group">
+              <div class="field">
+                <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-10 padding ">
+                  <%= text_field_tag :recuperar_acompanhamento_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+                </div>
+              </div>
+            </div>
+          <div class="form-group">
+            <div class="field">
+              <%= label_tag 'Status', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= select_tag  'recuperar_acompanhamento_status', options_for_select([
+                                                                                ['Aguardando acompanhamento', 0],
+                                                                                ['Em andamento', 1],
+                                                                                ['Stand by', 2]
+                                                                            ]), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione o status para qual acompanhamento voltará'}, :include_blank => true} %>
+              </div>
+            </div>
+          </div>
+            <div class="form-group">
+              <div class="field">
+                <%= label_tag 'Retorno', nil,  class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-6 padding">
+                  <div class="input-group clockpicker" data-autoclose="true">
+                    <%= text_field_tag :recuperar_acompanhamento_retorno, nil,  class: 'form-control input-sm', autocomplete: "off",  placeholder: 'DD/MM/YYYY HH:mm' %>
+                    <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div class="form-group margin">
+            <div class="pull-center">
+              <button class="btn btn-primary btn-xs" id="btn10" onclick="setarData(30, $('#acompanhamento_recuperar #recuperar_acompanhamento_retorno')); return false;">30min</button>
+              <button class="btn btn-primary btn-xs" id="btn20" onclick="setarData(60, $('#acompanhamento_recuperar #recuperar_acompanhamento_retorno')); return false;">60min</button>
+              <button class="btn btn-primary btn-xs" id="btn30" onclick="setarData(120, $('#acompanhamento_recuperar #recuperar_acompanhamento_retorno')); return false;">2h</button>
+              <button class="btn btn-primary btn-xs" id="btn45" onclick="setarData(240, $('#acompanhamento_recuperar #recuperar_acompanhamento_retorno')); return false;">4h</button>
+              <button class="btn btn-primary btn-xs" id="btn1" onclick="setarData(360, $('#acompanhamento_recuperar #recuperar_acompanhamento_retorno')); return false;">6h</button>
+              <button class="btn btn-primary btn-xs" id="btn2" onclick="setarData(1440, $('#acompanhamento_recuperar #recuperar_acompanhamento_retorno')); return false;">24h</button>
+              <button class="btn btn-primary btn-xs" id="btn4" onclick="setarData(2880, $('#acompanhamento_recuperar #recuperar_acompanhamento_retorno')); return false;">48h</button>
+              <button class="btn btn-primary btn-xs" id="btn24" onclick="setarData(4320, $('#acompanhamento_recuperar #recuperar_acompanhamento_retorno')); return false;">72h</button>
+              <button class="btn btn-primary btn-xs" id="btn48" onclick="setarData(5760, $('#acompanhamento_recuperar #recuperar_acompanhamento_retorno')); return false;">96h</button>
+              <button class="btn btn-primary btn-xs" id="btn72" onclick="setarData(8640, $('#acompanhamento_recuperar #recuperar_acompanhamento_retorno')); return false;">144h</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="field">
+                <%= label_tag 'Responsável', nil, class: 'col-sm-2 control-label padding' %>
+                <div class="col-sm-10 padding ">
+                <%= select_tag 'recuperar_acompanhamento_responsavel', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um responsável'}, :include_blank => true} %>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="field">
+              <%= label_tag 'Comentário', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= text_area_tag :recuperar_acompanhamento_comentario, nil, class: 'form-control input-sm', autocomplete: "off" %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnRecuperarAcompanhamento', :class => 'btn btn-primary' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+

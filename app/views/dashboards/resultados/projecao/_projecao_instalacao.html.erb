@@ -1,0 +1,216 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Projeção Instalação
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div class="col-md-3 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Total</h5>
+                  <span class="label label-info pull-right" id="compentencia_qtd_total_projecao_instalacao"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-left" id="qtd_total_projecao_instalacao" style="margin-bottom: 3px"></h2>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <small class="pull-left" id="qtd_cliente_total_projecao_instalacao"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-right" id="valor_total_projecao_instalacao" style="margin-bottom: 3px"></h2>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <small class="pull-right" id="media_total_projecao_instalacao"></small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>1ª parc.</h5>
+                  <span class="label label-info pull-right" id="compentencia_qtd_primeira_projecao_instalacao"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-left" id="qtd_primeira_projecao_instalacao" style="margin-bottom: 3px"></h2>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <small class="pull-left" id="qtd_cliente_primeira_projecao_instalacao"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-right" id="valor_primeira_projecao_instalacao" style="margin-bottom: 3px"></h2>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <small class="pull-right" id="media_primeira_projecao_instalacao"></small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Outras parc.</h5>
+                  <span class="label label-info pull-right" id="compentencia_qtd_outras_projecao_instalacao"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-left" id="qtd_outras_projecao_instalacao" style="margin-bottom: 3px"></h2>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <small class="pull-left" id="qtd_cliente_outras_projecao_instalacao"></small>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h2 class="pull-right" id="valor_outras_projecao_instalacao" style="margin-bottom: 3px"></h2>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <small class="pull-right" id="media_outras_projecao_instalacao"></small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">3 meses</span>
+                <h5>Projeção Instalação</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="projecao_instalacao_12_meses" style="height: 210px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function drawProjecaoInstalacao12Meses() {
+        $.getJSON("/dashboards/get_projecao_instalacao_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val(), function(data) {
+            var dataArray = [
+                ['Mês', 'Valor total', 'Quantidade', 'Valor primeira parcela', 'Quantidade primeira parcela',
+                    'Valor outras parcelas', 'Quantidade outras parcelas', 'Quantidade empresas primeira parcela',
+                    'Quantidade empresas', 'Quantidade empresas outras parcelas'],
+            ];
+
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseFloat(data[i].todastotal), parseInt(data[i].todasqtd),
+                    parseFloat(data[i].primeiratotal), parseInt(data[i].primeiraqtd),
+                    parseFloat(data[i].todastotal) - parseFloat(data[i].primeiratotal),
+                    parseInt(data[i].todasqtd) - parseInt(data[i].primeiraqtd),
+                    parseInt(data[i].qtdclienteprimeira), parseInt(data[i].qtdclientetotal),
+                    parseInt(data[i].qtdclientetotal) - parseInt(data[i].qtdclienteprimeira)];
+                dataArray.push(row);
+            }
+
+            var meses = data;
+            preencherPainelProjecaoInstalacao($(meses).get(0).data, parseInt($(meses).get(0).todasqtd), parseFloat($(meses).get(0).todastotal),
+                parseInt($(meses).get(0).primeiraqtd), parseFloat($(meses).get(0).primeiratotal),
+                parseInt($(meses).get(0).todasqtd) - parseInt($(meses).get(0).primeiraqtd),
+                parseFloat($(meses).get(0).todastotal) - parseFloat($(meses).get(0).primeiratotal),
+                parseInt($(meses).get(0).qtdclienteprimeira), parseInt($(meses).get(0).qtdclientetotal),
+                parseFloat($(meses).get(0).qtdclientetotal) - parseFloat($(meses).get(0).qtdclienteprimeira));
+
+            var options = {
+                'chartArea': {'width': '80%', 'height': '60%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                vAxis: {viewWindowMode: "explicit", viewWindow: {min: 0}, format: 'short'},
+                animation: { easing: 'in', duration: 500, startup: true, displayLegendValues: false},
+                legend: { position: "top" }
+            };
+            var chart = new google.visualization.BarChart(document.getElementById('projecao_instalacao_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    preencherPainelProjecaoInstalacao($(meses).get(selectedItem.row).data, parseInt($(meses).get(selectedItem.row).todasqtd),
+                        parseFloat($(meses).get(selectedItem.row).todastotal),
+                        parseInt($(meses).get(selectedItem.row).primeiraqtd), parseFloat($(meses).get(selectedItem.row).primeiratotal),
+                        parseInt($(meses).get(selectedItem.row).todasqtd) - parseInt($(meses).get(selectedItem.row).primeiraqtd),
+                        parseFloat($(meses).get(selectedItem.row).todastotal) - parseFloat($(meses).get(selectedItem.row).primeiratotal),
+                        parseInt($(meses).get(selectedItem.row).qtdclienteprimeira), parseInt($(meses).get(selectedItem.row).qtdclientetotal),
+                        parseFloat($(meses).get(selectedItem.row).qtdclientetotal) - parseFloat($(meses).get(selectedItem.row).qtdclienteprimeira));
+
+                }else{
+                    preencherPainelProjecaoInstalacao($(meses).get(0).data, parseInt($(meses).get(0).todasqtd), parseFloat($(meses).get(0).todastotal),
+                        parseInt($(meses).get(0).primeiraqtd), parseFloat($(meses).get(0).primeiratotal),
+                        parseInt($(meses).get(0).todasqtd) - parseInt($(meses).get(0).primeiraqtd),
+                        parseFloat($(meses).get(0).todastotal) - parseFloat($(meses).get(0).primeiratotal),
+                            parseInt($(meses).get(0).qtdclienteprimeira), parseInt($(meses).get(0).qtdclientetotal),
+                        parseFloat($(meses).get(0).qtdclientetotal) - parseFloat($(meses).get(0).qtdclienteprimeira));
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+            formatter.format(data, 1); // Apply formatter to second column
+            formatter.format(data, 3);
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([2,4,6,7,8,9]);
+            chart.draw(view, options);
+        });
+    }
+
+    function preencherPainelProjecaoInstalacao(competencia, qtd, valor, qtdPrimeira, valorPrimeira, qtdOutras, valorOutras,
+                                               qtdclienteprimeira, qtdclientetotal, qtdclienteoutras) {
+        $('#compentencia_qtd_total_projecao_instalacao').text(competencia);
+        $('#compentencia_qtd_primeira_projecao_instalacao').text(competencia);
+        $('#compentencia_qtd_outras_projecao_instalacao').text(competencia);
+
+        $('#qtd_total_projecao_instalacao').text('Qtd. ' + qtd);
+        $('#valor_total_projecao_instalacao').text(mascaraValor(valor.toFixed(2)));
+
+        var mediaCalc = ((valor/qtd));
+        $('#media_total_projecao_instalacao').text(mascaraValor(mediaCalc.toFixed(2)));
+
+        $('#qtd_primeira_projecao_instalacao').text('Qtd. ' + qtdPrimeira);
+        $('#valor_primeira_projecao_instalacao').text(mascaraValor(valorPrimeira.toFixed(2)));
+
+        mediaCalc = ((valorPrimeira/qtdPrimeira));
+        $('#media_primeira_projecao_instalacao').text(mascaraValor(mediaCalc.toFixed(2)));
+
+        $('#qtd_outras_projecao_instalacao').text('Qtd. ' + qtdOutras);
+        $('#valor_outras_projecao_instalacao').text(mascaraValor(valorOutras.toFixed(2)));
+
+        mediaCalc = ((valorOutras/qtdOutras));
+        $('#media_outras_projecao_instalacao').text(mascaraValor(mediaCalc.toFixed(2)));
+
+        $('#qtd_cliente_outras_projecao_instalacao').text('Qtd. clientes ' + qtdclienteoutras)
+        $('#qtd_cliente_primeira_projecao_instalacao').text('Qtd. clientes ' + qtdclienteprimeira)
+        $('#qtd_cliente_total_projecao_instalacao').text('Qtd. clientes ' + qtdclientetotal)
+    }
+
+</script>

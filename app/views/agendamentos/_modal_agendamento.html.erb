@@ -1,0 +1,319 @@
+<div id="agendamento" class="modal inmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <i class="fa fa-clock-o modal-icon"></i>
+        <h4 class="modal-title">Agendamento</h4>
+      </div>
+      <form class="form-horizontal" id="form_agendamento">
+        <div class="modal-body no-padding">
+          <div id="tabAgendamento" class="tabs-container">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tab-1"> Informações</a></li>
+              <li><a data-toggle="tab" href="#tab-2"> Atividades</a></li>
+              <li><a data-toggle="tab" href="#tab-3" id="tabFechamento"> Fechamento</a></li>
+              <li><a data-toggle="tab" href="#tab-4" id="tabCancelamento"> Cancelamento</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="tab-1" class="tab-pane active">
+                <div class="panel-body" style="min-height: 270px !important;">
+                  <div class="form-group">
+                    <div class="field">
+                      <%= label_tag 'Inicio', nil,  class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <div class='input-group date' id='datetimepicker1'>
+                          <%= text_field_tag :data_inicio, nil,  class: 'form-control input-sm', autocomplete: "off",  placeholder: 'DD/MM/YYYY HH:mm' %>
+                          <span class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= label_tag 'Fim', nil,  class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <div class='input-group date' id='datetimepicker2'>
+                          <%= text_field_tag :data_fim, nil,  class: 'form-control input-sm', autocomplete: "off", placeholder: 'DD/MM/YYYY HH:mm' %>
+                          <span class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding ">
+                        <%= text_field_tag :cliente, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Digite o nome para buscar' %>
+                        <%= hidden_field_tag 'cliente_id', nil, class: 'form-control input-sm' %>
+                        <%= hidden_field_tag 'implantacao_id', nil, class: 'form-control input-sm' %>
+                        <%= hidden_field_tag 'fechamento_vendedor', nil, class: 'form-control input-sm' %>
+                        <%= hidden_field_tag 'negociador_id', nil, class: 'form-control input-sm' %>
+                        <%= hidden_field_tag 'negociacao_id', nil, class: 'form-control input-sm' %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= label_tag 'Cidade', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding ">
+                        <%= text_field_tag :cidade, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true"  %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= label_tag 'Telefone', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding ">
+                        <div class='input-group phone' id='phone2'>
+                          <%= text_field_tag :telefone, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                          <span class="input-group-addon">
+                            <input class="pref pref-telefone" name="telbox[]" type="checkbox"  id="telefone_preferencial1" title="Preferencial?" style="margin-right: 10px;">
+                            <input class="whats whats-telefone" onclick="setWhats('telefone')" type="checkbox" id="telefone_whats1" title="Enviou whatsapp?">
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= label_tag '1° Contato', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding ">
+                        <%= text_field_tag :responsavel, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= label_tag 'Telefone', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding ">
+                        <div class='input-group phone' id='phone1'>
+                        <%= text_field_tag :telefone2, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                          <span class="input-group-addon">
+                                  <input class="pref pref-telefone2" name="telbox[]" type="checkbox"  id="telefone_preferencial2" title="Preferencial?" style="margin-right: 10px;">
+                                  <input class="whats whats-telefone2" onclick="setWhats('telefone2')" type="checkbox" id="telefone_whats2" title="Enviou whatsapp?">
+                                </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= label_tag '2° Contato', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding ">
+                        <%= text_field_tag :responsavel2, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                      </div>
+                    </div>
+                  </div>
+                  <%= hidden_field_tag :id, nil, class: 'form-control input-sm' %>
+                  <%= hidden_field_tag :id_reagendado, nil, class: 'form-control input-sm' %>
+                  <div class="form-group" style="margin-bottom: 5px !important;">
+                    <div class="field">
+                      <%= label_tag 'Técnico', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding ">
+                        <%= select_tag 'user_id', options_for_select(User.joins(:permissao).where('permissoes.agenda is true').empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um técnico'}, :include_blank => true} %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= label_tag 'Serviço', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding ">
+                        <%= select_tag 'tipo_agendamento_id', options_for_select( TipoAgendamento.where(ativo: true).order(:descricao).collect{ |u| [u.descricao, u.id] }) , {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um tipo'}, :include_blank => true} %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" id="infoEmpresa" style="display: none">
+                    <div class="field">
+                      <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= text_field_tag :empresa, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true" %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= label_tag 'Solicitante', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= text_field_tag :user_registro, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true" %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" id="form_confirmacao" style="display: none">
+                    <div class="field">
+                      <%= label_tag 'Confirmação', nil, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-2 padding">
+                      <input class="confirm-agenda" type="checkbox" onclick="setValueInConfirmacao()" id="confirmado_agendamento" title="Confirmação?" value="false" style="margin-left: 10px;">
+                      <small style="margin-left: 15px;" id="text-confirmacao"></small>
+                      </div>
+                    </div>
+                    <div id="confirmacao_confirmado">
+                    <div class="field">
+                      <%= label_tag 'Usuário', nil, class: 'col-sm-1 control-label padding' %>
+                      <div class="col-sm-3 padding">
+                        <%= text_field_tag :usuario_confirmacao, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true" %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= label_tag 'Data', nil, class: 'col-sm-1 control-label padding' %>
+                      <div class="col-sm-3 padding">
+                        <%= text_field_tag :data_confirmacao, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "true" %>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="form-group" id="form_comentario">
+                    <div class="field">
+                      <%= label_tag 'Comentário', nil,  class: 'col-sm-2 control-label padding', id:'comentario_label' %>
+                      <div class="col-sm-10 padding">
+                        <%= text_area_tag :comentario, nil, autocomplete: "off", class: 'form-control input-sm' %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="tab-2" class="tab-pane">
+                <div class="panel-body" style="height: 315px !important;" >
+                  <button class="btn btn-xs btn-primary" id="novo_comentario">Comentário</button>
+                  <div id="activities_agendamento" class="scroll">
+                  </div>
+                </div>
+              </div>
+              <div id="tab-3" class="tab-pane">
+                <div class="panel-body">
+                  <div class="form-group">
+                    <div class="field">
+                      <%= label_tag 'Vendedor', nil,  class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= text_field_tag :fechamento_vendedor, nil, autocomplete: "off", class: 'form-control input-sm', disabled: "true" %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= label_tag 'Sistema', nil,  class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= text_field_tag :fechamento_sistema, nil, autocomplete: "off", class: 'form-control input-sm', disabled: "true" %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= label_tag 'Data/hora', nil,  class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= text_field_tag :fechamento_data, nil, autocomplete: "off", class: 'form-control input-sm', disabled: "true" %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="tab-4" class="tab-pane">
+                <div class="panel-body">
+                  <div class="form-group">
+                    <div class="field">
+                      <%= label_tag 'Usuário', nil,  class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= text_field_tag :agendamento_user_cancelamento, nil, autocomplete: "off", class: 'form-control input-sm', disabled: "true" %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= label_tag 'Data/hora', nil,  class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= text_field_tag :agendamento_data_cancelamento, nil, autocomplete: "off", class: 'form-control input-sm', disabled: "true" %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= label_tag 'Motivo', nil,  class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-10 padding">
+                        <%= text_area_tag :agendamento_motivo, nil, autocomplete: "off", class: 'form-control input-sm observacao', disabled: "true" %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" id="btnAbrirLigacao">Ligação</button>
+          <button type="button" class="btn btn-danger" id="btnExcluirEvento">Cancelar</button>
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <button type="button" class="btn btn-info" id="btnAbrirImplantacao" style="display: none;">Implantação</button>
+          <button type="button" class="btn btn-warning" id="btnReagendar">Reagendar</button>
+          <button type="button" class="btn btn-primary" id="btnSalvarReagendamento" style="display: none;">Salvar</button>
+          <%= submit_tag 'Salvar', :id => 'btnSalvarAgendamento', :class => 'btn btn-primary' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+    function setValueInConfirmacao() {
+        var value = $('#form_agendamento #confirmado_agendamento').val();
+        var bool = value == 'true';
+        $('#form_agendamento #confirmado_agendamento').val(!bool)
+
+        if(!bool){
+            $('#text-confirmacao').text('- Confirmado');
+        }else{
+            $('#text-confirmacao').text('- Não Confirmado');
+        }
+    }
+    function setWhats(id) {
+        var checkBox;
+        var t=$('#telefone').val();
+        var t2=$('#telefone2').val();
+        if(id == 'telefone') {
+            checkBox = document.getElementById('telefone_whats1');
+            if(checkBox.checked){
+              if(t) {
+                
+                window.open('https://api.whatsapp.com/send?phone=55' + (id == 'telefone' ? apenasNumeros($('#telefone').val()) : apenasNumeros($('#telefone2').val())), '_blank');
+              }
+
+            }else{
+            var teste = '#tr-whats'+id;
+            $(teste).closest('tr').remove();
+          }
+
+        }else if(id == 'telefone2'){
+            checkBox = document.getElementById('telefone_whats2');
+
+            if(checkBox.checked){
+              if(t2) {
+                
+                window.open('https://api.whatsapp.com/send?phone=55' + (id == 'telefone' ? apenasNumeros($('#telefone').val()) : apenasNumeros($('#telefone2').val())), '_blank');
+              }
+
+            }else{
+            var teste = '#tr-whats'+id;
+            $(teste).closest('tr').remove();
+          }
+            
+        }
+    
+        
+    }
+    function deleteComentario(id) {
+        swal({
+            title: "Deseja excluir o comentário?",
+            text: '',
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Sim!",
+            cancelButtonText: "Não!",
+            showConfirmButton: true,
+            allowOutsideClick: false
+        }).then(function(result) {
+            if (result.value) {
+                $.ajax({
+                    url: '/comentarios/' + id,
+                    processData: false,
+                    contentType: false,
+                    type: 'DELETE',
+                    success: function (data) {
+                        $("#agendamento #activity-" + id).remove();
+                    },error: function(data){
+                        exibirErro('Ocorreu um erro.');
+                    }
+                });
+                return false;
+            }
+        });
+    }
+
+</script>
+

@@ -1,0 +1,78 @@
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#tab-1"> Dados</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-1" class="tab-pane active">
+            <div class="panel-body">
+              <fieldset class="form-horizontal">
+                <%= form_for(@pacote, html: { autocomplete: "off" }) do |f| %>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :sistema, class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-10 padding">
+                        <%= f.text_field :sistema, class: 'form-control input-sm', :value => !@pacote.sistema.nil? ? @pacote.sistema.nome : '' %>
+                        <%= f.hidden_field 'sistema_id', :value =>  !@pacote.sistema.nil? ? @pacote.sistema.id : '' %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label  :mensalidade, 'Valor Mensal', class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= f.text_field :mensalidade, class: 'form-control input-sm', :value => !@pacote.mensalidade.nil? ? human_currency(@pacote.mensalidade) : '' %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= f.label :mensalidade_promocional, 'Valor Mensal Promo.', class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= f.text_field :mensalidade_promocional, class: 'form-control input-sm', :value => !@pacote.mensalidade_promocional.nil? ? human_currency(@pacote.mensalidade_promocional) : '' %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :implantacao, 'Implantação', class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= f.text_field :implantacao , class: 'form-control input-sm', :value => !@pacote.implantacao.nil? ? human_currency(@pacote.implantacao) : '' %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= f.label :implantacao_promocional, 'Implantação Promo.', class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= f.text_field :implantacao_promocional, class: 'form-control input-sm', :value => !@pacote.implantacao_promocional.nil? ? human_currency(@pacote.implantacao_promocional) : '' %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field">
+                      <%= f.label :implantacao_remota, 'Implantação Remota', class: 'col-sm-2 control-label padding' %>
+                      <div class="col-sm-4 padding">
+                        <%= f.text_field :implantacao_remota , class: 'form-control input-sm', :value => !@pacote.implantacao_remota.nil? ? human_currency(@pacote.implantacao_remota) : '' %>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <%= f.label :implantacao_remota_promocional, 'Implantação Remota Promo.', class: 'col-sm-2 control-label padding padding-top-0  ' %>
+                      <div class="col-sm-4 padding">
+                        <%= f.text_field :implantacao_remota_promocional, class: 'form-control input-sm', :value => !@pacote.implantacao_remota_promocional.nil? ? human_currency(@pacote.implantacao_remota_promocional) : '' %>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <div class="actions aligncenter">
+                    <%= f.submit 'Salvar', :class => 'btn btn-lg btn-success aligncenter' %>
+                  </div>
+                <% end %>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

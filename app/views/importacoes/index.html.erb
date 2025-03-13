@@ -1,0 +1,62 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>IMPORTAÇÕES</h2>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">    
+    <div class="tabs-container" >
+      <ul class="nav nav-tabs" id="empresa-importacoes-tabs">
+
+      </ul>
+      <div class="tab-content">
+        <%= render 'importacoes/tabela_importacoes'%> 
+      </div>
+    </div>
+  </div>
+</div>
+<%= render 'importacoes/modals/importacao_em_massa'%>
+<%= render 'importacoes/modals/reprocessar_importacao'%>
+<%= render 'importacoes/modals/reconsultar_empresas'%>
+<script>
+  $(document).ready(function() {
+
+    loadImportacaoEmpresas();
+
+    function buscarImportacoes(empresa) {
+      $.getJSON("/importacoes/importacoes_estado?empresa_id=" + empresa, function(data) {
+        var table = $('.table-importacoes').DataTable();
+        table.clear().draw();
+        $.each(data,function (i,val){
+          var id = Number(val['id']);
+          table.row.add( [
+            val['id'],
+            val['data_importacao'],
+            val['total'],
+            val['importado'],
+            val['nao_importado'],
+            val['ja_existente'],
+            val['sigla'],
+            '<a href="/importacoes/'+ id + '/download_csv_file">Download</a>'
+          ] ).draw( false );
+        });
+      });
+    };
+
+      function loadImportacaoEmpresas(){
+          $.getJSON('/empresas?q[ativo_eq]=true', function(data){
+              $.each(data,function (i,val){
+                  $(`<li ${i === 0 ? 'class="active"' : ''}><a data-toggle="tab" ${i === 0 ? 'aria-expanded="true"' : ''} class="tabEstado" id="tab-${val['id']}">${val['estado']}</a></li>`).appendTo('#empresa-importacoes-tabs');
+                  if(i === 0){
+                      buscarImportacoes(val['id']);
+                  }
+              });
+              $('.tabEstado').on('click', function () {
+                  buscarImportacoes($(this)[0].id.split('-')[1]);
+              });
+          });
+      }
+
+  });
+</script>

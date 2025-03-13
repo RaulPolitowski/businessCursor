@@ -1,0 +1,258 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Inadimplência
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div class="col-md-3 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Inadimplência</h5>
+                  <span class="label label-info pull-right" id="competencia_inadimplencia"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="inadimplencia_total" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_inadimplencia"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="inadimplencia_total_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Inad. Mensalidade</h5>
+                  <span class="label label-info pull-right" id="competencia_inadimplencia_mensalidade"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="inadimplencia_mensalidade" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_inadimplencia_mensalidade"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="inadimplencia_mensalidade_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Inad. Instalação</h5>
+                  <span class="label label-info pull-right" id="competencia_inadimplencia_instalacao"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="inadimplencia_instalacao" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_inadimplencia_instalacao"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="inadimplencia_instalacao_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Inad. Outros</h5>
+                  <span class="label label-info pull-right" id="competencia_inadimplencia_outros"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 45px !important;">
+                  <div class="col-lg-8 no-padding">
+                    <h2 class="pull-left" id="inadimplencia_outros" style="margin-bottom: 3px"></h2>
+                  </div>
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <div class="stat-percent font-bold text-danger" id="percentual_outros_instalacao"></div>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <small id="inadimplencia_outros_anterior"></small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5>Inadimplência</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="inadimplencia" style="height: 271px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function drawInadimplencia12Meses() {
+        $.getJSON("/dashboards/get_inadimplencia_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val(), function(data) {
+            var dataArray = [
+                ['Mês', 'Inadimplência', 'Mensalidade', 'Instalação', 'Outros']
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseFloat(data[i].total), parseFloat(data[i].valormensalidade),
+                    parseFloat(data[i].valorinstalacao), parseFloat(data[i].valoroutros)];
+                dataArray.push(row);
+            }
+
+            preencherPaineisInadimplencia($(data).get(-1).data, parseFloat($(data).get(-1).total).toFixed(2), parseFloat($(data).get(-1).valormensalidade).toFixed(2),
+                parseFloat($(data).get(-1).valorinstalacao).toFixed(2), parseFloat($(data).get(-1).valoroutros).toFixed(2),
+                parseFloat($(data).get(-2).total), parseFloat($(data).get(-2).valormensalidade), parseFloat($(data).get(-2).valorinstalacao),
+                parseFloat($(data).get(-2).valoroutros));
+
+            var options = {
+                'chartArea': {'width': '80%', 'height': '60%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                legend: {position: 'top'},
+                series: {1: {type: 'line', color: 'red'}, 2: {type: 'line', color: 'green'}, 3: {type: 'line', color: 'black'}},
+                vAxis: { title: 'Valor', viewWindowMode: "explicit", viewWindow: {min: 0}, format: 'short'},
+                animation: { easing: 'in', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('inadimplencia'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    var ultimo = selectedItem.row-1;
+                    if(ultimo == -1)
+                        ultimo = 0;
+
+                    preencherPaineisInadimplencia(data.getValue(selectedItem.row, 0),
+                        data.getValue(selectedItem.row, 1).toFixed(2),
+                        data.getValue(selectedItem.row, 2).toFixed(2),
+                        data.getValue(selectedItem.row, 3).toFixed(2),
+                        data.getValue(selectedItem.row, 4).toFixed(2),
+                        data.getValue(ultimo, 1).toFixed(2),
+                        data.getValue(ultimo, 2).toFixed(2),
+                        data.getValue(ultimo, 3).toFixed(2),
+                        data.getValue(ultimo, 4).toFixed(2));
+                }else{
+                    preencherPaineisInadimplencia(data.getValue(data.xg.length-1, 0),
+                        data.getValue(data.xg.length-1, 1).toFixed(2),
+                        data.getValue(data.xg.length-1, 2).toFixed(2),
+                        data.getValue(data.xg.length-1, 3).toFixed(2),
+                        data.getValue(data.xg.length-1, 4).toFixed(2),
+                        data.getValue(data.xg.length-2, 1).toFixed(2),
+                        data.getValue(data.xg.length-2, 2).toFixed(2),
+                        data.getValue(data.xg.length-2, 3).toFixed(2),
+                        data.getValue(data.xg.length-2, 4).toFixed(2));
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+            formatter.format(data, 1);
+            formatter.format(data, 2);
+            formatter.format(data, 3);
+            formatter.format(data, 4);
+
+            chart.draw(data, options);
+        });
+    }
+
+    function preencherPaineisInadimplencia(competencia, totalInadimplencia, mensalidadeInadimplencia, instalacaoInadimplencia,
+                                           outrasInadimplencia, totalAnterior, mensalidadeAnterior, instalacaoAnterior,
+                                           outrosAnterior) {
+
+        $('#competencia_inadimplencia').text(competencia);
+        $('#competencia_inadimplencia_instalacao').text(competencia);
+        $('#competencia_inadimplencia_mensalidade').text(competencia);
+        $('#competencia_inadimplencia_outros').text(competencia);
+
+        $('#inadimplencia_total').text(mascaraValor(totalInadimplencia));
+        $('#inadimplencia_instalacao').text(mascaraValor(instalacaoInadimplencia));
+        $('#inadimplencia_mensalidade').text(mascaraValor(mensalidadeInadimplencia));
+        $('#inadimplencia_outros').text(mascaraValor(outrasInadimplencia));
+
+        $('#inadimplencia_total_anterior').text('Ant. ' + mascaraValor(totalAnterior))
+        var valor = ((totalInadimplencia*100 / totalAnterior)-100);
+        $('#percentual_inadimplencia').text('');
+        if(valor > 0){
+            $('#percentual_inadimplencia').removeClass('text-danger').addClass('text-info');
+            $('#percentual_inadimplencia').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_inadimplencia').removeClass('text-info').addClass('text-danger');
+            $('#percentual_inadimplencia').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#inadimplencia_mensalidade_anterior').text('Ant. ' + mascaraValor(mensalidadeAnterior))
+        var valor = ((mensalidadeInadimplencia*100 / mensalidadeAnterior)-100);
+        $('#percentual_inadimplencia_mensalidade').text('');
+        if(valor > 0){
+            $('#percentual_inadimplencia_mensalidade').removeClass('text-danger').addClass('text-info');
+            $('#percentual_inadimplencia_mensalidade').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_inadimplencia_mensalidade').removeClass('text-info').addClass('text-danger');
+            $('#percentual_inadimplencia_mensalidade').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#inadimplencia_instalacao_anterior').text('Ant. ' + mascaraValor(instalacaoAnterior))
+        var valor = ((instalacaoInadimplencia*100 / instalacaoAnterior)-100);
+        $('#percentual_inadimplencia_instalacao').text('');
+        if(valor > 0){
+            $('#percentual_inadimplencia_instalacao').removeClass('text-danger').addClass('text-info');
+            $('#percentual_inadimplencia_instalacao').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_inadimplencia_instalacao').removeClass('text-info').addClass('text-danger');
+            $('#percentual_inadimplencia_instalacao').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+
+        $('#inadimplencia_outros_anterior').text('Ant. ' + mascaraValor(outrosAnterior))
+        var valor = ((outrasInadimplencia*100 / outrosAnterior)-100);
+        $('#percentual_outros_instalacao').text('');
+        if(valor > 0){
+            $('#percentual_outros_instalacao').removeClass('text-danger').addClass('text-info');
+            $('#percentual_outros_instalacao').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_outros_instalacao').removeClass('text-info').addClass('text-danger');
+            $('#percentual_outros_instalacao').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+    }
+</script>

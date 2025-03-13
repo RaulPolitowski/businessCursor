@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nome: MyString
+  chave: MyString
+  qtd_disponivel: 1
+  qtd_usada: 1
+  dia_renovacao: 2022-03-11
+
+two:
+  nome: MyString
+  chave: MyString
+  qtd_disponivel: 1
+  qtd_usada: 1
+  dia_renovacao: 2022-03-11

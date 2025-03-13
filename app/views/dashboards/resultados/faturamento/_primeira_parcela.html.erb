@@ -1,0 +1,613 @@
+<div class="col-lg-12 no-padding">
+    <div class="panel panel-default" style="margin-bottom: 10px !important;">
+        <div class="panel-heading">
+            Primeira parcela
+            <div class="col-sm-2  pull-right" style="margin-top: -6px !important;" id="tabela_por">
+                <%= select_tag  'filtro_tabela_parcela', options_for_select([
+                                                                    ['Por UF', 1],
+                                                                    ['Por Cidade', 2],
+                                                                    ], 1), {:class => "form-control input-sm chosen-select"} %>
+            </div>
+        </div>
+        <div class="panel-body no-padding">
+            <div class="col-lg-12 padding-left-right">
+                <div class="col-md-3 padding-5">
+                    <div id="parcDiv" class="col-lg-12 padding-left-right" title="Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual.">
+                        <div class="ibox" style="cursor: pointer" onclick="carregarInfoTabelaPrimeiraParcelaMensalidade()">
+                            <div class="ibox-content product-box">
+                                <div class="ibox-title ibox-title-without-border-style">
+                                    <h5>1ª Parc. Mensalidade</h5>
+                                    <span class="label label-info pull-right" id="competencia_primeira_mensalidade"></span>
+                                </div>
+                                <div class="ibox-content padding-5" style="height: 55px !important;">
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 no-padding">
+                                            <h2 class="pull-left" id="qtd_primeira_mensalidade_valor" style="margin-bottom: 2px !important;"></h2>
+                                        </div>
+                                        <small class="pull-left" id="media_primeira_mensalidade"></small>
+                                    </div>
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 no-padding">
+                                            <h2 class="pull-right" id="valor_primeira_mensalidade_valor" style="margin-bottom: 2px"></h2>
+                                        </div>
+                                        <div class="stat-percent font-bold text-danger" id="percentual_primeira_mensalidade"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 padding-left-right">
+                        <div class="ibox" style="cursor: pointer" onclick="carregarInfoTabelaPrimeiraParcelaInstalacao()">
+                            <div class="ibox-content product-box">
+                                <div class="ibox-title ibox-title-without-border-style">
+                                    <h5>1ª Parc. Instalação</h5>
+                                    <span class="label label-info pull-right" id="competencia_primeira_instalacao"></span>
+                                </div>
+                                <div class="ibox-content padding-5" style="height: 55px !important;">
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 no-padding">
+                                            <h2 class="pull-left" id="qtd_primeira_instalacao_valor" style="margin-bottom: 2px !important;"></h2>
+                                        </div>
+                                        <small class="pull-left" id="media_primeira_instalacao"></small>
+                                    </div>
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 no-padding">
+                                            <h2 class="pull-right" id="valor_primeira_instalacao_valor" style="margin-bottom: 2px"></h2>
+                                        </div>
+                                        <div class="stat-percent font-bold text-danger" id="percentual_primeira_instalacao"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 padding-left-right">
+                        <div class="ibox" style="cursor: pointer" onclick="carregarInfoTabelaPrimeiraParcelaMensalidadeAtrasada()">
+                            <div class="ibox-content product-box">
+                                <div class="ibox-title ibox-title-without-border-style">
+                                    <h5>1ª Parc. Mensal. Atrasada</h5>
+                                    <span class="label label-info pull-right" id="competencia_primeira_mensalidade_pend"></span>
+                                </div>
+                                <div class="ibox-content padding-5" style="height: 55px !important; background-color: #ffe8e8;">
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 no-padding">
+                                            <h2 class="pull-left" id="qtd_primeira_mensalidade_pend" style="margin-bottom: 3px !important;"></h2>
+                                        </div>
+                                        <small class="pull-left" id="media_primeira_mensalidade_pend"></small>
+                                    </div>
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 no-padding">
+                                            <h2 class="pull-right" id="valor_primeira_mensalidade_pend" style="margin-bottom: 2px"></h2>
+                                        </div>
+                                        <div class="stat-percent font-bold text-danger" id="percentual_primeira_mensalidade_pend"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 padding-left-right">
+                        <div class="ibox" style="cursor: pointer" onclick="carregarInfoTabelaPrimeiraParcelaInstalacaoAtrasada()">
+                            <div class="ibox-content product-box">
+                                <div class="ibox-title ibox-title-without-border-style">
+                                    <h5>1ª Parc. Inst. Atrasada</h5>
+                                    <span class="label label-info pull-right" id="competencia_primeira_instalacao_pend"></span>
+                                </div>
+                                <div class="ibox-content padding-5" style="height: 55px !important; background-color: #ffe8e8;">
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 no-padding">
+                                            <h2 class="pull-left" id="qtd_primeira_instalacao_pend" style="margin-bottom: 3px !important;"></h2>
+                                        </div>
+                                        <small class="pull-left" id="media_primeira_instalacao_pend"></small>
+                                    </div>
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 no-padding">
+                                            <h2 class="pull-right" id="valor_primeira_instalacao_pend" style="margin-bottom: 2px"></h2>
+                                        </div>
+                                        <div class="stat-percent font-bold text-danger" id="percentual_primeira_instalacao_pend"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7 padding-5">
+                    <div class="ibox">
+                        <div class="ibox-content product-box">
+                            <div class="ibox-title ibox-title-without-border-style">
+                                <span class="label label-info pull-right">Anual</span>
+                                <h5>Parcelas (12 meses)</h5>
+                            </div>
+                            <div class="ibox-content padding-5">
+                                <div id="primeira_parcela_12_meses" style="height: 310px !important; width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 padding-5">
+                    <div class="ibox">
+                        <div class="ibox-content product-box">
+                            <div class="ibox-title ibox-title-without-border-style">
+                                <span class="label label-info pull-right" id="competencia_tabela"></span>
+                                <h5 id="titulo_tabela">Mensalidade</h5>
+                            </div>
+                            <div class="ibox-content padding-5">
+                                <div id="faturamento_cidade" style="height: 310px !important;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%= render 'dashboards/resultados/faturamento/tabela/tabela_primeira_mensalidade' %>
+            <%= render 'dashboards/resultados/faturamento/tabela/tabela_primeira_mensalidade_atrasada' %>
+            <%= render 'dashboards/resultados/faturamento/tabela/tabela_primeira_instalacao' %>
+            <%= render 'dashboards/resultados/faturamento/tabela/tabela_primeira_instalacao_atrasada' %>
+        </div>
+    </div>
+</div>
+<%= render 'dashboards/resultados/faturamento/modal_cobrancas' %>
+<style>
+.h30{
+    height: 30px !important;
+  }
+</style>
+<script>
+
+    $('#tabela_por').on('click', function () {
+        if ($('#filtro_tabela_parcela').val() == 1)
+            drawPrimeiraParcelaPorUF('Mensalidade');            
+        else if ($('#filtro_tabela_parcela').val() == 2) {
+            document.getElementById("titulo_tabela").innerHTML = "Por cidade";
+            $('#competencia_tabela').text("Atual");
+            drawTableFaturamentoCidades();
+        }
+    });
+
+    function drawPrimeiraParcela12Meses() {
+        $.getJSON("/dashboards/get_total_primeira_mensalidade_por_tipo?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val(),
+            function(data) {
+                var dataArray = [
+                    ['Mês', 'Mensalidade', 'Instalação', 'Quant. Instalação', 'Quant. Mensalidade', 'Média Instalação', 'Média Mensalidade',
+                        'Quant. Pendente Mensalidade', 'Valor Pendente Mensalidade', 'Quant. Pendente Instalação', 'Valor Pendente Instalação',
+                        'Média Mensalidade Pendente', 'Média Instalação Pendente'
+                    ]
+                ];
+                for (var i = 0; i < data.length; i++) {
+                    var row = [data[i].data, parseFloat(data[i].valormensalidade), parseFloat(data[i].valorinstalacao),
+                        parseFloat(data[i].quantidadeinstalacao), parseFloat(data[i].quantidademensalidade),
+                        parseFloat(data[i].mediainstalacao), parseFloat(data[i].mediamensalidade),
+                        parseFloat(data[i].quantidadependentemensalidade), parseFloat(data[i].valorpendendemensalidade),
+                        parseFloat(data[i].quantidadependenteinstalacao), parseFloat(data[i].valorpendenteinstalacao),
+                        parseFloat(data[i].mediamensalidadepend), parseFloat(data[i].mediainstalacaopend)
+                    ];
+                    dataArray.push(row);
+                }
+
+                var meses = data;
+                var result = null;
+                $.getJSON("/dashboards/get_total_primeira_mensalidade_por_tipo_mes_anterior?empresa=" + $('#empresas_financeiro_id').val() +
+                    "&estado=" + $('#estado_financeiro_id').val(),
+                    function(ret) {
+                        result = ret;
+                        preencherPainelPrimeiraParcela($(meses).get(-1).data, parseFloat($(meses).get(-1).valorinstalacao), $(meses).get(-1).quantidadeinstalacao,
+                            parseFloat($(meses).get(-1).valormensalidade), $(meses).get(-1).quantidademensalidade,
+                            parseFloat($(meses).get(-1).mediamensalidade), parseFloat($(meses).get(-1).mediainstalacao),
+                            parseFloat($(meses).get(-1).quantidadependentemensalidade), parseFloat($(meses).get(-1).valorpendendemensalidade),
+                            parseFloat($(meses).get(-1).quantidadependenteinstalacao), parseFloat($(meses).get(-1).valorpendenteinstalacao),
+                            parseFloat($(meses).get(-1).mediamensalidadepend), parseFloat($(meses).get(-1).mediainstalacaopend),
+                            parseFloat($(result).get(-1).valormensalidade), parseFloat($(result).get(-1).valorinstalacao),
+                            parseFloat($(meses).get(-2).valorpendendemensalidade), parseFloat($(meses).get(-2).valorpendenteinstalacao));
+                    });
+
+                var options = {
+                    'chartArea': {
+                        'width': '80%',
+                        'height': '60%'
+                    },
+                    hAxis: {
+                        title: 'Mês',
+                        textStyle: {
+                            fontSize: 9,
+                            color: 'blue'
+                        }
+                    },
+                    seriesType: 'bars',
+                    legend: {
+                        position: 'top'
+                    },
+                    vAxis: {
+                        title: 'Valor',
+                        viewWindowMode: "explicit",
+                        viewWindow: {
+                            min: 0
+                        },
+                        format: 'short'
+                    },
+                    animation: {
+                        easing: 'in',
+                        duration: 500,
+                        startup: true,
+                        displayLegendValues: false
+                    }
+                };
+                var chart = new google.visualization.ComboChart(document.getElementById('primeira_parcela_12_meses'));
+
+                function selectHandler() {
+                    var selectedItem = chart.getSelection()[0];
+                    if (selectedItem) {
+                        var ultimo = selectedItem.row - 1;
+                        if (ultimo == -1)
+                            ultimo = 0;
+
+                        preencherPainelPrimeiraParcela(data.getValue(selectedItem.row, 0), parseFloat(data.getValue(selectedItem.row, 2)),
+                            data.getValue(selectedItem.row, 3), parseFloat(data.getValue(selectedItem.row, 1)),
+                            data.getValue(selectedItem.row, 4), parseFloat(data.getValue(selectedItem.row, 6)),
+                            parseFloat(data.getValue(selectedItem.row, 5)),
+                            data.getValue(selectedItem.row, 7), parseFloat(data.getValue(selectedItem.row, 8)),
+                            data.getValue(selectedItem.row, 9), parseFloat(data.getValue(selectedItem.row, 10)),
+                            data.getValue(selectedItem.row, 11), parseFloat(data.getValue(selectedItem.row, 12)),
+                            parseFloat(data.getValue(ultimo, 1)), parseFloat(data.getValue(ultimo, 2)),
+                            parseFloat(data.getValue(ultimo, 11)), parseFloat(data.getValue(ultimo, 12)));
+
+                        $('#parcDiv').attr({
+                            title: "Dados aos quais comparam o fechamento do mês inteiro."
+                        });
+                        if (selectedItem['column'] == 1) {
+                            document.getElementById("titulo_tabela").innerHTML = "Mensalidade";
+                            drawPrimeiraParcelaPorUF('Mensalidade');
+                        }else{
+                            document.getElementById("titulo_tabela").innerHTML = "Instalação";
+                            drawPrimeiraParcelaPorUF('Instalacao');
+                        }
+                    } else {
+                        preencherPainelPrimeiraParcela($(meses).get(-1).data, parseFloat($(meses).get(-1).valorinstalacao), $(meses).get(-1).quantidadeinstalacao,
+                            parseFloat($(meses).get(-1).valormensalidade), $(meses).get(-1).quantidademensalidade,
+                            parseFloat($(meses).get(-1).mediamensalidade), parseFloat($(meses).get(-1).mediainstalacao),
+                            parseFloat($(meses).get(-1).quantidadependentemensalidade), parseFloat($(meses).get(-1).valorpendendemensalidade),
+                            parseFloat($(meses).get(-1).quantidadependenteinstalacao), parseFloat($(meses).get(-1).valorpendenteinstalacao),
+                            parseFloat($(meses).get(-1).mediamensalidadepend), parseFloat($(meses).get(-1).mediainstalacaopend),
+                            parseFloat($(result).get(-1).valormensalidade), parseFloat($(result).get(-1).valorinstalacao),
+                            parseFloat($(meses).get(-2).valorpendendemensalidade), parseFloat($(meses).get(-2).valorpendenteinstalacao));
+                        $('#parcDiv').attr({
+                            title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."
+                        });
+
+                    }
+                    $('#bloco_primeira_parcela_mensalidade').hide();
+                }
+
+                google.visualization.events.addListener(chart, 'select', selectHandler);
+
+                var data = google.visualization.arrayToDataTable(dataArray);
+
+                var formatter = new google.visualization.NumberFormat({
+                    prefix: 'R$ ',
+                    negativeColor: 'red',
+                    negativeParens: true
+                });
+                formatter.format(data, 1);
+                formatter.format(data, 2);
+
+                chart.draw(data, options);
+
+                view = new google.visualization.DataView(data);
+                view.hideColumns([3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+                chart.draw(view, options);
+            });
+    }
+
+    function preencherPainelPrimeiraParcela(competencia, valorInstalacao, quantidadeInstalacao, valorMensalidade, quantidadeMensalidade,
+        mediaMensalidade, mediaInstalacao, quantPendenteMensalidade, valorPendenteMensalidade,
+        quantPendenteInstalacao, valorPendenteInstalacao, mediaMensalidadePend, mediaInstalacaoPend,
+        valorMensalidadeAnterior, valorInstalacaoAnterior, valorMensalidadePendAnterior,
+        valorInstalacaoPendAnterior) {
+        $('#competencia_primeira_instalacao').text(competencia);
+        $('#competencia_primeira_mensalidade').text(competencia);
+        $('#competencia_primeira_instalacao_pend').text(competencia);
+        $('#competencia_primeira_mensalidade_pend').text(competencia);
+        if ($('#filtro_tabela_parcela').val() == 2)
+            $('#competencia_tabela').text("Atual");
+        else
+            $('#competencia_tabela').text(competencia);
+
+        $('#qtd_primeira_instalacao_valor').text('Total ' + quantidadeInstalacao);
+        $('#qtd_primeira_mensalidade_valor').text('Total ' + quantidadeMensalidade);
+
+        $('#valor_primeira_instalacao_valor').text(mascaraValor(valorInstalacao.toFixed(2)));
+        $('#valor_primeira_mensalidade_valor').text(mascaraValor(valorMensalidade.toFixed(2)));
+        $('#media_primeira_instalacao').text('Média ' + mascaraValor(mediaInstalacao.toFixed(2)));
+        $('#media_primeira_mensalidade').text('Média ' + mascaraValor(mediaMensalidade.toFixed(2)));
+
+        $('#qtd_primeira_instalacao_pend').text('Total ' + quantPendenteInstalacao);
+        $('#qtd_primeira_mensalidade_pend').text('Total ' + quantPendenteMensalidade);
+
+        $('#valor_primeira_instalacao_pend').text(mascaraValor(valorPendenteInstalacao.toFixed(2)));
+        $('#valor_primeira_mensalidade_pend').text(mascaraValor(valorPendenteMensalidade.toFixed(2)));
+
+        $('#media_primeira_instalacao_pend').text('Média ' + mascaraValor(mediaInstalacaoPend.toFixed(2)));
+        $('#media_primeira_mensalidade_pend').text('Média ' + mascaraValor(mediaMensalidadePend.toFixed(2)));
+
+        var valor = ((valorMensalidade * 100 / valorMensalidadeAnterior) - 100);
+        $('#percentual_primeira_mensalidade').text('');
+        if (valorMensalidadeAnterior == 0) {
+            $('#percentual_primeira_mensalidade').removeClass('text-danger').addClass('text-info');
+            $('#percentual_primeira_mensalidade').append(parseFloat(100).toFixed(2) + '% <i class="fa fa-level-up"></i>');
+        } else if (valor >= 0) {
+            $('#percentual_primeira_mensalidade').removeClass('text-danger').addClass('text-info');
+            $('#percentual_primeira_mensalidade').append(valor.toFixed(2) + '% <i class="fa fa-level-up"></i>');
+        } else {
+            $('#percentual_primeira_mensalidade').removeClass('text-info').addClass('text-danger');
+            $('#percentual_primeira_mensalidade').append(valor.toFixed(2) + '% <i class="fa fa-level-down"></i>');
+        }
+
+        var valor = ((valorInstalacao * 100 / valorInstalacaoAnterior) - 100);
+        $('#percentual_primeira_instalacao').text('');
+        if (valor >= 0) {
+            $('#percentual_primeira_instalacao').removeClass('text-danger').addClass('text-info');
+            $('#percentual_primeira_instalacao').append(valor.toFixed(2) + '% <i class="fa fa-level-up"></i>');
+        } else {
+            $('#percentual_primeira_instalacao').removeClass('text-info').addClass('text-danger');
+            $('#percentual_primeira_instalacao').append(valor.toFixed(2) + '% <i class="fa fa-level-down"></i>');
+        }
+
+        var valor = ((valorPendenteMensalidade * 100 / valorMensalidadePendAnterior) - 100);
+        $('#percentual_primeira_mensalidade_pend').text('');
+        //        if(valor >= 0){
+        $('#percentual_primeira_mensalidade_pend').removeClass('text-danger').addClass('text-info');
+        $('#percentual_primeira_mensalidade_pend').append('0.00' + '% <i class="fa fa-level-up"></i>');
+        //        }else{
+        //            $('#percentual_primeira_mensalidade_pend').removeClass('text-info').addClass('text-danger');
+        //            $('#percentual_primeira_mensalidade_pend').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        //        }
+
+        var valor = ((valorPendenteInstalacao * 100 / valorInstalacaoPendAnterior) - 100);
+        $('#percentual_primeira_instalacao_pend').text('');
+        //        if(valor >= 0){
+        $('#percentual_primeira_instalacao_pend').removeClass('text-danger').addClass('text-info');
+        $('#percentual_primeira_instalacao_pend').append('0.00' + '% <i class="fa fa-level-up"></i>');
+        //        }else{
+        //            $('#percentual_primeira_instalacao_pend').removeClass('text-info').addClass('text-danger');
+        //            $('#percentual_primeira_instalacao_pend').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        //        }
+
+    }
+
+    function drawTableFaturamentoCidades() {
+        $.getJSON("/dashboards/get_clientes_ativos_cidade?order=VLR&empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val(),
+            function(data) {
+                var datatable = new google.visualization.DataTable();
+                datatable.addColumn('string', 'Nome');
+                datatable.addColumn('number', 'Valor');
+
+                for (var i = 0; i < data.length; i++) {
+                    datatable.addRow([data[i].nome, parseInt(data[i].valor)]);
+                }
+
+                var table = new google.visualization.Table(document.getElementById('faturamento_cidade'));
+
+                table.draw(datatable, {
+                    allowHtml: true,
+                    width: '100%',
+                    height: '100%',
+                });
+            });
+    }
+
+    function carregarInfoTabelaPrimeiraParcelaMensalidade() {
+        $('#bloco_primeira_parcela_instalacao').hide();
+        $('#bloco_primeira_parcela_mensalidade_atrasada').hide();
+        $('#bloco_primeira_parcela_instalacao_atrasada').hide();
+
+        if ($('#bloco_primeira_parcela_mensalidade').is(':visible')) {
+            $('#bloco_primeira_parcela_mensalidade').hide();
+        } else {
+            $.getJSON("/dashboards/table_primeira_parcela?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&tipo=1" +
+                "&data=" + $('#competencia_primeira_mensalidade').text(),
+                function(data) {
+                    $('#bloco_primeira_parcela_mensalidade').show();
+                    var table = $('.table-primeira-mensalidade').DataTable();
+                    table.clear().draw();
+                    $.each(data, function(i, val) {
+                        table.row.add([
+                            moment(val['datapagamento']).format("DD/MM/YYYY"),
+                            val['razaosocial'],
+                            val['cidade'],
+                            val['vendedor'],
+                            val['implantador'],
+                            mascaraValor(val['valorpago'])
+                        ]).draw(false);
+                    });
+                });
+        }
+    }
+
+    function carregarInfoTabelaPrimeiraParcelaMensalidadeAtrasada() {
+        $('#bloco_primeira_parcela_instalacao').hide();
+        $('#bloco_primeira_parcela_mensalidade').hide();
+        $('#bloco_primeira_parcela_instalacao_atrasada').hide();
+
+        if ($('#bloco_primeira_parcela_mensalidade_atrasada').is(':visible')) {
+            $('#bloco_primeira_parcela_mensalidade_atrasada').hide();
+        } else {
+            $.getJSON("/dashboards/table_primeira_parcela?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&tipo=2" +
+                "&data=" + $('#competencia_primeira_mensalidade_pend').text(),
+                function(data) {
+                    $('#bloco_primeira_parcela_mensalidade_atrasada').show();
+                    var table = $('.table-primeira-mensalidade-atrasada').DataTable();
+                    table.clear().draw();
+                    $.each(data, function(i, val) {
+                        table.row.add([
+                            moment(val['datavencimento']).format("DD/MM/YYYY"),
+                            val['qtd_dias'],
+                            val['razaosocial'],
+                            val['dias_sem_uso'],
+                            val['cidade'],
+                            val['vendedor'],
+                            moment(val['databloqueio']).format("DD/MM/YYYY"),
+                            mascaraValor(val['valor']),
+                            val['ultima_ligacao'],
+                            val['historico'],
+                            val['usuario_ligacao'],
+                            val['clifor_id'],
+                            val['dataretorno']
+                        ]).draw(false);
+                    });
+
+                    $('.tdClickMensalidade').on('click', function() {
+
+                    })
+                });
+        }
+    }
+
+    function abrirModalCobranca(id, razao_social) {
+        $.getJSON("/dashboards/table_historico_cobranca_cliente?empresa=" + $('#empresas_financeiro_id').val() +
+            "&cliente_id=" + id,
+            function(data) {
+                $("#tbody_cobranca tr").remove();
+                $('#modal_cobrancas #empresa').val(razao_social)
+                $.each(data, function(key, value) {
+                    var newRow = $("<tr style='height: 10px'>");
+                    var cols = "";
+                    cols += '<td style="width: 15%">' + value['data'] + '</td>';
+                    cols += '<td style="width: 10%">' + humanBoolean(value['conseguiucontato']) + '</td>';
+                    cols += '<td style="width: 10%">' + value['nome'] + '</td>';
+                    cols += '<td style="width: 20%">' + value['contato'] + '</td>';
+                    cols += '<td style="width: 30%">' + value['historico'] + '</td>';
+                    cols += '<td style="width: 15%">' + value['dataretorno'] + '</td>';
+
+                    newRow.append(cols);
+
+                    $("#table-cobrancas").append(newRow);
+                })
+
+
+                $('#modal_cobrancas').modal('show');
+            });
+    }
+
+    function carregarInfoTabelaPrimeiraParcelaInstalacao() {
+        $('#bloco_primeira_parcela_mensalidade_atrasada').hide();
+        $('#bloco_primeira_parcela_mensalidade').hide();
+        $('#bloco_primeira_parcela_instalacao_atrasada').hide();
+
+        if ($('#bloco_primeira_parcela_instalacao').is(':visible')) {
+            $('#bloco_primeira_parcela_instalacao').hide();
+        } else {
+            $.getJSON("/dashboards/table_primeira_parcela_instalacao?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&tipo=1" +
+                "&data=" + $('#competencia_primeira_instalacao').text(),
+                function(data) {
+                    $('#bloco_primeira_parcela_instalacao').show();
+                    var table = $('.table-primeira-instalacao').DataTable();
+                    table.clear().draw();
+                    $.each(data, function(i, val) {
+                        table.row.add([
+                            moment(val['datapagamento']).format("DD/MM/YYYY"),
+                            val['razaosocial'],
+                            val['cidade'],
+                            val['vendedor'],
+                            val['implantador'],
+                            mascaraValor(val['valorpagotipo'])
+                        ]).draw(false);
+                    });
+                });
+        }
+    }
+
+    function carregarInfoTabelaPrimeiraParcelaInstalacaoAtrasada() {
+        $('#bloco_primeira_parcela_instalacao').hide();
+        $('#bloco_primeira_parcela_mensalidade_atrasada').hide();
+        $('#bloco_primeira_parcela_mensalidade').hide();
+
+        if ($('#bloco_primeira_parcela_instalacao_atrasada').is(':visible')) {
+            $('#bloco_primeira_parcela_instalacao_atrasada').hide();
+        } else {
+            $.getJSON("/dashboards/table_primeira_parcela_instalacao?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&tipo=2" +
+                "&data=" + $('#competencia_primeira_instalacao_pend').text(),
+                function(data) {
+                    $('#bloco_primeira_parcela_instalacao_atrasada').show();
+                    var table = $('.table-primeira-instalacao-atrasada').DataTable();
+                    table.clear().draw();
+                    $.each(data, function(i, val) {
+                        table.row.add([
+                            moment(val['datavencimento']).format("DD/MM/YYYY"),
+                            val['qtd_dias'],
+                            val['razaosocial'],
+                            val['dias_sem_uso'],
+                            val['cidade'],
+                            val['vendedor'],
+                            moment(val['databloqueio']).format("DD/MM/YYYY"),
+                            mascaraValor(val['valor']),
+                            val['ultima_ligacao'],
+                            val['historico'],
+                            val['usuario_ligacao'],
+                            val['clifor_id'],
+                            val['dataretorno']
+                        ]).draw(false);
+                    });
+
+                    $('.tdClickInstalacao').on('click', function() {
+
+
+                        $.getJSON("/dashboards/table_historico_cobranca_cliente?empresa=" + $('#empresas_financeiro_id').val() +
+                            "&cliente_id=" + $(this).attr('id'),
+                            function(data) {
+                                $("#tbody_cobranca tr").remove();
+                                $.each(data, function(key, value) {
+                                    var newRow = $("<tr style='height: 10px'>");
+                                    var cols = "";
+                                    cols += '<td style="width: 15%">' + value['data'] + '</td>';
+                                    cols += '<td style="width: 10%">' + humanBoolean(value['conseguiucontato']) + '</td>';
+                                    cols += '<td style="width: 10%">' + value['nome'] + '</td>';
+                                    cols += '<td style="width: 20%">' + value['contato'] + '</td>';
+                                    cols += '<td style="width: 30%">' + value['historico'] + '</td>';
+                                    cols += '<td style="width: 15%">' + value['dataretorno'] + '</td>';
+
+                                    newRow.append(cols);
+
+                                    $("#table-cobrancas").append(newRow);
+                                })
+
+
+                                $('#modal_cobrancas').modal('show');
+                            });
+                    })
+                });
+        }
+    }
+
+    function drawPrimeiraParcelaPorUF(script) {
+      $.getJSON("/dashboards/get_total_faturamento_UF?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val() +
+            "&data=" + $('#competencia_primeira_mensalidade').text() +
+            "&script=" + script, function(data) {    
+
+        var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'Estado');
+            datatable.addColumn('number', 'Total');
+
+        for (var i = 0; i < data.length; i++) {
+          datatable.addRow([data[i].sigla, parseFloat(data[i].total)]);
+        }
+        for (var i=0; i< data.length; i++){
+          datatable.setRowProperty(i, 'className', 'h30');
+        }
+        
+        var table = new google.visualization.Table(document.getElementById('faturamento_cidade'));
+
+          var formatter = new google.visualization.NumberFormat(
+              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+          formatter.format(datatable, 1); // Apply formatter to second column
+          
+          table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+      });
+    }
+</script>

@@ -1,0 +1,156 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>SETORES</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="<%= url_for :controller => 'dashboards', :action => 'painel_vendas' %>">Home</a>
+      </li> 
+      <li class="active">
+        <strong>Setores</strong>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Cadastros</h5>
+          <div class="ibox-tools">
+            <%= button_to new_setor_path, { method: 'get', class: 'btn btn-sm btn-primary' } do %>
+                <i class="fa fa-file" aria-hidden="true"> Novo Setor</i>
+            <% end %>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <div class="ibox-content">
+          <div class="tabs-container" id="tabsSetor" >
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" id="tabAtivo" href="#tabsSetor-1"> Ativos</a></li>
+              <li class=""><a data-toggle="tab" id="tabInativo" href="#tabsSetor-2"> Inativos</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="tabsSetor-1" class="tab-pane active">
+                <div class="panel-body">
+                  <table class="table table-striped table-bordered table-hover table-setor-ativas">
+                    <thead>
+                    <tr>
+                      <th>Codigo</th>
+                      <th>Nome setor</th>
+                      <th>Ordem</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% @setores.each do |setor| %>
+                        <tr>
+                          <td><%= setor.id %></td>
+                          <td><%= setor.nome_setor unless setor.nome_setor.nil? %></td>
+                          <td ><%= setor.ordem unless setor.ordem.nil? %></td>
+                          <td ><%= link_to edit_setor_path(setor), { class: 'btn btn-sm btn-success', title: 'Editar', 'data-toggle' => 'tooltip', 'data-placement' => 'right' } do %>
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                              <% end %>
+                              <%= link_to desativar_setor_path(setor), { class: 'btn btn-sm btn-danger', title: 'Desativar', 'data-toggle' => 'tooltip', 'data-placement' => 'right' } do %>
+                                <i class="fa fa-remove" aria-hidden="true"></i>
+                              <% end %>
+                          </td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+              <div id="tabsSetor-2" class="tab-pane">
+                <div class="panel-body">
+                  <table class="table table-striped table-bordered table-hover table-setor-inativas">
+                    <thead>
+                    <tr>
+                       <th>Codigo</th>
+                      <th>Nome setor</th>
+                      <th>Ordem</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% @setores_inativas.each do |setor| %>
+                        <tr>
+                          <td  style="width: 10%"><%= setor.id.to_s %></td>
+                          <td  style="width: 65%"><%= setor.nome_setor unless setor.nome_setor.nil? %></td>
+                          <td style="width: 15%"><%= setor.ordem unless setor.ordem.nil? %></td>
+                          <td style="width: 10%"><%= link_to edit_setor_path(setor), { class: 'btn btn-sm btn-success', title: 'Editar', 'data-toggle' => 'tooltip', 'data-placement' => 'right' } do %>
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                              <% end %>
+                              <%= link_to desativar_setor_path(setor), { class: 'btn btn-sm btn-primary', title: 'Ativar', 'data-toggle' => 'tooltip', 'data-placement' => 'right' } do %>
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                              <% end %>
+                          </td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            $('.table-setor-ativas').DataTable({
+                pageLength: 10,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                "order": [[2, 'asc']],
+                buttons: [
+                    {extend: 'excel', title: 'Perguntas'},
+                    {extend: 'pdf', title: 'Perguntas'}
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                },
+                "columnDefs": [
+                    { "width": "10%", "targets": 0 },
+                    { "width": "65%", "targets": 1 },
+                    { "width": "15%", "targets": 2 },
+                ],
+            });
+
+            $('.table-setor-inativas').DataTable({
+                pageLength: 10,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                "order": [[2, 'asc']],
+                buttons: [
+                    {extend: 'excel', title: 'Perguntas'},
+                    {extend: 'pdf', title: 'Perguntas'}
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                },
+                 "columnDefs": [
+                    { "width": "10%", "targets": 0 },
+                    { "width": "65%", "targets": 1 },
+                    { "width": "15%", "targets": 2 }
+                ],
+
+            });
+        });
+    </script>
+<% end %>

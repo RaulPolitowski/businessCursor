@@ -1,0 +1,165 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>SOLICITAÇÕES DE BANCO DE DADOS</h2>
+  </div>
+</div>
+<%= hidden_field_tag :empresa_id, current_empresa.id %>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12 padding" >
+      <div class="ibox float-e-margins border-bottom" style="margin-bottom: 10px !important;">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+              <div class="row">
+                <div class="col-lg-2">
+                  <div class="form-group" id="data_q">
+                    <label> Data de </label>
+                    <%= text_field_tag :created_at_gteq, nil, class:"form-control input-sm" %>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group" id="data_q">
+                    <label> Data até </label>
+                    <%= text_field_tag :created_at_lteq, nil, class:"form-control input-sm" %>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label> Solicitante </label>
+                    <%= select_tag :user_id_eq, options_for_select(User.empresas_acesso(current_empresa.id).order("name").collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione'}, :include_blank => true} %>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label> Responsável </label>
+                    <%= select_tag :responsavel_id_eq, options_for_select(User.empresas_acesso(current_empresa.id).order("name").collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione'}, :include_blank => true} %>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label> Status </label>
+                    <%= select_tag :status_eq,  options_for_select([['PENDENTE', 'PENDENTE'],
+                                                     ['EM ANDAMENTO', 'ANDAMENTO'],
+                                                     ['CRIADO', 'CRIADO'],
+                                                                    ['COM ERRO', 'ERROR'],
+                                                     ['DESATIVADOS', -1],
+                                                     ]), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione'}, :include_blank => true} %>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label> Tipo </label>
+                    <%= select_tag :tipo_eq,  options_for_select([['Novo banco de dados',1],
+                                                     ['Agrupamento de bancos', 2],
+                                                     ['Agrupamento de bancos com migração', 3],
+                                                     ]), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione'}, :include_blank => true} %>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label> Telefone </label>
+                    <%= text_field_tag :cliente_telefone_or_cliente_telefone2_cont, nil, class:"form-control input-sm" , onkeypress:"return SomenteNumero(event)", onchange:"$(this).val(apenasNumerosGeral($(this).val()))"%>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label> Cliente </label>
+                    <input id="q_cliente_bd" type="text" placeholder="Filtre e pressione Enter" class="form-control" autocomplete="off"  value="<%= @cliente.nil? ? "" : @cliente.razao_social %>">
+                    <%= hidden_field_tag :q_cliente_id_eq %>
+                  </div>
+                </div>
+                
+                <div class="col-lg-1">
+                  <div class="form-group">
+                    <br>
+                    <button type="button" class="ladda-button btn btn-md btn-success" onclick="carregarSolicitacao()">Buscar</button>
+                    
+                  </div>
+                </div>
+              </div>
+        </div>
+      </div>
+    </div>
+    <%= render 'solicitacao_bancos/modals/novo_banco' %>
+    <%= render 'solicitacao_bancos/modals/editar_solicitacao' %>
+    <%= render 'solicitacao_bancos/modals/desativar_solicitacao' %>
+    <%= render 'solicitacao_bancos/tabela_solicitacao_bancos'%>
+  </div>
+
+</div>
+
+
+<script>
+  $(document).ready(function() {
+    carregarSolicitacao();
+
+    $('#openModalNovoBanco').on('click', function () {
+      $('#modalNovoBanco').modal('show');        
+    });
+  });
+
+  function carregarSolicitacao()
+    {
+      var ativo = true;
+      if ($('#status_eq').val() == -1)
+      {
+        //$('#status_eq').val("");
+        ativo = false;
+      }
+      $.getJSON("/solicitacao_bancos/solicitacoes_bancos?&q[created_at_gteq]=" + $('#created_at_gteq').val() 
+            + "&q[created_at_lteq]=" + $('#created_at_lteq').val()
+            + "&q[user_id_eq]=" + $('#user_id_eq').val() 
+            + "&q[responsavel_id_eq]=" + $('#responsavel_id_eq').val()
+            + "&q[status_eq]=" + $('#status_eq').val()
+            + "&q[cliente_id_eq]=" + $('#q_cliente_id_eq').val()
+            + "&q[cliente_telefone_or_cliente_telefone2_cont]=" + $('#cliente_telefone_or_cliente_telefone2_cont').val()
+            + "&q[tipo_eq]=" + $('#tipo_eq').val() + "&ativo=" + ativo, function(data){
+      
+        var table = $('.table-banco').DataTable();
+        table.clear().draw();
+        $.each(data,function (i,val){
+            console.log(val['motivo_erro']);
+          var id = Number(val['id']);
+            var options = '';
+            if(val['finalizado']){
+                options = '<a class="btn btn-sm btn-default btn-table" title="Visualizar" data-toggle="tooltip" data-placement="right" href="/solicitacao_bancos/'+ id + '"><i class="fa fa-eye" aria-hidden="true"></i></a> &nbsp;'
+                if(val['file']['url']){
+                    options += '<a  class="btn btn-sm btn-info btn-table" target="_blank" href="/solicitacao_bancos/' + id + '/download_database" title="Download database"><i class="fa fa-download" aria-hidden="true"></i></a>';
+                }
+            }else{
+                if(val['status'] === 'PENDENTE' || val['status'] === 'ERROR'){
+                    options = '<button class="btn btn-sm btn-default btn-table" onclick="editarSolicitacao('+id+')" title="Editar"><i class="fa fa-pencil" aria-hidden="true"></i></button> &nbsp;'
+                        + '<button class="btn btn-sm btn-danger btn-table" onclick="desativarSolicitacao('+id+')" title="Desativar"><i class="fa fa-trash" aria-hidden="true"></i></button>&nbsp;'
+                        + '<button class="btn btn-sm btn-info btn-table" onclick="gerarDatabase('+id+')" title="Gerar database"><i class="fa fa-database" aria-hidden="true"></i></button>';
+
+                    if(val['status'] === 'ERROR'){
+                        options += '<button class="btn btn-sm btn-warning btn-table" onclick="showErrorDatabase('+id+')" title="Ver erro"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></button>'
+                        + '<button class="btn btn-sm btn-info btn-table" onclick="openCadastroCliente('+val['cliente_id']+')" title="Abrir cadastro de cliente"><i class="fa fa-user-o" aria-hidden="true"></i></button>';
+                    }
+                }
+            }
+
+          table.row.add( [
+              val['cliente']['razao_social'], 
+              val['cidade'], 
+              val['data_solicitacao'],
+              val['data_implantacao'],
+              val['status'], 
+              val['user'] ? val['user']['name']: 'Parceiro',
+              val['responsavel'] ? val['responsavel']['name'] : 'Sem responsável',
+              options
+            ] ).draw( false );
+          });        
+      });    
+    }
+   
+
+</script>

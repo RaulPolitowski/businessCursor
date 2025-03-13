@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  pergunta_resposta_cliente_id: 
+  tag: 
+
+two:
+  pergunta_resposta_cliente_id: 
+  tag: 

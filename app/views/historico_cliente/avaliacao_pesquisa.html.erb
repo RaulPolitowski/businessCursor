@@ -1,0 +1,147 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>AVALIAÇÃO PESQUISA</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="<%= url_for :controller => 'dashboards', :action => 'painel_vendas' %>">Home</a>
+      </li>
+      <li class="active">
+        <strong>Avaliação Pesquisa</strong>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+<div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins border-bottom" style="margin-bottom: 5px;">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+
+            <div class="ibox-tools">
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <%= search_form_for @q, url: avaliacao_pesquisa_historico_cliente_index_path  do |f| %>
+
+              <div class="row">
+                <div class="field col-sm-2">
+                  <%= f.label :cliente_cidade_estado_id_eq, "Estado"   %>
+                  <%= f.collection_select :cliente_cidade_estado_id_eq,  Estado.all.order(:nome), :id, :descricao_completa, {include_blank: true}, {:class => "chosen-select input-sm  form-control"} %>
+                </div>
+                <div class="field col-sm-2">
+                  <%= f.label :cliente_cidade_id_eq, "Cidade"   %>
+                  <%= f.select :cliente_cidade_id_eq, options_for_select([]) , {include_blank: true}, {:class => "chosen-select input-sm  form-control", :data => {:placeholder => 'Selecione um cidade'}} %>
+                </div>
+                <div class="field col-sm-2">
+                  <%= f.label :sistema_cont, "Sistema"   %>
+                  <%= f.collection_select :sistema_cont,  Sistema.all.order(:nome), :nome, :nome, {include_blank: true}, {:class => "chosen-select input-sm  form-control"} %>
+                </div>
+                <div class="field col-sm-2">
+                  <%= f.label :nova_eq, "Nova?"   %>
+                  <%= f.select :nova_eq, options_for_select([
+                                                                    ['Todas', nil],
+                                                                    ['Sim', true],
+                                                                    ['Não', false]
+                                                            ], params[:q].try(:[], :nova_eq)) , {include_blank: false}, {:class => "chosen-select input-sm  form-control"} %>
+                </div>
+                <div class="field col-sm-2">
+                  <%= f.label :bloqueado_eq, "Bloqueado?"   %>
+                  <%= f.select :bloqueado_eq, options_for_select([
+                                                                         ['Todos', nil],
+                                                                         ['Sim', true],
+                                                                         ['Não', false]
+                                                                 ], params[:q].try(:[], :bloqueado_eq)) , {include_blank: false}, {:class => "chosen-select input-sm  form-control"} %>
+                </div>
+                <div class="col-lg-1">
+                  <br>
+                  <%= submit_tag 'Atualizar', :id => 'btnAtualizarAcompanhamentos', :class => 'btn btn-primary' %>
+                </div>
+              </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Empresas</h5>
+          </div>
+        <div class="ibox-content">
+        <table class="table table-striped table-bordered table-hover table-avaliando-pesquisa">
+            <thead>
+            <tr>
+              <th title="Data que foi feito a pesquisa">Data</th>
+              <th>Cliente</th>
+              <th>Cidade-UF</th>
+              <th>Sistema</th>
+              <th>Versão</th>
+              <th>Nova?</th>
+              <th>Últ. ativ.</th>
+              <th>Pend. Fin.?</th>
+              <th>Bloq.?</th>
+              <th>Tempo</th>
+              <th></th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @pesquisas.each do |empresa| %>
+                <tr>
+                  <td><%= human_datetime empresa.data_pesquisa %></td>
+                  <td><%= empresa.cliente.razao_social %></td>
+                  <td><%= empresa.cliente.cidade.present? ? empresa.cliente.cidade.descricao_completa : '' %></td>
+                  <td><%= empresa.sistema %></td>
+                  <td><%= empresa.versao %></td>
+                  <td><%= human_boolean(empresa.nova) %></td>
+                  <td><%= human_datetime(empresa.ultimo_login) %></td>
+                  <td><%= human_boolean empresa.com_pendencia_financeira %></td>
+                  <td><%= human_boolean empresa.bloqueado %></td>
+                  <td><%= empresa.tempo %></td>
+                  <td><%= link_to "/historico_cliente/#{empresa.cliente.id}#tab-6", { class: 'btn btn-sm btn-default btn-table', title: 'Histórico', 'data-toggle' => 'tooltip', 'data-placement' => 'right', target: :_blank } do %>
+                        <i class="fa fa-history" aria-hidden="true"></i>
+                    <% end %></td>
+                  <td><button class="btn btn-sm btn-primary btn-table" title="Realizar avaliação" onclick="abrirModalAvaliacaoPesquisa(<%= empresa.id %>, '<%= empresa.cliente.cnpj %>')"><i class="fa fa-check-circle-o" aria-hidden="true"></i></button></td>
+                </tr>
+            <% end %>
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= render 'historico_cliente/modals/modal_pesquisa_avaliacao' %>
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-euro.js"></script>
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            $('.table-avaliando-pesquisa').DataTable({
+                pageLength: 25,
+                dom: '<"html5buttons"B>lTfgitp',
+                "ordering": true,
+                "order": [[ 0, "desc" ]],
+                buttons: [
+                    {extend: 'excel', title: 'Empresas'},
+                    {extend: 'pdf', title: 'Empresas'}
+                ],
+                columnDefs: [
+                    { type: 'date-euro', targets: 0 },
+                    { type: 'date-euro', targets: 6 }
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                }
+            });
+        });
+    </script>
+<% end %>
+

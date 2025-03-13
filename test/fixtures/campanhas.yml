@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  qtd_total: 1
+  qtd_enviado: 1
+  qtd_erros: 1
+  qtd_ignorado: 1
+  tipo: MyString
+  empresa_id: 
+  job: 1
+
+two:
+  qtd_total: 1
+  qtd_enviado: 1
+  qtd_erros: 1
+  qtd_ignorado: 1
+  tipo: MyString
+  empresa_id: 
+  job: 1

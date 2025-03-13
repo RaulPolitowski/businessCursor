@@ -1,0 +1,827 @@
+<div class="row  border-bottom white-bg dashboard-header">
+  <div class="col-sm-12">
+    <h2>EMPRESAS</h2>
+    <small id="diaSelecionado"></small>
+  </div>
+</div>
+<input type="hidden" id="dia_selecionado" value="">
+<input type="hidden" id="status_empresa_geral" value="">
+<input type="hidden" id="status_empresa" value="">
+<input type="hidden" id="job" value="">
+<input type="hidden" id="boas" value="">
+<input type="hidden" id="empresa_id" value="1">
+<div class="wrapper wrapper-content padding-5">
+  <div class="row animated fadeInDown">
+    <div class="col-lg-12 padding-left-right" >
+      <div class="col-lg-12 padding-left-right">
+        <input type="hidden" id="status_id" value="">
+        <div class="ibox float-e-margins border-bottom">
+          <a class="collapse-link black_link">
+            <div class="ibox-title">
+              <h5>Filtros</h5>
+              <div class="ibox-tools">
+                <button class="btn btn-white btn-xs pull-rigth" id="btnAbrirModalExportarLista">Exportar Listas</button>
+                <button class="btn btn-white btn-xs pull-rigth" id="btnAgruparMensal">Agrupar mês</button>
+                <input type="hidden" id="agruparMes" value="false">
+                <i class="fa fa-chevron-up"></i>
+              </div>
+            </div>
+          </a>
+          <div class="ibox-content" style="display: none;">
+            <form>
+              <div class="row">
+                <div class="field col-sm-3">
+                  <%= label_tag 'Competência', nil, class: 'col-sm-2 control-label padding' %>
+                  <%= select_tag  'mes_filtro', options_for_select([
+                                                                       ['Janeiro', 1],
+                                                                       ['Fevereiro', 2],
+                                                                       ['Março', 3],
+                                                                       ['Abril', 4],
+                                                                       ['Maio', 5],
+                                                                       ['Junho', 6],
+                                                                       ['Julho', 7],
+                                                                       ['Agosto', 8],
+                                                                       ['Setembro', 9],
+                                                                       ['Outubro', 10],
+                                                                       ['Novembro', 11],
+                                                                       ['Dezembro', 12]
+                                                                   ], Time.now.month), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um mês'}} %>
+
+                </div>
+                <div class="field col-sm-3">
+                  <%= label_tag 'Ano', nil, class: 'col-sm-2 control-label padding' %>
+                  <%= select_tag  'ano_filtro', options_for_select([   
+                                                                       ['2025', 2025],
+                                                                       ['2024', 2024],
+                                                                       ['2023', 2023],
+                                                                       ['2022', 2022],
+                                                                       ['2021', 2021],
+                                                                       ['2020', 2020],
+                                                                       ['2019', 2019],
+                                                                       ['2018', 2018],
+                                                                       ['2017', 2017]
+                                                                   ], Time.now.year), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um ano'}} %>
+
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 padding-left-right" >
+      <div class="col-lg-12 padding-left-right" >
+        <div class="ibox float-e-margins">
+          <div class="tabs-container" >
+            <ul class="nav nav-tabs" id="empresa-jobs-tabs">
+
+            </ul>
+            <div class="tab-content">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 padding-left-right" >
+      <div class="col-lg-12 padding-left-right">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title" style="padding-top: 7px !important;">
+            <!--<div class="ibox-tools">-->
+            <div class="col-lg-12">
+              <div class="col-lg-8">
+                <h5 class="pull-left" style="padding-top: 10px !important;">Controle JOBS</h5>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-content">
+            <div id="controle_jobs_morris" style="height: 170px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 padding-left-right">
+      <div class="col-lg-4 padding-left-right">
+        <div class="ibox float-e-margins ">
+          <div class="ibox-title">
+            <h5 id="totalJobs">Jobs</h5>
+          </div>
+          <div class="ibox-content padding-left-right">
+            <div class="row">
+              <div class="col-lg-12">
+                <div id="jobs" style="height: 180px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 padding-left-right">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>Empresas por status geral</h5>
+          </div>
+          <div class="ibox-content">
+            <div class="row">
+              <div id="empresas_status_geral" style="height: 180px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 padding-left-right">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>Empresas por status</h5>
+          </div>
+          <div class="ibox-content">
+            <div class="row">
+              <div id="empresas_status" style="height: 180px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 padding-left-right">
+      <div class="col-lg-3 padding-left-right">
+        <div class="ibox float-e-margins ">
+          <div class="ibox-title">
+            <h5 id="totalJobs">Jobs Boas x Ruins</h5>
+          </div>
+          <div class="ibox-content padding-left-right">
+            <div class="row">
+              <div class="col-lg-12">
+                <div id="saldos" style="height: 180px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 padding-left-right">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>Boas x Ruins</h5>
+          </div>
+          <div class="ibox-content">
+            <div class="row">
+              <div id="empresas_boas_ruins" style="height: 180px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 padding-left-right">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>Boas x Ruins por status geral</h5>
+          </div>
+          <div class="ibox-content">
+            <div class="row">
+              <div id="empresas_boas_status_geral" style="height: 180px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 padding-left-right">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>Boas x Ruins por status</h5>
+          </div>
+          <div class="ibox-content">
+            <div class="row">
+              <div id="empresas_boas_status_empresa" style="height: 180px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="bloco_clientes" class="col-lg-12 padding-left-right" >
+      <div class="col-lg-12 padding-left-right">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <div class="ibox-tools">
+              <h5 id="lblLigacaoEmAndamento" class="pull-left">CONTATOS</h5>
+              <button name="button" type="submit" class="margin ladda-button btn btn-primary" data-remote="true" data-type="script" data-style="expand-left" id="btnCarregarContatos">
+                Carregar contatos
+              </button>
+            </div>
+          </div>
+          <div class="ibox-content padding-left-right">
+            <table class="table table-striped table-bordered table-hover table-controle-fila">
+              <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Código Cnae</th>
+                <th>Cnae</th>
+                <th>Data de Abertura</th>
+              </tr>
+              </thead>
+              <tbody style="width:100%">
+
+              </tbody>
+              <tfoot>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= render 'modal_exportacao_listas' %>
+<style>
+  .google-visualization-table-th {
+    text-align: center !important;
+  }
+  .google-visualization-table-td {
+    text-align: center !important;
+  }
+</style>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    var bar
+    $(document).ready(function() {
+
+        loadEmpresas();
+        createTableFechamentos();
+
+        google.charts.load('current', {'packages': ['corechart', 'table']});
+
+        bar = Morris.Bar({
+            element: 'controle_jobs_morris',
+            data:[ {value: 0} ],
+            xkey: 'dia',
+            ykeys: ['quantidade'],
+            labels: ['Empresas'],
+            hideHover: 'auto',
+            resize: true,
+            barColors: ['#1ab394', '#cacaca'],
+        }).on('click', function (i, row) {
+            $('#dia_selecionado').val(row['dia']);
+            $('#diaSelecionado').text('Dia ' + row['dia']);
+            drawTableJobs();
+            drawChartStatusEmpresaGeral();
+            drawChartStatusEmpresa();
+
+            drawTableSaldos();
+            drawChartBoasRuins();
+            drawChartBoasRuinsStatusGeral();
+            drawChartBoasRuinsStatusEmpresa();
+        });
+
+        $('#btnCarregarContatos').on('click', function () {
+            buscarClientes();
+            return false;
+        });
+
+        $('#mes_filtro').on('change', function () {
+            colocandoInformacoes();
+            setTimeout(function () {
+                drawTableJobs();
+                drawChartStatusEmpresaGeral();
+                drawChartStatusEmpresa();
+                drawTableSaldos();
+                drawChartBoasRuins();
+                drawChartBoasRuinsStatusEmpresa();
+                drawChartBoasRuinsStatusGeral();
+            }, 500);
+        });
+
+        $('#ano_filtro').on('change', function () {
+            colocandoInformacoes();
+            setTimeout(function () {
+                drawTableJobs();
+                drawChartStatusEmpresaGeral();
+                drawChartStatusEmpresa();
+                drawTableSaldos();
+                drawChartBoasRuins();
+                drawChartBoasRuinsStatusEmpresa();
+                drawChartBoasRuinsStatusGeral();
+            }, 500);
+        });
+
+        $('#empresa_id').on('change', function () {
+            colocandoInformacoes();
+            setTimeout(function () {
+                drawTableJobs();
+                drawChartStatusEmpresaGeral();
+                drawChartStatusEmpresa();
+                drawTableSaldos();
+                drawChartBoasRuins();
+                drawChartBoasRuinsStatusEmpresa();
+                drawChartBoasRuinsStatusGeral();
+            }, 500);
+
+        });
+
+        $('#btnAgruparMensal').on('click', function () {
+            if($("#agruparMes").val() == "false"){
+                $("#agruparMes").val(true);
+                $('#btnAgruparMensal').removeClass("btn-white");
+                $('#btnAgruparMensal').addClass("btn-info");
+            }else{
+                $('#btnAgruparMensal').removeClass("btn-info");
+                $('#btnAgruparMensal').addClass("btn-white");
+                $("#agruparMes").val(false);
+            }
+            drawTableJobs();
+            drawTableSaldos();
+            drawChartStatusEmpresaGeral();
+            drawChartStatusEmpresa();
+            drawChartBoasRuins();
+            return false;
+        });
+
+        $('#btnAbrirModalExportarLista').on('click', function () {
+            // buscarAbordagem();
+            $('#modal_exportacao_listas').modal('show');
+            return false;
+        });
+
+
+        $('#btnGerarListaExportacao').on('click', function (){
+            if($("#modal_exportacao_listas #numero_job").val() === "" || $("#modal_exportacao_listas #quantidade").val() === ""){
+              exibirErro("Informe o job e a quantidade");
+              return false;
+            }
+            $.ajax({
+              url: '/dashboards/exportar_lista_empresas_xlsx',
+              method: 'GET',
+              data: {
+                empresa_id: $("#modal_exportacao_listas #empresa_id").val(),
+                numero_job: $("#modal_exportacao_listas #numero_job").val(),
+                quantidade: $("#modal_exportacao_listas #quantidade").val(),
+                nono_digito: $("#modal_exportacao_listas #nono_digito").val()
+              },
+              xhrFields: {
+                responseType: 'blob'
+              },
+              success: function(data) {
+                let estado = null;
+                $.getJSON('/empresas/get_estado_by_empresa?empresa_id=' + $("#modal_exportacao_listas #empresa_id").val(), function(data_empresa){
+                  var downloadLink = document.createElement("a");
+                  downloadLink.href = URL.createObjectURL(data);
+                  downloadLink.download = `exportacao-job${$("#modal_exportacao_listas #numero_job").val()}-${data_empresa.sigla}.xlsx`;
+                  downloadLink.click();
+                  URL.revokeObjectURL(downloadLink.href);
+                  $('#modal_exportacao_listas').modal('toggle');
+                })
+              },
+              error: function(e) {
+                console.log({e});
+                console.log("Erro ao fazer a solicitação");
+              }
+            });
+            return false;
+        });
+    });
+
+    function AtualizarPaineis(empresa_id)
+    {
+        $('#empresa_id').val(empresa_id);
+        colocandoInformacoes();
+        setTimeout(function () {
+            drawTableJobs();
+            drawChartStatusEmpresaGeral();
+            drawChartStatusEmpresa();
+            drawTableSaldos();
+            drawChartBoasRuins();
+            drawChartBoasRuinsStatusEmpresa();
+            drawChartBoasRuinsStatusGeral();
+        }, 500);
+    }
+
+    function getFormExportacao(){
+        var form = new FormData();
+        form.append('empresa_id', $("#modal_exportacao_listas #empresa_id").val());
+        form.append('numero_job', $("#modal_exportacao_listas #numero_job").val());
+        form.append('quantidade', $("#modal_exportacao_listas #quantidade").val());
+        return form;
+    }
+
+    function buscarAbordagem() {
+        $.getJSON('/abordagem_iniciais/get_abordagem_tipo?tipo=' + $('#modal_exportacao_listas #tipo').val(), function(data){
+            if(data){
+                $('#modal_exportacao_listas #abordagem_id').val(data.id);
+                $('#modal_exportacao_listas #texto_abordagem').val(data.texto);
+            }else{
+                $('#modal_exportacao_listas #abordagem_id').val('');
+                $('#modal_exportacao_listas #texto_abordagem').val(null);
+            }
+        });
+    }
+
+    function loadEmpresas(){
+        $.getJSON('/empresas?q[ativo_eq]=true', function(data){
+            $.each(data,function (i,val){
+                console.log(val);
+                $(`<li ${i === 0 ? 'class="active"' : ''}><a data-toggle="tab" ${i === 0 ? 'aria-expanded="true"' : ''} class="tabEstado" id="tab-${val['id']}">${val['estado']}</a></li>`).appendTo('#empresa-jobs-tabs');
+                if(i === 0){
+                    AtualizarPaineis(val['id']);
+                }
+            });
+            $('.tabEstado').on('click', function () {
+                AtualizarPaineis($(this)[0].id.split('-')[1]);
+            });
+        });
+    }
+
+    function colocandoInformacoes() {
+        $.getJSON("/dashboards/get_controle_filas_job?mes=" + $('#mes_filtro').val()
+            + "&ano=" + $('#ano_filtro').val()
+            + "&empresa_id=" + $('#empresa_id').val(), function(data) {
+            bar.setData(data);
+
+            var ok = false;
+            $.each(data,function (i,val){
+                if(val['dia'] == moment().format("DD/MM/YYYY")){
+                    $('#dia_selecionado').val(moment().format("DD/MM/YYYY"));
+                    $('#diaSelecionado').text('Dia ' + moment().format("DD/MM/YYYY"));
+                    return false;
+                }
+
+                if(ok == false){
+                    $('#dia_selecionado').val(val['dia']);
+                    ok = true;
+                }
+
+            });
+
+            setTimeout(function(){
+
+                google.charts.setOnLoadCallback(drawTableJobs());
+                setInterval(drawTableJobs(), 600000);
+
+                google.charts.setOnLoadCallback(drawTableSaldos());
+                setInterval(drawTableSaldos(), 600000);
+
+                google.charts.setOnLoadCallback(drawChartStatusEmpresaGeral());
+                setInterval(drawChartStatusEmpresaGeral(), 600000);
+
+                google.charts.setOnLoadCallback(drawChartStatusEmpresa());
+                setInterval(drawChartStatusEmpresa(), 600000);
+
+                google.charts.setOnLoadCallback(drawChartBoasRuins());
+                setInterval(drawChartBoasRuins(), 600000);
+
+                google.charts.setOnLoadCallback(drawChartBoasRuinsStatusGeral());
+                setInterval(drawChartBoasRuinsStatusGeral(), 600000);
+
+                google.charts.setOnLoadCallback(drawChartBoasRuinsStatusEmpresa());
+                setInterval(drawChartBoasRuinsStatusEmpresa(), 600000);
+
+            }, 500);
+        });
+    }
+
+
+
+    function drawTableJobs() {
+        if($('#dia_selecionado').val() == '')
+            return false;
+
+        $.getJSON("/dashboards/get_lista_job?data_controle=" + $('#dia_selecionado').val() + "&agrupar_mes=" + $('#agruparMes').val()
+            + "&empresa_id=" + $('#empresa_id').val(), function(data) {
+            var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'JOB');
+            datatable.addColumn('number', 'Quant.');
+            datatable.addColumn('number', 'Ligado');
+            datatable.addColumn('number', 'Saldo');
+            datatable.addColumn('number', '%');
+
+            var contador = 0;
+            for (var i = 0; i < data.length; i++) {
+                row = [data[i].job, parseInt(data[i].quantidade), parseInt(data[i].ligado), parseInt(data[i].restam),
+                    parseFloat(data[i].percentual)]
+
+                datatable.addRow(row);
+                contador = contador + parseInt(data[i].quantidade)
+            }
+
+            $('#totalJobs').text('JOBS (' +  contador + ')')
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: '% '});
+            formatter.format(datatable, 4);
+
+            var table = new google.visualization.Table(document.getElementById('jobs'));
+
+            function selectHandler() {
+                var selectedItem = table.getSelection();
+                if (table.getSelection().length > 0) {
+                    $('#job').val(datatable.getValue(selectedItem[0].row, 0));
+                }else {
+                    $('#job').val('');
+                }
+                drawChartStatusEmpresaGeral();
+                drawChartStatusEmpresa();
+            }
+
+            google.visualization.events.addListener(table, 'select', selectHandler);
+
+            table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'disable'});
+        });
+    }
+
+    function drawTableSaldos() {
+        if($('#dia_selecionado').val() == '')
+            return false;
+        $.getJSON("/dashboards/get_lista_job?data_controle=" + $('#dia_selecionado').val() +
+            "&empresa_id=" + $('#empresa_id').val() +
+            "&agrupar_mes=" + $('#agruparMes').val(), function(data) {
+            var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', 'JOB');
+            datatable.addColumn('number', 'Quant.');
+            datatable.addColumn('number', 'Ligado');
+            datatable.addColumn('number', 'Boas');
+            datatable.addColumn('number', '%');
+
+            var contador = 0;
+            for (var i = 0; i < data.length; i++) {
+                row = [data[i].job, parseInt(data[i].quantidade), parseInt(data[i].ligado), parseInt(data[i].boas), parseFloat(data[i].percentual_boas)]
+
+                datatable.addRow(row);
+                contador = contador + parseInt(data[i].quantidade)
+            }
+
+            $('#totalJobs').text('JOBS (' +  contador + ')')
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: '% '});
+            formatter.format(datatable, 4);
+
+            var table = new google.visualization.Table(document.getElementById('saldos'));
+
+            function selectHandler() {
+                var selectedItem = table.getSelection();
+                if (table.getSelection().length > 0) {
+                    $('#job').val(datatable.getValue(selectedItem[0].row, 0));
+                }else {
+                    $('#job').val('');
+                }
+                drawChartBoasRuins();
+                drawChartBoasRuinsStatusGeral();
+                drawChartBoasRuinsStatusEmpresa();
+            }
+
+            google.visualization.events.addListener(table, 'select', selectHandler);
+
+            table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'disable'});
+        });
+    }
+
+    function drawChartStatusEmpresaGeral() {
+        if($('#dia_selecionado').val() == '')
+            return false;
+        $.getJSON("/dashboards/get_empresas_status_geral?data_controle=" + $('#dia_selecionado').val() +
+            "&job_id=" + $('#job').val() +
+            "&empresa_id=" + $('#empresa_id').val() +
+            "&agrupar_mes=" + $('#agruparMes').val(), function(data) {
+            var dataArray = [
+                ['Status', 'Quantidade', 'ID'],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [(data[i].label + ' (' + parseInt(data[i].value) + ')'), parseInt(data[i].value), data[i].id];
+                dataArray.push(row);
+            }
+            var options = {
+                'chartArea': {'width': '100%', 'height': '80%'},
+                pieStartAngle: 50,
+                pieHole: 0.2
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('empresas_status_geral'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection();
+                if (chart.getSelection().length > 0) {
+                    $('#status_empresa_geral').val(data.getValue(selectedItem[0].row, 2));
+                }else {
+                    $('#status_empresa_geral').val('');
+                }
+                drawChartStatusEmpresa();
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+        });
+    }
+
+    function drawChartStatusEmpresa() {
+        if($('#dia_selecionado').val() == '')
+            return false;
+        $.getJSON("/dashboards/get_empresas_status?data_controle=" + $('#dia_selecionado').val() +
+            "&job_id=" + $('#job').val() +
+            "&status_empresa_geral=" + $('#status_empresa_geral').val() +
+            "&empresa_id=" + $('#empresa_id').val() +
+            "&agrupar_mes=" + $('#agruparMes').val(), function(data) {
+            var dataArray = [
+                ['Status', 'Quantidade', 'ID'],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [(data[i].label + ' (' + parseInt(data[i].value) + ')'), parseInt(data[i].value), data[i].id];
+                dataArray.push(row);
+            }
+            var options = {
+                'chartArea': {'width': '100%', 'height': '80%'},
+                pieStartAngle: 50,
+                pieHole: 0.2
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('empresas_status'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection();
+                if (chart.getSelection().length > 0) {
+                    $('#status_empresa').val(data.getValue(selectedItem[0].row, 2));
+                }else {
+                    $('#status_empresa').val('');
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+        });
+    }
+
+    function drawChartBoasRuins() {
+        if($('#dia_selecionado').val() == '')
+            return false;
+        $.getJSON("/dashboards/get_empresas_boas_ruins?data_controle=" + $('#dia_selecionado').val() +
+            "&empresa_id=" + $('#empresa_id').val() +
+            "&job_id=" + $('#job').val()
+            + "&agrupar_mes=" + $('#agruparMes').val(), function(data) {
+            var dataArray = [
+                ['Descrição', 'Quantidade', 'ID'],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [(data[i].desc + ' (' + parseInt(data[i].count) + ')'), parseInt(data[i].count), data[i].desc];
+                dataArray.push(row);
+            }
+            var options = {
+                'chartArea': {'width': '100%', 'height': '80%'},
+                pieStartAngle: 50,
+                pieHole: 0.2
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('empresas_boas_ruins'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection();
+                if (chart.getSelection().length > 0) {
+                    if(data.getValue(selectedItem[0].row, 2) == "BOAS")
+                        $('#boas').val(true);
+                    else $('#boas').val(false);
+                }else {
+                    $('#boas').val('');
+                }
+                drawChartBoasRuinsStatusGeral();
+                drawChartBoasRuinsStatusEmpresa();
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+        });
+    }
+
+    function drawChartBoasRuinsStatusGeral() {
+        if($('#dia_selecionado').val() == '')
+            return false;
+        $.getJSON("/dashboards/get_empresas_boas_ruins_status_geral?data_controle=" + $('#dia_selecionado').val() +
+            "&empresa_id=" + $('#empresa_id').val() +
+            "&job_id=" + $('#job').val() +
+            "&boas=" + $('#boas').val() , function(data) {
+            var dataArray = [
+                ['Descrição', 'Quantidade', 'ID'],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [(data[i].label + ' (' + parseInt(data[i].value) + ')'), parseInt(data[i].value), data[i].id];
+                dataArray.push(row);
+            }
+            var options = {
+                'chartArea': {'width': '100%', 'height': '80%'},
+                pieStartAngle: 50,
+                pieHole: 0.2
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('empresas_boas_status_geral'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection();
+                if (chart.getSelection().length > 0) {
+                    $('#status_empresa_geral').val(data.getValue(selectedItem[0].row, 2));
+                }else {
+                    $('#status_empresa_geral').val('');
+                }
+                drawChartBoasRuinsStatusEmpresa();
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+        });
+    }
+
+    function drawChartBoasRuinsStatusEmpresa() {
+        if($('#dia_selecionado').val() == '')
+            return false;
+        $.getJSON("/dashboards/get_empresas_boas_ruins_status_empresa?data_controle=" + $('#dia_selecionado').val() +
+            "&empresa_id=" + $('#empresa_id').val() +
+            "&job_id=" + $('#job').val() +
+            "&status_empresa_geral=" + $('#status_empresa_geral').val() +
+            "&boas=" + $('#boas').val(), function(data) {
+            var dataArray = [
+                ['Descrição', 'Quantidade', 'ID'],
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [(data[i].label + ' (' + parseInt(data[i].value) + ')'), parseInt(data[i].value), data[i].id];
+                dataArray.push(row);
+            }
+            var options = {
+                'chartArea': {'width': '100%', 'height': '80%'},
+                pieStartAngle: 50,
+                pieHole: 0.2
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('empresas_boas_status_empresa'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection();
+                if (chart.getSelection().length > 0) {
+                    $('#status_empresa').val(data.getValue(selectedItem[0].row, 2));
+                }else {
+                    $('#status_empresa').val('');
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+        });
+    }
+
+    function buscarClientes() {
+        if($('#dia_selecionado').val() == '')
+            return false;
+        $.getJSON("/dashboards/get_controle_filas_table?data_controle=" + $('#dia_selecionado').val() +
+            "&job_id=" + $('#job').val() +
+            "&boas=" + $('#boas').val() +
+            "&status_empresa_geral=" + $('#status_empresa_geral').val() +
+            "&status_empresa=" + $('#status_empresa').val() +
+            "&empresa_id=" + $('#empresa_id').val() +
+            "&agrupar_mes=" + $('#agruparMes').val(), function(data) {
+
+            var table = $('.table-controle-fila').DataTable();
+            table.clear().draw();
+            // $('#bloco_clientes').show();
+            var t = $('.table-controle-fila').DataTable();
+            $.each(data,function (i,val){
+                t.row.add( [
+                    val['razao_social'],
+                    val['codigo'],
+                    val['cnae'],
+                    moment(val['data_licenca']).format("DD/MM/YYYY"),
+                ] ).draw( false );
+            });
+        });
+    };
+
+    function createTableFechamentos(){
+        if ($("#DataTables_Table_0_wrapper").length == 0){
+            $('.table-controle-fila').DataTable({
+                pageLength: 10,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        title: 'Fechamentos'
+                    },
+                    {extend: 'pdf', title: 'Fechamentos'}
+
+                ],
+                "ordering": false,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                },
+                "columnDefs": [
+                    { "width": "30%", "targets": [0] },
+                    { "width": "12%", "targets": [1] },
+                    { "width": "35%", "targets": [2] },
+                    { "width": "12%", "targets": [3] },
+                ]
+            });
+        }
+    };
+</script>
+

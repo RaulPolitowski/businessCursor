@@ -1,0 +1,56 @@
+<div id="modal_pausar_acompanhamento" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Motivo</h4>
+      </div>
+      <%= form_for @acompanhamento, html: { id: "pausar_acompanhamento_form" }, :url => pausar_acompanhamento_path do |f| %>
+        <div class="modal-body" style="min-height: 250px;">
+          <div class="form-group">
+            <div class="field">
+              <div class="col-sm-12">
+                <label id="error_motivo" style="color: red; display: none;">Informe o motivo!</label>
+                <%= text_area(:acompanhamento, :motivo, cols: 40, rows: 5, class: 'form-control input-sm', required: true)%>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-12 no-padding">
+              <div class="field">
+                <div class="col-sm-6">
+                  <label id="data_retorno_comentario">Data Retorno</label>
+                  <div class="input-group clockpicker" data-autoclose="true">
+                    <%= text_field_tag 'data_retorno', nil,  class: 'form-control input-sm', autocomplete: "off", placeholder: 'DD/MM/YYYY HH:mm', required: true%>
+                    <span class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 no-padding" style="margin-top: 5px">
+              <div class="form-group margin">
+                <div class="pull-center">
+                  <button class="btn btn-primary btn-xs" id="btn10" onclick="setarData(10, $('#modal_pausar_acompanhamento #data_retorno')); return false;">10min</button>
+                  <button class="btn btn-primary btn-xs" id="btn30" onclick="setarData(30, $('#modal_pausar_acompanhamento #data_retorno')); return false;">30min</button>
+                  <button class="btn btn-primary btn-xs" id="btn45" onclick="setarData(45, $('#modal_pausar_acompanhamento #data_retorno')); return false;">45min</button>
+                  <button class="btn btn-primary btn-xs" id="btn1" onclick="setarData(60, $('#modal_pausar_acompanhamento #data_retorno')); return false;">1hora</button>
+                  <button class="btn btn-primary btn-xs" id="btn2" onclick="setarData(120, $('#modal_pausar_acompanhamento #data_retorno')); return false;">2horas</button>
+                  <button class="btn btn-primary btn-xs" id="btn4" onclick="setarData(240, $('#modal_pausar_acompanhamento #data_retorno')); return false;">4horas</button>
+                  <button class="btn btn-primary btn-xs" id="btn24" onclick="setarData(1440, $('#modal_pausar_acompanhamento #data_retorno')); return false;">24horas</button>
+                  <button class="btn btn-primary btn-xs" id="btn48" onclick="setarData(2880, $('#modal_pausar_acompanhamento #data_retorno')); return false;">48horas</button>
+                  <button class="btn btn-primary btn-xs" id="btn72" onclick="setarData(4320, $('#modal_pausar_acompanhamento #data_retorno')); return false;">72horas</button>
+                </div></div>
+            </div></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal" id="btnFechar">Fechar</button>
+          <%= f.submit 'Salvar', id: 'btnSubmitPausar', :class => 'btn btn-info ladda-button'%>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+

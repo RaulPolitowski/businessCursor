@@ -1,0 +1,55 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>NOTIFICAÇÃO VIA WHATSAPP</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="<%= url_for :controller => 'dashboards', :action => 'painel_vendas' %>">Home</a>
+      </li> 
+      <li class="active">
+        <strong>Notificação via Whatsapp</strong>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">         
+          <h5>Notificação via Whatsapp</h5>
+          <div class="ibox-tools">
+            <%= button_to new_mensagem_notificacao_path, { method: 'get', class: 'btn btn-sm btn-primary' } do %>
+              <i class="fa fa-plus-circle" aria-hidden="true">Nova Notificação</i>
+            <% end %>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <div class="tab-content">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" id="tabAtivos" href="#tabAtivos-1">Ativos</a></li>
+              <li><a data-toggle="tab" id="tabDesativados" href="#tabDesativados-2">Desativados</a></li>
+            </ul>
+          </div>
+          <div class="tab-content">
+            <div id="tabAtivos-1" class="tab-pane active">
+              <%= render partial: 'mensagem_notificacoes/tables/table_mensagem_notificacao', locals: {
+                selector_table: 'table-notificacao-whatsapps-ativos', notificacoes: @mensagem_notificacoes 
+              } %>
+            </div>
+            <div id="tabDesativados-2" class="tab-pane" >
+              <%= render partial: 'mensagem_notificacoes/tables/table_mensagem_notificacao', locals: {
+                selector_table: 'table-notificacao-whatsapps-desativados', notificacoes: @mensagem_notificacoes_desativados
+              } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= render 'whatsapp_numeros/modal_qrcode'%>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+<%= link_to 'Novo Notificacao Whatsapp', new_mensagem_notificacao_path %>

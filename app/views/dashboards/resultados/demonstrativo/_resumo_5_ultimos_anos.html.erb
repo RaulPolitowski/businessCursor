@@ -1,0 +1,78 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important">
+  <div class="panel-heading" style="margin-top: -6px !important; padding-left: 10px" id="categoria_tabela">
+        Resultado Anual
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-left-right">
+        <div id="fatReceitaAnos" class="col-md-12 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">            
+              <div class="ibox-content padding-5">
+                  <div id="desc_receitas_anos"  style="height: 250px !important;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+     </div>
+  </div>
+</div>
+</div>
+
+
+<script>
+function drawTableResumoAnual() {
+    $.getJSON("/dashboards/get_resumo_ultimos_5_anos?empresa=" + $('#empresas_financeiro_id').val(), function(data)
+    {
+         var datatable = new google.visualization.DataTable();
+
+         var now = new Date;
+         var mes_a_considerar =  now.getMonth()
+          if(mes_a_considerar == 0){
+              mes_a_considerar = 1
+          }
+         datatable.addColumn('string', 'Tipo');
+         for (var i = 0; i < data.length; i++) {
+             if (data[i].ano == now.getFullYear()) {
+                 datatable.addColumn('number',data[i].ano +'(prévia)');
+             } else {
+                 datatable.addColumn('number', data[i].ano);
+             }
+         }
+
+         datatable.addRow(['RECEITAS', parseFloat(data[0].receita), parseFloat(data[1].receita),parseFloat(data[2].receita),
+             parseFloat(data[3].receita),parseFloat(data[4].receita)]);
+         datatable.addRow(['DESPESAS', parseFloat(data[0].despesa), parseFloat(data[1].despesa),parseFloat(data[2].despesa),
+            parseFloat(data[3].despesa),parseFloat(data[4].despesa)]);
+         datatable.addRow(['RESULTADOS', parseFloat(data[0].resultado), parseFloat(data[1].resultado),parseFloat(data[2].resultado),
+            parseFloat(data[3].resultado),parseFloat(data[4].resultado)]);
+         datatable.addRow(['FATURAMENTO MENSAL', parseFloat(data[0].mediamensal),parseFloat(data[1].mediamensal),
+            parseFloat(data[2].mediamensal),parseFloat(data[3].mediamensal),parseFloat(data[4].resultadosemmesatual / mes_a_considerar)]);
+
+        for (var i=0; i < 4; i++){
+             datatable.setRowProperty(i, 'className', 'h0');
+         }
+        //Faz a estilização das últimas duas linhas
+        datatable.setRowProperty(2, 'className','bold-green-font');
+        datatable.setRowProperty(3, 'className','bold-green-font');
+        //Sobrescreve a estilização acima apenas das primeiras célulaspara que as mesmas fiquem em preto e negrito
+        //ao invés de verde
+        datatable.setCell(2 , 0, 'Resultado', 'RESULTADO LÍQUIDO DO EXERCÍCIO' , {'className':'blackcolor'});
+        datatable.setCell(3 , 0, 'MÉDIA DE FATURAMENTO MENSAL', 'MÉDIA DE LUCRO LÍQUIDO MENSAL' , {'className':'blackcolor'});
+
+
+
+
+        var table = new google.visualization.Table(document.getElementById('desc_receitas_anos'));
+
+         var formatter = new google.visualization.NumberFormat(
+             {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+         for (var k = 1; k < 6; k++) {
+             formatter.format(datatable, k);
+         }
+         $('#fatReceitaAnos').show();
+         table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', frozenColumns:1});
+     });
+}
+
+</script>

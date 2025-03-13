@@ -1,0 +1,534 @@
+<input type="hidden" id="empresa_id" value="">
+<input type="hidden" id="cliente_id" value="">
+<input type="hidden" id="ligacao_id" value="">
+<input type="hidden" id="cliente_retorno_id" value="<%= params[:cliente_retorno_id] %>">
+<input type="hidden" id="retorno_id" value="<%= params[:retorno_id] %>">
+<input type="hidden" id="cliente_fechado" value="">
+<input type="hidden" id="obrigacao" value="<%= params[:obrigacao] %>">
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce padding-top-10">
+  <div class="ibox float-e-margins margin-bottom-10">
+    <% if current_user.admin? %>
+      <%= render partial: 'ligacoes/form_captacao_automatizada' %>
+    <% end %>
+    <div class="ibox-title">
+      <div class="ibox-tools">
+        <label id="lblLigacaoEmAndamento" style="display: none">LIGAÇÃO EM ANDAMENTO</label>
+
+        <button name="button" type="submit" class=" margin ladda-button btn btn-primary" data-remote="true" data-type="script" data-style="expand-left" id="btnProxLigacao">
+          <i class="fa fa-user"></i> Proxima Cliente
+        </button>
+        <button name="button" type="submit" class="ladda-button btn btn-danger" data-remote="true" data-type="script" data-style="expand-left" id="btnCancelarLigacao" style="display: none">
+          <i class="fa fa-remove"></i></i> Cancelar Cliente
+        </button>
+        <button name="button" type="submit" class="ladda-button btn btn-warning" data-remote="true" data-type="script" data-style="expand-left" id="btnDevolverFilaTriagem" style="display: none">
+          <i class="fa fa-undo-alt"></i> Devolver Fila (Triagem)
+        </button>
+
+
+        <button name="button" class="pull-left ladda-button margin btn btn-success" id="btnIniciarLigacao" style="display: none">
+          <i class="fa fa-phone"></i> Iniciar Atendimento
+        </button>
+
+        <button name="button" class="pull-left ladda-button btn btn-success btn-rounded"  id="btnSalvarClienteManual" style="display: none">
+          <i class="fa fa-save"></i> Salvar Cliente
+        </button>
+        <button name="button" class="pull-left ladda-button btn btn-success btn-rounded"  id="btnBuscarCliente" style="display: none">
+          <i class="fa fa-search"></i> Buscar
+        </button>
+      </div>
+    </div>
+    <div class="ibox-content">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#tab-1"> Empresa</a></li>
+          <li class=""><a data-toggle="tab" href="#tab-2"> Contatos</a></li>
+          <li class=""><a data-toggle="tab" href="#tab-3"> Whatsapp</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-1" class="tab-pane active">
+            <div class="panel-body">
+
+              <form role="form" id="formCliente">
+                <div class="form-group margin-bottom-5">
+                  <div class="row">
+                    <div class="field col-sm-4" style="width: 30%;">
+                      <label for="cliente_razao_social">Cliente</label>
+                      <div class="input-group m-b" style="margin-bottom: 0px;">
+                        <input class="form-control input-sm" type="text" name="cliente[razao_social]" id="cliente_razao_social">
+                        <span class="input-group-addon padding-0">
+                          <button id="btnCopyCliente" type="button" class="btn btn-sm btn-success btn-table" title="Copiar"  data-toggle="tooltip" data-placement="right">
+                            <i class="fa fa-files-o" aria-hidden="true"></i>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="field col-sm-2" style="width: 20%;">
+                      <label for="cliente_cnpj">CNPJ</label>
+                      <div class="input-group m-b" style="margin-bottom: 0px;">
+                        <input class="form-control input-sm" type="text" name="cliente[cnpj]" id="cliente_cnpj" maxlength="14" onkeypress="return SomenteNumero(event)" size="14"  >
+                        <span class="input-group-addon padding-0">
+                          <button id="adicionarCnpj" type="button" class="btn btn-sm btn-success btn-table" title="Buscar CNPJ"  data-toggle="tooltip" data-placement="right">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="field col-sm-4" style="width: 30%">
+                      <label for="cliente_cnae">CNAE</label>
+                      <div class="input-group m-b" style="margin-bottom: 0px;">
+                        <input class="form-control input-sm" type="text" name="cliente[cnae]" id="cliente_cnae" readOnly="off">
+                        <input type="hidden" id="cliente_cnae_id" value="">
+                        <span class="input-group-addon padding-0">
+                          <button id="btnInserirCnaeBlackList"  class="btn btn-sm btn-danger btn-table" title="Incluir CNAE na blacklist"  data-toggle="tooltip" data-placement="right">
+                            <i class="fa fa-ban" aria-hidden="true"></i>
+                          </button>
+                        </span>
+                        <span class="input-group-addon padding-0">
+                          <button id="btnVerCnaes"  class="btn btn-sm btn-info btn-table" title="Ver todos Cnaes"  data-toggle="tooltip" data-placement="right">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="field col-sm-2" style="width: 20%;">
+                      <label for="cliente_porte">Natureza Jurídica</label>
+                      <input class="form-control input-sm" type="text" name="cliente[porte]" id="cliente_porte"  readOnly="off">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group margin-bottom-5">
+                  <div class="row">
+                    <div class="field col-sm-3">
+                      <label for="cliente_cidade">Cidade</label>
+                      <input class="form-control input-sm" type="text" name="cliente[cidade]" id="cliente_cidade" readOnly="off">
+                    </div>
+                    <div class="field col-sm-3">
+                      <label for="cliente_contato">Contato</label>
+                      <input class="form-control input-sm" type="text" name="cliente[contato]" id="cliente_contato">
+                      <input type="hidden" name="cliente[contato_id]" id="cliente_contato_id" value="">
+                    </div>
+                    <div class="field col-sm-2">
+                      <label for="cliente_contato1">Contato</label>
+                      <input class="form-control input-sm" type="text" name="cliente[contato1]" id="cliente_contato1">
+                      <input type="hidden" name="cliente[contato1_id]" id="cliente_contato1_id" value="">
+                    </div>
+                    <div class="field col-sm-2">
+                      <label for="cliente_telefone">Telefone</label>
+                      <input class="pref pref-celular" type="checkbox" onclick="setPref('telefone')" id="cliente_telefone_preferencial" title="Preferencial?" style="margin-right: 10px;">
+                      <input class="whats whats-celular" type="checkbox" onclick="setWhats('telefone')" id="cliente_telefone_enviado_whats" title="Enviou whatsapp?" style="margin-right: 10px;">
+                      <input class="message-obs" id="setObstelefone" type="checkbox" value="telefone">
+                      <input class="form-control input-sm" type="text" name="cliente[telefone]" id="cliente_telefone">
+                    </div>
+                    <div class="field col-sm-2">
+                      <label for="cliente_telefone2">Celular</label>
+                      <input class="pref pref-celular" type="checkbox" onclick="setPref('telefone2')" id="cliente_telefone2_preferencial" title="Preferencial?" style="margin-right: 10px;">
+                      <input class="whats whats-celular" type="checkbox" onclick="setWhats('telefone2')" id="cliente_telefone2_enviado_whats" title="Enviou whatsapp?" style="margin-right: 10px;">
+                      <input class="message-obs" id="setObstelefone2" type="checkbox" value="telefone2">
+                      <input class="form-control input-sm" type="text" name="cliente[telefone2]" id="cliente_telefone2">
+                    </div>
+
+                  </div>
+                </div>
+                <div class="form-group margin-bottom-5">
+                  <div class="row">
+                    <div class="field col-sm-1">
+                      <label for="cliente_triagem">Triagem</label>
+                      <input class="form-control input-sm" type="text" name="cliente[triagem]" id="cliente_triagem" readOnly="off">
+                    </div>
+                    <div class="field col-sm-1">
+                      <label for="cliente_job">JOB</label>
+                      <input class="form-control input-sm" type="text" name="cliente[job]" id="cliente_job" readOnly="off">
+                    </div>
+                    <div class="field col-sm-2">
+                      <label for="cliente_data_licensa">Data Licença</label>
+                      <input class="form-control input-sm" type="text" name="cliente[data_licensa]" id="cliente_data_licensa" readOnly="off">
+                    </div>
+                    <div class="field col-sm-2">
+                      <label for="cliente_data_licensa">Data Importação</label>
+                      <input class="form-control input-sm" type="text" name="cliente[data_importacao]" id="cliente_data_importacao" readOnly="off">
+                    </div>
+                    <div class="field col-sm-3">
+                      <label for="cliente_email">Email</label>
+                      <input class="form-control input-sm" type="text" name="cliente[email]" id="cliente_email">
+                    </div>
+                    <div class="field col-sm-3">
+                      <label for="cliente_status_id">Status</label>
+                      <%= select_tag 'cliente_status_id', nil,  {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um status'}, :include_blank => true, disabled: "true"} %>
+                      <input type="hidden" id="status_fechamento" value="">
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div id="tab-2" class="tab-pane">
+            <div class="panel-body">
+              <div class="col-lg-6">
+                <label>Telefones</label>
+                <table id="table-contatos-cliente-telefone" class="table table-hover table-contatos">
+                  <thead>
+                  <tr>
+                    <th style="width: 65%">Nome</th>
+                    <th style="width: 30%">Telefone</th>
+                    <th style="width: 15%"></th>
+                  </tr>
+                  </thead>
+                  <tbody class="tbody-contatos" id="body-table-contatos-cliente-telefone">
+
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-lg-6">
+                <label>Celulares</label>
+                <table id="table-contatos-cliente-celular" class="table table-hover table-contatos">
+                  <thead>
+                  <tr>
+                    <th style="width: 55%">Nome</th>
+                    <th style="width: 20%">Telefone</th>
+                    <th style="width: 7%"></th>
+                    <th style="width: 5%"></th>
+                  </tr>
+                  </thead>
+                  <tbody class="tbody-contatos" id="body-table-contatos-cliente-celular">
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div id="tab-3" class="tab-pane">
+            <div class="panel-body">
+              <div class="col-lg-6">
+                <label>Números que foi enviado Whatsapp</label>
+                <table id="table-contatos-cliente-whats" class="table table-hover table-contatos">
+                  <thead>
+                  <tr>
+                    <th style="width: 65%">Nome</th>
+                    <th style="width: 30%">Telefone</th>
+                    <th style="width: 15%"></th>
+                  </tr>
+                  </thead>
+                  <tbody class="tbody-whats" id="body-table-contatos-whats">
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hr-line-dashed"></div>
+      <form role="form">
+        <div class="form-group margin-bottom-5">
+          <div class="row">
+            <div class="field col-sm-12">
+              <label>Observações da Ligação</label>
+              <textarea class="form-control" type="text" name="ligacao[observacao]" id="ligacao_observacoes"></textarea>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          
+            <li id="show_hist_anterior"><a data-toggle="tab" href="#tab-7"> Histórico Anterior</a></li>
+          
+          <li class="active"><a data-toggle="tab" href="#tab-4"> Histórico de Ligações</a></li>
+          <li><a data-toggle="tab" href="#tab-5"> Propostas</a></li>
+          <li><a data-toggle="tab" href="#tab-6"> Comentários</a></li>
+          <li><a data-toggle="tab" href="#tab-anexos"> Anexos </a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-4" class="tab-pane active">
+            <div class="ibox-content">
+              <table id="table-ligacoes" class="table table-hover">
+                <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Usuário</th>
+                  <th>Status</th>
+                  <th>Status Cliente</th>
+                  <th>Observação Ligação</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody id="body_table_ligacoes">
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="tab-5" class="tab-pane">
+            <div class="ibox-content">
+              <button class="ladda-button btn btn-sm btn-success" id="btnNovaProposta" onclick="abrirModalProposta(null)" style="display: none">Nova Proposta</button>
+              <table id="table-proposta" class="table table-hover">
+                <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Sistema</th>
+                  <th>Usuário</th>
+                  <th>Mensalidade</th>
+                  <th>Tipo Implantação</th>
+                  <th>Implantação</th>
+                  <th>Forma Pagamento</th>
+                  <th>Ativa</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody id="body_table_proposta">
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="tab-6" class="tab-pane">
+            <div class="ibox-content">
+              <!--<button class="ladda-button btn btn-sm btn-info" id="btnNovoComentario" onclick="abrirModalComentario()"><i class="fa fa-plus"></i> Comentário</button>-->
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="ibox-content tbody-comentarios" id="content_activities">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-7" class="tab-pane">
+            <div class="ibox-content">              
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a data-toggle="tab" href="#tab-10"> Ligações</a></li>
+                      <li><a data-toggle="tab" href="#tab-8"> Implantação</a></li>
+                      <li><a data-toggle="tab" href="#tab-9"> Acompanhamento</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div id="tab-8" class="tab-pane">
+                        <div class="ibox-content">                          
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="ibox-content tbody-comentarios" id="content_activities_implantacao">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="tab-9" class="tab-pane">
+                        <div class="ibox-content">                          
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="ibox-content tbody-comentarios" id="content_activities_acompanhamento">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="tab-10" class="tab-pane active">
+                        <div class="ibox-content">
+                          <table id="table-ligacoes-old" class="table table-hover">
+                            <thead>
+                            <tr>
+                              <th>Data</th>
+                              <th>Usuário</th>
+                              <th>Status</th>
+                              <th>Status Cliente</th>
+                              <th>Observação Ligação</th>
+                              <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id="body_table_ligacoes_old">
+
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-anexos" class="tab-pane">
+            <div class="ibox-content">  
+              <div class="row">
+                <div class="col-lg-6">
+                  <form action="/upload" id="mediadropzone" class="dropzone" enctype="multipart/form-data">
+                    <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>" />
+                    <%= hidden_field_tag 'cliente', @cliente %>
+                    <DIV class="dz-message">    
+                      Arraste os arquivos ou clique para fazer upload
+                    </DIV>
+                    <div class="fallback">
+                      <input name="media" type="file" multiple />
+                    </div>
+                  </form>
+                </div>
+                <div class="col-lg-6">
+                  <div class="row" style="font-size:25px;">
+                      <input type="checkbox" class="js-switch" id="contrato_assinado"/> Contrato assinado?
+                  </div>
+                  <div class="row">
+                    <h3><i class="fa fa-paperclip"> </i> Anexos do cliente</h3>
+                    <% if @anexos.present? %>
+                      <% @anexos.each do |att|%>
+                        <div id="anexo-<%=att.id%>">
+                            <i class="fa fa-file-text-o"></i> <%= link_to File.basename(att.file.path), {action: 'download_file', id: att.id, controller: 'upload'}, target: '_blank'  %>
+                            <button type="button" class="btn btn-danger" onclick="remover_anexo('<%= att.id %>')" >Excluir </button>                                                    
+                            
+                            <br />
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>                                  
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="pull-center" id="groupLigacaoIniciada"  style="display: none">
+      <p class="pull-center">
+        <button name="button" class="btn-lg ladda-button btn btn-bg-sistema" id="btnSistemaEspecifico" onclick="sistemaEspecifico()">
+          <i class="fa fa-laptop"></i> Sis. Específico
+        </button>
+        <button name="button" class="btn-lg ladda-button btn btn-warning" id="btNumeroErrado">
+          <i class="fa fa-times"></i> Nª errado
+        </button>
+        <button name="button" class="btn-lg ladda-button btn btn-bg-ocupado" id="btNumeroOcupado">
+          <i class="fa fa-exclamation"></i> Ocupado/Não atende
+        </button>
+        <button name="button" class="btn-lg ladda-button btn btn-bg-escritorio"  id="btnEscritorioContabil">
+          <i class="fa fa-handshake-o"></i> Esc. Contábil
+        </button>
+        <button name="button" class="btn-lg ladda-button btn btn-bg-agendar" onclick="abrirModalAgenda('botao')">
+          <i class="fa fa-calendar-alt"></i> Agendar demonstração
+        </button>
+        <button name="button" class="btn-lg ladda-button btn btn-bg-enviado-whats" id="btnEnviadoWhats" onclick="enviadoWhatsapp()">
+          <i class="fa fa-whatsapp"></i> Env. Whats
+        </button>
+        <button name="button" class="btn-lg ladda-button btn btn-primary" id="btLigacaoAtendida">
+          <i class="fa fa-check"></i> Ligação atendida
+        </button>
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="pull-center" id="groupLigacaoAtendida" style="display: none">
+      <p class="pull-center">
+        <button name="button" class="btn-lg ladda-button btn btn-bg-sistema" id="btnSistemaEspecifico" onclick="sistemaEspecifico()">
+          <i class="fa fa-laptop"></i> Sis. Específico
+        </button>
+        <button name="button" class="btn-lg ladda-button btn btn-danger"  id="btnPossuiSistema">
+          <i class="fa fa-laptop"></i> Possui Sistema?
+        </button>
+        <button name="button" class="btn-lg ladda-button btn btn-success"  id="btnAgendarLigacao">
+          <i class="fa fa-clock-o"></i> Agendar retorno
+        </button>
+        <button name="button" class="btn-lg ladda-button btn btn-bg-agendar" onclick="abrirModalAgenda('botao')">
+          <i class="fa fa-calendar-alt"></i> Agendar demonstração
+        </button>
+        <button name="button" class="btn-lg ladda-button btn btn-bg-enviado-whats" id="btnEnviadoWhats" onclick="enviadoWhatsapp()">
+          <i class="fa fa-whatsapp"></i> Env. Whats
+        </button>
+        <button name="button" class="btn-lg ladda-button btn btn-primary"  id="btFinalizarLigacao">
+          <i class="fa fa-check"></i></i> Finalizar ligação
+        </button>
+      </p>
+    </div>
+  </div>
+</div>
+
+<%= render 'propostas/modal_proposta' %>
+<%= render 'ligacoes/agendar_retorno' %>
+<%= render 'ligacoes/possui_sistema' %>
+<%= render 'escritorios/modal_escritorios' %>
+<%= render 'modal_agenda' %>
+<%= render 'modal_captacao' %>
+<%= render 'cnaes/cnaes_cliente' %>
+<%= render 'solicitacao_bancos/modals/confirmar_solicitacao' %>
+<%= render 'solicitacao_bancos/modals/solicitar_banco_fechamento' %>
+
+<div class="modal fade" id="modalFechamento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Informações do fechamento</h4>
+      </div>
+      <div class="modal-body scroll">
+        <label for="cliente_tipo_fechamento_id">Tipo</label>
+        <%= select_tag 'cliente_tipo_fechamento_id', options_for_select(TipoFechamento.all.collect {|p| [ p.descricao, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um tipo'}, :include_blank => true} %>
+        <div id="perguntas">
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Voltar</button>
+        <button type="button" class="btn btn-primary" id="btnFinalizarModalTipoFechamento">Próximo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $('.nav-tabs a[href="#tab-anexos"]').on('shown.bs.tab', function (e){
+      if ($('#cliente_retorno_id').val() == "")
+        $('#cliente').val($('#cliente_id').val());
+      else
+        $('#cliente').val($('#cliente_retorno_id').val());
+    });
+
+    var checkboxContrato = document.querySelector('.js-switch');
+    var init = new Switchery(checkboxContrato);
+
+    checkboxContrato.onchange = function(){
+      $.ajax({
+        url: '/clientes/assinar_contrato',
+        data: { info: checkboxContrato.checked,
+            cliente_id: $('#cliente').val()},
+        type: 'GET',
+        success: function(data) {
+            exibirMsg("Status do contrato alterado.");     
+        },
+        error: function(data) {
+            exibirErro(data);
+        }
+      });
+    }
+
+    $('#btnCopyCliente').on('click', function(){
+      $.getJSON('/solicitacao_desistencias/montar_msg?cliente_id=' + $('#cliente_id').val() +
+          '&tipo=CAPTACAO', function(data) {
+          const texto = data.texto;
+          let inputTest = document.createElement("textarea");
+          inputTest.value = texto;
+          //Anexa o elemento ao body
+          document.body.appendChild(inputTest);
+          //seleciona todo o texto do elemento
+          inputTest.select();
+          //executa o comando copy
+          document.execCommand('copy');
+          //remove o elemento
+          document.body.removeChild(inputTest);
+          exibirMsg("Abordagem copiada");
+      }).fail(function(response) {
+            console.log("ERRO")
+            console.log({response})
+      });
+      return false;
+    });
+
+  });
+</script>

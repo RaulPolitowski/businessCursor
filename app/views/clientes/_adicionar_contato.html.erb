@@ -1,0 +1,67 @@
+<div id="adicionar_contato" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Novo Contato</h4>
+      </div>
+      <form class="form-horizontal" id="form_adicionar_contato">
+        <div class="modal-body">
+          <div class="form-group margin">
+            <div class="field">
+              <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= text_field_tag :novo_contato_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: "off"%>
+                <input type="hidden" id="novo_contato_cliente_id" value="">
+              </div>
+            </div>
+          </div>
+          <div class="form-group margin">
+            <div class="field">
+              <%= label_tag 'Nome', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= text_field_tag :novo_contato_nome, nil, class: 'form-control input-sm', autocomplete: "off"%>
+              </div>
+            </div>
+          </div>
+          <div class="form-group margin">
+            <div class="field">
+              <%= label_tag 'Telefone', nil, class: 'col-sm-2 control-label padding' %>
+              <div class="col-sm-10 padding ">
+                <%= text_field_tag :novo_contato_telefone, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: "(00) 00000-0000"%>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnSalvarNovoContato', :class => 'btn btn-primary ladda-button' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('#btnSalvarNovoContato').on('click', function () {
+
+            if($('#novo_contato_nome').val() == '' || $('#novo_contato_telefone').val() == '' ){
+                exibirErro("Informe nome e telefone.")
+                return false;
+            }
+            $.ajax({
+                url: '/clientes/' + $('#novo_contato_cliente_id').val() + '/novo_contato',
+                data: $('#form_adicionar_contato').serialize() ,
+                type: 'POST',
+                success: function (data) {
+                    location.reload();
+                },error: function(data){
+                    exibirErro('Ocorreu um erro.' + data);
+                }
+            });
+        });
+    });
+
+
+</script>
+

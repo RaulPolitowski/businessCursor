@@ -1,0 +1,82 @@
+<fieldset id="form_mensagem_notificacao" class="form-horizontal">
+  <%= form_for(@mensagem_notificacao) do |f| %>
+    <div>
+      <input type="hidden" id="mensagem_notificacao_id" value="<%= f.object.id %>">
+      <div class="form-group">
+        <%= render partial: 'mensagem_notificacoes/select', locals: {
+          form: f,
+          select_tipo: 'NUMERO'
+        } %>
+      </div>
+      <% if @mensagem_notificacao.interesse? %>
+        <div class="form-group">
+          <%= render partial: 'mensagem_notificacoes/select', locals: {
+            form: f,
+            select_tipo: 'USUARIO'
+          } %>
+        </div>
+      <% end %>
+      <div class="form-group">
+        <div class="field">
+          <%= f.label :tipo, class: 'col-sm-2 control-label padding'  %>
+          <div class="col-sm-10 padding">
+            <%= f.select(:tipo, options_for_select([
+                ['Vendas', 'VENDAS'],
+                ['Interesse', 'INTERESSE'],
+                ['Captação', 'CAPTACAO'],
+              ], @mensagem_notificacao.tipo ? @mensagem_notificacao.tipo : nil),
+              { :include_blank => false }, {class: 'form-control input-sm chosen-select', :data => {:placeholder => 'Selecione um usuário' }})
+            %>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="field">
+          <%= f.label :destinatarios, class: 'col-sm-2 control-label padding' %>
+          <div class="col-sm-10 padding">
+            <%= f.text_field :destinatarios, class: 'form-control input-sm',
+              placeholder: 'Insira os números dos destinatários separados por vírgula (Ex. 45990123456, 45999123456)',
+              value: !f.object.vendas? ? 'USUÁRIO' : f.object.destinatarios&.join(', '),
+              disabled: !f.object.vendas?
+            %>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="field">
+          <%= f.label :mensagem, class: 'col-sm-2 control-label padding' %>
+          <div class="col-sm-10 padding">
+            <%= f.text_area :mensagem, class: 'form-control input-sm' %>
+          </div>
+        </div>
+      </div>
+      <i id="tooltip-notificacao" data-placement="bottom" class="col-sm-2 fa fa-exclamation-circle fa-lg" title="<%= "Palavras Chaves: #{@variaveis_mensagem} "%>"></i>
+    </div>
+    <div class="actions aligncenter">
+      <%= f.submit 'Salvar', :class => 'btn btn-lg btn-success aligncenter' %>
+    </div>
+  <% end %>
+</fieldset>
+
+<script>
+  $(document).ready(function(){
+    $('#mensagem_notificacao_tipo').on('change', function(){
+      const tipoValue = $(this).val();
+      let id = $('#mensagem_notificacao_id').val();
+
+      $.ajax({
+        url: `/mensagem_notificacoes/render_form/?tipo=${tipoValue}${id ? '&id='+id : ''}`,
+        method: 'GET',
+        success: function(response) {
+          if (response){
+            $('#form_mensagem_notificacao').html('');
+            $('#form_mensagem_notificacao').append(response)
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+    });
+  });
+</script>

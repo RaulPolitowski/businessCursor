@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cliente_id: 
+  empresa_id: 
+  data: 2019-02-06
+  feedback: MyString
+  avaliacao: MyString
+  positivo: MyString
+
+two:
+  cliente_id: 
+  empresa_id: 
+  data: 2019-02-06
+  feedback: MyString
+  avaliacao: MyString
+  positivo: MyString

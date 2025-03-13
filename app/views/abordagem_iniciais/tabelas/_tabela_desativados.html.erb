@@ -1,0 +1,24 @@
+<table class="table table-striped table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>Mensagem</th>
+      <th>Tipo</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @abordagem_iniciais.each do |item| %>
+      <tr>
+        <div class="row padding">
+          <td> <%= item.texto %> </td>
+        </div>
+        <td> <span class="btn btn-success btn-xs" style="background-color: #2aca76" > <%= item.tipo %></span> </td>
+        <td> <button class="btn btn-success btn-xs" type="button" onclick="editarAbordagem(<%= item.id %>)" >Editar</button> </td>
+        <td> <button class="btn btn-danger btn-xs" type="button" onclick="deletarAbordagem(<%= item.id %>)" >Excluir</button> </td>
+        <td> <button class="btn btn-info btn-xs" type="button" onclick="ativarAbordagem(<%= item.id %>)" >Ativar</button> </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

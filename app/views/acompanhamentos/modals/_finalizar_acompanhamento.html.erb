@@ -1,0 +1,23 @@
+<div id="modal_finalizar_acompanhamento" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Informações de conclusão</h4>
+      </div>
+      <%= form_for @acompanhamento, :url => finalizar_acompanhamento_path do |f| %>
+          <div class="modal-body scroll" style="min-height: 100px;">
+            <div id="perguntas">
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-white" data-dismiss="modal">Cancelar</button>
+            <%= f.submit 'Finalizar', :id => 'btnSubmitFinalizarAcompanhamento' , :class => 'btn btn-info'%>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+

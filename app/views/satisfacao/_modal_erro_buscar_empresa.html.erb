@@ -1,0 +1,43 @@
+<div id="modal_erro_cnpj" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <form class="form-horizontal" id="form_comentario">
+        <div class="modal-body">
+          <h3>Cliente não localizado na base de dados da Gruber Contabilidade. Verifique as informações ou entre em contato com a gente!</h3>
+          <div class="text-center">
+            <button id="btnMandarWhats" class="btn btn-sm btn-white btn-table" title="Whatsapp" onclick="openWhatsRaul()" data-toggle="tooltip" data-placement="right">
+                <%= image_tag("whats_enviado.ico", :alt => "Avatar", :class => "img-circle") %>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<style>
+.modal {
+  text-align: center;
+  padding: 0!important;
+}
+
+.modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+</style>
+
+<script>
+  function openWhatsRaul() {
+    window.open('https://api.whatsapp.com/send?phone=5545998498928', '_blank');
+  }
+</script>
+

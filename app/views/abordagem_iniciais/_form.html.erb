@@ -1,0 +1,96 @@
+<%= form_for(abordagem) do |f| %>
+  <div class="modal-body d-flex flex-direction-column">
+    <div class="form-group">
+      <div class="field">
+        <div class="col-sm-12">
+          <label id="error_texto" style="color: red; display: none;">Informe uma mensagem</label>
+          <%= f.label 'Texto da Abordagem', nil, class: 'control-label padding' %>
+          <%= f.text_area :texto, autocomplete: "off", class: "form-control", rows: "7"%>
+          <input type="hidden" id="abordagem_id" value="<%= abordagem.id %>">
+        </div>
+      </div>
+    </div>
+    <% if abordagem.resposta? %>
+      <div id="form_palavra_chave" class="form-group <%= 'd-none' unless abordagem.resposta? %>">
+        <div class="field">
+          <div class="col-sm-12">
+            <%= f.label 'Palavras Chaves para Resposta Automática', nil, class: 'control-label padding' %>
+            <%= f.text_area :palavra_chave_validacao,
+              class: 'form-control',
+              autocomplete: "off",
+              placeholder: "As palavras entre [] são as palavras/frases exatas, e as que estão fora dos [] são palavras inclusas. Escreva todas as palavras que serão validadas, separando por ; (Ex: [quero conhecer mais]; sim; interesse)",
+              rows: 5
+            %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div id="form_abordagem"class="form-group">
+      <div class="field">
+        <%= f.label 'Abordagem', nil, class: 'col-sm-2 control-label padding' %>
+        <div class="col-sm-4 padding ">
+          <%= f.select :tipo, options_for_select([
+            ['Naty','NATY'],
+            ['Desistência','DESISTENCIA'],
+            ['Resposta','RESPOSTA'],
+            ['Captação','CAPTACAO']], f.object.tipo || "CAPTACAO"), {}, {:class => "form-control input-sm chosen-select"} %>
+        </div>
+      </div>
+    </div>
+    <% if abordagem.resposta? %>
+      <div id="form_intervalo_resposta" class="form-group <%= 'd-none' unless abordagem.resposta? %>">
+        <div class="field">
+          <%= f.label 'Intervalo Resposta', nil, class: 'col-sm-2 control-label padding' %>
+          <div class="col-sm-4 padding ">
+            <%= f.text_field :intervalo_resposta_automatica, class: 'form-control input-sm', autocomplete: "off" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <% if abordagem.fila? %>
+      <div id="form_fila_captacao" class="form-group <%= 'd-none' unless abordagem.fila? %>">
+        <div class="field">
+          <%= f.label 'fila', nil, class: 'col-sm-2 control-label padding' %>
+          <div class="col-sm-4 padding">
+            <%= f.select :fila, options_for_select((
+                total_abordagem_tipo.map.with_index {
+                  |abordagem, index| [index + 1]
+                } << total_abordagem_tipo.length + 1
+              ), [f.object.fila]), {},
+              {:class => "form-control input-sm chosen-select"}
+            %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <div class="actions aligncenter">
+      <%= f.submit 'Salvar', class: 'btn btn-success' %>
+      <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+    </div>
+  </div>
+  
+  <script>
+    $(document).ready(function(){
+      $('#modal_abordagem #abordagem_inicial_tipo').on('change', function(){
+        const tipoValue = $(this).val();
+        let id = $('#modal_abordagem #abordagem_id').val();
+        $.ajax({
+          url: `/abordagem_iniciais/render_form/?tipo=${tipoValue}${id ? '&id='+id : ''}`,
+          method: 'GET',
+          success: function(response) {
+            if (response){
+              $('#form_abordagem_modal').html('');
+              $('#form_abordagem_modal').append(response)
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error(error);
+          }
+        });
+      });
+    });
+  </script>
+<% end %>
+

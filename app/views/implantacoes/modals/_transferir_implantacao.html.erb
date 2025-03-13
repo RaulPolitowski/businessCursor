@@ -1,0 +1,104 @@
+<div id="modal_transferir_implantacao" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Transferir</h4>
+      </div>
+      <form class="form-horizontal" id="form_transferir">
+        <div class="modal-body" style="padding: 0px 15px 0px 15px !important;">
+          <div class="row">
+            <div class="tabs-container" id="tabsRetorno" >
+              <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" id="tabTransferirImplantacao" href="#tabTransferirImplantacao-1"> Implantação</a></li>
+                <% if current_user.admin? %>
+                  <li class=""><a data-toggle="tab" id="tabTransferirVendedor" href="#tabTransferirImplantacao-2"> Vendedor</a></li>
+                <% end %>
+              </ul>
+              <div class="tab-content">
+                <div id="tabTransferirImplantacao-1" class="tab-pane active">
+                  <div class="panel-body">
+                    <div class="form-group">
+                      <div class="field">
+                        <div class="col-sm-12">
+                          <label for="cliente">Cliente</label>
+                          <%= text_field_tag "transferir_cliente", nil,{label: false, disabled: 'true', class: "form-control input-sm"} %>
+                          <input type="hidden" id="transferir_implantacao_id" value="">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="field">
+                        <div class="col-sm-12">
+                          <label for="responsavel_atual">Responsável atual</label>
+                          <%= text_field_tag "transferir_responsavel", nil,{label: false, disabled: 'true', class: "form-control input-sm"} %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="field">
+                        <div class="col-sm-12">
+                          <label for="responsavel_novo">Novo responsável</label>
+                          <%= select_tag 'transferir_novo_responsavel', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um implantador'}, :include_blank => true} %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="pull-right">
+                      <button type="button" class="btn btn-white" data-dismiss="modal">Cancelar</button>
+                      <%= submit_tag 'Transferir', :id => 'btnTransferirImplantacao', :class => 'btn btn-info'%>
+                    </div>
+                  </div>
+                </div>
+                <% if current_user.admin? %>
+                  <div id="tabTransferirImplantacao-2" class="tab-pane">
+                    <div class="panel-body">
+                      <div class="form-group" id="formCliente">
+                        <div class="field">
+                          <div class="col-sm-12">
+                            <label for="cliente">Cliente</label>
+                            <%= text_field_tag "transferir_cliente", nil,{label: false, disabled: 'true', class: "form-control input-sm"} %>
+                            <input type="hidden" id="transferir_implantacao_id" value="">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group" id="formOperador">
+                        <div class="field">
+                          <div class="col-sm-12">
+                            <label for="vendedor_atual">Vendedor atual</label>
+                            <%= text_field_tag "vendedor_atual", nil,{label: false, disabled: 'true', class: "form-control input-sm"} %>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="field">
+                          <div class="col-sm-12">
+                            <label for="vendedor_novo">Novo vendedor</label>
+                            <%= select_tag 'vendedor_novo', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true} %>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="field">
+                          <div class="col-sm-12">
+                          <label for="transferir_vendedor_comentario">Comentário</label>
+                          <%= text_area_tag :transferir_vendedor_comentario, nil, class: 'form-control input-sm', autocomplete: "off" %>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="pull-right">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Cancelar</button>
+                        <%= submit_tag 'Transferir', :id => 'btnTransferirVendedor', :class => 'btn btn-info'%>
+                      </div>
+                    </div>
+                <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+

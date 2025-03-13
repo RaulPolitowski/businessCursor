@@ -1,0 +1,379 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Desistências
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 no-padding" >
+        <div id="desDiv"class="col-md-3 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoDesistenciaImplantacaoPre()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Desistência Pré</h5>
+                  <span class="label label-info pull-right" id="competencia_desistencia_pre"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h3 class="pull-left" id="qtd_desistencia_pre" style="margin-bottom: 3px"></h3>
+                    </div>
+                    <div class="stat-percent font-bold text-danger pull-left" id="percentual_qtd_desistencia_pre"></div>
+                  </div>
+                  <div class="col-lg-8 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h3 class="pull-right" id="valor_mens_pre" style="margin-bottom: 3px"></h3>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <h3 id="valor_inst_pre"></h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoDesistenciaImplantacaoPos()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Desistência Durante</h5>
+                  <span class="label label-info pull-right" id="competencia_desistencia_pos"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h3 class="pull-left" id="qtd_desistencia_pos" style="margin-bottom: 3px"></h3>
+                    </div>
+                    <div class="stat-percent font-bold text-danger pull-left" id="percentual_qtd_desistencia_pos"></div>
+                  </div>
+                  <div class="col-lg-8 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h3 class="pull-right" id="valor_mens_pos" style="margin-bottom: 3px"></h3>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <h3 id="valor_inst_pos"></h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox" style="cursor: pointer" onclick="carregarInfoDesistenciaAcompanhamento()">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>Desistência Acompanhamento</h5>
+                  <span class="label label-info pull-right" id="competencia_desistencia_acomp"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important;">
+                  <div class="col-lg-4 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h3 class="pull-left" id="qtd_desistencia_acomp" style="margin-bottom: 3px"></h3>
+                    </div>
+                    <div class="stat-percent font-bold text-danger pull-left" id="percentual_qtd_desistencia_acomp"></div>
+                  </div>
+                  <div class="col-lg-8 no-padding">
+                    <div class="col-lg-12 no-padding">
+                      <h3 class="pull-right" id="valor_mens_acomp" style="margin-bottom: 3px"></h3>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                      <div class="pull-right">
+                        <h3 id="valor_inst_acomp"></h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <span class="label label-info pull-right">Anual</span>
+                <h5>Desistências</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="desistencias_12_meses" style="height: 226px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%= render 'dashboards/resultados/comercial/tabela/tabela_desistencia_implantacao_pre' %>
+        <%= render 'dashboards/resultados/comercial/tabela/tabela_desistencia_implantacao_pos' %>
+        <%= render 'dashboards/resultados/comercial/tabela/tabela_desistencia_acompanhamento' %>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+    function drawDesistencias12Meses() {
+        $.getJSON("/dashboards/desistencia_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&vendedor=" + $('#vendedor_id').val() +
+                "&implantador=" + $('#implantador_id').val() , function(data) {
+
+            var dataArray = [
+                ['Mês', 'Pré Implantação', 'Durante Implantação', 'Acompanhamento',
+                    'Mensalidade Pré', 'Implantação Pré', 'Média Pré Mensalidade', 'Média Pré Instalação',
+                    'Mensalidade Pós', 'Implantação Pós', 'Média Pós Mensalidade', 'Média Pós Instalação',
+                    'Mensalidade Acompanhamento', 'Implantação Acompanhamento', 'Média Acompanhamento Mensalidade', 'Média Acompanhamento Instalação']
+            ];
+            for (var i = 0; i < data.length; i++) {
+                var row = [data[i].data, parseInt(data[i].qtd_pre), parseInt(data[i].qtd_pos), parseInt(data[i].qtd_acomp),
+                    parseFloat(data[i].mens_pre), parseFloat(data[i].inst_pre), parseFloat(data[i].pre_media_mens), parseFloat(data[i].pre_media_inst),
+                    parseFloat(data[i].mens_pos), parseFloat(data[i].inst_pos), parseFloat(data[i].pre_media_pos), parseFloat(data[i].pre_media_pos),
+                    parseFloat(data[i].mens_acomp), parseFloat(data[i].inst_acomp), parseFloat(data[i].pre_media_acomp), parseFloat(data[i].pre_media_acomp)];
+                dataArray.push(row);
+            }
+
+            var meses = data;
+            var result = null;
+            $.getJSON("/dashboards/desistencia_12_meses_mes_anterior?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&vendedor=" + $('#vendedor_id').val() +
+                "&implantador=" + $('#implantador_id').val() , function(ret) {
+
+                result = ret;
+
+                preencherDesistenciaPre($(meses).get(-1).data,
+                                        parseInt($(meses).get(-1).qtd_pre),
+                                        parseFloat($(meses).get(-1).mens_pre),
+                                        parseFloat($(meses).get(-1).inst_pre),
+                                        parseInt($(result).get(-1).qtd_pre));
+
+                preencherDesistenciaDurante($(meses).get(-1).data,
+                                            parseInt($(meses).get(-1).qtd_pos),
+                                            parseFloat($(meses).get(-1).mens_pos),
+                                            parseFloat($(meses).get(-1).inst_pos),
+                                            parseInt($(result).get(-1).qtd_pos));
+
+                preencherDesistenciaAcomp($(meses).get(-1).data,
+                                          parseInt($(meses).get(-1).qtd_acomp),
+                                          parseFloat($(meses).get(-1).mens_acomp),
+                                          parseFloat($(meses).get(-1).inst_acomp),
+                                          parseInt($(result).get(-1).qtd_acomp));
+            });
+
+            $('#desDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+          
+            var options = {
+                'chartArea': {'width': '90%', 'height': '70%'},
+                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+                seriesType: 'bars',
+                legend: {position: 'top'},
+                animation: { easing: 'inAndOut', duration: 500, startup: true, displayLegendValues: false}
+            };
+            var chart = new google.visualization.ComboChart(document.getElementById('desistencias_12_meses'));
+
+            function selectHandler() {
+                var selectedItem = chart.getSelection()[0];
+                if (selectedItem) {
+                    var ultimo = selectedItem.row-1;
+                    if(ultimo == -1)
+                        ultimo = 0;
+
+                    preencherDesistenciaPre(data.getValue(selectedItem.row, 0), parseInt(data.getValue(selectedItem.row, 1)),
+                        parseFloat(data.getValue(selectedItem.row, 4)),
+                        parseFloat(data.getValue(selectedItem.row, 5)), parseInt(data.getValue(ultimo, 1)));
+
+                    preencherDesistenciaDurante(data.getValue(selectedItem.row, 0), parseInt(data.getValue(selectedItem.row, 2)),
+                        parseFloat(data.getValue(selectedItem.row, 8)),
+                        parseFloat(data.getValue(selectedItem.row, 9)), parseInt(data.getValue(ultimo, 2)));
+
+                    preencherDesistenciaAcomp(data.getValue(selectedItem.row, 0), parseInt(data.getValue(selectedItem.row, 3)),
+                        parseFloat(data.getValue(selectedItem.row, 12)),
+                        parseFloat(data.getValue(selectedItem.row, 13)), parseInt(data.getValue(ultimo, 3)));
+                    $('#desDiv').attr({title: "Dados aos quais comparam o fechamento do mês inteiro."});
+            
+                
+                }else{
+                    preencherDesistenciaPre($(meses).get(-1).data,
+                        parseInt($(meses).get(-1).qtd_pre),
+                        parseFloat($(meses).get(-1).mens_pre),
+                        parseFloat($(meses).get(-1).inst_pre),
+                        parseInt($(result).get(-1).qtd_pre));
+
+                    preencherDesistenciaDurante($(meses).get(-1).data,
+                        parseInt($(meses).get(-1).qtd_pos),
+                        parseFloat($(meses).get(-1).mens_pos),
+                        parseFloat($(meses).get(-1).inst_pos),
+                        parseInt($(result).get(-1).qtd_pos));
+
+                    preencherDesistenciaAcomp($(meses).get(-1).data,
+                        parseInt($(meses).get(-1).qtd_acomp),
+                        parseFloat($(meses).get(-1).mens_acomp),
+                        parseFloat($(meses).get(-1).inst_acomp),
+                        parseInt($(result).get(-1).qtd_acomp));
+                    $('#desDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+            
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            var data = google.visualization.arrayToDataTable(dataArray);
+
+            chart.draw(data, options);
+
+            view = new google.visualization.DataView(data);
+            view.hideColumns([4,5,6,7,8,9,10,11,12,13,14,15]);
+            chart.draw(view, options);
+        });
+    }
+
+    function preencherDesistenciaPre(competencia, quantidade, valorMensalidade, valorInstalacao, quantAnterior){
+        $('#competencia_desistencia_pre').text(competencia);
+        $('#qtd_desistencia_pre').text('Total ' + quantidade);
+        $('#valor_mens_pre').text('Mensal. ' + mascaraValor(valorMensalidade.toFixed(2)));
+        $('#valor_inst_pre').text('Instal. ' +mascaraValor(valorInstalacao.toFixed(2)));
+
+        var valor = ((quantidade*100 / quantAnterior)-100);
+        $('#percentual_qtd_desistencia_pre').text('');
+
+        if(valor > 0){
+            $('#percentual_qtd_desistencia_pre').removeClass('text-danger').addClass('text-info');
+            $('#percentual_qtd_desistencia_pre').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_qtd_desistencia_pre').removeClass('text-info').addClass('text-danger');
+            $('#percentual_qtd_desistencia_pre').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+    }
+
+    function preencherDesistenciaDurante(competencia, quantidade, valorMensalidade, valorInstalacao, quantAnterior){
+        $('#competencia_desistencia_pos').text(competencia);
+        $('#qtd_desistencia_pos').text('Total ' + quantidade);
+        $('#valor_mens_pos').text('Mensal. ' + mascaraValor(valorMensalidade.toFixed(2)));
+        $('#valor_inst_pos').text('Instal. ' +mascaraValor(valorInstalacao.toFixed(2)));
+
+        var valor = ((quantidade*100 / quantAnterior)-100);
+        $('#percentual_qtd_desistencia_pos').text('');
+        if(valor > 0){
+            $('#percentual_qtd_desistencia_pos').removeClass('text-danger').addClass('text-info');
+            $('#percentual_qtd_desistencia_pos').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_qtd_desistencia_pos').removeClass('text-info').addClass('text-danger');
+            $('#percentual_qtd_desistencia_pos').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+    }
+
+    function preencherDesistenciaAcomp(competencia, quantidade, valorMensalidade, valorInstalacao, quantAnterior){
+        $('#competencia_desistencia_acomp').text(competencia);
+        $('#qtd_desistencia_acomp').text('Total ' + quantidade);
+        $('#valor_mens_acomp').text('Mensal. ' + mascaraValor(valorMensalidade.toFixed(2)));
+        $('#valor_inst_acomp').text('Instal. ' +mascaraValor(valorInstalacao.toFixed(2)));
+
+        var valor = ((quantidade*100 / quantAnterior)-100);
+        $('#percentual_qtd_desistencia_acomp').text('');
+        if(valor > 0){
+            $('#percentual_qtd_desistencia_acomp').removeClass('text-danger').addClass('text-info');
+            $('#percentual_qtd_desistencia_acomp').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+        }else{
+            $('#percentual_qtd_desistencia_acomp').removeClass('text-info').addClass('text-danger');
+            $('#percentual_qtd_desistencia_acomp').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+        }
+    }
+
+    function carregarInfoDesistenciaImplantacaoPre() {
+        $('#bloco_desistencia_implantacao_pos').hide();
+        $('#bloco_desistencia_acompanhamento').hide();
+        if($('#bloco_desistencia_implantacao_pre').is(':visible')){
+            $('#bloco_desistencia_implantacao_pre').hide();
+        }else{
+            $.getJSON("/dashboards/table_desistencia_implantacao?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#competencia_desistencia_pre').text() +
+                "&vendedor=" + $('#vendedor_id').val() +
+                "&implantador=" + $('#implantador_id').val() +
+                "&status=7", function(data) {
+                $('#bloco_desistencia_implantacao_pre').show();
+                var table = $('.table_desistencia_implantacao_pre').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['data_fim']).format("DD/MM/YYYY HH:mm"),
+                        moment(val['data_fechamento']).format("DD/MM/YYYY HH:mm"),
+                        val['dias_aguardando'],
+                        val['razao_social'],
+                        val['cidade'],
+                        val['sistema'],
+                        val['vendedor'],
+                        mascaraValor(val['mensalidade']),
+                        mascaraValor(val['implantacao']),
+                        val['motivo']
+                    ] ).draw( false );
+                });
+            });
+        }
+    }
+
+    function carregarInfoDesistenciaImplantacaoPos() {
+        $('#bloco_desistencia_implantacao_pre').hide();
+        $('#bloco_desistencia_acompanhamento').hide();
+        if($('#bloco_desistencia_implantacao_pos').is(':visible')){
+            $('#bloco_desistencia_implantacao_pos').hide();
+        }else{
+            $.getJSON("/dashboards/table_desistencia_implantacao?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&data=" + $('#competencia_desistencia_pos').text() +
+                "&vendedor=" + $('#vendedor_id').val() +
+                "&implantador=" + $('#implantador_id').val() +
+                "&status=8", function(data) {
+                $('#bloco_desistencia_implantacao_pos').show();
+                var table = $('.table_desistencia_implantacao_pos').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['data_fim']).format("DD/MM/YYYY HH:mm"),
+                        moment(val['data_inicio']).format("DD/MM/YYYY HH:mm"),
+                        val['dias_implantacao'],
+                        val['razao_social'],
+                        val['cidade'],
+                        val['sistema'],
+                        val['vendedor'],
+                        val['implantador'],
+                        mascaraValor(val['mensalidade']),
+                        mascaraValor(val['implantacao']),
+                        val['motivo']
+                    ] ).draw( false );
+                });
+            });
+        }
+    }
+    function carregarInfoDesistenciaAcompanhamento() {
+        $('#bloco_desistencia_implantacao_pos').hide();
+        $('#bloco_desistencia_implantacao_pre').hide();
+        if($('#bloco_desistencia_acompanhamento').is(':visible')){
+            $('#bloco_desistencia_acompanhamento').hide();
+        }else{
+            $.getJSON("/dashboards/table_desistencia_acompanhamento?empresa=" + $('#empresas_financeiro_id').val() +
+                "&estado=" + $('#estado_financeiro_id').val() +
+                "&vendedor=" + $('#vendedor_id').val() +
+                "&implantador=" + $('#implantador_id').val() +
+                "&data=" + $('#competencia_desistencia_pos').text(), function(data) {
+                $('#bloco_desistencia_acompanhamento').show();
+                var table = $('.table_desistencia_acompanhamento').DataTable();
+                table.clear().draw();
+                $.each(data,function (i,val){
+                    table.row.add( [
+                        moment(val['data_fim']).format("DD/MM/YYYY HH:mm"),
+                        val['dias_acompanhamento'],
+                        val['razao_social'],
+                        val['cidade'],
+                        val['sistema'],
+                        val['vendedor'],
+                        val['implantador'],
+                        mascaraValor(val['mensalidade']),
+                        mascaraValor(val['implantacao']),
+                        val['motivo']
+                    ] ).draw( false );
+                });
+            });
+        }
+    }
+</script>

@@ -1,0 +1,187 @@
+<div class="text-center  animated fadeInDown">
+  <div>
+    <div>
+      <img alt="image" style="width: 300px; padding-bottom: 20px; padding-top: 30px" src="<%= image_url 'html_logo.png' %>"/>
+    </div>
+    <br>
+    <h2>Solicitação de Banco de Dados</h2>
+    <div class="ibox-content">
+    <div class="tabs-container">
+      <form role="form" id="formCliente">
+        <div class="form-group margin-bottom-5">
+          <div class="row">
+            <h3 class="pull-left">Dados do parceiro</h3>
+          </div><br>
+          <div class="row">
+            <div class="field col-sm-2">
+              <label for="data_solicitacao">Data/hora solicitação</label>
+              <input class="form-control input-sm" type="text" name="data_solicitacao" id="data_solicitacao" readOnly="off" value="<%= Time.now.strftime("%d/%m/%y %H:%M") %>">
+            </div>
+            <div class="field col-sm-3">
+              <label for="cliente_cnpj">Digite seu CNPJ</label>
+              <label id="error_cnpj_parceiro" style="color: red; display: none;">Campo obrigatório!</label>
+              <div class="input-group m-b" style="margin-bottom: 0px;">
+                <input class="form-control input-sm" type="text" name="parceiro[cnpj]" id="parceiro_cnpj"  autocomplete="off"  maxlength="14" onkeypress="return SomenteNumero(event)" size="14"  >
+                <span class="input-group-addon padding-0">
+                  <button type="button" class="btn btn-sm btn-info btn-table" onclick="buscarCliente(true)" title="Buscar" data-toggle="tooltip" data-placement="right">
+                      <i class="fa fa-search" aria-hidden="true"></i>
+                  </button>
+                </span>
+              </div>              
+            </div>
+            <div class="field col-sm-7">
+              <label for="cliente_razao_social">Razão social</label>
+              <input class="form-control input-sm" type="text" name="parceiro[razao_social]" id="parceiro_razao_social" readOnly="off">
+            </div>
+          </div>
+          <div class="row" style="margin-top: 15px">
+            <div class="field col-sm-3">
+              <label for="nome_solicitante">Seu nome</label>
+              <label id="error_nome_solicitante" style="color: red; display: none;">Campo obrigatório!</label>
+              <input class="form-control input-sm" type="text" name="nome_solicitante" id="nome_solicitante">
+            </div> 
+            <div class="field col-sm-3">
+              <label for="telefone_parceiro">Telefone/Celular</label>
+              <label id="error_telefone_parceiro" style="color: red; display: none;">Informe um telefone!</label>
+              <input class="form-control input-sm" type="text" name="telefone_parceiro" id="telefone_parceiro">
+            </div>      
+            <div class="field col-sm-3">
+              <label for="email_parceiro">Email</label>
+              <label id="error_email_solicitante" style="color: red; display: none;">Campo obrigatório!</label>
+              <input class="form-control input-sm" type="text" name="email_parceiro" id="email_parceiro">
+            </div>                         
+          </div>
+          <hr class="no-padding">
+          <div class="row">
+            <h3 class="pull-left">Dados do cliente</h3>
+          </div>
+          <div class="row" style="margin-top: 15px">            
+            <div class="field col-sm-2">
+              <label for="cliente_cnpj">Digite o CNPJ da empresa</label>
+              <label id="error_cnpj" style="color: red; display: none;">Campo obrigatório!</label>
+              <div class="input-group m-b" style="margin-bottom: 0px;">
+                <input class="form-control input-sm" type="text" name="cliente[cnpj]" id="cliente_cnpj"  autocomplete="off"  maxlength="14" onkeypress="return SomenteNumero(event)" size="14"  >
+                <span class="input-group-addon padding-0">
+                  <button type="button" class="btn btn-sm btn-info btn-table" onclick="buscarCliente(false)" title="Buscar" data-toggle="tooltip" data-placement="right">
+                      <i class="fa fa-search" aria-hidden="true"></i>
+                  </button>
+                </span>
+              </div>              
+            </div>
+            <div class="field col-sm-4">
+              <label for="cliente_razao_social">Razão social</label>
+              <input type="hidden" name="cliente_id" id="cliente_id">
+              <input class="form-control input-sm" type="text" name="cliente[razao_social]" id="cliente_razao_social" readOnly="off">
+            </div>
+            <div class="field col-sm-3">
+              <label for="cliente_cidade">Cidade/UF</label>
+              <input class="form-control input-sm" type="text" name="cliente[cidade]" id="cliente_cidade" readOnly="off">
+            </div>
+            <div class="field col-sm-3">
+              <%= label_tag 'Regime tributário', nil, class: 'col-sm-12 control-label padding' %>
+              <%= select_tag 'regime', options_for_select([['Simples Nacional','Simples Nacional'],
+                                                     ['Lucro Presumido', 'Lucro Presumido'],
+                                                     ['Lucro Real', 'Lucro Real']
+                                                     ],'Simples Nacional'), {:class => "form-control input-sm chosen-select"} %>
+            </div>     
+          </div>
+          <div class="form-group margin-bottom-5">
+            <div class="row" style="margin-top: 15px">
+              <div class="field col-sm-3">
+                <label for="socio_adm">Sócio administrador</label>
+                <label id="error_socio" style="color: red; display: none;">Campo obrigatório!</label>
+                <input class="form-control input-sm" type="text" name="socio_adm" id="socio_adm">
+              </div> 
+              <div class="field col-sm-3">
+                <label for="telefone1">Telefone 1</label>
+                <label id="error_telefone" style="color: red; display: none;">Informe um telefone!</label>
+                <input class="form-control input-sm" type="text" name="telefone1" id="telefone1">
+              </div>      
+              <div class="field col-sm-3">
+                <label for="telefone2">Telefone 2</label>
+                <input class="form-control input-sm" type="text" name="telefone2" id="telefone2">
+              </div>          
+              <div class="field col-sm-3">
+                <label for="email_cliente">Email</label>
+                <label id="error_email" style="color: red; display: none;">Campo obrigatório!</label>
+                <input class="form-control input-sm" type="text" name="email_cliente" id="email_cliente">
+              </div>                 
+            </div>
+          </div>
+          <hr class="no-padding">
+          <div class="row">
+            <h3 class="pull-left">Dados do fechamento</h3>
+          </div>
+          <div class="row" style="margin-top: 15px"> 
+            <div class="field col-sm-3">
+              <label for="sistema">Sistema</label>
+              <input class="form-control input-sm" type="text" name="sistema" id="sistema">
+            </div> 
+            <div class="field col-sm-3">
+              <label for="mensalidade">Valor da mensalidade</label>
+              <input class="form-control input-sm" type="text" name="mensalidade" id="mensalidade">
+            </div>      
+            <div class="field col-sm-2">
+              <label for="data_vencimento">Data de vencimento</label>
+              <input class="form-control input-sm" type="text" name="data_vencimento" id="data_vencimento">
+            </div>  
+            <div class="field col-sm-2">
+              <label for="implantacao">Valor da implantação</label>
+              <input class="form-control input-sm" type="text" name="implantacao" id="implantacao">
+            </div>    
+            <div class="field col-sm-2">
+              <label for="data_implantacao">Data da implantação</label>
+              <input class="form-control input-sm" type="text" name="data_implantacao" id="data_implantacao">
+            </div>         
+          </div>
+          <div class="row" style="margin-top: 15px">
+            <div class="field col-sm-3">
+              <%= label_tag 'Banco', nil, class: 'col-sm-12 control-label padding' %>
+              <%= select_tag 'local_banco', options_for_select([['Local',1],
+                                                    ['Em nuvem', 2]
+                                                    ],1), {:class => "form-control input-sm chosen-select"} %>
+            </div>
+            <div class="field col-sm-3">
+              <%= label_tag 'Tipo de banco', nil, class: 'col-sm-12 control-label padding' %>
+              <%= select_tag 'tipo_banco', options_for_select([['Novo banco de dados',1],
+                                                      ['Agrupamento de bancos', 2],
+                                                      ['Agrupamento de bancos com migração', 3],
+                                                      ],1), {:class => "form-control input-sm chosen-select"} %>
+              
+            </div>   
+          </div>
+        </div>
+        
+        <div class="form-group margin-bottom-5">
+          <div class="row"  style="margin-top: 15px">
+            <div class="field col-sm-12">
+              <label for="observacao">Observações</label>              
+              <textarea class="form-control input-sm" rows="5" name="observacao" id="observacao"></textarea>
+            </div>         
+          </div>
+        </div>
+        <div class=row>
+          <div class="field col-sm-12" style="margin-top: 10px">
+            <button name="button" class="ladda-button btn btn-success btn-rounded" id="btnLancarSolicitacaoBanco">
+              <i class="fa fa-save"></i> Salvar
+            </button>
+          </div> 
+        </div>
+      </form>
+    </div>
+  </div>
+  </div>
+<%= render 'solicitacao_desistencia_externo/modal_erro_buscar_empresa' %>
+</div>
+
+<script>
+  function openWhats() {
+    var telefone = $('#telefone').val();
+    if(telefone == '' || telefone == null)
+        return false;
+    window.open('https://api.whatsapp.com/send?phone=55' + telefone, '_blank');
+  }
+</script>
+
+
+

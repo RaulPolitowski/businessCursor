@@ -1,0 +1,123 @@
+<div id="registro_pesquisa" class="modal inmodal" tabindex="-1" role="dialog" data-backdrop="static"  data-keyboard="false" aria-hidden="true" >
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <i class="fa fa-clock-o modal-icon"></i>
+        <h4 class="modal-title">Pesquisa</h4>
+      </div>
+       <div class="modal-body no-padding scroll-pesquisa" style="min-height: 100px;">
+          <div class="tabs-container">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#tabInfoPesquisa"> Informações</a></li>
+              <li><a data-toggle="tab" href="#tabPerguntasPesquisa"> Perguntas</a></li>
+              <li><a data-toggle="tab" href="#tabFinanceiroPesquisa"> Financeiro</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="tabInfoPesquisa" class="tab-pane active">
+                <div class="panel-body">
+                  <form class="form-horizontal" id="form_pesquisa">
+                  <div class="form-group">
+                    <div class="field col-sm-6 padding" >
+                      <%= label_tag 'Cliente', nil %>
+                      <%= text_field_tag :pesquisa_cliente, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'CNPJ', nil %>
+                      <%= text_field_tag :pesquisa_cliente_cnpj, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-4 padding">
+                      <%= label_tag 'Cidade-UF', "Cidade-UF" %>
+                      <%= text_field_tag :pesquisa_cliente_cidade, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'Sistema', nil %>
+                      <%= text_field_tag :pesquisa_sistema, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'Versão', nil %>
+                      <%= text_field_tag :pesquisa_versao, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'Data', nil %>
+                      <%= text_field_tag :pesquisa_data, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'Últ. login', nil %>
+                      <%= text_field_tag :pesquisa_last_login, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-1 padding">
+                      <%= label_tag 'Tempo', nil %>
+                      <%= text_field_tag :pesquisa_tempo_inerte, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-1 padding">
+                      <%= label_tag 'Pend. Fin.', 'Pend. Fin.' %>
+                      <%= text_field_tag :pesquisa_pendencia_financeira, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                    <div class="field col-sm-2 padding">
+                      <%= label_tag 'Status Fin.', 'Status Fin.' %>
+                      <%= text_field_tag :pesquisa_status_financeiro, nil, class: 'form-control input-sm', autocomplete: "off", readOnly: 'true' %>
+                    </div>
+                  </div>
+                  </form>
+                </div>
+              </div>
+              <div id="tabPerguntasPesquisa" class="tab-pane">
+                <div class="panel-body">
+                  <%= hidden_field_tag 'pesquisa_id', nil, class: 'form-control input-sm' %>
+                  <%= hidden_field_tag 'cnpj', nil, class: 'form-control input-sm' %>
+                  <div id="perguntas">
+
+                  </div>
+                </div>
+              </div>
+              <div id="tabFinanceiroPesquisa" class="tab-pane">
+                <div class="panel-body scroll-table">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="ibox-content tbody-periodo-inerte">
+                        <table id="table-periodo-inerte-financeiro-modal" class="table table-hover">
+                          <thead>
+                          <tr>
+                            <th>Descrição</th>
+                            <th>Vencimento</th>
+                            <th>Status</th>
+                            <th>Valor</th>
+                          </tr>
+                          </thead>
+                          <tbody id="body_periodo_inerte_financeiro_modal">
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" onclick="openContatosGeral()">Contatos</button>
+        <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-primary" id="btnRegistrarPesquisa">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .scroll-pesquisa{
+    overflow-y: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    min-height: 200px;
+    max-height: 500px;
+  }
+</style>
+
+<script>
+    function openContatosGeral(){
+        window.open('http://contatos.gtech.site/contatos?cnpj=' + $('#registro_pesquisa #cnpj').val(), '_blank');
+    }
+</script>

@@ -1,0 +1,49 @@
+// Place all the styles related to the negociacoes controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+//= require datapicker/datepicker3.css
+//= require sweetalert/sweetalert2.min.css
+//= require chosen/bootstrap-chosen.css
+
+.swal-width {
+  width: 500px !important;
+}
+
+.whats {
+  visibility:hidden;
+  font-size:15px;
+  cursor:pointer;
+}
+.whats:before {
+  content:url('whats_nao_enviado.ico');
+  position: absolute;
+  visibility:visible;
+}
+.whats:checked:before {
+  content:url('whats_enviado.ico');
+  position: absolute;
+}
+
+.telefone {
+  visibility:hidden;
+  font-size:15px;
+  cursor:pointer;
+}
+.telefone:before {
+  content:url('telefonepreto.ico');
+  position: absolute;
+  visibility:visible;
+}
+.telefone:checked:before {
+  content:url('telefoneverde.ico');
+  position: absolute;
+}
+
+.greencolor{
+   color: green;
+   font-weight: bold;
+}
+
+.bold{
+  font-weight: bold;
+}

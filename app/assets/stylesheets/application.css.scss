@@ -1,0 +1,191 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require animate/animate.css
+ *= require style
+ *= require toastr/toastr.min.css
+ *= require dropzone/basic
+ *= require font-awesome
+ *= require datetimepicker/bootstrap-datetimepicker.css
+ *= require loading_mask
+ *= require dataTables/datatables.min.css
+ *= require touchspin/jquery.bootstrap-touchspin.min.css
+ *= require datapicker/datepicker3.css
+ *= require switchery
+ */
+
+@media (min-width: 992px) {
+  .modal-big {
+    width: 1050px !important;
+  }
+}
+
+.notificacao{
+  padding: 1px 1px !important;
+  min-height: 100px !important;
+  line-height: 20px !important;
+}
+
+.gruber-pesquisa{
+  background-image: url("background_gruber_pesquisa.png");
+}
+
+.aligncenter {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.dataTable{
+  width: 100% !important;
+}
+
+#table-data tr td {
+  height: 10px !important;
+}
+
+.btn-table{
+  margin-bottom: 0px !important;
+}
+
+.padding{
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.no-padding-left-right{
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.margin{
+  margin-left: 5px !important;
+  margin-right: 5px !important;
+}
+
+.padding-top-10{
+  padding-top: 10px !important;
+}
+
+.margin-bottom-10{
+  margin-bottom: 10px !important;
+}
+
+.margin-bottom-5 {
+  margin-bottom: 5px !important;
+}
+
+.black_link{
+  color: #676a6c !important;
+}
+
+.padding-top-0 {
+  padding-top: 0px !important;
+}
+
+.padding-0{
+  padding: 0px 0px !important;
+}
+
+.swal2-container {
+  z-index: 3000 !important;
+}
+
+.no-padding{
+  padding: 0px !important;
+}
+
+.observacao{
+  height: 250px !important;
+}
+
+.pull-center {
+  text-align: center;
+}
+
+
+.modal-extra-lg{
+ width: 1100px !important;
+}
+
+.whats {
+  visibility:hidden;
+  font-size:15px;
+  cursor:pointer;
+}
+.whats:before {
+  content:url('whats_nao_enviado.ico');
+  position: absolute;
+  visibility:visible;
+}
+.whats:checked:before {
+  content:url('whats_enviado.ico');
+  position: absolute;
+}
+
+.telefone {
+  visibility:hidden;
+  font-size:15px;
+  cursor:pointer;
+}
+.telefone:before {
+  content:url('telefonepreto.ico');
+  position: absolute;
+  visibility:visible;
+}
+.telefone:checked:before {
+  content:url('telefoneverde.ico');
+  position: absolute;
+}
+
+.chosen-container-single .chosen-single {
+  padding: 0px 12px !important;
+  margin-bottom: 4px !important;
+}
+
+.padding-5{
+  padding: 5px !important;
+}
+
+
+.confirm-agenda {
+  visibility:hidden;
+  font-size:15px;
+  cursor:pointer;
+}
+.confirm-agenda:before {
+  content:url('negative.png');
+  position: absolute;
+  visibility:visible;
+}
+.confirm-agenda:checked:before {
+  content:url('positive.png');
+  position: absolute;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-direction-column {
+  flex-direction: column;
+}
+
+.gap-2 {
+  gap: 2.5px;
+}
+.d-none {
+  display: none;
+}
+
+.align-items-center {
+  align-items: flex-end;
+}

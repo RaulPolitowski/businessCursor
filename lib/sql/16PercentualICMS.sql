@@ -1,0 +1,21 @@
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (3.19, 3060000.00, 2880000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (0.00, 180000.00, 0.00);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (3.30, 3240000.00, 3060000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (0.00, 360000.00, 180000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (3.40, 3420000.00, 3240000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (3.50, 3600000.00, 3420000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (0.67, 540000.00, 360000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (1.07, 720000.00, 540000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (1.33, 900000.00, 720000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (1.52, 1080000.00, 900000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (1.83, 1260000.00, 1080000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (2.07, 1440000.00, 1260000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (2.27, 1620000.00, 1440000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (2.42, 1800000.00, 1620000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (2.56, 1980000.00, 1800000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (2.67, 2160000.00, 1980000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (2.76, 2520000.00, 2340000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (2.84, 2520000.00, 2340000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (2.92, 2700000.00, 2520000.01);
+INSERT INTO percentualcreditoicms (aliquota, valorfinal, valorinicial) VALUES (3.06, 2880000.00, 2700000.01);
+

@@ -1,0 +1,1 @@
+json.array! @cnaes, :id, :codigo, :descricao

@@ -1,0 +1,272 @@
+<div class="wrapper wrapper-content padding-5">
+  <div class="row animated fadeInDown">
+    <div class="col-lg-12 padding-left-right" >
+      <div class="ibox float-e-margins border-bottom">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <div class="field col-sm-6">
+                <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag  'empresas_financeiro_id', options_for_select([
+                                                                                 ['GERMAN TECH (MATRIZ)', 17],
+                                                                                 ['GERMAN TECH (FILIAL)', 3253],
+                                                                                 ['GERMAN SERVIÇOS', 3422]
+                                                                             ], (current_empresa.id == 2 ? [3422] : [17,3253,3422])), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um status'}, :include_blank => true, :multiple => true} %>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Estado', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'estado_financeiro_id', options_for_select( Financeiro::Estado.order(:nome).collect{ |u| [u.descricao_completa, u.id] }) , {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-2" style="display: none;">
+                <%= label_tag 'Implantador', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'implantador_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um implantador'}, :include_blank => true} %>
+                <!--<%= select_tag 'implantador_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }, (!current_user.admin? ? current_user.id : nil)), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um implantador'}, :include_blank => true, :disabled => (!current_user.admin? ? true : false)} %>-->
+              </div>
+              <div class="field col-sm-2" >
+                <%= label_tag 'Vendedor', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'vendedor_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true} %>
+              </div>
+              <div class="col-lg-2">
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarPaineis', :class => 'btn btn-primary', :style => "margin-top: 20px !important"%>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="tabs-container" >
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1" id="tabClientes"> Clientes</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-2" id="tabFechamento"> Faturamento</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-5" id="tabDemonstrativo"> Demonstrativos</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-3" id="tabComercial"> Comercial</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-4" id="tabProjecao"> Projeções</a></li>
+      </ul>
+      <div class="tab-content" style="margin-bottom: 50px">
+        <div id="tab-1" class="tab-pane active">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/resultados/clientes/cliente_ativos_bloqueados' %>
+            <%= render 'dashboards/resultados/clientes/efetivacoes_desistencias' %>
+          </div>
+        </div>
+        <div id="tab-2" class="tab-pane">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/resultados/faturamento/faturamento' %>
+            <%= render 'dashboards/resultados/faturamento/primeira_parcela' %>
+            <%= render 'dashboards/resultados/faturamento/inadimplencia' %>
+          </div>
+        </div>
+        <div id="tab-3" class="tab-pane">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/resultados/comercial/efetivacoes_comercial' %>
+            <%= render 'dashboards/resultados/comercial/implantacoes_comercial' %>
+            <%= render 'dashboards/resultados/comercial/vendas_comercial' %>
+            <%= render 'dashboards/resultados/comercial/desistencias_comercial' %>
+            <%= render 'dashboards/resultados/comercial/vendedores_implantacoes_comercial' %>
+            <%= render 'dashboards/resultados/comercial/vendedores_acompanhamentos_comercial' %>
+            <%= render 'dashboards/resultados/comercial/tabela/tabela_top_implantacoes' %>
+            <%= render 'dashboards/resultados/comercial/tabela/tabela_top_efetivacoes' %>
+          </div>
+        </div>
+        <div id="tab-4" class="tab-pane">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/resultados/projecao/projecao_fat_honorario' %>
+            <%# <%= render 'dashboards/resultados/projecao/projecao_faturamento' %>
+            <%= render 'dashboards/resultados/projecao/projecao_clientes' %>            
+            <!--<%= render 'dashboards/resultados/projecao/projecao_honorario' %>
+            <%= render 'dashboards/resultados/projecao/projecao_instalacao' %> -->
+          </div>
+        </div>
+        <div id="tab-5" class="tab-pane">
+          <div class="panel-body" style="padding: 5px !important;">
+            <%= render 'dashboards/resultados/demonstrativo/receitas_despesas' %>
+            <%= render 'dashboards/resultados/demonstrativo/tipo_receita_12meses' %>
+            <%= render 'dashboards/resultados/demonstrativo/despesas_com_pessoal' %>
+            <%= render 'dashboards/resultados/demonstrativo/resumo_5_ultimos_anos' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .ibox-title-without-border-style {
+    border-style: none;
+    min-height: 24px !important;
+    padding: 5px !important;
+  }
+  .ibox{
+    margin-bottom: 5px !important;
+  }
+  .google-visualization-table-th {
+     text-align: center !important;
+   }
+  .google-visualization-table-td {
+    text-align: center !important;
+  }
+</style>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        google.charts.load('current', {'packages':['corechart','table']});
+
+        setTimeout(function(){
+            google.charts.setOnLoadCallback(drawClientes12Meses);
+            //google.charts.setOnLoadCallback(drawTableClientesCidades);                       
+            document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+            document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+            google.charts.setOnLoadCallback(drawEfetivacoesDesativacoesReal);
+            google.charts.setOnLoadCallback(drawTabelaEfetivacoesDesistenciasReal("ATIVAS")); 
+        }, 200);
+
+        $('#tabClientes').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            drawClientes12Meses();
+            //drawTableClientesCidades();
+            drawTabelaEfetivacoesDesistenciasReal("ATIVAS");            
+            document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+            document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+            drawEfetivacoesDesativacoesReal();
+        });
+
+        $('#tabFechamento').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            drawFaturamento12Meses();
+            drawPrimeiraParcela12Meses();
+            //drawTableFaturamentoCidades();
+            drawInadimplencia12Meses();
+            drawPrimeiraParcelaPorUF('Mensalidade');
+        });
+
+        $('#tabComercial').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            drawImplantacoes12Meses();
+            drawAcompanhamentos12Meses();
+            drawDesistencias12Meses();
+            drawFechamentos12Meses();
+            drawTableVendedoresAcompanhamentos();
+            drawTableVendedoresImplantacoes();
+        });
+
+        $('#tabProjecao').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            //drawProjecaoHonorario12Meses();
+            //drawProjecaoInstalacao12Meses();
+            //drawProjecaoFaturamento6Meses();
+            drawProjecaoFatHonorario();
+            drawProjecaoClientes6Meses();
+        });
+
+        $('#tabDemonstrativo').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            drawDemonstrativo12Meses();
+            drawTable12MesesResultado();
+            drawTableResumoAnual();
+        });        
+
+        $('#btnAtualizarPaineis').on('click', function () {
+            if($('#empresas_financeiro_id').val() == '') {
+                exibirWarning('Selecione pelo menos uma empresa');
+                return false;
+            }
+            atualizarPaineis();
+            return false;
+        })
+
+        $('#mes_filtro_implantacao').on('change', function () {
+            $('#bloco_top_implantacoes').hide();
+            drawTableVendedoresImplantacoes();
+        });
+
+        $('#tipo_filtro_implantacao').on('change', function () {
+            $('#bloco_top_implantacoes').hide();
+            drawTableVendedoresImplantacoes();
+        });
+
+        $('#mes_filtro_efetivacao').on('change', function () {
+            $('#bloco_top_implantacoes').hide();
+            drawTableVendedoresAcompanhamentos();
+        });
+
+        $('#tipo_filtro_efetivacao').on('change', function () {
+            $('#bloco_top_implantacoes').hide();
+            drawTableVendedoresAcompanhamentos();
+        });
+
+        $('#tipo_analise_projecao_faturamento').on('change', function(){
+            drawProjecaoFaturamento6Meses();
+        });
+
+        $('#qtd_meses_analise_faturamento').on('change', function(){
+            drawProjecaoFaturamento6Meses();
+        });
+        $('#qtd_meses_analise_honorario').on('change', function(){
+            drawProjecaoFatHonorario();
+        });
+        
+        $('#qtd_meses_analise_clientes').on('change', function(){
+            drawProjecaoClientes6Meses();
+        });
+    });
+
+    function atualizarPaineis() {
+        var tab = $('.tab-content .active').attr('id');
+        if(tab == "tab-1"){
+            drawClientes12Meses();
+            //drawTableClientesCidades();
+            drawTabelaEfetivacoesDesistenciasReal("ATIVAS");          
+            document.getElementById("titulo_grafico").innerHTML = "Efetivações";
+            document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+            drawEfetivacoesDesativacoesReal();
+        }else if(tab == "tab-2"){
+            drawFaturamento12Meses();
+            drawPrimeiraParcela12Meses();
+            //drawTableFaturamentoCidades();
+            drawPrimeiraParcelaPorUF('Mensalidade');
+            drawInadimplencia12Meses();
+        }else if(tab == "tab-3"){
+            drawImplantacoes12Meses();
+            drawAcompanhamentos12Meses();
+            drawDesistencias12Meses();
+            drawFechamentos12Meses();
+            drawTableVendedoresAcompanhamentos();
+            drawTableVendedoresImplantacoes();
+        }else if(tab == "tab-4"){
+            //drawProjecaoHonorario12Meses();
+            //drawProjecaoInstalacao12Meses();
+            //drawProjecaoFaturamento6Meses();
+            drawProjecaoFatHonorario();
+            drawProjecaoClientes6Meses();
+        }else if (tab == "tab-5"){
+          $('#fatDespesa').hide();
+          drawDemonstrativo12Meses();
+          drawTable12MesesResultado();
+        }
+    }
+
+</script>
+

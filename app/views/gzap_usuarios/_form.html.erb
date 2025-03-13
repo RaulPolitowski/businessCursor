@@ -1,0 +1,48 @@
+<fieldset id="form_mensagem_notificacao" class="form-horizontal">
+  <%= form_for(@gzap_usuario) do |f| %>
+    <div>
+      <div class="form-group">
+        <div class="field">
+          <%= render partial: 'gzap_usuarios/select_gzap_usuarios', locals: {f: f} %>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="field">
+          <%= f.label :destinatarios, class: 'col-sm-2 control-label padding' %>
+          <div class="col-sm-10 padding">
+            <%= f.text_field :destinatarios, class: 'form-control input-sm',
+              placeholder: 'Insira os números dos destinatários separados por vírgula (Ex. 45990123456, 45999123456)'
+            %>
+          </div>
+        </div>
+      </div>
+      <i id="tooltip-description" data-placement="bottom" class="col-sm-2 fa fa-exclamation-circle fa-lg" title="Para aparecer um usuário gzap é necessário no minimo uma conexão autenticada no gzap!"></i>
+    </div>
+    <div class="actions aligncenter">
+      <%= f.submit 'Salvar', :class => 'btn btn-lg btn-success aligncenter' %>
+    </div>
+  <% end %>
+</fieldset>
+
+<script>
+  $(document).ready(function(){
+    $('#mensagem_notificacao_tipo').on('change', function(){
+      const tipoValue = $(this).val();
+      let id = $('#mensagem_notificacao_id').val();
+
+      $.ajax({
+        url: `/mensagem_notificacoes/render_form/?tipo=${tipoValue}${id ? '&id='+id : ''}`,
+        method: 'GET',
+        success: function(response) {
+          if (response){
+            $('#form_mensagem_notificacao').html('');
+            $('#form_mensagem_notificacao').append(response);
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+    });
+  });
+</script>

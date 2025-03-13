@@ -1,0 +1,95 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>NEGOCIAÇÕES</h2>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+          <h5>Filtros</h5>
+              <%= form_tag('/relatorios/negociacoes_sp_print', method: :post) do %>
+                  <div class="row">
+                    <div class="field col-sm-2">
+                      <label for="data_inicio">Data Início</label>
+                      <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio" autocomplete="off" required>
+                    </div>
+                    <div class="field col-sm-2">
+                      <label for="data_fim">Data Fim</label>
+                      <input class="form-control input-sm" type="text" name="data_fim" id="data_fim" autocomplete="off" required>
+                    </div>
+                    <div class="field col-sm-2">
+                      <%= label_tag 'Estado', nil, class: 'col-sm-2 control-label padding' %>
+                      <%= select_tag 'estado_financeiro_id', options_for_select( Financeiro::Estado.order(:nome).collect{ |u| [u.descricao_completa, u.id] }) , {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}, :include_blank => true} %>
+                    </div>
+                    <div class="field col-sm-2">
+                      <%= label_tag 'Tipo', nil, class: 'col-sm-6 control-label padding' %>
+                      <%= select_tag  'resumo', options_for_select([
+                                                                       ['Analitico', false],
+                                                                       ['Resumido', true]
+                                                                   ], false), {:class => "form-control input-sm chosen-select"} %>
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Agrupar', nil, class: 'col-sm-2 control-label padding' %>
+                      <%= select_tag  'group_by', options_for_select([
+                                                                         ['Sem agrupamento', ''],
+                                                                         ['Negociador', 'VENDEDOR'],
+                                                                         ['Captador', 'CAPTADOR']
+                                                                     ], 'CAPTADOR'), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um agrupamento'}} %>
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Negociador', nil, class: 'col-sm-2 control-label padding' %>
+                      <%= select_tag 'negociador', options_for_select(User.empresas_acesso( ApplicationHelper.get_empresas_by_codigo(current_empresa.id.to_s)).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um negociador'}, :include_blank => true, :multiple => true} %>
+                    </div>
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Captador', nil, class: 'col-sm-2 control-label padding' %>
+                      <%= select_tag 'captador', options_for_select(User.empresas_acesso( ApplicationHelper.get_empresas_by_codigo(current_empresa.id.to_s)).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um captador'}, :include_blank => true, :multiple => true} %>
+                    </div>
+
+                    <div class="field col-sm-4">
+                      <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                      <%= select_tag  'empresa_id', options_for_select([
+                                                                               ['German Tech Sistemas (PR)', 1],
+                                                                               ['Pró Vendas', 11],
+                                                                               ['Centro de Distribuição', 20]
+                                                                       ], (get_codigo_empresa(current_empresa.id))), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma empresa'}, :include_blank => true, :multiple => true} %>
+                    </div>
+
+                    <div class="field col-sm-5">
+                      <label for="em_aberto">Status</label>
+                      <br>
+                      <label >
+                        <%=  check_box_tag 'em_aberto', '1', false, class: 'form-control input-sm icheckbox_square-green i-checks' %>
+                        Em Aberto
+                      </label>
+                      <label >
+                        <%=  check_box_tag 'reagendadas', '2', false, class: 'form-control input-sm icheckbox_square-green i-checks' %>
+                        Reagendado
+                      </label>
+                      <label >
+                        <%=  check_box_tag 'criadas', '3', true, class: 'form-control input-sm icheckbox_square-green i-checks' %>
+                        Criadas
+                      </label>
+                      <label >
+                        <%=  check_box_tag 'fechadas', '4', false, class: 'form-control input-sm icheckbox_square-green i-checks' %>
+                        Fechadas
+                      </label>
+                      <label >
+                        <%=  check_box_tag 'canceladas', '5', false, class: 'form-control input-sm icheckbox_square-green i-checks' %>
+                        Canceladas
+                      </label>
+                    </div>
+                    <div class="col-lg-2">
+                      <br>
+                      <%= submit_tag 'Gerar', :id => 'btnGerarRelatorio', :class => 'btn btn-primary', :formtarget => "_blank" %>
+                    </div>
+                  </div>
+              <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_include_tag("relatorios_negociacoes") %>

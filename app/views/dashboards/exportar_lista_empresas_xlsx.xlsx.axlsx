@@ -1,0 +1,19 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: 'Empresas') do |sheet|
+  sheet.add_row ['Phone Number', 'Name'] # Cabeçalhos das colunas
+  filas = FilaEmpresa.where(empresa_id: params[:empresa_id], numero_fila: params[:numero_job]).order('id').limit(params[:quantidade])
+  filas.each do |fila|
+    cliente = fila.cliente
+    fila.destroy
+    telefone = (cliente.telefone.present? ? cliente.telefone : (cliente.telefone2.present? ? cliente.telefone2 : nil))
+    if telefone.present?
+      telefone = telefone.gsub(/\D/, '')
+      if (params[:nono_digito])
+        telefone = telefone[0..1] + "9" + telefone[2..-1]
+      end
+
+      telefone = "55" + telefone
+      sheet.add_row [telefone ? telefone : cliente.telefone, cliente.razao_social]
+    end
+  end
+end

@@ -1,0 +1,58 @@
+<div id="modal_alterar_empresa" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <i class="fa fa-key modal-icon"></i>
+        <h4 class="modal-title">Empresa</h4>
+      </div>
+      <form class="form-horizontal" id="form_alterar_empresa">
+        <div class="modal-body">
+          <div class="form-group">
+            <div class="field" id="btn-trocar-empresas">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    $('#btn_alterar_empresa').click(function () {
+        $('#modal_alterar_empresa').modal('show');
+    });
+
+    loadTrocarEmpresas();
+
+    function trocarEmpresa(empresa)
+    {
+        $.ajax({
+            url: '/users/alterar_empresa/',
+            data: {empresa_id: empresa},
+            type: 'POST',
+            success: function (data) {
+                $('#modal_alterar_empresa').modal('toggle');
+                location.reload();
+            },error: function(){
+                alert('Ocorreu algum erro!')
+            }
+        });
+    }
+
+    function loadTrocarEmpresas(){
+        $.getJSON('/empresas?q[ativo_eq]=true', function(data){
+            $.each(data,function (i,val){
+                $(`<button type="button" class="ladda-button btn btn-md btn-success"
+                   style="margin-right: 5px; margin-top: 5px"
+                   onclick="trocarEmpresa(${val['id']})">${val['estado']}</button>`
+                ).appendTo('#btn-trocar-empresas');
+            });
+        });
+    }
+
+
+</script>

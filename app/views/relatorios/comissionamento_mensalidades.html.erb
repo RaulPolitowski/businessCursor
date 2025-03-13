@@ -1,0 +1,241 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>RELATÓRIO COMISSIONAMENTO</h2>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <h5>Filtros</h5>
+                    <%= form_tag('/relatorios/comissionamento_mensalidades_print', method: :post) do %>
+                    <div class="row">
+                        <div class="field col-sm-2">
+                            <label for="data_inicio">Competência inicial</label>
+                            <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio" autocomplete="off" required>
+                        </div>
+                        <div class="field col-sm-2">
+                            <label for="data_fim">Competência final</label>
+                            <input class="form-control input-sm" type="text" name="data_fim" id="data_fim" autocomplete="off" required>
+                        </div>
+                        <div class="field col-sm-3">
+                            <%= label_tag 'Tipo', nil, class: 'col-sm-2 control-label padding' %>
+                            <%= select_tag  'tipo', options_for_select([
+                                                                     ['Coordenação PR', '1'],
+                                                                     ['Coordenação SP', '2'],
+                                                                     ['Consultor 40%', '3'],
+                                                                     ['Implantação 30%', '4'],
+                                                                     ['Acompanhamento', '5'],
+                                                                     ['Consultor meta', '6'],
+                                                                     ['Implantador meta', '8'],
+                                                                     ['Estágio 20%', '7'],
+                                                                     ['Venda/Implantação', '9'],
+                                                                     ['Consultor/Supervisão', '10'],
+                                                                     ['Marketing Digital', '11'],
+                                                                 ], '1'), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um tipo'}} %>
+                        </div>
+                        <div class="col-lg-5">
+                            <br>
+                            <%= submit_tag 'Gerar', :id => 'btnGerarRelatorio', :class => 'btn btn-primary', :formtarget => "_blank" %>
+                            <% if current_user.admin? %>
+                                <button type="button" id="btnGerarExcel" class="btn btn-primary" onclick="downloadExcel()">Gerar XLSX</button>
+                            <% end %>
+                            <button type="button" id="btnComissoes" class="btn btn-primary" onclick="mostrarComissao()" style="display: none;" >Comissões </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                      <div class ="col-sm-6">
+                        <div class="row">
+                          <div class="field col-sm-4" id="local">
+                            <%= label_tag 'Valor local', nil, class: 'col-sm-12 control-label padding' %>
+                            <%= text_field_tag :valor_local, nil, class: 'form-control input-sm', autocomplete: "off", value: '53,55'  %>
+                        </div>
+                          <div class="field col-sm-4" id="regional">
+                            <%= label_tag 'Valor regional', nil, class: 'col-sm-12 control-label padding' %>
+                            <%= text_field_tag :valor_regional, nil, class: 'form-control input-sm', autocomplete: "off", value: '26,50' %>
+                        </div>
+                        <div class="field col-sm-4" id="vendedor_div" style="display: none;">
+                            <%= label_tag 'Vendedor', nil, class: 'col-sm-2 control-label padding' %>
+                            <%= select_tag 'vendedor', options_for_select(User.where('tipo_comissao = 1').empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true} %>                            
+                        </div>
+                        <div class="field col-sm-4" id="vendedor_meta_div" style="display: none;">
+                            <%= label_tag 'Vendedor', nil, class: 'col-sm-2 control-label padding' %>
+                            <%= select_tag 'vendedor_meta', options_for_select(User.where('tipo_comissao = 4').empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true} %>
+                        </div>
+                        <div class="field col-sm-4" id="responsavel_div" style="display: none;">
+                            <%= label_tag 'Responsável', nil, class: 'col-sm-2 control-label padding' %>
+                            <%= select_tag 'responsavel', options_for_select(User.where('tipo_comissao = 9').empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um responsável'}, :include_blank => true} %>
+                        </div>
+                        <div class="field col-sm-4" id="estagio_div" style="display: none;">
+                            <%= label_tag 'Colaborador', nil, class: 'col-sm-2 control-label padding' %>
+                            <%= select_tag 'estagio', options_for_select(User.where('tipo_comissao = 5').empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um colaborador'}, :include_blank => true} %>
+                        </div>
+                        <div class="field col-sm-4" id="implantacao_div" style="display: none;">
+                            <%= label_tag 'Implantador', nil, class: 'col-sm-2 control-label padding' %>
+                            <%= select_tag 'implantador', options_for_select(User.where('tipo_comissao = 2').empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um implantador'}, :include_blank => true} %>
+                        </div>
+                        <div class="field col-sm-4" id="implantador_meta_div" style="display: none;">
+                            <%= label_tag 'Implantador', nil, class: 'col-sm-2 control-label padding' %>
+                            <%= select_tag 'implantador_meta', options_for_select(User.where('tipo_comissao = 6').empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um implantador'}, :include_blank => true} %>
+                        </div>
+                        <div class="field col-sm-4" id="adm_div" style="display: none;">
+                            <%= label_tag 'Colaborador', nil, class: 'col-sm-2 control-label padding' %>
+                            <%= select_tag 'colaborador', options_for_select(User.where('tipo_comissao = 7').empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um colaborador'}, :include_blank => true} %>
+                        </div>
+                          <div class="field col-sm-4" id="acompanhamento_div" style="display: none;">
+                            <%= label_tag 'Acompanhador', nil, class: 'col-sm-2 control-label padding' %>
+                            <%= select_tag 'acompanhador', options_for_select(User.where('tipo_comissao = 3').empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um acompanhante'}, :include_blank => true} %>
+                        </div>
+                          <div class="field col-sm-4" id="vendedor_acompanhamento_div" style="display: none;">
+                            <%= label_tag 'Colaborador', nil, class: 'col-sm-2 control-label padding' %>
+                            <%= select_tag 'colaborador_tipo_10', options_for_select(User.where('tipo_comissao = 8').empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um colaborador'}, :include_blank => true} %>
+                          </div>
+                    </div>
+                    <div class="row">
+                          <div class="field col-sm-8" style="padding-right: 2px !important;">
+                            <%= label_tag 'Cliente', nil, class: 'col-sm-2 control-label padding' %>
+                            <%= text_field_tag :filtro_cliente2, nil, class: 'form-control input-sm', autocomplete: "off", placeholder: 'Digite o nome para buscar' %>
+                            <%# <input type="hidden" id="filtro_cliente_id" value="">  %>
+                            <%= hidden_field_tag :filtro_cliente_id, nil, class: 'form-control input-sm' %>
+                        </div>
+                        <div class="field col-sm-4" style="padding-top: 20px;padding-left: 0px;">
+                            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Adicionar clientes" onclick="addCliente()" ><i class="fa fa-plus-square" aria-hidden="true"></i> </button>
+                            <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="right" title="Desvincular todos clientes" onclick="desvincularClientes()" ><i class="fa fa-remove" aria-hidden="true"></i> </button>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 10px">
+                          <div class="field col-sm-12">
+                            <%= text_area_tag :clientes_add, nil, rows:5, class: 'form-control input-sm', autocomplete: "off", readOnly: true %>
+                        </div>
+                    </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <table class="table table-sm table-striped ml-4" id="tableImplantador" style="display: none;">
+                          <thead>
+                          <tr>
+                            <th>COMISSÕES</th>
+                          </tr>
+                          <tr>
+                            <th><%= "FAIXA" %>
+                            <th><%= "PORCENTAGEM" %>
+                          <tr>
+                          </thead>
+                          <tbody>
+                          <tr>
+                            <td>menos de 2000</td>
+                            <td>0%</td>
+                          </tr>
+                          <tr>
+                            <td>de 2001 até 4000</td>
+                            <td>10%</td>
+                          </tr>
+                          <tr>
+                            <td>de 4001 até 3500</td>
+                            <td>15%</td>
+                          </tr>
+                          <tr>
+                            <td>de 5501 até 7000</td>
+                            <td>20%</td>
+                          </tr>
+                          <tr>
+                            <td>de 7001 até 8000</td>
+                            <td>25%</td>
+                          </tr>
+                          <tr>
+                            <td>mais que 8000 </td>
+                            <td>30%</td>
+                          </tr>
+                          </tbody>
+                        </table>
+                        <table class="table table-sm table-striped ml-3" id="tableAcompanhador" style="display: none;">
+                          <thead>
+                          <tr>
+                            <th>COMISSÕES</th>
+                          </tr>
+                          <tr>
+                            <th><%= "FAIXA" %>
+                            <th><%= "PORCENTAGEM" %>
+                          <tr>
+                          </thead>
+                          <tbody>
+                          <tr>
+                            <td>menos que 12000</td>
+                            <td>10%</td>
+                          </tr>
+                          <tr>
+                            <td>de 12001 até 15000</td>
+                            <td>12%</td>
+                          </tr>
+                          <tr>
+                            <td>de 15001 até 21000</td>
+                            <td>15%</td>
+                          </tr>
+                          <tr>
+                            <td>acima de 21000</td>
+                            <td>20%</td>
+                          </tr>
+                          </tbody>
+                        </table>
+                        <table class="table table-sm table-striped ml-2" id="tableConsultor" style="display: none;">
+                          <thead>
+                          <tr>
+                            <th>COMISSÕES</th>
+                          </tr>
+                          <tr>
+                            <th><%= "FAIXA" %>
+                            <th><%= "PORCENTAGEM" %>
+                          <tr>
+                          </thead>
+                          <tbody>
+                          <tr>
+                            <td>até 1.500 </td>
+                            <td>0%</td>
+                          </tr>
+                          <tr>
+                            <td>de 1501 até 2200</td>
+                            <td>15%</td>
+                          </tr>
+                          <tr>
+                            <td>de 2201 até 3000</td>
+                            <td>20%</td>
+                          </tr>
+                          <tr>
+                            <td>de 3001 até 4500</td>
+                            <td>30%</td>
+                          </tr>
+                          <tr>
+                            <td>acima 4500</td>
+                            <td>40%</td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%= javascript_include_tag("relatorios_comissionamento_mensalidades") %>
+
+<script>
+ $('#tipo').on('change', function(){
+    $('#vendedor').val("");
+    $('#vendedor_meta').val("");
+    $('#estagio').val("");
+    $('#implantador').val("");
+    $('#implantador_meta').val("");
+    $('#acompanhador').val("");
+    $('#colaborador').val("");
+ });
+
+ function desvincularClientes(){     
+    $('#filtro_cliente').val("");
+    $('#filtro_cliente_id').val("");
+    $('#clientes_add').val("");
+ }
+ 
+</script>

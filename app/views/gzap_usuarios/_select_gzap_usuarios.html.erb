@@ -1,0 +1,22 @@
+<%= f.label :usuario_gzap, class: 'col-sm-2 control-label padding' %>
+<div class="col-sm-10 padding">
+  <%= f.hidden_field :name, value: f.object.user_id %>
+  <%= select_users_from_gzap(f) %>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#gzap_usuario_name').val(get_username())
+    $('#gzap_usuario_user_id').on('change', function(){
+      const name = get_username();
+      $('#gzap_usuario_name').val(name);
+    });
+  });
+
+  function get_username(){
+    const selectElement = document.getElementById("gzap_usuario_user_id");
+    const selectedIndex = selectElement.selectedIndex;
+    const selectedText = selectElement.options[selectedIndex].textContent;
+    return selectedText;
+  }
+</script>

@@ -1,0 +1,107 @@
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important">
+    <div class="panel-heading" style="margin-top: -6px !important; padding-left: 10px" id="categoria_tabela">
+      Despesas com Pessoal
+      <div class="panel-body no-padding">
+        <div class="col-lg-12 padding-left-right">
+          <div id="DespesasComPessoal" class="col-md-12 padding-5">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-content padding-5">
+                  <div id="despesas_com_pessoal"  style="height: 250px !important;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .greencolor{
+    color: green;
+  }
+  .redcolor{
+    color: red;
+  }
+  .bold{
+    font-weight: bold;
+  }
+</style>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        google.charts.load('current', {'packages':['corechart','table']});
+        drawTableDespesasComPessoal();
+});
+
+      var teste ;
+function drawTableDespesasComPessoal() {
+    $.getJSON("/dashboards/get_receita_12_meses_gruber?empresa=" + $('#empresas_financeiro_id').val() + "&script=SOMAR_RECEITA", function(info)
+    {
+         var total = info;
+         console.log(info);
+         teste = new Array (parseFloat($(total).get(-1).m0), parseFloat($(total).get(-1).m1), parseFloat($(total).get(-1).m2),
+         parseFloat($(total).get(-1).m3), parseFloat($(total).get(-1).m4), parseFloat($(total).get(-1).m5), parseFloat($(total).get(-1).m6),
+         parseFloat($(total).get(-1).m7), parseFloat($(total).get(-1).m8), parseFloat($(total).get(-1).m9), parseFloat($(total).get(-1).m10), parseFloat($(total).get(-1).m11))
+
+        drawTableDespesasComPessoal2();
+    });
+}
+
+function drawTableDespesasComPessoal2(){
+    $.getJSON("/dashboards/get_despesas_com_pessoal?empresa=" + $('#empresas_financeiro_id').val() , function(data)
+    {
+
+        var datatable = new google.visualization.DataTable();
+
+        var now = new Date;
+        monName = new Array ("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+        //Array para armazenar as porcentagens antes de serem convertidas para String
+        valorPorCento = new Array (parseFloat((data[0].valor*100)/teste[0]) ,parseFloat(((data[1].valor)*100)/teste[1]) ,parseFloat(((data[2].valor)*100)/teste[2]) ,parseFloat(((data[3].valor)*100)/teste[3]) , parseFloat(((data[4].valor)*100)/teste[4]) ,
+            parseFloat(((data[5].valor)*100)/teste[5]) , parseFloat(((data[6].valor)*100)/teste[6]) , parseFloat(((data[7].valor)*100)/teste[7]) , parseFloat(((data[8].valor)*100)/teste[8]) , parseFloat(((data[9].valor)*100)/teste[9]) , parseFloat(((data[10].valor)*100)/teste[10]))
+
+        datatable.addColumn('string', 'Faturamento')
+        for (var j = 0; j < 11; j++ ){
+            var ref = now.getMonth() +1 + j; //getMOnth retorna considerando jan como mês 0
+            var ano = now.getFullYear() -1; //ano anterior
+
+            if (ref > 11 ){
+                ref = ref - 12;
+                ano = now.getFullYear();
+            }
+            //Foi necessário deixar todas as colunas como String para que em uma mesma coluna pudessem ser utilizados dois dados, um em R$ e outro em %
+            datatable.addColumn('string', monName [ref] + '/' + ano);
+        }
+        //Devido as colunas String a formatação com o NumberFormat não era mais efetiva, portanto a formatação foi feita por meio do método .toLocaleString
+        datatable.addRow(['DESPESAS COM PESSOAL', parseFloat(data[0].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[1].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[2].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[3].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[4].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}),
+            parseFloat(data[5].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[6].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[7].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[8].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[9].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[10].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})]);
+        //As informações dessa linha serão acrescentadas no 'for' abaixo, porém para se utilizar o setCell a célula já precisa existir
+        //portanto essa linha apenas insere uma linha na tabela
+        datatable.addRow(['POORCENTAGEM','','','','', '','','','' ,'' ,'' ,'' ]);
+
+        for  (var x = 0; x < 11; x++) {
+            if (valorPorCento[x] >= 50) {
+                datatable.setCell(1, x + 1, valorPorCento[x].toFixed(2) + '%', valorPorCento[x].toFixed(2) + '%',{'className':'redcolor'});
+            }else{
+                datatable.setCell(1, x + 1, valorPorCento[x].toFixed(2) + '%', valorPorCento[x].toFixed(2) + '%');
+            }
+        }
+
+        var table = new google.visualization.Table(document.getElementById('despesas_com_pessoal'));
+        google.visualization.events.addListener(table, 'select', selectHandler);
+
+        function selectHandler(e) {
+            var selectedItem = table.getSelection();
+
+        }
+        $('#DespesasComPessoal').show();
+        table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', frozenColumns:1});
+    });
+}
+
+</script>

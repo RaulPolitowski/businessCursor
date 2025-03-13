@@ -1,0 +1,17 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-8">
+    <h2>AGENDA</h2>
+  </div>
+</div>
+
+<input type="hidden" id="agenda_index_id" value="<%= params[:agenda_index_id] %>">
+<input type="hidden" id="cliente_index_id" value="<%= params[:cliente_index_id] %>">
+
+<%= render partial: 'agendamentos/form_agenda' %>
+<%= render partial: 'agendamentos/modal_agendamento' %>
+<%= render partial: 'agendamentos/novo_comentario' %>
+<%= render partial: 'agendamentos/motivo' %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag("locale/pt-br") %>
+<% end %>

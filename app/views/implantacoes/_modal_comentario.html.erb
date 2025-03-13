@@ -1,0 +1,68 @@
+<div id="modal_comentario_implantacao" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Novo comentário</h4>
+      </div>
+      <form class="form-horizontal" id="form_comentario">
+        <div class="modal-body">
+          <div class="form-group">
+            <div class="field">
+              <div class="col-sm-12">
+                <input type="hidden" id="novo_comentario_implantacao_id" value="">
+                <label id="error_comentario" style="color: red; display: none;">Informe o comentário!</label>
+                <textarea autocomplete="off" class="form-control" name="comentario" id="text_comentario"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" id="comentario_data_retorno">
+            <div class="col-sm-12 no-padding">
+              <div class="field">
+                <div class="col-sm-6">
+                  <label id="data_retorno_comentario">Data Retorno</label>
+                  <div class="input-group clockpicker" data-autoclose="true">
+                    <%= text_field_tag 'retorno[data_retorno]', nil,  class: 'form-control input-sm', autocomplete: "off", placeholder: 'DD/MM/YYYY HH:mm' %>
+                    <span class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 no-padding" style="margin-top: 5px">
+              <div class="form-group margin">
+                <div class="pull-center">
+                  <button class="btn btn-primary btn-xs" id="btn10" onclick="setarData(10, $('#modal_comentario_implantacao #retorno_data_retorno')); return false;">10min</button>
+                  <button class="btn btn-primary btn-xs" id="btn20" onclick="setarData(20, $('#modal_comentario_implantacao #retorno_data_retorno')); return false;">20min</button>
+                  <button class="btn btn-primary btn-xs" id="btn30" onclick="setarData(30, $('#modal_comentario_implantacao #retorno_data_retorno')); return false;">30min</button>
+                  <button class="btn btn-primary btn-xs" id="btn45" onclick="setarData(45, $('#modal_comentario_implantacao #retorno_data_retorno')); return false;">45min</button>
+                  <button class="btn btn-primary btn-xs" id="btn1" onclick="setarData(60, $('#modal_comentario_implantacao #retorno_data_retorno')); return false;">1hora</button>
+                  <button class="btn btn-primary btn-xs" id="btn2" onclick="setarData(120, $('#modal_comentario_implantacao #retorno_data_retorno')); return false;">2horas</button>
+                  <button class="btn btn-primary btn-xs" id="btn4" onclick="setarData(240, $('#modal_comentario_implantacao #retorno_data_retorno')); return false;">4horas</button>
+                  <button class="btn btn-primary btn-xs" id="btn24" onclick="setarData(1440, $('#modal_comentario_implantacao #retorno_data_retorno')); return false;">24horas</button>
+                  <button class="btn btn-primary btn-xs" id="btn48" onclick="setarData(2880, $('#modal_comentario_implantacao #retorno_data_retorno')); return false;">48horas</button>
+                  <button class="btn btn-primary btn-xs" id="btn72" onclick="setarData(4320, $('#modal_comentario_implantacao #retorno_data_retorno')); return false;">72horas</button>
+                </div></div>
+            </div></div>
+            <div class="form-group">
+              <div class="field">
+                <div class="col-sm-12">
+                  <label for="comentario_usuario_id">Responsável</label>
+                  <%= select_tag 'comentario_usuario_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }, current_user.id), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um responsável'}} %>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-white" data-dismiss="modal">Fechar</button>
+          <%= submit_tag 'Salvar', :id => 'btnSalvarComentario', :class => 'btn btn-info' %>
+          <%= submit_tag 'Salvar', :id => 'btnSalvarComentarioIndex', :class => 'btn btn-info', :style => 'display: none;' %>
+          <%= submit_tag 'Salvar', :id => 'btnSalvarComentarioActivity', :class => 'btn btn-info', :style => 'display: none;' %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+

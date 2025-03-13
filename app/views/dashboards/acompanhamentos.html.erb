@@ -1,0 +1,1282 @@
+<div class="wrapper wrapper-content">
+  <div class="row">
+    <div class="col-lg-12 padding-left-right" >
+      <input type="hidden" id="status_id" value="">
+      <div class="ibox float-e-margins border-bottom">
+        <a class="collapse-link black_link">
+          <div class="ibox-title">
+            <h5>Filtros</h5>
+            <div class="ibox-tools">
+              <button class="btn btn-white btn-xs" id="btnOcultarEfetivas" value="false">Ocultar efetivas</button>
+              <input type="hidden" id="ocultar_efetivas" value="false">
+              <button class="btn btn-white btn-xs" id="btnNovas" value="false">Novas</button>
+              <input type="hidden" id="novos" value="false">
+              <button class="btn btn-primary btn-xs" id="btnEfetivas">Exibir efetivas</button>
+              <button class="btn btn-primary btn-xs" id="btnDia">Dia</button>
+              <button class="btn btn-primary btn-xs" id="btnOntem">Ontem</button>
+              <button class="btn btn-primary btn-xs" id="btnSemana">Semana</button>
+              <button class="btn btn-primary btn-xs" id="btnMes">Mês</button>
+              <i class="fa fa-chevron-up"></i>
+            </div>
+          </div>
+        </a>
+        <div class="ibox-content" style="display: none;">
+          <form>
+            <div class="row">
+              <input type="hidden" id="efetivas" value="false">
+              <div class="field col-sm-2">
+                <label for="data_inicio">Data Início</label>
+                <input class="form-control input-sm" type="text" name="data_inicio" id="data_inicio">
+              </div>
+              <div class="field col-sm-2">
+                <label for="data_fim">Data Fim</label>
+                <input class="form-control input-sm" type="text" name="data_fim" id="data_fim">
+              </div>
+              <div class="field col-sm-3">
+                <%= label_tag 'Implantador', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'implantador_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um implantador'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-3">
+                <%= label_tag 'Responsável', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'responsavel_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um responsável'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Vendedor', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'vendedor_id', options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um vendedor'}, :include_blank => true} %>
+              </div>
+              <div class="field col-sm-4">
+                <%= label_tag 'Empresa', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag  'empresa_id', options_for_select([
+                                                                     ['German Tech Sistemas (PR)', 1],
+                                                                     ['Pró Vendas', 11],
+                                                                     ['Centro de Distribuição', 20]
+                                                                 ], (get_codigo_empresa(current_empresa.id))), {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione uma empresa'}, :include_blank => true, :multiple => true} %>
+              </div>
+              <div class="field col-sm-2">
+                <%= label_tag 'Estado', nil, class: 'col-sm-2 control-label padding' %>
+                <%= select_tag 'estado_financeiro_id', options_for_select( Financeiro::Estado.order(:nome).collect{ |u| [u.descricao_completa, u.id] }) , {:class => "form-control input-sm chosen-select", :data => {:placeholder => 'Selecione um estado'}, :include_blank => true} %>
+              </div>
+
+              <div class="col-lg-1">
+                <br>
+                <%= submit_tag 'Atualizar', :id => 'btnAtualizarImplantacoes', :class => 'btn btn-primary', :formtarget => "_blank" %>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 padding-left-right">
+      <div class="col-lg-4 padding-left-right-0">
+        <div class="ibox iboxImplantacao" id="iboxConcluido" onclick="buscarClientes('5')">
+          <div class="ibox-content product-box">
+            <div class="ibox-title ibox-title-without-border-style">
+              <h5>Acompanhamentos Concluídos</h5>
+              <!--<span class="label label-info pull-right" id="compentencia_cliente"></span>-->
+            </div>
+            <div class="ibox-content padding-5" style="min-height: 85px !important;">
+              <div class="col-lg-12">
+                <div class="col-lg-4" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Mensalidade</small>
+                  <h3 class="no-margins" id="mensalidadeconcluido"></h3>
+                  <small id="media_mensalidadeconcluido"></small>
+                  <div class="font-bold text-danger" id="perc_mensalidadeconcluido"></div>
+                </div>
+                <div class="col-lg-5" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Implantação</small>
+                  <h3 class="no-margins" id="implantacaoconcluido"></h3>
+                  <small id="media_implantacaoconcluido"></small>
+                  <div class="font-bold text-danger" id="perc_implantacaoconcluido"></div>
+                </div>
+                <div class="col-lg-3" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Quantidade</small>
+                  <h3 class="no-margins" id="qtdconcluido"></h3>
+                  <small id="media_qtdconcluido"></small>
+                  <div class="font-bold text-danger" id="perc_qtdconcluido"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ibox iboxImplantacao" id="iboxAndamento" onclick="buscarClientes('1')">
+          <div class="ibox-content product-box">
+            <div class="ibox-title ibox-title-without-border-style">
+              <h5>Em Andamento</h5>
+              <!--<span class="label label-info pull-right" id="compentencia_cliente"></span>-->
+            </div>
+            <div class="ibox-content padding-5" style="min-height: 85px !important;">
+              <div class="col-lg-12">
+                <div class="col-lg-4" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Mensalidade</small>
+                  <h3 class="no-margins" id="mensalidadeandamento"></h3>
+                  <small id="media_mensalidadeandamento"></small>
+                  <div class="font-bold text-danger" id="perc_mensalidadeandamento"></div>
+                </div>
+                <div class="col-lg-5" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Implantação</small>
+                  <h3 class="no-margins" id="implantacaoandamento"></h3>
+                  <small id="media_implantacaoandamento"></small>
+                  <div class="font-bold text-danger" id="perc_implantacaoandamento"></div>
+                </div>
+                <div class="col-lg-3" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Quantidade</small>
+                  <h3 class="no-margins" id="qtdandamento"></h3>
+                  <small id="media_qtdandamento"></small>
+                  <div class="font-bold text-danger" id="perc_qtdandamento"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ibox iboxImplantacao" id="iboxStandBy" onclick="buscarClientes('2')">
+          <div class="ibox-content product-box">
+            <div class="ibox-title ibox-title-without-border-style">
+              <h5>Stand by</h5>
+              <!--<span class="label label-info pull-right" id="compentencia_cliente"></span>-->
+            </div>
+            <div class="ibox-content padding-5" style="min-height: 85px !important;">
+              <div class="col-lg-12">
+                <div class="col-lg-4" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Mensalidade</small>
+                  <h3 class="no-margins" id="mensalidadestandby"></h3>
+                  <small id="media_mensalidadestandby"></small>
+                  <div class="font-bold text-danger" id="perc_mensalidadestandby"></div>
+                </div>
+                <div class="col-lg-5" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Implantação</small>
+                  <h3 class="no-margins" id="implantacaostandby"></h3>
+                  <small id="media_implantacaostandby"></small>
+                  <div class="font-bold text-danger" id="perc_implantacaostandby"></div>
+                </div>
+                <div class="col-lg-3" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Quantidade</small>
+                  <h3 class="no-margins" id="qtdstandby"></h3>
+                  <small id="media_qtdstandby"></small>
+                  <div class="font-bold text-danger" id="perc_qtdstandby"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ibox iboxImplantacao" id="iboxAguardando" onclick="buscarClientes('0')">
+          <div class="ibox-content product-box">
+            <div class="ibox-title ibox-title-without-border-style">
+              <h5>Aguardando</h5>
+              <!--<span class="label label-info pull-right" id="compentencia_cliente"></span>-->
+            </div>
+            <div class="ibox-content padding-5" style="min-height: 85px !important;">
+              <div class="col-lg-12">
+                <div class="col-lg-4" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Mensalidade</small>
+                  <h3 class="no-margins" id="mensalidadeaguardando"></h3>
+                  <small id="media_mensalidadeaguardando"></small>
+                  <div class="font-bold text-danger" id="perc_mensalidadeaguardando"></div>
+                </div>
+                <div class="col-lg-5" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Implantação</small>
+                  <h3 class="no-margins" id="implantacaoaguardando"></h3>
+                  <small id="media_implantacaoaguardando"></small>
+                  <div class="font-bold text-danger" id="perc_implantacaoaguardando"></div>
+                </div>
+                <div class="col-lg-3" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Quantidade</small>
+                  <h3 class="no-margins" id="qtdaguardando"></h3>
+                  <small id="media_qtdaguardando"></small>
+                  <div class="font-bold text-danger" id="perc_qtdaguardando"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ibox iboxImplantacao" id="iboxDesistente" onclick="buscarClientes('3,4')">
+          <div class="ibox-content product-box">
+            <div class="ibox-title ibox-title-without-border-style">
+              <h5>Desistente</h5>
+              <!--<span class="label label-info pull-right" id="compentencia_cliente"></span>-->
+            </div>
+            <div class="ibox-content padding-5" style="min-height: 85px !important;">
+              <div class="col-lg-12">
+                <div class="col-lg-4" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Mensalidade</small>
+                  <h3 class="no-margins" id="mensalidadedesistente"></h3>
+                  <small id="media_mensalidadedesistente"></small>
+                  <div class="font-bold text-danger" id="perc_mensalidadedesistente"></div>
+                </div>
+                <div class="col-lg-5" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Implantação</small>
+                  <h3 class="no-margins" id="implantacaodesistente"></h3>
+                  <small id="media_implantacaodesistente"></small>
+                  <div class="font-bold text-danger" id="perc_implantacaodesistente"></div>
+                </div>
+                <div class="col-lg-3" style="padding-left: 5px; padding-right: 5px;">
+                  <small>Quantidade</small>
+                  <h3 class="no-margins" id="qtddesistente"></h3>
+                  <small id="media_qtddesistente"></small>
+                  <div class="font-bold text-danger" id="perc_qtddesistente"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8 padding-left-right-0">
+        <div class="col-lg-6  padding-left-right">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5>Top Estados</h5>
+            </div>
+            <div class="ibox-content">
+              <div class="row">
+                <div id="topestados" style="height: 225px"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6  padding-left-right">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5>Acompanhamentos</h5>
+            </div>
+            <div class="ibox-content">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div id="chartConcluido" style="min-height: 225px;"></div>
+                </div>
+                <div class="col-lg-6">
+                  <div id="chartAndamento" style="min-height: 225px;"></div>
+                </div>
+                <!--<div class="col-lg-4">
+                  <div id="chartAguardando" style="min-height: 225px;"></div>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6  padding-left-right">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5>Top Implantadores</h5>
+            </div>
+            <div class="ibox-content">
+              <div class="row">
+                <div id="top" style="height: 190px"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6  padding-left-right">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5>Top Vendedores</h5>
+            </div>
+            <div class="ibox-content">
+              <div class="row">
+                <div id="topVendedores" style="height: 190px"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div id="bloco_clientes" class="col-lg-12 padding-left-right" style="display: none">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <div id="tabela_clientes_msg" value="">Implantações</div>
+        </div>
+        <div class="ibox-content">
+          <table class="table table-striped table-bordered table-hover table-implantacoes" style="font-size:11px">
+            <thead>
+            <tr>
+              <th>Data</th>
+              <th>Cliente</th>
+              <th>Dias sem uso</th>
+              <th>Cidade-UF</th>
+              <th>Vendedor</th>
+              <th>Implantador</th>
+              <th>Sistema</th>
+              <th>Mensalidade</th>
+              <th>Hon. ativo?</th>
+              <th id="proxRetorno">Prox. retorno</th>
+              <th></th>
+              <th>Motivo desistencia</th>
+            </tr>
+            </thead>
+            <tbody style="width:100%">
+
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= render 'acompanhamentos/modals/novo_comentario' %>
+<%= render 'acompanhamentos/modals/voltar_acompanhamento' %>
+
+<div id="modal_activities_acompanhamentos" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn" id="modal_content_activities">
+
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-eu.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-euro.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#iboxConcluido').attr({title: "Dados aos quais comparam o fechamento do mesmo periodo do mês anterior."});
+        $('#iboxAndamento').attr({title: "Dados aos quais comparam o fechamento do mesmo periodo do mês anterior."});
+        $('#iboxStandBy').attr({title: "Dados aos quais comparam o fechamento do mesmo periodo do mês anterior."});
+        $('#iboxAguardando').attr({title: "Dados aos quais comparam o fechamento do mesmo periodo do mês anterior."});
+        $('#iboxDesistente').attr({title: "Dados aos quais comparam o fechamento do mesmo periodo do mês anterior."});
+          
+        $('#modal_voltar_acompanhamento #voltar_acomp_data_retorno').datetimepicker({
+              mask:'39.19.9999 29:59',
+              format: 'dd/mm/yyyy hh:ii',
+              language: 'pt-BR',
+              autoclose: true,
+              todayBtn: true,
+              pickerPosition: "bottom-left"
+        });
+
+        $('#modal_voltar_acompanhamento #btnVoltarAcompanhamento').on('click', function () {
+              voltarAcompanhamento();
+              return false;
+        });
+
+        google.charts.load('current', {'packages':['corechart','table']});
+        google.charts.setOnLoadCallback(drawChartConcluido);
+
+        function drawChartConcluido() {
+
+            $.getJSON("/dashboards/get_acompanhamentos_concluidas?data_inicio="+ $('#data_inicio').val() +
+                "&data_fim=" + $('#data_fim').val()
+                + '&implantador_id=' + $('#implantador_id').val()
+                + '&vendedor_id=' + $('#vendedor_id').val()
+                + '&responsavel_id=' + $('#responsavel_id').val()
+                + '&empresa_id=' + $('#empresa_id').val()
+                + '&estado=' + $('#estado_financeiro_id').val()
+                + '&flag=' + $('#efetivas').val(), function(data) {
+
+                var dataArray = [
+                    ['Sistema', 'Quantidade'],
+                ];
+                for (var i = 0; i < data.length; i++) {
+                    var row = [data[i].sistema, parseInt(data[i].count)];
+                    dataArray.push(row);
+                }
+
+                var options = {
+                    'chartArea': {'width': '100%', 'height': '80%'},
+                    pieStartAngle: 50,
+                    title: 'Concluídas'
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('chartConcluido'));
+
+                var data = google.visualization.arrayToDataTable(dataArray);
+                chart.draw(data, options);
+            });
+        }
+        setInterval(drawChartConcluido, 600000);
+
+        google.charts.setOnLoadCallback(drawChartAndamento);
+
+        function drawChartAndamento() {
+
+            $.getJSON("/dashboards/get_acompanhamentos_andamento?data_inicio="+ $('#data_inicio').val() +
+                "&data_fim=" + $('#data_fim').val()
+                + '&implantador_id=' + $('#implantador_id').val()
+                + '&vendedor_id=' + $('#vendedor_id').val()
+                + '&responsavel_id=' + $('#responsavel_id').val()
+                + '&empresa_id=' + $('#empresa_id').val()
+                + '&novos=' + $('#novos').val()
+                + '&ocultar_efetivas=' + $('#ocultar_efetivas').val()
+                + '&estado=' + $('#estado_financeiro_id').val()
+                + '&flag=' + $('#efetivas').val(), function(data) {
+
+                var dataArray = [
+                    ['Sistema', 'Quantidade'],
+                ];
+                for (var i = 0; i < data.length; i++) {
+                    var row = [data[i].sistema, parseInt(data[i].count)];
+                    dataArray.push(row);
+                }
+
+                var options = {
+                    'chartArea': {'width': '100%', 'height': '80%'},
+                    pieStartAngle: 50,
+                    title: 'Em andamento'
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('chartAndamento'));
+
+                var data = google.visualization.arrayToDataTable(dataArray);
+                chart.draw(data, options);
+            });
+        }
+        setInterval(drawChartAndamento, 600000);
+
+        //google.charts.setOnLoadCallback(drawChartAguardando);
+
+        function drawChartAguardando() {
+
+            $.getJSON("/dashboards/get_acompanhamentos_aguardando?data_inicio="+ $('#data_inicio').val() +
+                "&data_fim=" + $('#data_fim').val()
+                + '&implantador_id=' + $('#implantador_id').val()
+                + '&vendedor_id=' + $('#vendedor_id').val()
+                + '&responsavel_id=' + $('#responsavel_id').val()
+                + '&empresa_id=' + $('#empresa_id').val()
+                + '&novos=' + $('#novos').val()
+                + '&ocultar_efetivas=' + $('#ocultar_efetivas').val()
+                + '&estado=' + $('#estado_financeiro_id').val(), function(data) {
+
+                var dataArray = [
+                    ['Sistema', 'Quantidade'],
+                ];
+                for (var i = 0; i < data.length; i++) {
+                    var row = [data[i].sistema, parseInt(data[i].count)];
+                    dataArray.push(row);
+                }
+
+                var options = {
+                    'chartArea': {'width': '100%', 'height': '80%'},
+                    pieStartAngle: 50,
+                    title: 'Aguardando'
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('chartAguardando'));
+
+                var data = google.visualization.arrayToDataTable(dataArray);
+                chart.draw(data, options);
+            });
+        }
+        //setInterval(drawChartAguardando, 600000);
+
+        google.charts.setOnLoadCallback(drawTableTopImplantacoes);
+
+        function drawTableTopImplantacoes() {
+            $.getJSON("/dashboards/get_top_implantadores_acompanhamento?data_inicio=" + $('#data_inicio').val()
+                + "&data_fim=" + $('#data_fim').val()
+                + '&empresa_id=' + $('#empresa_id').val()
+                + '&estado=' + $('#estado_financeiro_id').val()
+                + '&flag=' + $('#efetivas').val(), function(data) {
+                var datatable = new google.visualization.DataTable();
+                datatable.addColumn('string', '');
+                datatable.addColumn('string', 'Nome');
+                datatable.addColumn('string', 'Quant.');
+                datatable.addColumn('number', 'Mensalidade');
+                datatable.addColumn('number', 'Implantação');
+
+                for (var i = 0; i < data.length; i++) {
+                    var row;
+                    i == 0 ? row = ['<%= image_tag("gold.png", size: "16x16") %>', data[i].nome, data[i].concluidas, parseFloat(data[i].mensalidade_concluida), parseFloat(data[i].implantacao_concluida)] :
+                        i == 1 ? row = ['<%= image_tag("silver.png", size: "16x16") %>', data[i].nome, data[i].concluidas, parseFloat(data[i].mensalidade_concluida), parseFloat(data[i].implantacao_concluida)] :
+                            i == 2 ? row = ['<%= image_tag("bronze.png", size: "16x16") %>', data[i].nome, data[i].concluidas, parseFloat(data[i].mensalidade_concluida), parseFloat(data[i].implantacao_concluida)] :
+                                row = ['', data[i].nome, data[i].concluidas, parseFloat(data[i].mensalidade_concluida), parseFloat(data[i].implantacao_concluida)]
+
+                    datatable.addRow(row);
+                }
+
+                var formatter = new google.visualization.NumberFormat(
+                    {prefix: 'R$ '});
+                formatter.format(datatable, 3);
+                formatter.format(datatable, 4);
+
+                var table = new google.visualization.Table(document.getElementById('top'));
+
+                table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'disable'});
+            });
+        }
+        setInterval(drawTableTopImplantacoes, 600000);
+
+        google.charts.setOnLoadCallback(drawTableTopVendedores);
+
+        function drawTableTopVendedores() {
+            $.getJSON("/dashboards/get_top_vendedores_acompanhamento?data_inicio=" + $('#data_inicio').val()
+                + "&data_fim=" + $('#data_fim').val()
+                + '&empresa_id=' + $('#empresa_id').val()
+                + '&estado=' + $('#estado_financeiro_id').val()
+                + '&flag=' + $('#efetivas').val(), function(data) {
+                var datatable = new google.visualization.DataTable();
+                datatable.addColumn('string', '');
+                datatable.addColumn('string', 'Nome');
+                datatable.addColumn('string', 'Quant.');
+                datatable.addColumn('number', 'Mensalidade');
+                datatable.addColumn('number', 'Implantação');
+
+                for (var i = 0; i < data.length; i++) {
+                    var row;
+                    i == 0 ? row = ['<%= image_tag("gold.png", size: "16x16") %>', data[i].nome, data[i].concluidas, parseFloat(data[i].mensalidade_concluida), parseFloat(data[i].implantacao_concluida)] :
+                        i == 1 ? row = ['<%= image_tag("silver.png", size: "16x16") %>', data[i].nome, data[i].concluidas, parseFloat(data[i].mensalidade_concluida), parseFloat(data[i].implantacao_concluida)] :
+                            i == 2 ? row = ['<%= image_tag("bronze.png", size: "16x16") %>', data[i].nome, data[i].concluidas, parseFloat(data[i].mensalidade_concluida), parseFloat(data[i].implantacao_concluida)] :
+                                row = ['', data[i].nome, data[i].concluidas, parseFloat(data[i].mensalidade_concluida), parseFloat(data[i].implantacao_concluida)]
+
+                    datatable.addRow(row);
+                }
+
+                var formatter = new google.visualization.NumberFormat(
+                    {prefix: 'R$ '});
+                formatter.format(datatable, 3);
+                formatter.format(datatable, 4);
+
+                var table = new google.visualization.Table(document.getElementById('topVendedores'));
+
+                table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'disable'});
+            });
+        }
+        setInterval(drawTableTopVendedores, 600000);
+
+        google.charts.setOnLoadCallback(drawTableTopEstados);
+        setInterval(drawTableTopEstados, 600000);
+
+        function atualizarPaineis() {
+            $('#status_id').val('');
+            $('#bloco_clientes').hide();
+
+            drawTableTopImplantacoes();
+            //drawChartAguardando();
+            drawTableTopEstados();
+            drawChartAndamento();
+            drawChartConcluido();
+            getValoresAcompanhamento();
+            drawTableTopVendedores();
+        }
+
+        $('#btnAtualizarImplantacoes').on('click', function () {
+            atualizarPaineis();
+            return false;
+        });
+
+        $('#btnDia').on('click', function () {
+            $("#data_inicio").datepicker("setDate",  new Date());
+            $("#data_fim").datepicker("setDate",  new Date());
+
+            atualizarPaineis();
+            return false;
+        });
+
+        $('#btnOntem').on('click', function () {
+            $("#data_inicio").datepicker("setDate",  addDays(new Date(), -1));
+            $("#data_fim").datepicker("setDate",  addDays(new Date(), -1));
+
+            atualizarPaineis();
+            return false;
+        });
+
+        $('#btnMes').on('click', function () {
+            $("#data_inicio").datepicker("setDate",  new Date(date.getFullYear(), date.getMonth(), 1));
+            $("#data_fim").datepicker("setDate",  new Date(date.getFullYear(), date.getMonth() + 1, 0));
+
+            atualizarPaineis();
+            return false;
+        });
+
+        $('#btnSemana').on('click', function () {
+            $("#data_inicio").datepicker("setDate", new Date(addDays(new Date(), -7)));
+            $("#data_fim").datepicker("setDate",  new Date());
+
+            atualizarPaineis();
+            return false;
+        });
+
+        $('#btnEfetivas').on('click', function () {
+          if($('#efetivas').val() == "false")
+            $('#efetivas').val("true");
+          else
+            $('#efetivas').val("false");          
+        
+          atualizarPaineis();
+          return false;
+        });
+
+        $('#btnNovas').on('click', function () {
+            if($("#novos").val() == "false"){
+                $("#novos").val(true);
+                $('#btnNovas').removeClass("btn-white");
+                $('#btnNovas').addClass("btn-info");
+            }else{
+                $('#btnNovas').removeClass("btn-info");
+                $('#btnNovas').addClass("btn-white");
+                $("#novos").val(false);
+            }
+            atualizarPaineis();
+            return false;
+        });
+        $('#btnOcultarEfetivas').on('click', function () {
+            if($("#ocultar_efetivas").val() == "false"){
+                $("#ocultar_efetivas").val(true);
+                $('#btnOcultarEfetivas').removeClass("btn-white");
+                $('#btnOcultarEfetivas').addClass("btn-info");
+            }else{
+                $('#btnOcultarEfetivas').removeClass("btn-info");
+                $('#btnOcultarEfetivas').addClass("btn-white");
+                $("#ocultar_efetivas").val(false);
+            }
+            atualizarPaineis();
+            return false;
+        });
+
+
+        getValoresAcompanhamento();
+
+        function getValoresAcompanhamento(){
+
+            $.getJSON("/dashboards/get_valores_acompanhamentos?data_inicio=" + $('#data_inicio').val() +
+                "&data_fim=" + $('#data_fim').val()
+                + '&implantador_id=' + $('#implantador_id').val()
+                + '&responsavel_id=' + $('#responsavel_id').val()
+                + '&vendedor_id=' + $('#vendedor_id').val()
+                + '&empresa_id=' + $('#empresa_id').val()
+                + '&novos=' + $('#novos').val()
+                + '&ocultar_efetivas=' + $('#ocultar_efetivas').val()
+                + '&estado=' + $('#estado_financeiro_id').val()
+                + '&flag=' + $('#efetivas').val(), function(data) {
+                limparCampos();
+                $('#dias').text(data[0]['qtddias']);
+                $.each(data,function (i,val){
+                    if(val['tipo'] == 'CONCLUIDO'){
+                        preecherConcluido(val);
+                    }
+                    if(val['tipo'] == 'EM ANDAMENTO'){
+                        preecherAndamento(val);
+                    }
+                    if(val['tipo'] == 'STAND BY'){
+                        preecherStandBy(val);
+                    }
+                    if(val['tipo'] == 'AGUARDANDO'){
+                        preecherAguardando(val);
+                    }
+                    if(val['tipo'] == 'DESISTENTE'){
+                        preecherDesistente(val);
+                    }
+                });
+            });
+        }
+        setInterval(getValoresAcompanhamento, 600000);
+
+        createTableAcompanhamentos();
+
+    })
+
+    function limparCampos() {
+        $('#perc_qtdconcluido').text('');
+        $('#media_qtdconcluido').text('');
+        $('#qtdconcluido').text('');
+        $('#perc_mensalidadeconcluido').text('');
+        $('#media_mensalidadeconcluido').text('');
+        $('#mensalidadeconcluido').text('');
+        $('#perc_implantacaoconcluido').text('');
+        $('#media_implantacaoconcluido').text('');
+        $('#implantacaoconcluido').text('');
+
+        $('#perc_qtdandamento').text('');
+        $('#media_qtdandamento').text('');
+        $('#qtdandamento').text('');
+        $('#perc_mensalidadeandamento').text('');
+        $('#media_mensalidadeandamento').text('');
+        $('#mensalidadeandamento').text('');
+        $('#perc_implantacaoandamento').text('');
+        $('#media_implantacaoandamento').text('');
+        $('#implantacaoandamento').text('');
+
+        $('#perc_qtdstandby').text('');
+        $('#media_qtdstandby').text('');
+        $('#qtdstandby').text('');
+        $('#perc_mensalidadestandby').text('');
+        $('#media_mensalidadestandby').text('');
+        $('#mensalidadestandby').text('');
+        $('#perc_implantacaostandby').text('');
+        $('#media_implantacaostandby').text('');
+        $('#implantacaostandby').text('');
+
+        $('#perc_qtdaguardando').text('');
+        $('#media_qtdaguardando').text('');
+        $('#qtdaguardando').text('');
+        $('#perc_mensalidadeaguardando').text('');
+        $('#media_mensalidadeaguardando').text('');
+        $('#mensalidadeaguardando').text('');
+        $('#perc_implantacaoaguardando').text('');
+        $('#media_implantacaoaguardando').text('');
+        $('#implantacaoaguardando').text('');
+
+        $('#perc_qtddesistente').text('');
+        $('#media_qtddesistente').text('');
+        $('#qtddesistente').text('');
+        $('#perc_mensalidadedesistente').text('');
+        $('#media_mensalidadedesistente').text('');
+        $('#mensalidadedesistente').text('');
+        $('#perc_implantacaodesistente').text('');
+        $('#media_implantacaodesistente').text('');
+        $('#implantacaodesistente').text('');
+    }
+
+    function preecherConcluido(val) {
+        if(parseFloat(val['qtdatual']) > parseFloat(val['qtdanterior'])){
+            $('#perc_qtdconcluido').removeClass('text-danger').addClass('text-info');
+            $('#perc_qtdconcluido').append((val['perc_quantidade'])+'% <i class="fa fa-level-up"></i>');
+
+        }else{
+            $('#perc_qtdconcluido').removeClass('text-info').addClass('text-danger');
+            $('#perc_qtdconcluido').append((val['perc_quantidade'])+'% <i class="fa fa-level-down"></i>');
+        }
+        $('#media_qtdconcluido').text('Média: ' + val['media_quantidade']);
+        $('#qtdconcluido').text(val['qtdatual']);
+
+        if(parseFloat(val['valormensalidadeatual']) > parseFloat(val['valormensalidadeanterior'])){
+            $('#perc_mensalidadeconcluido').removeClass('text-danger').addClass('text-info');
+            $('#perc_mensalidadeconcluido').append((val['perc_mensalidade'])+'% <i class="fa fa-level-up"></i>');
+
+        }else{
+            $('#perc_mensalidadeconcluido').removeClass('text-info').addClass('text-danger');
+            $('#perc_mensalidadeconcluido').append((val['perc_mensalidade'])+'% <i class="fa fa-level-down"></i>');
+        }
+        $('#media_mensalidadeconcluido').text('Média: ' + mascaraValor(val['media_mensalidade']));
+        $('#mensalidadeconcluido').text(mascaraValor(val['valormensalidadeatual']));
+
+        if(parseFloat(val['valorimplantacaoatual']) > parseFloat(val['valorimplantacaoanterior'])){
+            $('#perc_implantacaoconcluido').removeClass('text-danger').addClass('text-info');
+            $('#perc_implantacaoconcluido').append((val['perc_implantacao'])+'% <i class="fa fa-level-up"></i>');
+
+        }else{
+            $('#perc_implantacaoconcluido').removeClass('text-info').addClass('text-danger');
+            $('#perc_implantacaoconcluido').append((val['perc_implantacao'])+'% <i class="fa fa-level-down"></i>');
+        }
+        $('#media_implantacaoconcluido').text('Média: ' + mascaraValor(val['media_implantacao']));
+        $('#implantacaoconcluido').text(mascaraValor(val['valorimplantacaoatual']));
+    }
+
+    function preecherAndamento(val) {
+        $('#qtdandamento').text(val['qtdatual']);
+
+        $('#mensalidadeandamento').text(mascaraValor(val['valormensalidadeatual']));
+
+        $('#implantacaoandamento').text(mascaraValor(val['valorimplantacaoatual']));
+
+        if($('#novos').val() == 'true') {
+            if (parseFloat(val['qtdatual']) > parseFloat(val['qtdanterior'])) {
+                $('#perc_qtdandamento').removeClass('text-danger').addClass('text-info');
+                $('#perc_qtdandamento').append((val['perc_quantidade']) + '% <i class="fa fa-level-up"></i>');
+
+            } else {
+                $('#perc_qtdandamento').removeClass('text-info').addClass('text-danger');
+                $('#perc_qtdandamento').append((val['perc_quantidade']) + '% <i class="fa fa-level-down"></i>');
+            }
+            $('#media_qtdandamento').text('Média: ' + val['media_quantidade']);
+            if (parseFloat(val['valormensalidadeatual']) > parseFloat(val['valormensalidadeanterior'])) {
+                $('#perc_mensalidadeandamento').removeClass('text-danger').addClass('text-info');
+                $('#perc_mensalidadeandamento').append((val['perc_mensalidade']) + '% <i class="fa fa-level-up"></i>');
+
+            } else {
+                $('#perc_mensalidadeandamento').removeClass('text-info').addClass('text-danger');
+                $('#perc_mensalidadeandamento').append((val['perc_mensalidade']) + '% <i class="fa fa-level-down"></i>');
+            }
+            $('#media_mensalidadeandamento').text('Média: ' + mascaraValor(val['media_mensalidade']));
+            if (parseFloat(val['valorimplantacaoatual']) > parseFloat(val['valorimplantacaoanterior'])) {
+                $('#perc_implantacaoandamento').removeClass('text-danger').addClass('text-info');
+                $('#perc_implantacaoandamento').append((val['perc_implantacao']) + '% <i class="fa fa-level-up"></i>');
+
+            } else {
+                $('#perc_implantacaoandamento').removeClass('text-info').addClass('text-danger');
+                $('#perc_implantacaoandamento').append((val['perc_implantacao']) + '% <i class="fa fa-level-down"></i>');
+            }
+            $('#media_implantacaoandamento').text('Média: ' + mascaraValor(val['media_implantacao']));
+        }
+    }
+
+    function preecherStandBy(val) {
+        $('#qtdstandby').text(val['qtdatual']);
+
+        $('#mensalidadestandby').text(mascaraValor(val['valormensalidadeatual']));
+
+        $('#implantacaostandby').text(mascaraValor(val['valorimplantacaoatual']));
+
+        if($('#novos').val() == 'true') {
+            if (parseFloat(val['qtdatual']) > parseFloat(val['qtdanterior'])) {
+                $('#perc_qtdstandby').removeClass('text-danger').addClass('text-info');
+                $('#perc_qtdstandby').append((val['perc_quantidade']) + '% <i class="fa fa-level-up"></i>');
+
+            } else {
+                $('#perc_qtdstandby').removeClass('text-info').addClass('text-danger');
+                $('#perc_qtdstandby').append((val['perc_quantidade']) + '% <i class="fa fa-level-down"></i>');
+            }
+            $('#media_qtdstandby').text('Média: ' + val['media_quantidade']);
+            if (parseFloat(val['valormensalidadeatual']) > parseFloat(val['valormensalidadeanterior'])) {
+                $('#perc_mensalidadestandby').removeClass('text-danger').addClass('text-info');
+                $('#perc_mensalidadestandby').append((val['perc_mensalidade']) + '% <i class="fa fa-level-up"></i>');
+
+            } else {
+                $('#perc_mensalidadestandby').removeClass('text-info').addClass('text-danger');
+                $('#perc_mensalidadestandby').append((val['perc_mensalidade']) + '% <i class="fa fa-level-down"></i>');
+            }
+            $('#media_mensalidadestandby').text('Média: ' + mascaraValor(val['media_mensalidade']));
+            if (parseFloat(val['valorimplantacaoatual']) > parseFloat(val['valorimplantacaoanterior'])) {
+                $('#perc_implantacaostandby').removeClass('text-danger').addClass('text-info');
+                $('#perc_implantacaostandby').append((val['perc_implantacao']) + '% <i class="fa fa-level-up"></i>');
+
+            } else {
+                $('#perc_implantacaostandby').removeClass('text-info').addClass('text-danger');
+                $('#perc_implantacaostandby').append((val['perc_implantacao']) + '% <i class="fa fa-level-down"></i>');
+            }
+            $('#media_implantacaostandby').text('Média: ' + mascaraValor(val['media_implantacao']));
+        }
+    }
+
+    function preecherDesistente(val) {
+        if(parseFloat(val['qtdatual']) > parseFloat(val['qtdanterior'])){
+            $('#perc_qtddesistente').removeClass('text-danger').addClass('text-info');
+            $('#perc_qtddesistente').append((val['perc_quantidade'])+'% <i class="fa fa-level-up"></i>');
+
+        }else{
+            $('#perc_qtddesistente').removeClass('text-info').addClass('text-danger');
+            $('#perc_qtddesistente').append((val['perc_quantidade'])+'% <i class="fa fa-level-down"></i>');
+        }
+        $('#media_qtddesistente').text('Média: ' + val['media_quantidade']);
+        $('#qtddesistente').text(val['qtdatual']);
+
+        if(parseFloat(val['valormensalidadeatual']) > parseFloat(val['valormensalidadeanterior'])){
+            $('#perc_mensalidadedesistente').removeClass('text-danger').addClass('text-info');
+            $('#perc_mensalidadedesistente').append((val['perc_mensalidade'])+'% <i class="fa fa-level-up"></i>');
+
+        }else{
+            $('#perc_mensalidadedesistente').removeClass('text-info').addClass('text-danger');
+            $('#perc_mensalidadedesistente').append((val['perc_mensalidade'])+'% <i class="fa fa-level-down"></i>');
+        }
+        $('#media_mensalidadedesistente').text('Média: ' + mascaraValor(val['media_mensalidade']));
+        $('#mensalidadedesistente').text(mascaraValor(val['valormensalidadeatual']));
+
+        if(parseFloat(val['valorimplantacaoatual']) > parseFloat(val['valorimplantacaoanterior'])){
+            $('#perc_implantacaodesistente').removeClass('text-danger').addClass('text-info');
+            $('#perc_implantacaodesistente').append((val['perc_implantacao'])+'% <i class="fa fa-level-up"></i>');
+
+        }else{
+            $('#perc_implantacaodesistente').removeClass('text-info').addClass('text-danger');
+            $('#perc_implantacaodesistente').append((val['perc_implantacao'])+'% <i class="fa fa-level-down"></i>');
+        }
+        $('#media_implantacaodesistente').text('Média: ' + mascaraValor(val['media_implantacao']));
+        $('#implantacaodesistente').text(mascaraValor(val['valorimplantacaoatual']));
+    }
+
+    function preecherAguardando(val) {
+        $('#qtdaguardando').text(val['qtdatual']);
+
+        $('#mensalidadeaguardando').text(mascaraValor(val['valormensalidadeatual']));
+
+        $('#implantacaoaguardando').text(mascaraValor(val['valorimplantacaoatual']));
+
+        if($('#novos').val() == 'true') {
+            if (parseFloat(val['qtdatual']) > parseFloat(val['qtdanterior'])) {
+                $('#perc_qtdaguardando').removeClass('text-danger').addClass('text-info');
+                $('#perc_qtdaguardando').append((val['perc_quantidade']) + '% <i class="fa fa-level-up"></i>');
+
+            } else {
+                $('#perc_qtdaguardando').removeClass('text-info').addClass('text-danger');
+                $('#perc_qtdaguardando').append((val['perc_quantidade']) + '% <i class="fa fa-level-down"></i>');
+            }
+            $('#media_qtdaguardando').text('Média: ' + val['media_quantidade']);
+            if (parseFloat(val['valormensalidadeatual']) > parseFloat(val['valormensalidadeanterior'])) {
+                $('#perc_mensalidadeaguardando').removeClass('text-danger').addClass('text-info');
+                $('#perc_mensalidadeaguardando').append((val['perc_mensalidade']) + '% <i class="fa fa-level-up"></i>');
+
+            } else {
+                $('#perc_mensalidadeaguardando').removeClass('text-info').addClass('text-danger');
+                $('#perc_mensalidadeaguardando').append((val['perc_mensalidade']) + '% <i class="fa fa-level-down"></i>');
+            }
+            $('#media_mensalidadeaguardando').text('Média: ' + mascaraValor(val['media_mensalidade']));
+            if (parseFloat(val['valorimplantacaoatual']) > parseFloat(val['valorimplantacaoanterior'])) {
+                $('#perc_implantacaoaguardando').removeClass('text-danger').addClass('text-info');
+                $('#perc_implantacaoaguardando').append((val['perc_implantacao']) + '% <i class="fa fa-level-up"></i>');
+
+            } else {
+                $('#perc_implantacaoaguardando').removeClass('text-info').addClass('text-danger');
+                $('#perc_implantacaoaguardando').append((val['perc_implantacao']) + '% <i class="fa fa-level-down"></i>');
+            }
+            $('#media_implantacaoaguardando').text('Média: ' + mascaraValor(val['media_implantacao']));
+        }
+    }
+
+    function buscarClientes(status) {
+        if($('#status_id').val() == status){
+            $('#bloco_clientes').hide();
+            $('#status_id').val(null);
+        }else{
+            $('#status_id').val(status);
+            $.getJSON("/dashboards/get_acompanhamentos_table?data_inicio=" + $('#data_inicio').val() +
+                "&data_fim=" + $('#data_fim').val() + '&status_id=(' + status +
+                ')&vendedor_id=' + $('#vendedor_id').val()
+                + '&implantador_id=' + $('#implantador_id').val()
+                + '&responsavel_id=' + $('#responsavel_id').val()
+                + '&empresa_id=' + $('#empresa_id').val()
+                + '&novos=' + $('#novos').val()
+                + '&estado=' + $('#estado_financeiro_id').val()
+                + '&flag=' + $('#efetivas').val(), function(data) {
+                
+                var table = $('.table-implantacoes').DataTable();
+                table.clear().draw();
+                $('#bloco_clientes').show();
+                var t = $('.table-implantacoes').DataTable();
+
+                if(jQuery.inArray( status, ['0', '1', '2'] ) != -1){
+
+                    $.each(data,function (i,val){
+                        t.row.add( [
+                            moment(val['data']).format("DD/MM/YYYY HH:mm"),
+                            val['razao_social'],
+                            val['dias_sem_uso'],
+                            val['cidade'],
+                            val['vendedor'],
+                            val['implantador'],
+                            val['sistema'],
+                            mascaraValor(val['valor_mensalidade']),
+                            val['honorario_ativo'],
+                            (val['data_agendamento_retorno'] != null ? moment(val['data_agendamento_retorno']).format("DD/MM/YYYY HH:mm") : 'Sem retorno'),
+                            '<i onclick="abrirModal(' + val['acompanhamentoid'] + ')" class="fa fa-search" aria-hidden="true" title="Ver registro de atividades"></i>',
+                            val['motivo']
+                        ] ).draw( false );
+                    });
+                    t.columns( [11] ).visible( true );
+                    t.columns.adjust().draw( false );
+                }else{
+                    $.each(data,function (i,val){
+                        t.row.add( [
+                            moment(val['data']).format("DD/MM/YYYY HH:mm"),
+                            val['razao_social'],
+                            val['dias_sem_uso'],
+                            val['cidade'],
+                            val['vendedor'],
+                            val['implantador'],
+                            val['sistema'],
+                            mascaraValor(val['valor_mensalidade']),
+                            val['honorario_ativo'],
+                            '',
+                            '<i onclick="abrirModal(' + val['acompanhamentoid'] + ')" class="fa fa-search" aria-hidden="true" title="Ver registro de atividades"></i>',
+                            val['motivo']
+                        ] ).draw( false );
+                    });
+                    t.columns( [11] ).visible( false );
+                    t.columns.adjust().draw( false );
+                }
+
+            });
+        }
+    }
+
+    function createTableAcompanhamentos(){
+        if ($("#DataTables_Table_0_wrapper").length == 0){
+            $('.table-implantacoes').DataTable({
+                pageLength: 10,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        title: 'Acompanhamentos'
+                    },
+                    {extend: 'pdf', title: 'Acompanhamentos'}
+
+                ],
+                "ordering": true,
+                "order": [[ 8, "asc" ]],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                },
+                "columnDefs": [
+                    { "width": "15%", "targets": [0,2,3] },
+                    { "width": "5%", "targets": [7,8] },
+                    { "width": "25%", "targets": 1 },
+                    { "width": "15%", "targets": [4,5,6] },
+                    { "width": "5%", "targets": [9,10,11] }
+                ],
+                columnDefs: [
+                   { type: 'date-euro', targets: 0 },
+                   { type: 'date-euro', targets: 11 },
+                  {
+                    targets: [11],
+                    visible: false
+                } ],
+                "createdRow": function ( row, data, index ) {
+                    if (data[10] != null &&  moment(data[10], "DD/MM/YYYY HH:mm").add(1, 'hours') <= moment()) {
+                        $('td', row).addClass('redcolor');
+                    }
+                }
+            });
+        }
+    }
+    function abrirModal(id) {
+        $.ajax({
+            url: '/acompanhamentos/activities',
+            data: {id: id},
+            type: 'GET',
+            success: function (data) {
+                $("#modal_content_activities").html(data);
+                $("#modal_activities_acompanhamentos").modal('show');
+                addFuncoes();
+            },error: function(data){
+                exibirErro(data);
+            }
+        });
+    }
+
+    function addFuncoes(){
+        $('#abrirComentarioActivityAcompanhamento').on('click', function () {
+            $('#modal_comentario_acompanhamento #btnSalvarComentario').hide();
+            $('#modal_comentario_acompanhamento #btnSalvarComentarioActivity').show();
+            $('#modal_comentario_acompanhamento #comentario_data_retorno').show();
+
+            $('#modal_comentario_acompanhamento #text_comentario').val('');
+            $('#modal_comentario_acompanhamento #retorno_data_retorno').val('');
+
+            $('#modal_comentario_acompanhamento').modal('show');
+        });
+    }
+
+    $('#modal_comentario_acompanhamento #btnSalvarComentarioActivity').on('click', function(){
+        if($('#modal_comentario_acompanhamento #text_comentario').val() == ''){
+            $('#error_comentario').show();
+            return false;
+        }
+        $('#modal_comentario_acompanhamento #error_comentario').hide();
+        if($('#modal_comentario_acompanhamento #retorno_data_retorno').val() == '' && !moment($('#modal_comentario_acompanhamento #retorno_data_retorno').val(),"DD/MM/YYYY HH:mm").isValid()) {
+            exibirErro('Informe uma data de retorno válida!');
+            return false;
+        }
+        $.getJSON('/agendamento_retornos/verificar_horario_acompanhamento?data_retorno='+ $('#modal_comentario_acompanhamento #retorno_data_retorno').val(), function(data) {
+            if(parseInt(data) > 0){
+                exibirWarning('Já existe um retorno agendado para o mesmo horário!');
+                return false;
+            }else{
+                if(moment($('#modal_comentario_acompanhamento #retorno_data_retorno').val(),"DD/MM/YYYY HH:mm") > moment().add(2, 'days')){
+                    $('#modal_comentario_acompanhamento').modal('toggle');
+                    swal({
+                        title: 'INFORME A SENHA',
+                        input: 'password',
+                        inputAttributes: {
+                            id: 'senha_master',
+                            autocapitalize: 'off'
+                        },
+                        showConfirmButton: true,
+                        allowOutsideClick: false,
+                        showLoaderOnConfirm: true,
+                        preConfirm: function() {
+                            return new Promise(function(resolve) {
+                                $.post( "/parametros/senha_master_valida", { senha_master: $('#senha_master').val() }, function( data ) {
+                                    if(data == false){
+                                        swal.showValidationError(
+                                            'Senha Inválida.'
+                                        )
+                                    }
+                                    resolve();
+                                });
+                            })
+                        }
+                    }).then(function(result) {
+                        if(result == true || result['value']){
+                            salvarComentarioActivity();
+                        }else{
+                            exibirWarning('Comentário não cadastrado!');
+                        }
+                    });
+                }else{
+                    salvarComentarioActivity();
+                }
+            }
+        });
+
+        return false;
+    });
+
+    function salvarComentarioActivity() {
+        $.ajax({
+            url: '/comentarios/',
+            data: getFormComentarioActivity(),
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function (data) {
+                $('#modal_comentario_acompanhamento').modal('toggle');
+                $('#modal_activities_acompanhamentos').modal('toggle');
+            },error: function(data){
+                exibirErro('Ocorreu um erro.');
+            }
+        });
+    }
+
+    function getFormComentarioActivity(){
+        form = new FormData();
+        form.append('comentario[comentario]', $("#modal_comentario_acompanhamento #text_comentario").val());
+        form.append('comentario[acompanhamento_id]', $("#acompanhamento_id").val());
+        if(moment($('#modal_comentario_acompanhamento #retorno_data_retorno').val(),"DD/MM/YYYY HH:mm").isValid()){
+            form.append('data_retorno', $('#modal_comentario_acompanhamento #retorno_data_retorno').val());
+        }
+        form.append('usuario_id', $('#modal_comentario_acompanhamento #comentario_usuario_id').val());
+
+        return form;
+    }
+
+    function drawTableTopEstados() {
+        $.getJSON("/dashboards/get_top_estados_acompanhamento?data_inicio=" + $('#data_inicio').val() +
+                "&data_fim=" + $('#data_fim').val() +
+                '&empresa_id=' + $('#empresa_id').val() +
+                '&flag=' + $('#efetivas').val(), function(data) {
+                  
+            var datatable = new google.visualization.DataTable();
+            datatable.addColumn('string', '');
+            datatable.addColumn('string', 'UF');
+            datatable.addColumn('number', 'Qtd');
+            datatable.addColumn('number', 'Valor');
+            datatable.addColumn('number', 'Média');
+
+            for (var i = 0; i < data.length; i++) {
+                var row;
+                i == 0 ? row = ['<%= image_tag("gold.png", size: "16x16") %>', data[i].sigla, parseInt(data[i].qtd), parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                    i == 1 ? row = ['<%= image_tag("silver.png", size: "16x16") %>', data[i].sigla, parseInt(data[i].qtd), parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                        i == 2 ? row = ['<%= image_tag("bronze.png", size: "16x16") %>', data[i].sigla, parseInt(data[i].qtd), parseFloat(data[i].valor), parseFloat(data[i].media)] :
+                            row = ['', data[i].sigla, parseInt(data[i].qtd), parseFloat(data[i].valor), parseFloat(data[i].media)]
+
+                datatable.addRow(row);
+            }
+
+            var formatter = new google.visualization.NumberFormat(
+                {prefix: 'R$ '});
+            formatter.format(datatable, 3);
+            formatter.format(datatable, 4);
+
+            var table = new google.visualization.Table(document.getElementById('topestados'));
+
+            table.draw(datatable, {allowHtml: true, width: '100%', height: '100%', sort: 'disable'});
+        });
+    }
+
+    function openModalvoltarAcompanhamento(id, status) {
+      $.getJSON("/acompanhamentos/" + id, function(data) {
+          $('#modal_voltar_acompanhamento #form_voltar_acompanhamento')[0].reset();
+          $('#modal_voltar_acompanhamento #voltar_acomp_status_implantacao').val('').trigger("chosen:updated");
+          $('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val('').trigger("chosen:updated");
+
+          $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val(data['id']);
+          $('#modal_voltar_acompanhamento #voltar_acompanhamento_cliente_id').val(data['cliente']['id']);
+          $('#modal_voltar_acompanhamento #voltar_acompanhamento_cliente').val(data['cliente']['razao_social']);
+          
+          if (status == 0){
+              $('#modal_voltar_acompanhamento #status_atual_acompanhamento').val('AGUARDANDO');
+              $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').find('[value="2"]').remove();
+          }else if (status == 1){
+              $('#modal_voltar_acompanhamento #status_atual_acompanhamento').val('EM ANDAMENTO');
+              $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').find('[value="2"]').remove();
+          }else if (status == 2){
+              $('#modal_voltar_acompanhamento #status_atual_acompanhamento').val('STAND BY');
+              $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').find('[value="2"]').remove();
+          }else if (status == 4){
+              $('#modal_voltar_acompanhamento #status_atual_acompanhamento').val('DESISTENTE');
+              $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').find('[value="2"]').remove();
+              $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').append('<option value="'+ 2 + '">' + "Acompanhamento" + '</option>');
+          }else if (status == 5){
+            $('#modal_voltar_acompanhamento #status_atual_acompanhamento').val('CONCLUIDO');  
+            $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').find('[value="2"]').remove();          
+            $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').append('<option value="'+ 2 + '">' + "Acompanhamento" + '</option>');             
+          }
+          $('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').val('').trigger("chosen:updated");
+
+          $('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val(data['user'] != null ? data['user']['name'] : '');
+          $('#modal_voltar_acompanhamento #voltar_acompanhamento_vendedor').val(data['cliente']['fechamento']['user']['name']);
+          
+          $('#modal_voltar_acompanhamento').modal('show');
+      });
+    }
+
+  function voltarAcompanhamento() {
+    if($('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').val() == '') {
+        exibirErro("É obrigatório informar uma etapa para voltar.");
+        return false;
+    }
+    if($('#modal_voltar_acompanhamento #voltar_acomp_data_retorno').val() == '') {
+        exibirErro("É obrigatório informar data de retorno.");
+        return false;
+    }
+    if($('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val() == null) {
+        exibirErro("É obrigatório informar um vendedor.");
+        return false;
+    }
+
+    if($('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').val() == 0) {
+        //voltar acompanhamento pra implantacao
+        $.ajax({
+            url: '/acompanhamentos/' + $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val() + '/voltar_acomp_pra_impl',
+            data: { id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val(),
+                responsavel: $('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val(),
+                data_retorno: $('#modal_voltar_acompanhamento #voltar_acomp_data_retorno').val(),
+                cliente_id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_cliente_id').val(),
+                status: parseInt($('#modal_voltar_acompanhamento #voltar_acomp_status_implantacao').val()),
+                motivo: $('#modal_voltar_acompanhamento #voltar_acompanhamento_motivo').val()},
+            type: 'PUT',
+            success: function(data) {
+                $('#modal_voltar_acompanhamento').modal('hide');
+                window.location.reload();
+                exibirMsg("Acompanhamento voltou para implantação.");     
+            },
+            error: function(data) {
+                exibirErro(data);
+            }
+        });
+    }else if($('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').val() == 1){
+        //voltar pra negociacao
+        $.ajax({
+            url: '/acompanhamentos/' + $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val() + '/voltar_negociacao',
+            data: { id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val(),
+                responsavel: $('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val(),
+                data_retorno: $('#modal_voltar_acompanhamento #voltar_acomp_data_retorno').val(),
+                cliente_id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_cliente_id').val(),
+                motivo: $('#modal_voltar_acompanhamento #voltar_acompanhamento_motivo').val()},
+            type: 'PUT',
+            success: function(data) {
+                $('#modal_voltar_acompanhamento').modal('hide');
+                window.location.reload();
+                exibirMsg("Acompanhamento voltou para negociação.");                      
+            },
+            error: function(data) {
+                exibirErro(data);
+            }
+        });
+    }else if($('#modal_voltar_acompanhamento #voltar_acompanhamento_etapa').val() == 2){
+        //voltar pra acompanhamento
+        $.ajax({
+            url: '/acompanhamentos/' + $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val() + '/voltar_acomp_pra_acomp',
+            data: { id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_id').val(),
+                responsavel: $('#modal_voltar_acompanhamento #voltar_acompanhamento_responsavel').val(),
+                data_retorno: $('#modal_voltar_acompanhamento #voltar_acomp_data_retorno').val(),
+                cliente_id: $('#modal_voltar_acompanhamento #voltar_acompanhamento_cliente_id').val(),
+                status: parseInt($('#modal_voltar_acompanhamento #voltar_acomp_status_acompanhamento').val()),
+                motivo: $('#modal_voltar_acompanhamento #voltar_acompanhamento_motivo').val()},
+            type: 'PUT',
+            success: function(data) {
+                $('#modal_voltar_acompanhamento').modal('hide');
+                window.location.reload();
+                exibirMsg("Empresa voltou para acompanhamento.")
+            },
+            error: function(data) {
+                exibirErro(data);
+            }
+        });
+    }
+  }
+
+</script>
+<style>
+  .ibox-title-without-border-style {
+    border-style: none;
+    min-height: 24px !important;
+    padding: 5px !important;
+  }
+  .ibox{
+    margin-bottom: 5px !important;
+  }
+    .redcolor{
+      color: red;
+    }
+</style>

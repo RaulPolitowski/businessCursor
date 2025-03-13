@@ -1,0 +1,151 @@
+<div class="col-lg-6 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading">
+      Vendedores/Implantadores (Efetivações)
+      <div class="col-sm-3  pull-right" style="margin-top: -6px !important;">
+        <%= select_tag  'tipo_filtro_efetivacao', options_for_select([
+                                                                          ['Vendedor', 1],
+                                                                          ['Implantador', 2]
+                                                                      ], 1), {:class => "form-control input-sm chosen-select"} %>
+      </div>
+      <div class="col-sm-3  pull-right" style="margin-top: -6px !important;">
+        <%= select_tag  'mes_filtro_efetivacao', options_for_select([
+                                                                         ['Janeiro', 1],
+                                                                         ['Fevereiro', 2],
+                                                                         ['Março', 3],
+                                                                         ['Abril', 4],
+                                                                         ['Maio', 5],
+                                                                         ['Junho', 6],
+                                                                         ['Julho', 7],
+                                                                         ['Agosto', 8],
+                                                                         ['Setembro', 9],
+                                                                         ['Outubro', 10],
+                                                                         ['Novembro', 11],
+                                                                         ['Dezembro', 12]
+                                                                     ], Time.now.month), {:class => "form-control input-sm chosen-select"} %>
+      </div>
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 no-padding" >
+        <div class="col-md-8 padding-5">
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box">
+                <div class="ibox-title ibox-title-without-border-style">
+                  <h5>TOP</h5>
+                </div>
+                <div class="ibox-content padding-5">
+                  <div id="vendedores_efetivacoes" style="height: 212px !important;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 padding-5">
+          <div class="ibox">
+            <div class="ibox-content product-box">
+              <div class="ibox-title ibox-title-without-border-style">
+                <h5>Gráfico</h5>
+              </div>
+              <div class="ibox-content padding-5">
+                <div id="vendedores_efetivacoes_grafico" style="height: 212px !important;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function drawTableVendedoresAcompanhamentos() {
+      $.getJSON("/dashboards/top_vendedores_acompanhamentos?empresa=" + $('#empresas_financeiro_id').val() +
+          "&estado=" + $('#estado_financeiro_id').val() +
+          "&mes=" + $('#mes_filtro_efetivacao').val() +
+          "&tipo=" + $('#tipo_filtro_efetivacao').val(), function(data) {
+
+          var datatable = new google.visualization.DataTable();
+          datatable.addColumn('string', 'Nome');
+          datatable.addColumn('number', 'Quant.');
+          datatable.addColumn('string', 'Mens.');
+          datatable.addColumn('string', 'Inst.');
+          datatable.addColumn('string', 'ID');
+
+          for (var i = 0; i < data.length; i++) {
+              datatable.addRow([data[i].user, parseInt(data[i].quantidade), mascaraValor(parseFloat(data[i].mensalidade).toFixed(2)),
+                  mascaraValor(parseFloat(data[i].implantacao).toFixed(2)), data[i].user_id]);
+          }
+
+          drawChartTopAcompanhamento(data);
+
+          var table = new google.visualization.Table(document.getElementById('vendedores_efetivacoes'));
+
+          function selectHandler() {
+              var selectedItem = table.getSelection()[0];
+              if (selectedItem) {
+                  carregarTopEfetivacoes(datatable.getValue(selectedItem.row, 4))
+              }else{
+                  $('#bloco_top_efetivacoes').hide();
+              }
+          }
+
+          google.visualization.events.addListener(table, 'select', selectHandler);
+
+          table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+
+          view = new google.visualization.DataView(datatable);
+          view.hideColumns([4]);
+          table.draw(view, {allowHtml: true, width: '100%', height: '100%',});
+      });
+  }
+
+  function drawChartTopAcompanhamento(data) {
+      var dataArray = [
+          ['Situação', 'Quantidade'],
+      ];
+
+      for (var i = 0; i < data.length; i++) {
+          dataArray.push([data[i].user, parseInt(data[i].quantidade)]);
+      }
+
+      var options = {
+          'chartArea': {'width': '100%', 'height': '80%'},
+          pieStartAngle: 50,
+          legend: {position: 'bottom'},
+          is3D: true
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('vendedores_efetivacoes_grafico'));
+      var data = google.visualization.arrayToDataTable(dataArray);
+
+      chart.draw(data, options);
+  }
+
+  function carregarTopEfetivacoes(id) {
+      $.getJSON("/dashboards/table_efetivacoes?empresa=" + $('#empresas_financeiro_id').val() +
+          "&estado=" + $('#estado_financeiro_id').val() +
+          "&data=" + $('#mes_filtro_efetivacao').val() +
+          "&tipo=" + $('#tipo_filtro_efetivacao').val() +
+          "&object_id=" + id, function(data) {
+
+          $('#bloco_top_efetivacoes').show();
+          var table = $('.table-top-efetivacoes').DataTable();
+          table.clear().draw();
+          $.each(data,function (i,val){
+              table.row.add( [
+                  moment(val['data_fim']).format("DD/MM/YYYY HH:mm"),
+                  val['razao_social'],
+                  val['cidade'],
+                  val['sistema'],
+                  val['implantador'],
+                  val['vendedor'],
+                  mascaraValor(val['mensalidade']),
+                  mascaraValor(val['implantacao'])
+              ] ).draw( false );
+          });
+      });
+  }
+
+
+</script>

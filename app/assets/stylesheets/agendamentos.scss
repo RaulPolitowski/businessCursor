@@ -1,0 +1,46 @@
+// Place all the styles related to the agendamentos controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+//= require iCheck/custom.css
+//= require fullcalendar/fullcalendar.css
+//= require ladda/ladda-themeless.min.css
+//= require sweetalert/sweetalert2.min.css
+//= require qtip/jquery.qtip.min.css
+//= require chosen/bootstrap-chosen.css
+
+
+.tipoAgenda{
+  font-size: 9px !important;
+}
+.ibox{
+  margin-bottom: 5px !important;
+}
+
+.scroll{
+  overflow-y: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  min-height: 200px;
+  max-height: 270px !important;
+}
+
+.scroll .row{
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+.pref {
+  visibility:hidden;
+  font-size:15px;
+  cursor:pointer;
+}
+
+.pref:before {
+  content:url('star.ico');
+  position: absolute;
+  visibility:visible;
+}
+
+.pref:checked:before {
+  content:url('star_checked.ico');
+  position: absolute;
+}

@@ -1,0 +1,233 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+  <div class="sidebar-collapse">
+    <ul class="nav metismenu" id="side-menu">
+      <li class="nav-header" style="padding-bottom: 5px; padding-top: 25px;">
+        <div class="dropdown profile-element">
+                    <span>
+                      <%= image_tag(avatar_users_path, :alt => "Avatar", :class => "img-circle") %>
+                    </span>
+          <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class="clear">
+                            <span class="block m-t-xs">
+                                <strong class="font-bold"><%= current_user.name %></strong><br>
+                                <span class="m-r-sm text-muted welcome-message" ><b id="empresaNome"><%= current_empresa.present? ? current_empresa.razao_social : '' %></b></span>
+                            </span> <span class="text-muted text-xs block">Perfil <b class="caret"></b></span>
+                        </span>
+          </a>
+          <ul class="dropdown-menu animated fadeInRight m-t-xs">
+            <li><%= link_to editar_usuario_users_path, method: :delete do %>
+                  <i class="fa fa-pencil"></i> Editar
+              <% end %>
+            </li>
+            <li><a id="btn_alterar_empresa"><i class="fa fa-key"></i> Alterar Empresa</a>
+            </li>
+            <li class="divider"></li>
+            <li><%= link_to destroy_user_session_path, method: :delete do %>
+                  <i class="fa fa-sign-out"></i> Log out
+              <% end %>
+            </li>
+          </ul>
+        </div>
+        <div class="logo-element">
+          BM
+        </div>
+      </li>
+      <li class="<%= is_active_controller('dashboards') %>" title="DASHBOARD">
+        <a href="#"><i class="fa fa-bar-chart"></i> <span class="nav-label">DASHBOARD</span></a>
+        <ul class="nav nav-second-level collapse <%= is_active_controller('dashboards', 'in') %>">
+          <% if 90.eql? current_user.id %>
+              <li class="<%= is_active_controller('dashboards') && is_active_action('resultados') %>"><%= link_to "RESULTADOS GTECH", resultados_dashboards_path %> </li>
+              <li class="<%= is_active_controller('dashboards') && is_active_action('resultados_gruber') %>"><%= link_to "RESULTADOS GRUBER", resultados_gruber_dashboards_path %> </li>
+          <% else %>
+            <li class="<%= is_active_controller('dashboards') && is_active_action('empresas') %>"><%= link_to "EMPRESAS/JOBS", empresas_dashboards_path %> </li>
+            <li class="<%= is_active_controller('dashboards') && is_active_action('empresas_contatadas') %>"><%= link_to "EMPRESAS CONTATADAS", empresas_contatadas_dashboards_path %> </li>            
+            <li class="<%= is_active_controller('dashboards') && is_active_action('ligacoes') %>"><%= link_to "CONTATOS REALIZADOS", dashboards_path %> </li>
+            <li class="<%= is_active_controller('dashboards') && is_active_action('painel_vendas') %>"><%= link_to "VENDAS", root_path %> </li>
+            <li class="<%= is_active_controller('dashboards') && is_active_action('desistencias') %>"><%= link_to "DESISTÊNCIAS", desistencias_dashboards_path %> </li>
+            <li class="<%= is_active_controller('dashboards') && is_active_action('implantacoes') %>"><%= link_to "IMPLANTAÇÕES", implantacoes_dashboards_path %> </li>
+            <li class="<%= is_active_controller('dashboards') && is_active_action('acompanhamentos') %>"><%= link_to "ACOMPANHAMENTOS", acompanhamentos_dashboards_path %> </li>
+            <% if [1,4,27,99].include? current_user.id %>
+                <li class="<%= is_active_controller('dashboards') && is_active_action('funil') %>"><%= link_to "FUNIL DE VENDAS", funil_dashboards_path %> </li> 
+            <% end %>
+            <% if current_user.admin? %>
+                <li class="<%= is_active_controller('dashboards') && is_active_action('resumo_comercial') %>"><%= link_to "RESUMO COMERCIAL", resumo_comercial_dashboards_path %> </li>
+            <% end %>
+            <% if [1,4,27,99].include? current_user.id %>
+              <li class="<%= is_active_controller('dashboards') && is_active_action('resultados') %>"><%= link_to "RESULTADOS GTECH", resultados_dashboards_path %> </li>
+            <% end %>
+            <% if [1,4,27,99].include? current_user.id %>
+                <li class="<%= is_active_controller('dashboards') && is_active_action('resultados_gruber') %>"><%= link_to "RESULTADOS GRUBER", resultados_gruber_dashboards_path %> </li>
+            <% end %>
+            <% if [1,4,27,99].include? current_user.id %>
+              <li class="<%= is_active_controller('dashboards') && is_active_action('empresas_centro_distribuicao') %>"><%= link_to "CENTRO DE DIST.", empresas_centro_distribuicao_dashboards_path %> </li>
+            <% end %>
+          <% end %>
+        </ul>
+      </li>
+      <li class="<%= is_active_controller('satisfacao') || is_active_controller('satisfacao_gruber') %>" title="Gruber">
+        <a href="#"><i class="fa fa-book"></i></i> <span class="nav-label">GRUBER</span></a>
+        <ul class="nav nav-second-level collapse <%= is_active_controller('servicos', 'in') || is_active_controller('setores', 'in') || is_active_controller('satisfacao', 'in') || is_active_controller('satisfacao_gruber', 'in') %>">
+          <li class="<%= is_active_controller('satisfacao_gruber') && is_active_action('dashboard') %>"><%= link_to "DASHBOARD", dashboard_satisfacao_gruber_index_path %> </li>
+          <li class="<%= is_active_controller('satisfacao_gruber') && is_active_action('index') %>"><%= link_to "PESQ. REALIZADAS", satisfacao_gruber_index_path %> </li>
+          <li><%= link_to "LINK PESQUISA", satisfacao_index_path, target: :_blank %> </li>
+          <li class="<%= is_active_controller('servicos') && is_active_action('index') %>"><%= link_to "CAD. SERVIÇOS", servicos_path %> </li>
+          <li class="<%= is_active_controller('setores') && is_active_action('index') %>"><%= link_to "CAD. SETORES", setores_path %> </li>
+        </ul>
+      </li>
+      <li class="<%= is_active_controller('campanhas') || is_active_controller('whatsapp_numeros') %>" title="Campanhas">
+        <a href="#"><i class="fa fa-whatsapp"></i></i> <span class="nav-label">CAMPANHAS</span></a>
+        <ul class="nav nav-second-level collapse <%= is_active_controller('campanhas', 'in') || is_active_controller('whatsapp_numeros', 'in')  %>">
+          <li class="<%= is_active_controller('campanhas') && is_active_action('index') %>"><%= link_to "GERENCIAR", campanhas_path %> </li>
+          <li class="<%= is_active_controller('whatsapp_numeros') %>"><%= link_to "WHATSAPPS", whatsapp_numeros_path %> </li>
+          <li class="<%= is_active_controller('loja_itens') %>"><%= link_to "LOJA", loja_itens_path %> </li>
+        </ul>
+      </li>
+      <% unless 90.eql? current_user.id %>
+        <li class="<%= is_active_controller('agenda') %>" title="AGENDA">
+          <%= link_to agenda_path do %>
+              <i class="fa fa-calendar-o"></i> <span class="nav-label" >AGENDA</span>
+          <% end %>
+        </li>
+          <li class="<%= is_active_controller('importacoes') %>" title="IMPORTAÇÕES">
+            <%= link_to importacoes_path do %>
+                <i class="fa fa-globe"></i> <span class="nav-label" >IMPORTAÇÕES</span>
+            <% end %>
+          </li>
+        <li class="<%= is_active_controller('cnaes') || is_active_controller('status') || is_active_controller('tipo_agendamentos') || is_active_controller('sistemas') || is_active_controller('pacotes') || is_active_controller('users') || is_active_controller('parametros') || is_active_controller('empresas') || is_active_controller('permissoes') || is_active_controller('cidades') || is_active_controller('receitaws_contas')%>" title="CADASTRAR/GERENCIAR">
+          <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">CADASTRAR/GERENCIAR</span></a>
+          <ul class="nav nav-second-level collapse <%= is_active_controller('cnaes', 'in') || is_active_controller('status', 'in') || is_active_controller('tipo_agendamentos', 'in') || is_active_controller('sistemas', 'in') || is_active_controller('pacotes', 'in') || is_active_controller('users', 'in') || is_active_controller('parametros', 'in') || is_active_controller('empresas', 'in') || is_active_controller('permissoes', 'in') || is_active_controller('cidades', 'in')%>">
+            <% if current_user.admin? %>
+              <li class="<%= is_active_controller('abordagem_iniciais') && is_active_action('index') %>"><%= link_to "ABORDAGEM INICIAL", abordagem_iniciais_path %></li>
+              <li class="<%= is_active_controller('cidades') && is_active_action('index') %>"><%= link_to "CIDADES", cidades_path %></li>
+            <% end %>
+            <li class="<%= is_active_controller('clientes') %>">
+              <a href="#">CLIENTES <span class="fa arrow"></span></a>
+              <ul class="nav nav-third-level <%= is_active_controller('clientes', 'in') %>">
+                <li class="<%= is_active_controller('clientes') && is_active_action('index') %>"><%= link_to "TODOS", clientes_path %> </li>
+                <li class="<%= is_active_controller('clientes') && is_active_action('new') %>"><%= link_to "NOVO", new_cliente_path %> </li>
+              </ul>
+            </li>
+            <li class="<%= is_active_controller('mensagem_notificacoes') %>">
+              <a href="#">NOTIFICAÇÃO VIA WHATSAPP <span class="fa arrow"></span></a>
+              <ul class="nav nav-third-level <%= is_active_controller('mensagem_notificacoes', 'in') %>">
+                <li class="<%= is_active_controller('whatsapp_numeros') && is_active_action('index') %>"><%= link_to "NÚMEROS", numero_notificacoes_path %> </li>
+                <li class="<%= is_active_controller('mensagem_notificacoes') && is_active_action('index') %>"><%= link_to "NOTIFICAÇÕES", mensagem_notificacoes_path %> </li>
+                <li class="<%= is_active_controller('gzap_usuarios') && is_active_action('index') %>"><%= link_to "USUÁRIOS GZAP", gzap_usuarios_path %> </li>
+              </ul>
+            </li>
+            <% if current_user.admin? %>
+              <li class="<%= is_active_controller('cnaes') && is_active_action('index') %>"><%= link_to "CNAES", cnaes_path %></li>
+              <li class="<%= is_active_controller('empresas') && is_active_action('index') %>"><%= link_to "EMPRESAS", empresas_path %> </li>
+            <% end %>
+            <li class="<%= is_active_controller('escritorios') %>">
+              <a href="#">ESCRITÓRIOS <span class="fa arrow"></span></a>
+              <ul class="nav nav-third-level <%= is_active_controller('escritorios', 'in') %>">
+                <li class="<%= is_active_controller('escritorios') && is_active_action('index') %>"><%= link_to "CADASTROS", escritorios_path %> </li>
+                <li class="<%= is_active_controller('escritorios') && is_active_action('fila') %>"><%= link_to "TODOS", todos_escritorios_path %> </li>
+              </ul>
+            </li>
+            <% if current_user.admin? %>
+              <li class="<%= is_active_controller('contratos') && is_active_action('index') %>"><%= link_to "CONTRATOS", contratos_path %> </li>
+              <li class="<%= is_active_controller('formaspagamento') && is_active_action('index') %>"><%= link_to "FORMAS DE PAGAMENTO", formaspagamento_index_path %> </li>
+              <li class="<%= is_active_controller('pacotes') && is_active_action('index') %>"><%= link_to "PACOTES", pacotes_path %> </li>
+              <li class="<%= is_active_controller('parametros') && is_active_action('editar_parametros') %>"><%= link_to "PARÂMETROS", editar_parametros_parametros_path %> </li>
+              <li class="<%= is_active_controller('perguntas') && is_active_action('index') %>"><%= link_to "PERGUNTAS", perguntas_path %> </li>
+              <li class="<%= is_active_controller('permissoes') && is_active_action('index') %>"><%= link_to "PERMISSÕES", permissoes_path %> </li>
+              <li class="<%= is_active_controller('sistemas') && is_active_action('index') %>"><%= link_to "SISTEMAS", sistemas_path %> </li>
+              <% if can? :manage, Status %>
+                <li class="<%= is_active_controller('status') && is_active_action('index') %>"><%= link_to "STATUS", status_index_path %> </li>
+              <% end %>
+              <li class="<%= is_active_controller('tipo_agendamentos') && is_active_action('index') %>"><%= link_to "TIPO DE AGENDAMENTO", tipo_agendamentos_path %> </li>
+              <li class="<%= is_active_controller('tipo_fechamentos') && is_active_action('index') %>"><%= link_to "TIPOS FECHAMENTO", tipo_fechamentos_path %> </li>
+              <li class="<%= is_active_controller('users') && is_active_action('index') %>"><%= link_to "USUÁRIOS", users_path %> </li>
+              <li class="<%= is_active_controller('receitaws_contas') && is_active_action('index') %>"><%= link_to "RECEITA WS", receitaws_contas_path %> </li>
+            <% end %>
+          </ul>
+        </li>
+        <li class="<%= is_active_controller('solicitacao_desistencias') %>" title="SOLICITAÇÕES DE DESISTÊNCIAS">
+          <a href="#"><i class="fa fa-address-card"></i></i> <span class="nav-label">SOLICITAÇÕES DE DESISTÊNCIAS</span></a>
+          <ul class="nav nav-second-level collapse <%= is_active_controller('solicitacao_desistencias', 'in') %>">
+            <li class="<%= is_active_controller('solicitacao_desistencias') && is_active_action('index') %>"><%= link_to "GERENCIAR", solicitacao_desistencias_path %> </li>
+            <li class="<%= is_active_controller('solicitacao_desistencias') && is_active_action('new') %>"><%= link_to "LANÇAR", new_solicitacao_desistencia_path %> </li>
+            <li><%= link_to "LANÇAR EXTERNO", solicitacao_desistencia_externo_lancar_desistencia_path, target: :_blank %> </li>
+            <li class="<%= is_active_controller('solicitacao_desistencias') && is_active_action('painel_desistencias') %>"><%= link_to "DADOS/ESTATÍSTICAS", painel_desistencias_solicitacao_desistencias_path %> </li>
+          </ul>
+        </li>
+        <li class="<%= is_active_controller('solicitacao_bancos') %>" title="SOLICITAÇÕES DE BANCO">
+          <a href="#"><i class="fa fa-database"></i></i> <span class="nav-label">SOLICITAÇÕES DE BANCO</span></a>
+          <ul class="nav nav-second-level collapse <%= is_active_controller('solicitacao_bancos', 'in') %>">
+            <li class="<%= is_active_controller('solicitacao_bancos') && is_active_action('index') %>"><%= link_to "GERENCIAR", solicitacao_bancos_path %> </li>
+            <li><%= link_to "LANÇAR EXTERNO", solicitacao_banco_externo_solicitar_banco_externo_path, target: :_blank %> </li>
+          </ul>
+        </li>
+        <li class="<%= is_active_controller('ligacoes') %>" title="LIGAÇÕES">
+          <a href="#"><i class="fa fa-phone"></i></i> <span class="nav-label">LIGAÇÕES</span></a>
+          <ul class="nav nav-second-level collapse <%= is_active_controller('clientes', 'in') %>">
+            <li class="<%= is_active_controller('ligacoes') && is_active_action('ligacao') %>"><%= link_to "NOVAS LIGAÇÕES", ligacao_ligacoes_path %> </li>
+            <li class="<%= is_active_controller('ligacoes') && is_active_action('index') %>"><%= link_to "HISTÓRICO", ligacoes_path %> </li>
+            <li class="<%= is_active_controller('ligacoes') && is_active_action('retorno') %>"><%= link_to "RETORNO INICIAL", agendamento_retornos_path%> </li>
+          </ul>
+        </li>
+        <li class="<%= is_active_controller('negociacoes') %>" title="NEGOCIAÇÕES">
+          <%= link_to negociacoes_path do %>
+              <i class="fa fa-money"></i> <span class="nav-label" >NEGOCIAÇÕES</span>
+          <% end %>
+        </li>
+        <li class="<%= is_active_controller('implantacoes') %>" title="IMPLANTAÇÕES">
+          <a href="#"><i class="fa fa-book"></i></i> <span class="nav-label">IMPLANTAÇÕES</span></a>
+          <ul class="nav nav-second-level collapse <%= is_active_controller('implantacoes', 'in') %>">
+            <li class="<%= is_active_controller('implantacoes') && is_active_action('index') %>"><%= link_to "GERENCIAR", implantacoes_path %> </li>
+            <li class="<%= is_active_controller('implantacoes') && is_active_action('show') %>"><%= link_to "LANÇAR", lancar_implantacoes_path %> </li>
+            <li class="<%= is_active_controller('agendamento_retornos') && is_active_action('retornos_implantacao') %>"><%= link_to "RETORNOS", retornos_implantacao_agendamento_retornos_path %> </li>
+          </ul>
+        </li>
+        <li class="<%= is_active_controller('acompanhamentos') %>" title="ACOMPANHAMENTOS">
+          <a href="#"><i class="fa fa-check-square"></i></i> <span class="nav-label">ACOMPANHAMENTOS</span></a>
+          <ul class="nav nav-second-level collapse <%= is_active_controller('acompanhamentos', 'in') %>">
+            <li class="<%= is_active_controller('acompanhamentos') && is_active_action('index') %>"><%= link_to "GERENCIAR", acompanhamentos_path %> </li>
+            <li class="<%= is_active_controller('acompanhamentos') && is_active_action('retornos_acompanhamento') %>"><%= link_to "RETORNOS", retornos_acompanhamento_agendamento_retornos_path %> </li>
+          </ul>
+        <!--</li>-->
+          <!-- <% if current_user.admin? %> -->
+            <!--<li class="<%= is_active_controller('auditoria_desistencias') %>" title="AUD. DESISTÊNCIAS">-->
+              <!--<%= link_to auditoria_desistencias_path do %>-->
+                  <!--<i class="fa fa-stethoscope"></i> <span class="nav-label" >AUD. DESISTÊNCIAS</span>-->
+              <!--<% end %>-->
+            <!--</li>-->
+        <!--<% end %>-->
+
+<!--        <li class="<%#= is_active_controller('historico_cliente') %>" title="HISTÓRICO">-->
+<!--          <a href="#"><i class="fa fa-history"></i></i> <span class="nav-label">HISTÓRICO</span></a>-->
+<!--          <ul class="nav nav-second-level collapse <%#= is_active_controller('historico_cliente', 'in') %>">-->
+<!--            <li class="<%#= is_active_controller('historico_cliente') && is_active_action('aguardando_contato') %>"><%#= link_to "INERTES", aguardando_inertes_historico_cliente_index_path%> </li>-->
+<!--            <li class="<%#= is_active_controller('historico_cliente') && is_active_action('aguardando_pesquisa') %>"><%#= link_to "PESQUISA", aguardando_pesquisa_historico_cliente_index_path%> </li>-->
+<!--            <li class="<%#= is_active_controller('historico_cliente') && is_active_action('avaliacao_contato') %>"><%#= link_to "AVALIAÇÃO INERTES", avaliacao_inertes_historico_cliente_index_path %> </li>-->
+<!--            <li class="<%#= is_active_controller('historico_cliente') && is_active_action('avaliacao_pesquisa') %>"><%#= link_to "AVALIAÇÃO PESQUISA", avaliacao_pesquisa_historico_cliente_index_path %> </li>-->
+<!--          </ul>-->
+<!--        </li>-->
+        <li class="<%= is_active_controller('relatorios') %>" title="RELATÓRIOS">
+          <a href="#"><i class="fa fa-file"></i></i> <span class="nav-label">RELATÓRIOS</span></a>
+          <ul class="nav nav-second-level collapse <%= is_active_controller('relatorios', 'in') %>">
+            <li class="<%= is_active_controller('relatorios') && is_active_action('analise_cliente') %>"><%= link_to "ANÁLISE DE CLIENTES", analise_cliente_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('analise_desistencias') %>"><%= link_to "ANÁLISE DE DESISTÊNCIAS", analise_desistencias_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('analise_bloqueados_paralisados') %>"><%= link_to "CONSULTA DE BLOQUEIO E PARALISAÇÃO", analise_bloqueados_paralisados_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('analise_vendedor') %>"><%= link_to "ANÁLISE DE COLABORADOR", analise_vendedor_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('analise_pci') %>"><%= link_to "ANÁLISE DE PCI", analise_pci_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('cobranca_primeira_mensalidade') %>"><%= link_to "COBRANÇA PRIMEIRA MENSALIDADE", cobranca_primeira_mensalidade_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('contratos_assinados') %>"><%= link_to "CONFERENCIA DE ASSINATURA DE CONTRATOS", contratos_assinados_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('ligacoes') %>"><%= link_to "LIGAÇÕES", ligacoes_relatorios_path%> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('ligacoes') %>"><%= link_to "RESUMO COMERCIAL", resumo_comercial_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('primeira_mensalidade') %>"><%= link_to "PRIMEIRA MENSALIDADE", primeira_mensalidade_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('projecao_clientes_novos') %>"><%= link_to "PROJEÇÃO CLIENTES NOVOS", projecao_clientes_novos_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('negociacoes') %>"><%= link_to "NEGOCIAÇÕES", negociacoes_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('pesquisa_satisfacao') %>"><%= link_to "PESQUISAS DE SATISFAÇÃO", pesquisa_satisfacao_relatorios_path %> </li>
+            <li class="<%= is_active_controller('relatorios') && is_active_action('periodo_inertes') %>"><%= link_to "PERÍODOS INERTES", periodo_inertes_relatorios_path %> </li>
+            <% if [1,4,27,99].include? current_user.id %>
+              <li class="<%= is_active_controller('relatorios') && is_active_action('comissionamento_mensalidades') %>"><%= link_to "COMISSIONAMENTO", comissionamento_mensalidades_relatorios_path %> </li>
+            <% end %>
+          </ul>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</nav>

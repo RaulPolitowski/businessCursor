@@ -1,0 +1,41 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  user: postgres
+  username: postgres # Utilizado para acessar o banco (opção -U)
+  password: root
+  pool: 75
+
+development:
+  <<: *default
+  host: copel.gtech.site
+  database: business_raul
+  username: postgres 
+  password: q27pptz8
+
+test:
+  <<: *default
+  host: 127.0.0.1
+  database: businessmanager_test
+  username: postgres
+  password: g2010tech
+
+fiscal_development:
+  <<: *default
+  host: copel.gtech.site
+  user: postgres
+  username: postgres # Utilizado para acessar o banco (opção -U)
+  database: fiscal_raul
+  password: q27pptz8
+  pool: 25
+
+api_development:
+  <<: *default
+#  database: api-dev
+  database: api_raul
+  host: copel.gtech.site
+  user: postgres
+  username: postgres
+  password: q27pptz8
+  pool: 25

@@ -1,0 +1,492 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>SOLICITAÇÃO DE DESISTÊNCIA</h2>
+    <ol class="breadcrumb">
+      <li>
+          <a href="<%= url_for :controller => 'solicitacao_desistencias', :action => 'index' %>">Gerenciar</a>
+      </li>
+      <li class="active">
+          <strong>Lançar</strong>
+      </li>        
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce padding-top-10">
+  <div class="ibox-content">
+    <div class="tabs-container">
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1"> Informações</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-2"> Solicitação cancelamento</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-3"> Contatos</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-parecer"> Parecer </a></li>
+      </ul>
+      <div class="tab-content">
+        <div id="tab-1" class="tab-pane active">
+          <div class="panel-body">
+            <div class="form-group margin-bottom-5">
+              <div class="row">
+                <div class="field col-sm-6">
+                  <label for="cliente_razao_social">Cliente</label>
+                  <div class="input-group m-b" style="margin-bottom: 0px;">
+                    <%= text_field_tag "cliente_razao_social", @cliente.razao_social, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                    <%= hidden_field_tag 'cliente_id', @cliente.id %>
+                    <span class="input-group-addon padding-0">
+                          <button id="btnCopyCliente" type="button" class="btn btn-sm btn-success btn-table" title="Copiar"  data-toggle="tooltip" data-placement="right">
+                            <i class="fa fa-files-o" aria-hidden="true"></i>
+                          </button>
+                        </span>
+                  </div>
+                </div>
+                <div class="field col-sm-3">
+                  <label for="cliente_cnpj">CNPJ</label>
+                  <%= text_field_tag "cliente_cnpj", @cliente.cnpj, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                </div>
+                <div class="field col-sm-3">
+                  <label for="cliente_cidade">Cidade/UF</label>
+                  <%= text_field_tag "cliente_cidade", @cliente.cidade.nome + '/' + @cliente.cidade.estado.sigla, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                </div>
+              </div>
+            </div>
+            <div class="form-group margin-bottom-5">
+              <div class="row">
+                <div class="field col-sm-2">
+                  <label for="vendedor">Vendedor</label>
+                  <% if @cliente.fechamento.present?%>
+                    <%= text_field_tag "cliente_sistema", @cliente.fechamento.user.name, {label: false,  disabled: 'true', class: "form-control input-sm"} %> 
+                  <% else %>
+                    <%= text_field_tag "cliente_sistema", 'Não encontrado', {label: false,  disabled: 'true', class: "form-control input-sm"} %> 
+                  <% end %>
+                </div>
+                <div class="field col-sm-4">
+                  <label for="tecnico">Responsável técnico</label>
+                  <%= text_field_tag "tecnico", @cliente_fin['local'], {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                </div>
+                <div class="field col-sm-3">
+                  <label for="sistema">Sistema</label>
+                  <%= text_field_tag "sistema", @cliente_fin['sistema'], {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                </div>
+                <div class="field col-sm-3">
+                  <label for="mensalidade">Mensalidade</label>
+                  <%= text_field_tag "mensalidade", @cliente_fin['valor_mensalidade'], {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                </div>                
+              </div>
+            </div>
+            <div class="form-group margin-bottom-5">
+              <div class="row">
+                <div class="field col-sm-2">
+                  <label for="implantador">Implantador</label>
+                  <% if @cliente.fechamento.present? && @cliente.implantacao%>
+                    <%= text_field_tag "implantador", @cliente.implantacao.present? && @cliente.implantacao.user.present? ? @cliente.implantacao.user.name : 'Sem Implantador', {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                  <% else %>
+                    <%= text_field_tag "implantador", 'Não encontrado', {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                  <% end %>
+                </div>
+                <div class="field col-sm-2">
+                  <label for="dias_cliente">Dias como cliente</label>
+                  <%= text_field_tag "dias_cliente", @cliente_fin['dias_cliente'], {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                </div>
+                <div class="field col-sm-2">
+                  <label for="dias_sem_uso">Dias sem uso</label>
+                  <%= text_field_tag "dias_sem_uso", @dias_sem_uso, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                </div>
+                <div class="field col-sm-3">
+                  <label for="ultimo_acesso">Último acesso</label>
+                  <%= text_field_tag "ultimo_acesso", @ultimo_acesso, {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                </div>     
+                <div class="field col-sm-3">
+                  <label for="status">Status</label>
+                  <%= text_field_tag "status", @cliente_fin['situacao'], {label: false,  disabled: 'true', class: "form-control input-sm"} %>
+                </div>            
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-2" class="tab-pane">
+          <div class="panel-body">
+            <%= form_for(@solicitacao_desistencia) do |f| %>
+              <%= f.hidden_field :cliente_id, id:"cliente_id" %>
+              <div class="form-group margin-bottom-5">
+                <div class="row margin-bottom-5">
+                  <div class="field col-sm-3">
+                    <%= f.label :data_solicitacao %><br>
+                    <%= f.text_field :data_solicitacao, value: human_datetime(@solicitacao_desistencia.data_solicitacao), class:"form-control input-sm", readOnly: true %>
+                  </div>
+                  <div class="field col-sm-3">
+                    <label for="user">Colaborador</label>
+                    <% if @solicitacao_desistencia.user_id.present? %>
+                      <input class="form-control input-sm" value="<%= @solicitacao_desistencia.user.name %>" type="text" name="colaborador" id="colaborador" readOnly="off">
+                    <% else %>
+                      <input class="form-control input-sm" value="" type="text" name="colaborador" id="colaborador" readOnly="off">
+                    <% end %>
+                  </div>
+                  <div class="field col-sm-3">
+                    <%= f.label :solicitante %><br>
+                    <%= f.text_field :solicitante, class:"form-control input-sm", id:"solicitante", autocomplete:"off" %>
+                  </div>    
+                  <div class="field col-sm-3">
+                    <%= f.label :telefone %>
+                    <div class="input-group m-b" style="margin-bottom: 0px;">
+                      <%= f.text_field :telefone, class:"form-control input-sm", id:"telefone", autocomplete:"off" %>
+                      <span class="input-group-addon padding-0">
+                        <button type="button" class="btn btn-sm btn-info btn-table" onclick="openWhats()" title="Whatsapp" data-toggle="tooltip" data-placement="right">
+                            <i class="fa fa-whatsapp" aria-hidden="true"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>            
+                </div>
+                <div class="row margin-bottom-5">
+                  <div class="field col-sm-3">
+                    <label for="nome_solicitante">Nome solicitante externo</label>
+                    <%= f.text_field :nome_solicitante, class:"form-control input-sm", readOnly: true %>
+                  </div>
+                  <div class="field col-sm-3">
+                    <%= f.label :email_solicitante %><br>
+                    <%= f.text_field :email_solicitante, class:"form-control input-sm", readOnly:true %>
+                  </div>
+                </div>
+                <div class="row margin-bottom-5">
+                  <div class="field col-sm-10">
+                    <%= f.label :motivo_solicitacao, 'Motivo desistência' %><br>
+                    <%= f.text_area :motivo_solicitacao, rows: 4, class:"form-control input-sm" %>
+                  </div>  
+                  <div class="field col-sm-2" style="margin-top: 50px">
+                    <button name="button" class="pull-left ladda-button btn btn-success btn-rounded">
+                      <i class="fa fa-save"></i> Salvar
+                    </button>
+                  </div> 
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div id="tab-3" class="tab-pane">
+          <div class="panel-body">
+            <div class="col-lg-6">
+              <table id="table-contatos-cliente-whats" class="table table-hover table-contatos">
+                <thead>
+                <tr>
+                  <th style="width: 65%">Nome</th>
+                  <th style="width: 30%">Telefone</th>
+                  <th style="width: 15%"></th>
+                </tr>
+                </thead>
+                <tbody class="tbody-whats" id="body-table-contatos-whats">
+                  <% @contatos1.each do |item| %>
+                    <tr class="fields">
+                      <td><%= item['name'].present? ? item['name'] : 'Sem nome' %></td>
+                      <td><%= item['phone'] %></td>
+                      <td><button class="btn btn-sm btn-white btn-table" title="Whatsapp" onclick="chamarApiWhats(<%= item['phone'] %>)" data-toggle="tooltip" data-placement="right"> <i class="fa fa-whatsapp"></i></button></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-lg-6">
+              <table id="table-contatos-cliente-whats2" class="table table-hover table-contatos2">
+                <thead>
+                <tr>
+                  <th style="width: 65%">Nome</th>
+                  <th style="width: 30%">Telefone</th>
+                  <th style="width: 15%"></th>
+                </tr>
+                </thead>
+                <tbody class="tbody-whats" id="body-table-contatos-whats2">
+                  <% @contatos2.each do |item| %>
+                    <tr class="fields">
+                      <td><%= item['name'].present? ? item['name'] : 'Sem nome' %></td>
+                      <td><%= item['phone'] %></td>
+                      <td><button class="btn btn-sm btn-white btn-table" title="Whatsapp" onclick="chamarApiWhats(<%= item['phone'] %>)" data-toggle="tooltip" data-placement="right"> <i class="fa fa-whatsapp"></i></button></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="tab-parecer" class="tab-pane">
+          <% if @solicitacao_desistencia.motivo_desistencia.present? %>
+            <div class="panel-body">
+              <% if !@tags.blank? %>
+                <div class="row margin-bottom-5">
+                  <div class="field col-sm-12">
+                    <label>Tags</label>
+                    <ul id="tag_list">
+                      <% @tags.each do |tag| %>
+                          <li> <%= tag %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              <% end %>
+              <div class="row margin-bottom-5">
+                <div class="field col-sm-12">
+                  <label for="motivo_desistencia">Motivo da desistência </label>
+                  <%= text_area_tag "motivo_desistencia", @solicitacao_desistencia.motivo_desistencia, {label: false,  disabled: 'true', class: "form-control input-sm", readOnly:"true", rows:"4"} %>
+                </div>
+              </div>
+            </div>
+          <% else %>
+            <div class="panel-body">
+              <div class="row margin-bottom-5">
+                <div class="field col-sm-12">
+                  <label for="motivo_ficou">Motivo da recuperação </label>
+                  <%= text_area_tag "motivo_ficou", @solicitacao_desistencia.motivo_ficou, {label: false,  disabled: 'true', class: "form-control input-sm", readOnly:"true", rows:"4"} %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <%= hidden_field_tag 'desistencia_id', @solicitacao_desistencia.id %>
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#tab-4"> Histórico (<%= @retornos.count%>) </a></li>
+          <li><a data-toggle="tab" href="#tab-5"> Acordos (<%= @acordos.count%>)</a></li>
+          <li><a data-toggle="tab" href="#tab-anexos"> Anexos </a></li>
+          <li><a data-toggle="tab" href="#tab-deb-pendentes"> Débitos pendentes </a></li>
+          <li><a data-toggle="tab" href="#tab-deb-pagos"> Débitos pagos </a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-4" class="tab-pane active">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content tbody-contatos">
+                  <button class="btn btn-sm btn-info" id="btnNovoRetorno" onclick="abrirModalComentarioRetorno()"><i class="fa fa-plus"></i> Comentário</button>
+                  <% @retornos.each do |activity| %>
+                      <div class="activity">
+                        <%=  render_activity activity %>
+                      </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-5" class="tab-pane">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content tbody-contatos">
+                  <button class="btn btn-sm btn-info" id="btnNovoComentario" onclick="abrirModalComentario()"><i class="fa fa-plus"></i> Comentário</button>
+                  <% @acordos.each do |activity| %>
+                      <div class="activity">
+                        <%=  render_activity activity %>
+                      </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>          
+          <div id="tab-anexos" class="tab-pane">
+            <div class="ibox-content">  
+              <div class="row">
+                <div class="col-lg-6">
+                  <form action="/upload" id="mediadropzone" class="dropzone" enctype="multipart/form-data">
+                    <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>" />
+                    <%= hidden_field_tag 'desistencia', @solicitacao_desistencia.id %>
+                    <DIV class="dz-message">    
+                      Arraste os arquivos ou clique para fazer upload
+                    </DIV>
+                    <div class="fallback">
+                      <input name="media" type="file" multiple />
+                    </div>
+                  </form>
+                </div>
+                <div class="col-lg-6">
+                  <div class="row">
+                    <h3><i class="fa fa-paperclip"> </i> Anexos da desistência </h3>
+                    <% if @anexos.present? %>
+                      <% @anexos.each do |att|%>
+                        <div id="anexo-<%=att.id%>">
+                          <i class="fa fa-file-text-o"></i> <%= link_to File.basename(att.file.path), {action: 'download_file', id: att.id, controller: 'upload'}, target: '_blank'  %>
+                          <button type="button" class="btn btn-danger" onclick="remover_anexo('<%= att.id %>')" >Excluir </button>
+                          <br />
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>                                  
+              </div>
+            </div>
+          </div>
+          <div id="tab-deb-pendentes" class="tab-pane">
+          <br>
+            <div class="ibox-content">
+              <div class="row">
+                <div class="field col-sm-2">
+                  <label >Total de débitos</label>
+                  <input class="form-control input-sm" value="R$ <%= @total_debitos_pdt %>" type="text" name="total_debitos" readOnly="off">
+                </div>
+                <div class="field col-sm-2">
+                  <label >Total de juros</label>
+                  <input class="form-control input-sm" value="R$ <%= @total_juros_pdt %>" type="text" name="total_juros" readOnly="off">
+                </div>
+                <div class="field col-sm-2">
+                  <label >Total de multa</label>
+                  <input class="form-control input-sm" value="R$ <%= @total_multa_pdt %>" type="text" name="total_multa" readOnly="off">
+                </div>
+                <div class="field col-sm-2">
+                  <label >Total pendente</label>
+                  <input class="form-control input-sm" value="R$ <%= @total_saldo_pdt %>" type="text" name="total_desconto" readOnly="off">
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content tbody-contatos">
+                  <table id="table-debitos-pendentes" class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th style="width: 15%">Vencimento</th>
+                        <th>Valor</th>
+                        <th>Saldo</th>
+                        <th>Juros</th>
+                        <th>Multa</th>
+                        <th>Dias vencido</th>
+                        <th>Complemento</th>
+                      </tr>
+                    </thead>
+                    <tbody id="body_table_debitos_pendentes">
+                      <% @debitos_pendentes.each do |debitos| %>
+                        <tr>
+                            <td><%= debitos['data_vencimento'] %></td>
+                            <td><%= debitos['valor'] %></td>
+                            <td><%= debitos['saldo'] %></td>
+                            <td><%= debitos['juro'] %></td>
+                            <td><%= debitos['multa'] %></td>
+                            <td><%= debitos['dias_vencido'] %></td>
+                            <td><%= debitos['complemento'] %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-deb-pagos" class="tab-pane">
+            <br>
+            <div class="ibox-content">
+              <div class="row">
+                <div class="field col-sm-2">
+                  <label >Total de débitos</label>
+                  <input class="form-control input-sm" value="R$ <%= @total_debitos %>" type="text" name="total_debitos" readOnly="off">
+                </div>
+                <div class="field col-sm-2">
+                  <label >Total de juros</label>
+                  <input class="form-control input-sm" value="R$ <%= @total_juros %>" type="text" name="total_juros" readOnly="off">
+                </div>
+                <div class="field col-sm-2">
+                  <label >Total de multa</label>
+                  <input class="form-control input-sm" value="R$ <%= @total_multa %>" type="text" name="total_multa" readOnly="off">
+                </div>
+                <div class="field col-sm-2">
+                  <label >Total de descontos</label>
+                  <input class="form-control input-sm" value="R$ <%= @total_descontos %>" type="text" name="total_desconto" readOnly="off">
+                </div>
+                <div class="field col-sm-2">
+                  <label >Total recebido</label>
+                   <input class="form-control input-sm" value="R$ <%= @total_recebido %>" type="text" name="total_recebido" readOnly="off">
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ibox-content tbody-contatos">
+                  <table id="table-ligacoes" class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th style="width: 15%">Data baixa</th>
+                        <th>Valor</th>
+                        <th>Desconto</th>
+                        <th>Juros</th>
+                        <th>Multa</th>
+                        <th>Total</th>
+                        <th>Complemento</th>
+                      </tr>
+                    </thead>
+                    <tbody id="body_table_ligacoes">
+                      <% @debitos_pagos.each do |debitos| %>
+                        <tr>
+                            <td><%= debitos['data_baixa'] %></td>
+                            <td><%= debitos['valor'] %></td>
+                            <td><%= debitos['desconto'] %></td>
+                            <td><%= debitos['juro'] %></td>
+                            <td><%= debitos['multa'] %></td>
+                            <td><%= debitos['total'] %></td>
+                            <td><%= debitos['complemento'] %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="pull-center">
+      <p class="pull-center">
+        <% if @solicitacao_desistencia.status.eql? 'AGUARDANDO' %>    
+          <button name="button" class="btn-lg ladda-button btn btn-info" id="btnIniciar">
+            INICIAR
+          </button>
+        <% end %>
+        <% unless ['DESISTENTE', 'RECUPERADO'].include? @solicitacao_desistencia.status %>
+          <button name="button" class="btn-lg ladda-button btn btn-danger" id="btnDesistente">
+            DESISTENTE
+          </button>
+          <button name="button" class="btn-lg ladda-button btn btn-success" id="btnRecuperado">
+            RECUPERADO
+          </button>
+        <% end %>
+      </p>
+    </div>
+  </div>
+</div>
+
+<%= render 'solicitacao_desistencias/modals/novo_comentario' %>
+<%= render 'solicitacao_desistencias/modals/modal_finalizar_solicitacao' %>
+<%= render 'solicitacao_desistencias/modals/nova_tag' %>
+
+
+<script>
+  function openWhats() {
+    var telefone = $('#telefone').val();
+    if(telefone == '' || telefone == null)
+        return false;
+    window.open('https://api.whatsapp.com/send?phone=55' + apenasNumeros(telefone), '_blank');
+  }
+
+
+  $('#btnCopyCliente').on('click', function(){
+      $.getJSON('/solicitacao_desistencias/montar_msg?cliente_id=' + $('#cliente_id').val()+
+          '&tipo=DESISTENCIA', function(data) {
+          const texto = data.texto;
+          let inputTest = document.createElement("textarea");
+          inputTest.value = texto;
+          //Anexa o elemento ao body
+          document.body.appendChild(inputTest);
+          //seleciona todo o texto do elemento
+          inputTest.select();
+          //executa o comando copy
+          document.execCommand('copy');
+          //remove o elemento
+          document.body.removeChild(inputTest);
+          exibirMsg("Abordagem copiada");
+      });
+      return false;
+  });
+
+</script>
+

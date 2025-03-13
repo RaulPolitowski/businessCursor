@@ -1,0 +1,28 @@
+<div id="modal_usuario_inicio_implantacao" class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Usuário</h4>
+      </div>
+      <%= form_for @implantacao, :url => iniciar_implantacao_path do |f| %>
+          <div class="modal-body" style="height: 100px;">
+            <div class="form-group">
+              <div class="field">
+                <div class="col-sm-12">
+                  <label for="responsavel_novo">Implantador</label>
+                  <%= f.select :user_id, options_for_select(User.empresas_acesso(current_empresa.id).collect {|p| [ p.name, p.id ] }, current_user.id ), {}, {:class => "form-control input-sm chosen-select"} %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-white" data-dismiss="modal">Cancelar</button>
+            <%= f.submit 'Iniciar', :class => 'btn btn-info'%>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,89 @@
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="tabs-container">
+        <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#tab-1"> Dados</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-1" class="tab-pane active">
+            <div class="panel-body">
+              <fieldset class="form-horizontal">
+                <%= form_for(@pergunta, html: { autocomplete: "off" }) do |f| %>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :perguntaaqui, 'Pergunta', class: 'col-sm-2 control-label' %>
+                        <div class="col-sm-10">
+                          <%= f.text_field :pergunta, class: 'form-control input-sm'%>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :tipo, 'Tipo', class: 'col-sm-2 control-label'  %>
+                        <div class="col-sm-10">
+                          <%= f.select :tipo, options_for_select([
+                                                                       ['NORMAL', 'NORMAL'],
+                                                                       ['CONFIRMAÇÃO', 'CONFIRMACAO'],
+                                                                       ['TAGS', 'TAGS'],
+                                                                       ['NOTA (0 a 10)', 'NOTA']
+                                                                   ], f.object.tipo), {}, {class: 'form-control input-sm chosen-select', :data => {:placeholder => 'Selecione um tipo'}} %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :pergunta_gatilho_id, 'Pergunta Gatilho', class: 'col-sm-2 control-label'  %>
+                        <div class="col-sm-10">
+                          <%= f.select :pergunta_gatilho_id, options_for_select(Pergunta.where(tipo: 'CONFIRMACAO', ativo:true).collect {|p| [ "#{p.id} - #{p.pergunta}", p.id ] }, f.object.pergunta_gatilho_id), {:include_blank => true}, {class: 'form-control input-sm chosen-select', :data => {:placeholder => 'Selecione uma pergunta'}} %>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="field">
+                        <%= f.label :fechamento, 'Fechamento' , class: 'col-sm-2 control-label', :style => 'padding-top: 2px'%>
+                        <div class="col-sm-1">
+                          <div class="i-checks">
+                            <%= f.check_box :fechamento %>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="field">
+                        <%= f.label :implantacao, 'Implantação' , class: 'col-sm-2 control-label', :style => 'padding-top: 2px'%>
+                        <div class="col-sm-1">
+                          <div class="i-checks">
+                            <%= f.check_box :implantacao %>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="field">
+                        <%= f.label :acompanhamento, 'Acompanhamento' , class: 'col-sm-2 control-label' , :style => 'padding-top: 2px'%>
+                        <div class="col-sm-1">
+                          <div class="i-checks">
+                            <%= f.check_box :acompanhamento %>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="field">
+                        <%= f.label :pesquisa, 'Pesquisa' , class: 'col-sm-2 control-label' , :style => 'padding-top: 2px'%>
+                        <div class="col-sm-1">
+                          <div class="i-checks">
+                            <%= f.check_box :pesquisa %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="actions aligncenter">
+                      <%= f.submit 'Salvar', :class => 'btn btn-lg btn-success aligncenter' %>
+                    </div>
+                <% end %>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

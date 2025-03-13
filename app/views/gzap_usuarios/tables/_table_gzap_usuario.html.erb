@@ -1,0 +1,39 @@
+<div class="panel-body">
+	<table class='<%= "table table-striped table-bordered table-hover" %>'>
+		<thead>
+			<tr>
+        <th>Destinatarios</th>
+        <th>Usuário</th>
+        <th colspan="3"></th>
+			</tr>
+		</thead>
+		<tbody id='body_table_mensagem_notificacao'>
+			<% gzap_usuarios.each do |gzap_usuario| %>
+				<tr>
+					<td>
+						<% gzap_usuario.destinatarios.each do |destinatario|%>
+							<%= "#{destinatario} |" %>
+						<% end %>
+					</td>
+					<td><%= gzap_usuario.name %></td>
+					<td>
+						<%= link_to edit_gzap_usuario_path(gzap_usuario), { class: 'btn btn-sm btn-success', title: 'Editar', 'data-placement' => 'right' } do %>
+							<i class="fa fa-pencil" aria-hidden="true"></i>
+						<% end %>
+						<% if gzap_usuario.ativo %>
+									<%= link_to ativar_desativar_gzap_usuario_path(gzap_usuario), method: :post, class: 'btn btn-sm btn-danger', title: 'Desativar', 'data-placement' => 'right' do %>
+										<i class="fa fa-ban" aria-hidden="true"></i>
+									<% end %>
+						<% else %>
+							<%= link_to ativar_desativar_gzap_usuario_path(gzap_usuario), method: :post, class: 'btn btn-sm btn-info', title: 'Ativar', 'data-placement' => 'right' do %>
+								<i class="fa fa-power-off" aria-hidden="true"></i>
+							<% end %>
+						<% end %> 
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+		<tfoot>
+		</tfoot>
+	</table>
+</div>
