@@ -5,6 +5,7 @@ default: &default
   user: postgres
   username: postgres # Utilizado para acessar o banco (opção -U)
   password: root
+  port: 5433
   pool: 75
 
 development:
@@ -12,7 +13,8 @@ development:
   host: copel.gtech.site
   database: business_raul
   username: postgres 
-  password: q27pptz8
+  password: g2010tech
+  port: 5433
 
 test:
   <<: *default
@@ -20,6 +22,7 @@ test:
   database: businessmanager_test
   username: postgres
   password: g2010tech
+  port: 5433
 
 fiscal_development:
   <<: *default
@@ -27,8 +30,9 @@ fiscal_development:
   user: postgres
   username: postgres # Utilizado para acessar o banco (opção -U)
   database: fiscal_raul
-  password: q27pptz8
+  password: g2010tech
   pool: 25
+  port: 5433
 
 api_development:
   <<: *default
@@ -37,5 +41,6 @@ api_development:
   host: copel.gtech.site
   user: postgres
   username: postgres
-  password: q27pptz8
+  password: g2010tech
   pool: 25
+  port: 5433
