@@ -144,6 +144,156 @@
   </div>
 </div>
 
+<!-- Nova seção de Insights -->
+<div class="col-lg-12 no-padding">
+  <div class="panel panel-default" style="margin-bottom: 10px !important;">
+    <div class="panel-heading" style="height: 39px">
+      <h5 style="margin-top: 0px; display: inline-block;">Insights</h5>
+      <div class="col-sm-2 pull-right" style="margin-top: -6px !important;">
+        <select id="filtro_insights" class="form-control input-sm chosen-select">
+          <option value="ano_atual" selected>Ano Atual</option>
+          <option value="3">3 Meses</option>
+          <option value="6">6 Meses</option>
+          <option value="12">12 Meses</option>
+          <option value="24">24 Meses</option>
+        </select>
+      </div>
+    </div>
+    <div class="panel-body no-padding">
+      <div class="col-lg-12 padding-5">
+        <div class="row">
+          <!-- Taxa de Desistência -->
+          <div class="col-md-4">
+            <div class="insight-card">
+              <div class="insight-header">
+                <span class="insight-title">Taxa de Desistência</span>
+                <span class="info-icon" title="Percentual de clientes que desistiram em relação ao total de efetivações">ⓘ</span>
+              </div>
+              <div class="insight-main">
+                <div class="insight-value" id="taxa_desistencia">29.6%</div>
+                <div class="insight-status" id="status_desistencia">
+                  <span class="status-icon">●</span>
+                  <span class="status-text">Dentro da meta</span>
+                </div>
+              </div>
+              <div class="insight-trend" id="trend_desistencia">
+                <div class="trend-arrow">▼ 5.6%</div>
+                <div class="trend-text">vs mês anterior</div>
+              </div>
+              <div class="insight-target">
+                <div class="target-bar">
+                  <div class="target-fill" id="fill_desistencia" style="width: 74%;"></div>
+                  <div class="target-marker" style="left: 100%;">
+                    <span class="marker-value">40%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Taxa de Retenção -->
+          <div class="col-md-4">
+            <div class="insight-card">
+              <div class="insight-header">
+                <span class="insight-title">Taxa de Retenção</span>
+                <span class="info-icon" title="Percentual de clientes que permaneceram ativos no período">ⓘ</span>
+              </div>
+              <div class="insight-main">
+                <div class="insight-value" id="taxa_retencao">70.4%</div>
+                <div class="insight-status" id="status_retencao">
+                  <span class="status-icon">●</span>
+                  <span class="status-text">Acima da meta</span>
+                </div>
+              </div>
+              <div class="insight-trend" id="trend_retencao">
+                <div class="trend-arrow">▲ 5.6%</div>
+                <div class="trend-text">vs mês anterior</div>
+              </div>
+              <div class="insight-target">
+                <div class="target-bar">
+                  <div class="target-fill" id="fill_retencao" style="width: 100%;"></div>
+                  <div class="target-marker" style="left: 70%;">
+                    <span class="marker-value">70%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Comparativo Mensal - Taxa de Retenção -->
+          <div class="col-md-4">
+            <div class="white-box insight-card">
+              <h3 class="box-title card-title">Comparativo Mensal</h3>
+              <div class="ct-chart">
+                <div class="month-bars-container">
+                  <!-- Mês Atual (à esquerda) -->
+                  <div class="month-bar month-current" style="width: 14%;">
+                    <div class="month-bar-fill-container">
+                      <div id="fill_mes_atual" class="month-bar-fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="month-bar-value" id="taxa_mes_atual">0%</div>
+                    <div class="month-bar-label">Atual</div>
+                  </div>
+                  
+                  <!-- Mês -1 -->
+                  <div class="month-bar month-previous" style="width: 14%;">
+                    <div class="month-bar-fill-container">
+                      <div id="fill_mes_1" class="month-bar-fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="month-bar-value" id="taxa_mes_1">0%</div>
+                    <div class="month-bar-label" id="label_mes_1">Mês -1</div>
+                  </div>
+                  
+                  <!-- Mês -2 -->
+                  <div class="month-bar month-previous" style="width: 14%;">
+                    <div class="month-bar-fill-container">
+                      <div id="fill_mes_2" class="month-bar-fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="month-bar-value" id="taxa_mes_2">0%</div>
+                    <div class="month-bar-label" id="label_mes_2">Mês -2</div>
+                  </div>
+                  
+                  <!-- Mês -3 -->
+                  <div class="month-bar month-previous" style="width: 14%;">
+                    <div class="month-bar-fill-container">
+                      <div id="fill_mes_3" class="month-bar-fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="month-bar-value" id="taxa_mes_3">0%</div>
+                    <div class="month-bar-label" id="label_mes_3">Mês -3</div>
+                  </div>
+                  
+                  <!-- Mês -4 -->
+                  <div class="month-bar month-previous" style="width: 14%;">
+                    <div class="month-bar-fill-container">
+                      <div id="fill_mes_4" class="month-bar-fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="month-bar-value" id="taxa_mes_4">0%</div>
+                    <div class="month-bar-label" id="label_mes_4">Mês -4</div>
+                  </div>
+                  
+                  <!-- Mês -5 -->
+                  <div class="month-bar month-previous" style="width: 14%;">
+                    <div class="month-bar-fill-container">
+                      <div id="fill_mes_5" class="month-bar-fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="month-bar-value" id="taxa_mes_5">0%</div>
+                    <div class="month-bar-label" id="label_mes_5">Mês -5</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="insight-status" id="status_progresso_detail" style="margin-top: 10px; text-align: center;">
+                <span class="progress-icon">↗</span>
+                <span class="status-text">Melhor que mês anterior</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
   .redcolor{
     color: red;
@@ -163,77 +313,488 @@
   .google-visualization-tooltip {
     font-size: 12px !important;
   }
+  
+  /* Estilos para os cards de insights com efeitos mais tecnológicos */
+  .insight-card {
+    border: 1px solid #eaeaea;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    height: 220px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  
+  .insight-card:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #4361EE, #4CC9F0);
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .insight-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 20, 110, 0.15);
+    border-color: rgba(67, 97, 238, 0.3);
+  }
+  
+  .insight-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(210, 220, 250, 0.5);
+    padding-bottom: 10px;
+  }
+  
+  .insight-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 0.3px;
+  }
+  
+  .info-icon {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #4361EE;
+    cursor: help;
+    background-color: rgba(67, 97, 238, 0.1);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+  
+  .info-icon:hover {
+    background-color: #4361EE;
+    color: white;
+    transform: scale(1.1);
+  }
+  
+  .insight-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .insight-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #222;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    background: linear-gradient(120deg, #4361EE, #3A0CA3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: pulse 2s infinite;
+  }
+  
+  .progress-value {
+    font-size: 30px;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.03);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  .insight-status {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background-color: rgba(76, 175, 80, 0.15);
+    color: #43a047;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(76, 175, 80, 0.2);
+  }
+  
+  .insight-status.warning {
+    background-color: rgba(255, 152, 0, 0.15);
+    color: #f57c00;
+    box-shadow: 0 2px 5px rgba(255, 152, 0, 0.2);
+  }
+  
+  .insight-status.negative {
+    background-color: rgba(244, 67, 54, 0.15);
+    color: #e53935;
+    box-shadow: 0 2px 5px rgba(244, 67, 54, 0.2);
+  }
+  
+  .status-icon, .progress-icon {
+    margin-right: 5px;
+    font-size: 14px;
+  }
+  
+  .insight-trend {
+    margin-bottom: 15px;
+  }
+  
+  .trend-arrow {
+    font-weight: 600;
+    color: #4CAF50;
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background-color: rgba(76, 175, 80, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .trend-arrow.negative {
+    color: #F44336;
+    background-color: rgba(244, 67, 54, 0.1);
+  }
+  
+  .trend-text {
+    font-size: 12px;
+    color: #777;
+    margin-top: 5px;
+  }
+  
+  .insight-target {
+    margin-top: 15px;
+  }
+  
+  .target-bar {
+    height: 8px;
+    background-color: rgba(210, 220, 250, 0.5);
+    border-radius: 4px;
+    position: relative;
+    margin-bottom: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .target-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #4361EE, #4CC9F0);
+    transition: width 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 1px 3px rgba(67, 97, 238, 0.3);
+    position: relative;
+  }
+  
+  .target-fill:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    animation: shine 2s infinite;
+  }
+  
+  @keyframes shine {
+    0% {
+      transform: translateX(-100%);
+    }
+    60%, 100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  .target-marker {
+    position: absolute;
+    top: -25px;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .marker-value {
+    background-color: #f5f8ff;
+    padding: 2px 6px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-weight: 500;
+    color: #4361EE;
+  }
+  
+  /* Estilos para o novo comparativo mensal */
+  .monthly-comparison {
+    margin-top: 20px;
+  }
+  
+  .comparison-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    height: 100px;
+  }
+  
+  .month-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 14%;
+  }
+  
+  .month-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .month-value-container {
+    width: 65%;
+    height: 80px;
+    background-color: rgba(210, 220, 250, 0.5);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .month-value-fill {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(180deg, #4361EE, #4CC9F0);
+    border-radius: 4px 4px 0 0;
+    transition: height 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  
+  .month-percent {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+    margin-top: 5px;
+  }
+  
+  .month-bar.current .month-value-container {
+    box-shadow: 0 0 0 2px #4361EE;
+  }
+  
+  .month-bar.current .month-label {
+    color: #4361EE;
+    font-weight: 600;
+  }
+  
+  .month-bar.current .month-percent {
+    color: #4361EE;
+    font-weight: 600;
+  }
+  
+  .month-bar.current .month-value-fill {
+    background: linear-gradient(180deg, #3A0CA3, #4361EE);
+    box-shadow: 0 0 15px rgba(67, 97, 238, 0.5);
+  }
+  
+  .month-bar.current .month-value-fill:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    animation: shineVertical 2s infinite;
+  }
+  
+  @keyframes shineVertical {
+    0% {
+      transform: translateY(-100%);
+    }
+    60%, 100% {
+      transform: translateY(100%);
+    }
+  }
+  
+  /* Estilos para o comparativo mensal */
+  .month-bars-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    height: 160px;
+    margin-top: 10px;
+  }
+  
+  .month-bar {
+    position: relative;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .month-bar-fill-container {
+    background-color: #f5f5f5;
+    width: 80%;
+    height: 70%;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .month-bar-fill {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #26c6da;
+    transition: height 0.5s ease-out;
+  }
+  
+  .month-current .month-bar-fill {
+    background-color: #2b9bf4;
+  }
+  
+  .month-bar-value {
+    font-weight: bold;
+    margin-top: 5px;
+  }
+  
+  .month-bar-label {
+    font-size: 11px;
+    color: #777;
+    margin-top: 3px;
+  }
 </style>
 
 <script>
-  $(document).ready(function() {
-    console.log("Iniciando carregamento da página");
+  $(document).ready(function(){
+    console.log("Inicializando painel Efetivações x Desistências");
     
-    // Não é mais necessário limpar estes elementos
-    // $('.saldo-acumulado-container').remove();
-    // $('#saldo_acumulado_card').remove();
-    
-    // Carregar dados iniciais
-    drawEfetivacoesDesativacoesReal();
-    
-    // Adicionar event listener para o filtro de período de saldo acumulado
-    $('#filtro_periodo_saldo').on('change', function() {
-      calcularSaldoPorPeriodo($(this).val());
-    });
-    
-    $('#filtro_tipo_grafico').on('change', function () {  
-      // Não é mais necessário limpar estes elementos
-      // $('.saldo-acumulado-container').remove();
-      // $('#saldo_acumulado_card').remove();
-      // $('#saldo_acumulado_container').empty();
+    try {
+      console.log("Carregando dados iniciais...");
       
-      if ($('#filtro_tipo_grafico').val() == 1){
-        document.getElementById("titulo_grafico_bars").innerHTML = "Efetivações x Desistências";
-        drawEfetivacoesDesativacoesReal();  
-      }else if ($('#filtro_tipo_grafico').val() == 3){
-        document.getElementById("titulo_grafico_bars").innerHTML = "Pagamento 2º honorário";
-        drawEfetivacoesDesativacoes2meses(2); 
-      }else if ($('#filtro_tipo_grafico').val() == 4){
-        document.getElementById("titulo_grafico_bars").innerHTML = "Pagamento 3º honorário";
-        drawEfetivacoesDesativacoes2meses(3);  
-      }else{
-        document.getElementById("titulo_grafico_bars").innerHTML = "Novos honorários x honorários baixados";
-        drawEfetivacoesDesativacoes();
-      }
-
-      if ($('#filtro_grafico_efet_des').val() == 1){
+      // Testar a API para verificar se está funcionando
+      setTimeout(function() {
+        testarAPIEfetivacoes();
+      }, 1500);
+      
+      // Carregar dados principais
+      drawEfetivacoesDesativacoesReal();
+      
+      // Sincronizar opções do filtro de insights com o filtro de período do saldo
+      var opcoesFiltroPeriodo = $('#filtro_periodo_saldo option').clone();
+      $('#filtro_insights').empty().append(opcoesFiltroPeriodo);
+      
+      // Garantir que o valor inicial seja o mesmo nos dois filtros
+      var valorInicial = $('#filtro_periodo_saldo').val() || "ano_atual";
+      $('#filtro_insights').val(valorInicial);
+      console.log("Valor inicial do filtro:", valorInicial);
+      
+      // Monitorar mudanças nos filtros de empresa e estado
+      $('#empresas_financeiro_id, #estado_financeiro_id').off('change').on('change', function() {
+        console.log("Filtro de empresa ou estado alterado, atualizando insights");
+        var periodoAtual = $('#filtro_insights').val() || "ano_atual";
+        
+        // Dar um delay curto para permitir que outros handlers sejam executados
+        setTimeout(function() {
+          atualizarInsights(periodoAtual);
+        }, 500);
+      });
+      
+      // Inicializar o filtro de período com callback para atualizar os insights também
+      $('#filtro_periodo_saldo').off('change').on('change', function() {
+        var periodo = $(this).val();
+        console.log("Filtro de período alterado:", periodo);
+        
+        // Atualizar saldo acumulado
+        calcularSaldoPorPeriodo(periodo);
+        
+        // Sincronizar o valor com o filtro de insights e atualizar
+        $('#filtro_insights').val(periodo);
+        
+        // Forçar atualização dos insights
+        setTimeout(function() {
+          console.log("Atualizando insights após mudança no filtro de período");
+          atualizarInsights(periodo);
+        }, 100);
+      });
+      
+      // Inicializar o filtro de tipo de gráfico
+      $('#filtro_tipo_grafico').off('change').on('change', function() {
+        console.log("Filtro tipo de gráfico alterado:", $(this).val());
+        
+        if ($('#filtro_tipo_grafico').val() == 1) {
+          document.getElementById("titulo_grafico_bars").innerHTML = "Efetivações x Desistências";
+          drawEfetivacoesDesativacoesReal();
+        } else if ($('#filtro_tipo_grafico').val() == 3) {
+          document.getElementById("titulo_grafico_bars").innerHTML = "Pagamento 2º honorário";
+          drawEfetivacoesDesativacoes2meses(2);
+        } else if ($('#filtro_tipo_grafico').val() == 4) {
+          document.getElementById("titulo_grafico_bars").innerHTML = "Pagamento 3º honorário";
+          drawEfetivacoesDesativacoes2meses(3);
+        } else {
+          document.getElementById("titulo_grafico_bars").innerHTML = "Novos honorários x honorários baixados";
+          drawEfetivacoesDesativacoes();
+        }
+        
+        // Atualizar o gráfico secundário com base no filtro atual
+        atualizarGraficoSecundario();
+        
+        // Atualizar também os insights com o período atual
+        var periodoAtual = $('#filtro_insights').val() || "ano_atual";
+        setTimeout(function() {
+          atualizarInsights(periodoAtual);
+        }, 500);
+      });
+      
+      // Função para atualizar o gráfico secundário
+      function atualizarGraficoSecundario() {
+        console.log("Atualizando gráfico secundário com base no filtro:", $('#filtro_grafico_efet_des').val());
+        
+        if ($('#filtro_grafico_efet_des').val() == 1) {
           document.getElementById("titulo_grafico").innerHTML = "Clientes por cidade";
           document.getElementById("desc_compt_eft_dest").innerHTML = "Atual";
           drawTableClientesCidades();
-        }else if ($('#filtro_grafico_efet_des').val() == 2) {
+        } else if ($('#filtro_grafico_efet_des').val() == 2) {
           document.getElementById("titulo_grafico").innerHTML = "Efetivações";
           document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
           if ($('#filtro_tipo_grafico').val() == 1)
             drawChartDesistenciasReal("ATIVAS");
           else
             drawChartDesistencias("ATIVAS");
-        }else if ($('#filtro_grafico_efet_des').val() == 3) {
+        } else if ($('#filtro_grafico_efet_des').val() == 3) {
           document.getElementById("titulo_grafico").innerHTML = "Desistências";
           document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
           if ($('#filtro_tipo_grafico').val() == 1)
             drawChartDesistenciasReal("INATIVAS");
           else
             drawChartDesistencias("INATIVAS");
-        }else if ($('#filtro_grafico_efet_des').val() == 4) {
+        } else if ($('#filtro_grafico_efet_des').val() == 4) {
           document.getElementById("titulo_grafico").innerHTML = "Efetivações";
           document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
           if ($('#filtro_tipo_grafico').val() == 1)
             drawTabelaEfetivacoesDesistenciasReal("ATIVAS");
           else
             drawTabelaEfetivacoesDesistencias("ATIVAS");
-        }else if ($('#filtro_grafico_efet_des').val() == 6) {
+        } else if ($('#filtro_grafico_efet_des').val() == 6) {
           document.getElementById("titulo_grafico").innerHTML = "Efetivações";
           document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
           if ($('#filtro_tipo_grafico').val() == 1)
-            drawEfetivacoesDesistenciasPorUF(2);
-          else
             drawEfetivacoesDesistenciasPorUF(4);
-        }else{
+          else
+            drawEfetivacoesDesistenciasPorUF(5);
+        } else {
           document.getElementById("titulo_grafico").innerHTML = "Desistências";
           document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
           if ($('#filtro_tipo_grafico').val() == 1)
@@ -241,52 +802,85 @@
           else
             drawTabelaEfetivacoesDesistencias("INATIVAS");
         }
-    });
-
-    // Modificar para usar change em vez de click para evitar chamadas múltiplas
-    $('#grafico_por_efet_des').on('change', function () {
-      if ($('#filtro_grafico_efet_des').val() == 1){
-        document.getElementById("titulo_grafico").innerHTML = "Clientes por cidade";
-        document.getElementById("desc_compt_eft_dest").innerHTML = "Atual";
-        drawTableClientesCidades();
-      }else if ($('#filtro_grafico_efet_des').val() == 2) {
-        document.getElementById("titulo_grafico").innerHTML = "Efetivações";
-        document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
-        if ($('#filtro_tipo_grafico').val() == 1)
-          drawChartDesistenciasReal("ATIVAS");
-        else
-          drawChartDesistencias("ATIVAS");
-      }else if ($('#filtro_grafico_efet_des').val() == 3) {
-        document.getElementById("titulo_grafico").innerHTML = "Desistências";
-        document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
-        if ($('#filtro_tipo_grafico').val() == 1)
-          drawChartDesistenciasReal("INATIVAS");
-        else
-          drawChartDesistencias("INATIVAS");
-      }else if ($('#filtro_grafico_efet_des').val() == 4) {
-        document.getElementById("titulo_grafico").innerHTML = "Efetivações";
-        document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
-        if ($('#filtro_tipo_grafico').val() == 1)
-          drawTabelaEfetivacoesDesistenciasReal("ATIVAS");
-        else
-          drawTabelaEfetivacoesDesistencias("ATIVAS");
-      }else if ($('#filtro_grafico_efet_des').val() == 6) {
-        document.getElementById("titulo_grafico").innerHTML = "Efetivações";
-        document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
-        if ($('#filtro_tipo_grafico').val() == 1)
-          drawEfetivacoesDesistenciasPorUF(4);
-        else
-          drawEfetivacoesDesistenciasPorUF(5);
-      }else{
-        document.getElementById("titulo_grafico").innerHTML = "Desistências";
-        document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
-        if ($('#filtro_tipo_grafico').val() == 1)
-          drawTabelaEfetivacoesDesistenciasReal("INATIVAS");
-        else
-          drawTabelaEfetivacoesDesistencias("INATIVAS");
       }
-    });
-
+      
+      // Listener para o filtro de gráfico de efetivações/desistências
+      $('#grafico_por_efet_des').off('change').on('change', function() {
+        console.log("Filtro gráfico efetivações/desistências alterado:", $(this).val());
+        atualizarGraficoSecundario();
+      });
+      
+      // Event listener para o filtro de insights - usar off antes de on para evitar múltiplos handlers
+      $('#filtro_insights').off('change').on('change', function() {
+        var periodo = $(this).val();
+        console.log("Filtro insights alterado para:", periodo);
+        
+        // Sincronizar o filtro de período do saldo com o filtro de insights
+        $('#filtro_periodo_saldo').val(periodo);
+        
+        // Atualizar saldo acumulado
+        calcularSaldoPorPeriodo(periodo);
+        
+        // Forçar atualização dos insights com delay mínimo para garantir que o valor foi alterado
+        setTimeout(function() {
+          console.log("Executando atualizarInsights com período:", periodo);
+          atualizarInsights(periodo);
+        }, 100);
+      });
+      
+      // Atualizar insights quando o botão de atualizar do dashboard for clicado
+      $('#btnAtualizarPaineis').off('click').on('click', function() {
+        console.log("Botão de atualizar painéis clicado");
+        var valorAtual = $('#filtro_insights').val() || "ano_atual";
+        console.log("Atualizando insights com filtro:", valorAtual);
+        atualizarInsights(valorAtual);
+      });
+      
+      // Assegurar que os listeners sejam aplicados corretamente
+      function corrigirComportamentoChosen() {
+        console.log("Corrigindo comportamento dos filtros");
+        
+        // Reconfigurar eventos para chosen-select se estiver sendo usado
+        if ($.fn.chosen) {
+          $('.chosen-select').trigger('chosen:updated');
+          
+          // Configurar eventos específicos para chosen
+          $('#filtro_insights').chosen().on('change', function() {
+            var periodo = $(this).val();
+            console.log("Chosen change no filtro insights:", periodo);
+            
+            // Atualizar insights
+            setTimeout(function() {
+              atualizarInsights(periodo);
+            }, 100);
+          });
+        }
+      }
+      
+      // Inicializar o filtro de insights após um breve delay
+      setTimeout(function() {
+        console.log("Inicializando o filtro de insights");
+        
+        // Verificar se o elemento existe
+        if ($('#filtro_insights').length > 0) {
+          console.log("Elemento filtro_insights encontrado");
+          corrigirComportamentoChosen();
+          
+          // Inicializar insights com o valor padrão
+          var valorInicial = $("#filtro_insights").val() || "ano_atual";
+          console.log("Inicializando insights com valor:", valorInicial);
+          
+          // Forçar atualização dos insights
+          atualizarInsights(valorInicial);
+        } else {
+          console.error("Elemento filtro_insights não encontrado!");
+        }
+      }, 1000);
+      
+      console.log("Inicialização concluída com sucesso");
+    } catch (err) {
+      console.error("Erro durante a inicialização:", err);
+    }
   });
 
     function drawTableClientesCidades() {
@@ -388,7 +982,8 @@
                     drawChartDesistencias("INATIVAS");
                     $('#filtro_grafico_efet_des').val(3);
                     document.getElementById("titulo_grafico").innerHTML = "Desistências";
-                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();}
+                    document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
+                  }
                 }else{
                     preencherEfetivacoesDesistencias(data.getValue(data.jc.length-1, 0), data.getValue(data.jc.length-1, 1), mascaraValor(data.getValue(data.jc.length-1, 8).toFixed(2)),
                         mascaraValor(data.getValue(data.jc.length-1, 9).toFixed(2)), data.getValue(data.jc.length-1, 4), mascaraValor(data.getValue(data.jc.length-1, 10).toFixed(2)),
@@ -1192,6 +1787,530 @@
 
         chart.draw(data, options);
       });
+    }
+
+    // Função para testar se a API está funcionando
+    function testarAPIEfetivacoes() {
+      console.log("Testando conexão com a API...");
+      
+      $.ajax({
+        url: "/dashboards/get_efetivacoes_desativacoesReal",
+        data: {
+          empresa: '0',
+          estado: '0'
+        },
+        method: 'GET',
+        dataType: "json",
+        timeout: 5000,
+        success: function(data) {
+          console.log("Teste de API bem-sucedido, dados recebidos:", data ? data.length : 0);
+          if (data && data.length > 0) {
+            console.log("Amostra de dados:", data[0]);
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error("Teste de API falhou:", status, error);
+          console.error("Código de status:", xhr.status);
+          console.error("Texto de resposta:", xhr.responseText ? xhr.responseText.substring(0, 300) : "Vazio");
+        }
+      });
+    }
+
+    // Função para atualizar o comparativo mensal
+    function atualizarComparativoMensal(taxasRetencao, mesesDados) {
+      console.log("Atualizando comparativo mensal com", taxasRetencao.length, "meses");
+      
+      // Limpar todas as barras primeiro
+      for (var i = 1; i <= 5; i++) {
+        $('#taxa_mes_' + i).text('0%');
+        $('#fill_mes_' + i).css('height', '0%');
+        $('#label_mes_' + i).text('Mês -' + i);
+      }
+      $('#taxa_mes_atual').text('0%');
+      $('#fill_mes_atual').css('height', '0%');
+      
+      // Se não tivermos dados suficientes, não fazer nada
+      if (!taxasRetencao || taxasRetencao.length === 0 || !mesesDados || mesesDados.length === 0) {
+        console.warn("Sem dados suficientes para atualizar o comparativo mensal");
+        $('#status_progresso').text('Sem dados');
+        $('#status_progresso_detail .status-text').text('Dados insuficientes para análise');
+        $('#status_progresso_detail .progress-icon').text('');
+        return;
+      }
+      
+      // Meses em português para exibição
+      var mesesPT = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+      
+      // O último mês é considerado o atual
+      var mesAtual = mesesDados[mesesDados.length - 1].data;
+      var taxaAtual = taxasRetencao[taxasRetencao.length - 1];
+      
+      console.log("Mês atual:", mesAtual, "Taxa:", taxaAtual.toFixed(1) + "%");
+      
+      // Definir valor e altura da barra do mês atual
+      $('#taxa_mes_atual').text(taxaAtual.toFixed(1) + '%');
+      
+      // Animar com delay para melhor visualização
+      setTimeout(function() {
+        $('#fill_mes_atual').css('height', taxaAtual + '%');
+      }, 100);
+      
+      // Preencher os meses anteriores (no máximo 5)
+      for (var i = mesesDados.length - 2, barIndex = 1; i >= 0 && barIndex <= 5; i--, barIndex++) {
+        var mes = mesesDados[i];
+        var taxa = taxasRetencao[i];
+        
+        // Extrair mês e ano para rotular
+        var partesMes = mes.data.split('/');
+        var numMes = parseInt(partesMes[0]) - 1; // Meses em JavaScript são base 0
+        var ano = partesMes[1];
+        
+        // Formar o rótulo do mês com nome e ano
+        var labelMes = mesesPT[numMes] + '/' + ano;
+        
+        console.log("Barra", barIndex, ":", labelMes, "Taxa:", taxa.toFixed(1) + "%");
+        
+        // Atualizar texto e valor da barra
+        $('#label_mes_' + barIndex).text(labelMes);
+        $('#taxa_mes_' + barIndex).text(taxa.toFixed(1) + '%');
+        
+        // Animar com delay sequencial
+        (function(idx, val) {
+          setTimeout(function() {
+            $('#fill_mes_' + idx).css('height', val + '%');
+          }, 100 + (idx * 50));
+        })(barIndex, taxa);
+      }
+      
+      // Atualizar o status de progresso baseado na comparação do mês atual com o mês anterior
+      if (taxasRetencao.length >= 2) {
+        var mesAnterior = taxasRetencao[taxasRetencao.length - 2];
+        var diferenca = taxaAtual - mesAnterior;
+        
+        if (diferenca > 5) {
+          // Melhoria significativa
+          $('#status_progresso').text('Crescimento significativo');
+          $('#status_progresso_detail .status-text').text('Aumento expressivo na retenção');
+          $('#status_progresso_detail .progress-icon').text('↗');
+          $('#status_progresso_detail').removeClass('trend-neutral trend-negative').addClass('trend-positive');
+        } else if (diferenca > 0) {
+          // Melhoria leve
+          $('#status_progresso').text('Crescimento');
+          $('#status_progresso_detail .status-text').text('Retenção melhor que mês anterior');
+          $('#status_progresso_detail .progress-icon').text('↗');
+          $('#status_progresso_detail').removeClass('trend-neutral trend-negative').addClass('trend-positive');
+        } else if (diferenca === 0) {
+          // Estável
+          $('#status_progresso').text('Estável');
+          $('#status_progresso_detail .status-text').text('Sem alteração em relação ao mês anterior');
+          $('#status_progresso_detail .progress-icon').text('→');
+          $('#status_progresso_detail').removeClass('trend-positive trend-negative').addClass('trend-neutral');
+        } else if (diferenca > -5) {
+          // Queda leve
+          $('#status_progresso').text('Queda');
+          $('#status_progresso_detail .status-text').text('Retenção menor que mês anterior');
+          $('#status_progresso_detail .progress-icon').text('↘');
+          $('#status_progresso_detail').removeClass('trend-positive trend-neutral').addClass('trend-negative');
+        } else {
+          // Queda significativa
+          $('#status_progresso').text('Queda significativa');
+          $('#status_progresso_detail .status-text').text('Redução expressiva na retenção');
+          $('#status_progresso_detail .progress-icon').text('↘');
+          $('#status_progresso_detail').removeClass('trend-positive trend-neutral').addClass('trend-negative');
+        }
+        
+        console.log("Status progresso: Mês Atual:", taxaAtual.toFixed(1) + "%", 
+                   "Mês Anterior:", mesAnterior.toFixed(1) + "%", 
+                   "Diferença:", diferenca.toFixed(1) + "%");
+      } else {
+        // Sem dados suficientes para comparação
+        $('#status_progresso').text('Dados únicos');
+        $('#status_progresso_detail .status-text').text('Sem mês anterior para comparação');
+        $('#status_progresso_detail .progress-icon').text('');
+        $('#status_progresso_detail').removeClass('trend-positive trend-negative').addClass('trend-neutral');
+      }
+    }
+
+    // Função para calcular e atualizar os insights
+    function atualizarInsights(periodo) {
+      console.log("Atualizando insights para o período:", periodo);
+      
+      // Verificar se o período é válido
+      if (!periodo) {
+        console.warn("Período inválido, usando ano_atual como padrão");
+        periodo = "ano_atual";
+      }
+      
+      // Obter os parâmetros da requisição com valores padrão - usando a mesma lógica do restante do dashboard
+      var empresa = $('#empresas_financeiro_id').length ? $('#empresas_financeiro_id').val() : '0';
+      var estado = $('#estado_financeiro_id').length ? $('#estado_financeiro_id').val() : '0';
+      
+      console.log("Parâmetros para API: empresa=", empresa, "estado=", estado, "periodo:", periodo);
+      
+      // Mostrar indicador de carregamento
+      $('#taxa_desistencia, #taxa_retencao').text('Carregando...');
+      $('#status_desistencia .status-text, #status_retencao .status-text').text('Carregando...');
+      $('#status_progresso').text('Carregando...');
+      
+      // Adicionar um timeout para detectar se a requisição demora muito
+      var requestTimeout = setTimeout(function() {
+        console.warn("A requisição está demorando mais que o esperado...");
+      }, 5000);
+      
+      // Usar a mesma API e o mesmo formato de requisição que drawEfetivacoesDesativacoesReal
+      $.getJSON("/dashboards/get_efetivacoes_desativacoesReal?empresa=" + empresa + "&estado=" + estado, function(data) {
+        // Limpar o timeout
+        clearTimeout(requestTimeout);
+        
+        console.log("Dados recebidos para insights:", data);
+        
+        try {
+          if (!data || data.length === 0) {
+            console.warn("Sem dados disponíveis para insights");
+            // Zerar todos os valores
+            $('#taxa_desistencia').text('0.0%');
+            $('#taxa_retencao').text('100.0%');
+            $('#fill_desistencia').css('width', '0%');
+            $('#fill_retencao').css('width', '100%');
+            
+            // Limpar o comparativo mensal
+            for (var i = 1; i <= 5; i++) {
+              $('#taxa_mes_' + i).text('0%');
+              $('#fill_mes_' + i).css('height', '0%');
+              $('#label_mes_' + i).text('Mês -' + i);
+            }
+            $('#taxa_mes_atual').text('0%');
+            $('#fill_mes_atual').css('height', '0%');
+            
+            // Atualizar status
+            $('#status_desistencia .status-text').text('Sem dados');
+            $('#status_retencao .status-text').text('Sem dados');
+            $('#status_progresso').text('Sem dados');
+            $('#status_progresso_detail .status-text').text('Dados insuficientes');
+            
+            return;
+          }
+          
+          // Log para verificar a estrutura dos dados
+          console.log("Estrutura do primeiro registro:", Object.keys(data[0]).join(", "));
+          
+          // Para o comparativo mensal, sempre usamos os últimos 6 meses disponíveis
+          var dadosComparativoMensal = data.slice(-6);
+          
+          if (dadosComparativoMensal.length > 0) {
+            console.log("Dados para comparativo mensal:", dadosComparativoMensal.length, "meses");
+            // Calcular taxas de retenção para o comparativo mensal
+            var taxasRetencao = [];
+            
+            for (var i = 0; i < dadosComparativoMensal.length; i++) {
+              var mes = dadosComparativoMensal[i];
+              var efetivacoesMes = parseInt(mes.quantidadeefetivacoes) || 0;
+              var desistenciasMes = parseInt(mes.quantidadeinativos) || 0;
+              
+              // Calcular taxa de desistência como percentual das efetivações
+              var taxaDesistencia = 0;
+              if (efetivacoesMes > 0) {
+                taxaDesistencia = (desistenciasMes / efetivacoesMes) * 100;
+              }
+              
+              taxasRetencao.push(100 - taxaDesistencia);
+            }
+            
+            // Atualizar o comparativo mensal com os últimos 6 meses
+            atualizarComparativoMensal(taxasRetencao, dadosComparativoMensal);
+          }
+          
+          // Identificar o período conforme seleção para os outros insights
+          console.log("Filtrando dados para o período:", periodo);
+          var dadosFiltrados = [];
+          
+          if (periodo === 'ano_atual') {
+            // Ano atual - filtrar dados apenas do ano corrente
+            var anoAtual = new Date().getFullYear();
+            console.log("Filtrando por ano atual:", anoAtual);
+            
+            for (var i = 0; i < data.length; i++) {
+              // Extrair o ano do campo data (formato MM/AAAA)
+              var dataParts = data[i].data.split('/');
+              var anoData = parseInt(dataParts[1]);
+              
+              console.log("Item:", i, "data:", data[i].data, "ano:", anoData);
+              
+              if (anoData === anoAtual) {
+                dadosFiltrados.push(data[i]);
+              }
+            }
+            
+            // Se não encontrou dados do ano atual, usar todos os dados
+            if (dadosFiltrados.length === 0) {
+              console.warn("Nenhum dado encontrado para o ano atual. Usando todos os dados.");
+              dadosFiltrados = data;
+            }
+          } else {
+            // Número específico de meses - limitar à quantidade de dados disponíveis
+            var numMeses = parseInt(periodo);
+            console.log("Filtrando por número de meses:", numMeses);
+            
+            // Usar exatamente o número de meses solicitado
+            if (data.length < numMeses) {
+              console.warn("Dados disponíveis (" + data.length + ") são menos que o solicitado (" + numMeses + "). Usando todos.");
+              dadosFiltrados = data;
+            } else {
+              dadosFiltrados = data.slice(-numMeses);
+              console.log("Limitando a " + numMeses + " meses. Dados filtrados:", dadosFiltrados.length);
+            }
+          }
+          
+          // Se ainda não tem dados filtrados, não fazer nada
+          if (dadosFiltrados.length === 0) {
+            console.warn("Sem dados filtrados disponíveis");
+            $('#taxa_desistencia').text('0.0%');
+            $('#taxa_retencao').text('100.0%');
+            return;
+          }
+          
+          // Verificar se estamos em um filtro por meses específicos
+          var usarMediaNoLugarDeUltimoMes = (periodo !== 'ano_atual' && parseInt(periodo) > 0);
+          
+          // Debug: mostrar os meses que serão usados para cálculo
+          for (var i = 0; i < dadosFiltrados.length; i++) {
+            console.log("Mês " + (i+1) + ":", dadosFiltrados[i].data, 
+              "Efetivações:", dadosFiltrados[i].quantidadeefetivacoes, 
+              "Desistências:", dadosFiltrados[i].quantidadeinativos);
+          }
+          
+          // Verificar a estrutura dos dados antes de processar
+          if (!dadosFiltrados[0].hasOwnProperty('quantidadeefetivacoes') || !dadosFiltrados[0].hasOwnProperty('quantidadeinativos')) {
+            throw new Error("Estrutura de dados inválida: propriedades esperadas não encontradas");
+          }
+          
+          // Calcular taxas de retenção e desistência para os cards
+          var desistencias = [];
+          var totalEfetivacoes = 0;
+          var totalDesistencias = 0;
+          
+          for (var i = 0; i < dadosFiltrados.length; i++) {
+            var mes = dadosFiltrados[i];
+            var efetivacoesMes = parseInt(mes.quantidadeefetivacoes) || 0;
+            var desistenciasMes = parseInt(mes.quantidadeinativos) || 0;
+            
+            totalEfetivacoes += efetivacoesMes;
+            totalDesistencias += desistenciasMes;
+            
+            // Calcular taxa de desistência como percentual das efetivações
+            var taxaDesistencia = 0;
+            if (efetivacoesMes > 0) {
+              taxaDesistencia = (desistenciasMes / efetivacoesMes) * 100;
+            }
+            
+            console.log("Mês:", mes.data, "Efetivações:", efetivacoesMes, "Desistências:", desistenciasMes, "Taxa:", taxaDesistencia.toFixed(1) + "%");
+            
+            desistencias.push(taxaDesistencia);
+          }
+          
+          // Taxa de desistência/retenção será a do último mês ou a média do período selecionado
+          var taxaDesistenciaAtual, taxaRetencaoAtual;
+          
+          if (usarMediaNoLugarDeUltimoMes) {
+            // Usar a taxa média do período quando um filtro específico de meses for usado
+            var taxaMediaDesistencia = 0;
+            if (totalEfetivacoes > 0) {
+              taxaMediaDesistencia = (totalDesistencias / totalEfetivacoes) * 100;
+            }
+            taxaDesistenciaAtual = taxaMediaDesistencia;
+            taxaRetencaoAtual = 100 - taxaMediaDesistencia;
+            
+            console.log("Usando média do período. Taxa média de desistência:", taxaDesistenciaAtual.toFixed(1) + "%");
+            console.log("Taxa média de retenção:", taxaRetencaoAtual.toFixed(1) + "%");
+          } else {
+            // Usar a taxa do último mês quando o filtro for ano atual
+            taxaDesistenciaAtual = desistencias[desistencias.length - 1];
+            taxaRetencaoAtual = 100 - taxaDesistenciaAtual;
+            
+            console.log("Usando último mês. Taxa de desistência atual:", taxaDesistenciaAtual.toFixed(1) + "%");
+            console.log("Taxa de retenção atual:", taxaRetencaoAtual.toFixed(1) + "%");
+          }
+          
+          // Variação em relação ao mês anterior (apenas quando não estamos usando média)
+          var variacaoDesistencia = 0;
+          var variacaoRetencao = 0;
+          
+          if (!usarMediaNoLugarDeUltimoMes && desistencias.length > 1) {
+            var taxaDesistenciaAnterior = desistencias[desistencias.length - 2];
+            
+            variacaoDesistencia = taxaDesistenciaAtual - taxaDesistenciaAnterior;
+            variacaoRetencao = -variacaoDesistencia; // Se a desistência cai, a retenção sobe
+            
+            console.log("Variação desistência:", variacaoDesistencia.toFixed(1) + "%");
+            console.log("Variação retenção:", variacaoRetencao.toFixed(1) + "%");
+          } else if (usarMediaNoLugarDeUltimoMes) {
+            // Quando estamos usando média, não há variação a ser exibida
+            console.log("Usando média de período, não há variação a ser calculada");
+          }
+          
+          // Atualizar os valores na UI
+          $('#taxa_desistencia').text(taxaDesistenciaAtual.toFixed(1) + '%');
+          $('#taxa_retencao').text(taxaRetencaoAtual.toFixed(1) + '%');
+          
+          // Preencher barras de progresso
+          $('#fill_desistencia').css('width', Math.min(100, (taxaDesistenciaAtual * 100 / 40)) + '%');
+          $('#fill_retencao').css('width', (taxaRetencaoAtual * 100 / 100) + '%');
+          
+          // Atualizar status conforme metas
+          atualizarStatusDesistencia(taxaDesistenciaAtual);
+          atualizarStatusRetencao(taxaRetencaoAtual);
+          
+          // Atualizar tendências apenas se não estamos usando média
+          if (!usarMediaNoLugarDeUltimoMes) {
+            atualizarTendencias(variacaoDesistencia, variacaoRetencao);
+            // Não atualizamos mais aqui, pois agora é feito na função atualizarComparativoMensal
+            // atualizarStatusProgresso(variacaoRetencao);
+          } else {
+            // Limpar as tendências quando usamos média
+            $('#trend_desistencia .trend-arrow, #trend_retencao .trend-arrow').text('');
+            // Não atualizamos mais o status de progresso aqui
+            // $('#status_progresso').text('Média');
+            // $('#status_progresso_detail .status-text').text('Média do período selecionado');
+          }
+          
+          console.log("Insights atualizados com sucesso para o período " + periodo);
+        } catch (e) {
+          console.error("Erro ao processar dados para insights:", e.message);
+          console.error("Detalhes do erro:", e.stack);
+          
+          // Mostrar mensagem de erro específica na UI
+          $('#taxa_desistencia').text('Erro');
+          $('#taxa_retencao').text('Erro');
+          $('#status_desistencia .status-text').text('Erro ao processar');
+          $('#status_retencao .status-text').text('Erro ao processar');
+          $('#status_progresso').text('Erro');
+          $('#status_progresso_detail .status-text').text('Falha ao calcular dados');
+        }
+      }).fail(function(xhr, status, error) {
+        // Limpar o timeout
+        clearTimeout(requestTimeout);
+        
+        console.error("Erro ao carregar dados para insights:", status, error);
+        console.error("Código de status:", xhr.status);
+        
+        // Tentar extrair informações detalhadas do erro
+        var errorDetails = "";
+        try {
+          if (xhr.responseText) {
+            errorDetails = "\nResposta: " + xhr.responseText.substring(0, 200);
+            
+            // Tentar fazer parse da resposta como JSON
+            var jsonResponse = JSON.parse(xhr.responseText);
+            if (jsonResponse && jsonResponse.error) {
+              errorDetails += "\nErro específico: " + jsonResponse.error;
+            }
+          }
+        } catch (e) {
+          errorDetails = "\nNão foi possível extrair detalhes adicionais do erro.";
+        }
+        
+        console.error("Detalhes da resposta:", errorDetails);
+        
+        // Mostrar mensagem de erro na UI
+        $('#taxa_desistencia').text('Erro');
+        $('#taxa_retencao').text('Erro');
+        $('#status_desistencia .status-text').text('Erro ao carregar');
+        $('#status_retencao .status-text').text('Erro ao carregar');
+        $('#status_progresso').text('Erro');
+        $('#status_progresso_detail .status-text').text('Falha na comunicação');
+        
+        // Limpar barras de progresso
+        $('#fill_desistencia').css('width', '0%');
+        $('#fill_retencao').css('width', '0%');
+        
+        // Limpar o comparativo mensal
+        for (var i = 1; i <= 5; i++) {
+          $('#taxa_mes_' + i).text('0%');
+          $('#fill_mes_' + i).css('height', '0%');
+          $('#label_mes_' + i).text('Mês -' + i);
+        }
+        $('#taxa_mes_atual').text('0%');
+        $('#fill_mes_atual').css('height', '0%');
+      });
+    }
+
+    // Filtrar dados por período selecionado
+    function filtrarDadosPorPeriodo(dados, periodo) {
+      if (periodo === 'ano_atual') {
+        var anoAtual = new Date().getFullYear();
+        return dados.filter(function(item) {
+          return parseInt(item.data.split('/')[1]) === anoAtual;
+        });
+      } else {
+        // Limitar aos últimos X meses
+        return dados.slice(-parseInt(periodo));
+      }
+    }
+
+    // Atualizar status da taxa de desistência
+    function atualizarStatusDesistencia(taxa) {
+      var status = $('#status_desistencia');
+      var text = $('.status-text', status);
+      
+      status.removeClass('warning negative');
+      
+      if (taxa <= 30) {
+        text.text('Excelente');
+      } else if (taxa <= 40) {
+        text.text('Dentro da meta');
+        status.addClass('warning');
+      } else {
+        text.text('Acima da meta');
+        status.addClass('negative');
+      }
+    }
+
+    // Atualizar status de retenção conforme metas
+    function atualizarStatusRetencao(taxa) {
+      if (taxa >= 80) {
+        $('#status_retencao').text('Ótimo');
+        $('#status_retencao').removeClass('status-ok status-warning status-critical').addClass('status-great');
+        $('#status_retencao .status-text').text('Acima da meta');
+      } else if (taxa >= 70) {
+        $('#status_retencao').text('Bom');
+        $('#status_retencao').removeClass('status-great status-warning status-critical').addClass('status-ok');
+        $('#status_retencao .status-text').text('Dentro da meta');
+      } else if (taxa >= 60) {
+        $('#status_retencao').text('Regular');
+        $('#status_retencao').removeClass('status-great status-ok status-critical').addClass('status-warning');
+        $('#status_retencao .status-text').text('Abaixo da meta');
+      } else {
+        $('#status_retencao').text('Crítico');
+        $('#status_retencao').removeClass('status-great status-ok status-warning').addClass('status-critical');
+        $('#status_retencao .status-text').text('Muito abaixo da meta');
+      }
+    }
+    
+    // Atualizar tendências
+    function atualizarTendencias(variacaoDesistencia, variacaoRetencao) {
+      // Tendência de desistência (menor é melhor)
+      if (variacaoDesistencia <= -2) {
+        $('#trend_desistencia .trend-arrow').text('↓');
+        $('#trend_desistencia').removeClass('trend-neutral trend-negative').addClass('trend-positive');
+      } else if (variacaoDesistencia < 2) {
+        $('#trend_desistencia .trend-arrow').text('→');
+        $('#trend_desistencia').removeClass('trend-positive trend-negative').addClass('trend-neutral');
+      } else {
+        $('#trend_desistencia .trend-arrow').text('↑');
+        $('#trend_desistencia').removeClass('trend-positive trend-neutral').addClass('trend-negative');
+      }
+      
+      // Tendência de retenção (maior é melhor)
+      if (variacaoRetencao >= 2) {
+        $('#trend_retencao .trend-arrow').text('↑');
+        $('#trend_retencao').removeClass('trend-neutral trend-negative').addClass('trend-positive');
+      } else if (variacaoRetencao > -2) {
+        $('#trend_retencao .trend-arrow').text('→');
+        $('#trend_retencao').removeClass('trend-positive trend-negative').addClass('trend-neutral');
+      } else {
+        $('#trend_retencao .trend-arrow').text('↓');
+        $('#trend_retencao').removeClass('trend-positive trend-neutral').addClass('trend-negative');
+      }
     }
 
 </script>
