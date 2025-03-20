@@ -120,6 +120,27 @@
               </div>
               <div class="ibox-content padding-5">
                 <div id="clientes_12_meses" style="height: 290px !important;"></div>
+                
+                <!-- Indicadores de Crescimento -->
+                <div class="growth-indicators-container">
+                  <h4 class="text-center m-t-md">Evolução do Crescimento</h4>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="stat-panel quarterly">
+                        <div class="stat-title">Últimos 3 Meses</div>
+                        <div id="quarter-growth-clients" class="stat-value">--</div>
+                        <div id="quarter-growth-value" class="stat-subvalue">--</div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="stat-panel yearly">
+                        <div class="stat-title">Mesmo Mês no Ano Anterior</div>
+                        <div id="year-growth-clients" class="stat-value">--</div>
+                        <div id="year-growth-value" class="stat-subvalue">--</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -152,9 +173,121 @@
   .h30{
     height: 30px !important;
   }
+  
+  /* Estilo para os indicadores de crescimento */
+  .growth-indicators-container {
+    margin-top: 15px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-top: 15px;
+  }
+  
+  .growth-indicators-container h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .stat-panel {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .stat-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 4px;
+    width: 100%;
+  }
+  
+  .stat-panel.monthly::before {
+    background-color: #1ab394;
+  }
+  
+  .stat-panel.quarterly::before {
+    background-color: #1c84c6;
+  }
+  
+  .stat-panel.yearly::before {
+    background-color: #f8ac59;
+  }
+  
+  .stat-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #676a6c;
+    margin-bottom: 10px;
+  }
+  
+  .stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  
+  .stat-subvalue {
+    font-size: 14px;
+    color: #676a6c;
+  }
+  
+  .value-increase {
+    color: #1ab394;
+  }
+  
+  .value-decrease {
+    color: #ed5565;
+  }
+  
+  .stat-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-left: 5px;
+  }
+  
+  .badge-increase {
+    background-color: rgba(26, 179, 148, 0.15);
+    color: #1ab394;
+  }
+  
+  .badge-decrease {
+    background-color: rgba(237, 85, 101, 0.15);
+    color: #ed5565;
+  }
 </style>
 
 <script>
+  // Inicializar os gráficos quando a página carregar
+  $(document).ready(function() {
+    // Garantir que a biblioteca do Google Charts esteja carregada
+    if (typeof google !== 'undefined' && google.charts) {
+      google.charts.load('current', {'packages':['corechart', 'table']});
+      google.charts.setOnLoadCallback(function() {
+        console.log("Google Charts carregado, iniciando drawClientes12Meses");
+        drawClientes12Meses();
+      });
+    } else {
+      console.log("Esperando Google Charts carregar...");
+      setTimeout(function() {
+        drawClientes12Meses();
+      }, 1000);
+    }
+  });
+
   $('#grafico_por').on('change', function () {
     if ($('#filtro_grafico').val() == 2)
       drawClientes12Meses();
@@ -169,10 +302,15 @@
   });
 
     function drawClientes12Meses() {
+        console.log("Iniciando chamada para obter dados dos clientes");
         $.getJSON("/dashboards/get_cliente_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
             "&estado=" + $('#estado_financeiro_id').val(), function(data) {
 
+            console.log("Dados recebidos:", data.length, "registros");
             var meses = data;
+            
+            // Armazenar dados para análise
+            window.dadosMensaisClientes = data.slice();
 
             var dataArray = [
                 ['Mês', 'Quantidade', 'Quantidade', {type: 'string', role: 'annotation'}, 'Valor', 'Média',
@@ -195,13 +333,19 @@
                     $(meses).get(-1).totalqtd, mascaraValor($(meses).get(-1).totalvalor), mascaraValor($(meses).get(-1).totalmedia),
                     $(meses).get(-1).paralisadoqtd, mascaraValor($(meses).get(-1).paralisadovalor), mascaraValor($(meses).get(-1).paralisadomedia));
                 if ($('#filtro_grafico').val() == 2)
-                  drawChartAtivosBloqueados($(meses).get(-1).normalqtd, $(meses).get(-1).bloqueadoqtd, $(meses).get(-1).paralisadoqtd);
+                    drawChartAtivosBloqueados($(meses).get(-1).normalqtd, $(meses).get(-1).bloqueadoqtd, $(meses).get(-1).paralisadoqtd);
                 else if ($('#filtro_grafico').val() == 3)
-                  drawTicketMedioClientesAtivos();
+                    drawTicketMedioClientesAtivos();
                 else if ($('#filtro_grafico').val() == 5)
-                  drawTabelaAtivosBloqueadosSistema();
+                    drawTabelaAtivosBloqueadosSistema();
                 else
-                  drawChartAtivosBloqueadosSistema();
+                    drawChartAtivosBloqueadosSistema();
+                
+                // Armazenar os dados dos últimos 12 meses em uma variável global para uso posterior
+                window.dadosUltimos12Meses = data.slice();
+                
+                // Calcular indicadores de crescimento apenas na inicialização
+                calcularEExibirIndicadoresCrescimento();
             }else{
                 preencherClientes('', 0, mascaraValor('0.00'),
                     mascaraValor('0.00'), 0, mascaraValor('0.00'),
@@ -209,13 +353,13 @@
                     mascaraValor('0.00'), 0, mascaraValor('0.00'),
                     mascaraValor('0.00'));
                 if ($('#filtro_grafico').val() == 2)    
-                  drawChartAtivosBloqueados(0, 0, 0);
+                    drawChartAtivosBloqueados(0, 0, 0);
                 else if ($('#filtro_grafico').val() == 3)
-                  drawTicketMedioClientesAtivos();
+                    drawTicketMedioClientesAtivos();
                 else if ($('#filtro_grafico').val() == 5)
-                  drawTabelaAtivosBloqueadosSistema();
+                    drawTabelaAtivosBloqueadosSistema();
                 else
-                  drawChartAtivosBloqueadosSistema();
+                    drawChartAtivosBloqueadosSistema();
             }
 
             var options = {
@@ -231,6 +375,8 @@
             function selectHandler() {
                 var selectedItem = chart.getSelection()[0];
                 if (selectedItem) {
+                    var mesSelecionado = meses[selectedItem.row];
+                    
                     preencherClientes($(meses).get(selectedItem.row).final,
                         $(meses).get(selectedItem.row).normalqtd, mascaraValor($(meses).get(selectedItem.row).normalvalor), mascaraValor($(meses).get(selectedItem.row).normalmedia),
                         $(meses).get(selectedItem.row).bloqueadoqtd, mascaraValor($(meses).get(selectedItem.row).bloqueadovalor), mascaraValor($(meses).get(selectedItem.row).bloqueadomedia),
@@ -238,17 +384,20 @@
                         $(meses).get(selectedItem.row).totalqtd, mascaraValor($(meses).get(selectedItem.row).totalvalor), mascaraValor($(meses).get(selectedItem.row).totalmedia),
                         $(meses).get(selectedItem.row).paralisadoqtd, mascaraValor($(meses).get(selectedItem.row).paralisadovalor), mascaraValor($(meses).get(selectedItem.row).paralisadomedia));
                     if ($('#filtro_grafico').val() == 2)    
-                      drawChartAtivosBloqueados($(meses).get(selectedItem.row).normalqtd, $(meses).get(selectedItem.row).bloqueadoqtd, $(meses).get(selectedItem.row).paralisadoqtd);
+                        drawChartAtivosBloqueados($(meses).get(selectedItem.row).normalqtd, $(meses).get(selectedItem.row).bloqueadoqtd, $(meses).get(selectedItem.row).paralisadoqtd);
                     else if ($('#filtro_grafico').val() == 3)
-                      drawTicketMedioClientesAtivos();
+                        drawTicketMedioClientesAtivos();
                     else if ($('#filtro_grafico').val() == 4)
-                      drawClientesAtivosPorUF();
+                        drawClientesAtivosPorUF();
                     else if ($('#filtro_grafico').val() == 5)
-                      drawTabelaAtivosBloqueadosSistema();
+                        drawTabelaAtivosBloqueadosSistema();
                     else
-                      drawChartAtivosBloqueadosSistema();
+                        drawChartAtivosBloqueadosSistema();
                     if (selectedItem.row == 13) $('#card_bloqueados_atualmente').show();
                     else $('#card_bloqueados_atualmente').hide();
+                    
+                    // Não recalcular os indicadores de crescimento quando um mês for selecionado
+                    // Manter os mesmos dados da última atualização
                 }else{
                     preencherClientes($(meses).get(-1).final,
                         $(meses).get(-1).normalqtd, mascaraValor($(meses).get(-1).normalvalor), mascaraValor($(meses).get(-1).normalmedia),
@@ -257,15 +406,15 @@
                         $(meses).get(-1).totalqtd, mascaraValor($(meses).get(-1).totalvalor), mascaraValor($(meses).get(-1).totalmedia),
                         $(meses).get(-1).paralisadoqtd, mascaraValor($(meses).get(-1).paralisadovalor), mascaraValor($(meses).get(-1).paralisadomedia));
                     if ($('#filtro_grafico').val() == 2)    
-                      drawChartAtivosBloqueados($(meses).get(-1).normalqtd, $(meses).get(-1).bloqueadoqtd, $(meses).get(-1).paralisadoqtd);
+                        drawChartAtivosBloqueados($(meses).get(-1).normalqtd, $(meses).get(-1).bloqueadoqtd, $(meses).get(-1).paralisadoqtd);
                     else if ($('#filtro_grafico').val() == 3)
-                      drawTicketMedioClientesAtivos();
+                        drawTicketMedioClientesAtivos();
                     else if ($('#filtro_grafico').val() == 4)
-                      drawClientesAtivosPorUF();
+                        drawClientesAtivosPorUF();
                     else if ($('#filtro_grafico').val() == 5)
-                      drawTabelaAtivosBloqueadosSistema();
+                        drawTabelaAtivosBloqueadosSistema();
                     else
-                      drawChartAtivosBloqueadosSistema();
+                        drawChartAtivosBloqueadosSistema();
                     $('#card_bloqueados_atualmente').show();
                 }
             }
@@ -279,6 +428,8 @@
             view = new google.visualization.DataView(data);
             view.hideColumns([4,5,6,7,8,9,10,11,12,13,14]);
             chart.draw(view, options);
+        }).fail(function(jqxhr, textStatus, error) {
+            console.error("Erro ao carregar dados:", textStatus, error);
         });
     }
 
@@ -582,6 +733,124 @@
           
         table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
       });
+    }
+
+    // Nova função para calcular e exibir indicadores de crescimento apenas uma vez
+    function calcularEExibirIndicadoresCrescimento() {
+        var dados = window.dadosUltimos12Meses;
+        if (!dados || dados.length < 4) {
+            console.log("Dados insuficientes para calcular crescimento");
+            $('#quarter-growth-clients').html("Dados insuficientes");
+            $('#quarter-growth-value').html("Dados insuficientes");
+            $('#year-growth-clients').html("Dados indisponíveis");
+            $('#year-growth-value').html("Dados indisponíveis");
+            return;
+        }
+        
+        console.log("Calculando indicadores de crescimento");
+        
+        // Usando os dados do último mês disponível
+        var mesAtual = dados[dados.length - 1];
+        
+        // Dados para o cálculo trimestral (3 meses atrás)
+        var mesTrimestre = dados[dados.length - 4];
+        
+        // Dados para comparação anual
+        var partesMesAtual = mesAtual.final.split('/');
+        if (partesMesAtual.length === 2) {
+            var nomeMesAtual = partesMesAtual[0];
+            var anoAtual = partesMesAtual[1];
+            var anoAnterior = (parseInt(anoAtual) - 1).toString();
+            
+            // Organizar dados por mês e ano para comparação anual
+            var dadosPorData = {};
+            for (var i = 0; i < dados.length; i++) {
+                var mes = dados[i];
+                var partes = mes.final.split('/');
+                if (partes.length === 2) {
+                    var nomeMes = partes[0];
+                    var ano = partes[1];
+                    
+                    if (!dadosPorData[ano]) {
+                        dadosPorData[ano] = {};
+                    }
+                    
+                    dadosPorData[ano][nomeMes] = mes;
+                }
+            }
+            
+            // Crescimento em relação ao trimestre (3 meses atrás)
+            var crescimentoTrimestral = calcularCrescimento(mesAtual, mesTrimestre);
+            exibirCrescimento('quarter', crescimentoTrimestral);
+            
+            // Crescimento em relação ao mesmo mês do ano anterior
+            if (dadosPorData[anoAnterior] && dadosPorData[anoAnterior][nomeMesAtual]) {
+                var mesAnoAnterior = dadosPorData[anoAnterior][nomeMesAtual];
+                var crescimentoAnual = calcularCrescimento(mesAtual, mesAnoAnterior);
+                exibirCrescimento('year', crescimentoAnual);
+            } else {
+                console.log("Dados do mesmo mês no ano anterior não disponíveis para", nomeMesAtual, anoAnterior);
+                $('#year-growth-clients').html("Dados indisponíveis");
+                $('#year-growth-value').html("Dados indisponíveis");
+            }
+        }
+    }
+
+    // Função auxiliar para calcular o crescimento entre dois períodos
+    function calcularCrescimento(mesAtual, mesAnterior) {
+      var qtdAtual = parseInt(mesAtual.totalqtd) || 0;
+      var qtdAnterior = parseInt(mesAnterior.totalqtd) || 1; // Evitar divisão por zero
+      var valorAtual = parseFloat(mesAtual.totalvalor) || 0;
+      var valorAnterior = parseFloat(mesAnterior.totalvalor) || 1; // Evitar divisão por zero
+      
+      var crescimentoQtd = ((qtdAtual - qtdAnterior) / qtdAnterior) * 100;
+      var crescimentoValor = ((valorAtual - valorAnterior) / valorAnterior) * 100;
+      
+      return {
+        periodo: {
+          atual: mesAtual.final,
+          anterior: mesAnterior.final
+        },
+        clientes: {
+          atual: qtdAtual,
+          anterior: qtdAnterior,
+          variacao: crescimentoQtd
+        },
+        valor: {
+          atual: valorAtual,
+          anterior: valorAnterior,
+          variacao: crescimentoValor
+        }
+      };
+    }
+
+    // Função auxiliar para formatar os valores e exibi-los
+    function exibirCrescimento(tipo, dados) {
+      var elementClientes = $('#' + tipo + '-growth-clients');
+      var elementValor = $('#' + tipo + '-growth-value');
+      
+      // Formatação para clientes
+      var classClientes = dados.clientes.variacao >= 0 ? 'value-increase' : 'value-decrease';
+      var simboloClientes = dados.clientes.variacao >= 0 ? '▲' : '▼';
+      var percentualClientes = Math.abs(dados.clientes.variacao).toFixed(1) + '%';
+      var badgeClientes = '<span class="stat-badge ' + (dados.clientes.variacao >= 0 ? 'badge-increase' : 'badge-decrease') + '">' + simboloClientes + ' ' + percentualClientes + '</span>';
+      
+      var textoClientes = dados.clientes.anterior + ' → ' + dados.clientes.atual + ' ' + badgeClientes;
+      elementClientes.html(textoClientes);
+      elementClientes.removeClass('value-increase value-decrease').addClass(classClientes);
+      
+      // Formatação para valor
+      var classValor = dados.valor.variacao >= 0 ? 'value-increase' : 'value-decrease';
+      var simboloValor = dados.valor.variacao >= 0 ? '▲' : '▼';
+      var percentualValor = Math.abs(dados.valor.variacao).toFixed(1) + '%';
+      var badgeValor = '<span class="stat-badge ' + (dados.valor.variacao >= 0 ? 'badge-increase' : 'badge-decrease') + '">' + simboloValor + ' ' + percentualValor + '</span>';
+      
+      var valorAnteriorFormatado = 'R$ ' + dados.valor.anterior.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      var valorAtualFormatado = 'R$ ' + dados.valor.atual.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      
+      var textoValor = valorAnteriorFormatado + ' → ' + valorAtualFormatado + ' ' + badgeValor;
+      elementValor.html(textoValor);
+      elementValor.removeClass('value-increase value-decrease').addClass(classValor);
     }
 
 </script>
