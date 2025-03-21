@@ -1,191 +1,232 @@
 <div class="col-lg-12 no-padding">
-  <div class="panel panel-default" style="margin-bottom: 10px !important;">
-    <div class="panel-heading">
-      Faturamento
-      <div class="col-sm-2  pull-right" style="margin-top: -6px !important;" id="fat_grafico_por">
+  <div class="panel panel-default dashboard-main-panel" style="margin-bottom: 15px !important; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+    <div class="panel-heading" style="border-top-left-radius: 6px; border-top-right-radius: 6px; background: linear-gradient(to right, #f3f3f4, #ffffff); border-bottom: 1px solid #e7eaec; padding: 12px 15px;">
+      <span style="font-weight: 600; color: #333333;"><i class="fa fa-money" style="color: #1ab394; margin-right: 8px;"></i>Faturamento</span>
+      <div class="col-sm-3 pull-right" style="margin-top: -6px !important;" id="fat_grafico_por">
         <%= select_tag  'filtro_grafico_faturamento', options_for_select([
                                                               ['Por sistema', 1],
                                                               ['Por sistema - Tabela', 4],
                                                               ['Por tipo', 2],
                                                               ['Ticket Médio', 3],
                                                               ['Por UF', 5]
-                                                              ], 4), {:class => "form-control input-sm chosen-select"} %>
+                                                              ], 4), {:class => "form-control input-sm chosen-select", style: "border-radius: 4px;"} %>
       </div>
     </div>
-    <div class="panel-body no-padding">
-      <div class="col-lg-12 padding-left-right">
-        <div id="fatDiv" class="col-md-3 padding-5">
-          <div id="fatDiv" class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Faturamento total</h5>
-                  <span class="label label-info pull-right" id="compentencia_faturamento_total"></span>
-                </div>
-                <div class="ibox-content padding-5" style="height: 45px !important;">
-                  <div class="col-lg-8 no-padding">
-                    <h2 class="pull-left" id="faturamento_total" style="margin-bottom: 3px"></h2>
+    <div class="panel-body no-padding" style="padding: 0 !important;">
+      <div class="col-lg-12 padding-left-right" style="padding: 15px; display: flex; min-height: 100%; min-width: 100%;">
+        <!-- Layout otimizado para utilizar o espaço horizontal completo -->
+        <div class="row" style="display: flex; min-height: 485px; min-width: 100%;">
+          <!-- Coluna esquerda - Cards de faturamento -->
+          <div class="col-md-3 padding-5" style="display: flex; flex-direction: column; height: 100%;">
+            <div style="display: flex; flex-direction: column; height: 100%; gap: 30px;">
+              <!-- Card de Faturamento Total -->
+              <div class="ibox" style="margin-bottom: 15px; flex: 1 0 auto;">
+                <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #1ab394; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(245,249,250,1) 100%);">
+                  <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                    <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                      <i class="fa fa-money pulse-icon" style="color: #1ab394; margin-right: 8px;"></i>Faturamento total
+                    </h5>
+                    <span class="label label-info pull-right tech-badge" id="compentencia_faturamento_total" style="background-color: #1ab394; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(26,179,148,0.3);"></span>
                   </div>
-                  <div class="col-lg-4 no-padding">
-                    <div class="col-lg-12 no-padding">
-                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_total"></div>
+                  <div class="ibox-content padding-5" style="height: 60px !important; border-top: 1px solid rgba(0,0,0,0.05);">
+                    <div class="col-lg-8 no-padding">
+                      <h2 class="pull-left highlight-value" id="faturamento_total" style="margin-bottom: 3px; color: #1ab394; font-weight: 700; font-size: 24px;"></h2>
                     </div>
-                    <div class="col-lg-12 no-padding">
-                      <div class="pull-right">
-                        <small id="faturamento_anterior"></small>
+                    <div class="col-lg-4 no-padding">
+                      <div class="col-lg-12 no-padding">
+                        <div class="stat-percent font-bold text-danger glow-text" id="percentual_faturamento_total" style="font-size: 13px;"></div>
+                      </div>
+                      <div class="col-lg-12 no-padding">
+                        <div class="pull-right">
+                          <small id="faturamento_anterior" style="color: #888888;"></small>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div id="fatDiv" class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Fat. Mensalidade</h5>
-                  <span class="label label-info pull-right" id="competencia_faturamento_mensalidade"></span>
-                </div>
-                <div class="ibox-content padding-5" style="height: 45px !important;">
-                  <div class="col-lg-8 no-padding">
-                    <h2 class="pull-left" id="faturamento_mensalidade" style="margin-bottom: 3px"></h2>
+              
+              <!-- Card de Mensalidade -->
+              <div class="ibox" style="margin-bottom: 15px; flex: 1 0 auto;">
+                <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #1c84c6; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(245,248,252,1) 100%);">
+                  <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                    <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                      <i class="fa fa-calendar-check-o pulse-icon" style="color: #1c84c6; margin-right: 8px;"></i>Fat. Mensalidade
+                    </h5>
+                    <span class="label label-info pull-right tech-badge" id="competencia_faturamento_mensalidade" style="background-color: #1c84c6; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(28,132,198,0.3);"></span>
                   </div>
-                  <div class="col-lg-4 no-padding">
-                    <div class="col-lg-12 no-padding">
-                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_mensalidade"></div>
+                  <div class="ibox-content padding-5" style="height: 60px !important; border-top: 1px solid rgba(0,0,0,0.05);">
+                    <div class="col-lg-8 no-padding">
+                      <h2 class="pull-left highlight-value" id="faturamento_mensalidade" style="margin-bottom: 3px; color: #1c84c6; font-weight: 700; font-size: 24px;"></h2>
                     </div>
-                    <div class="col-lg-12 no-padding">
-                      <div class="pull-right">
-                        <small id="faturamento_mensalidade_anterior"></small>
+                    <div class="col-lg-4 no-padding">
+                      <div class="col-lg-12 no-padding">
+                        <div class="stat-percent font-bold text-danger glow-text" id="percentual_faturamento_mensalidade" style="font-size: 13px;"></div>
+                      </div>
+                      <div class="col-lg-12 no-padding">
+                        <div class="pull-right">
+                          <small id="faturamento_mensalidade_anterior" style="color: #888888;"></small>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div id="fatDiv" class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Fat. Instalação</h5>
-                  <span class="label label-info pull-right" id="competencia_faturamento_instalacao"></span>
-                </div>
-                <div class="ibox-content padding-5" style="height: 45px !important;">
-                  <div class="col-lg-8 no-padding">
-                    <h2 class="pull-left" id="faturamento_instalacao" style="margin-bottom: 7px"></h2>
+              
+              <!-- Card de Instalação -->
+              <div class="ibox" style="margin-bottom: 15px; flex: 1 0 auto;">
+                <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #f8ac59; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(252,248,245,1) 100%);">
+                  <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                    <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                      <i class="fa fa-plug pulse-icon" style="color: #f8ac59; margin-right: 8px;"></i>Fat. Instalação
+                    </h5>
+                    <span class="label label-info pull-right tech-badge" id="competencia_faturamento_instalacao" style="background-color: #f8ac59; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(248,172,89,0.3);"></span>
                   </div>
-                  <div class="col-lg-4 no-padding">
-                    <div class="col-lg-12 no-padding">
-                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_instalacao"></div>
+                  <div class="ibox-content padding-5" style="height: 60px !important; border-top: 1px solid rgba(0,0,0,0.05);">
+                    <div class="col-lg-8 no-padding">
+                      <h2 class="pull-left highlight-value" id="faturamento_instalacao" style="margin-bottom: 3px; color: #f8ac59; font-weight: 700; font-size: 24px;"></h2>
                     </div>
-                    <div class="col-lg-12 no-padding">
-                      <div class="pull-right">
-                        <small id="faturamento_instalacao_anterior"></small>
+                    <div class="col-lg-4 no-padding">
+                      <div class="col-lg-12 no-padding">
+                        <div class="stat-percent font-bold text-danger glow-text" id="percentual_faturamento_instalacao" style="font-size: 13px;"></div>
+                      </div>
+                      <div class="col-lg-12 no-padding">
+                        <div class="pull-right">
+                          <small id="faturamento_instalacao_anterior" style="color: #888888;"></small>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div id="fatDiv" class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Fat. Outros</h5>
-                  <span class="label label-info pull-right" id="competencia_faturamento_outros"></span>
-                </div>
-                <div class="ibox-content padding-5" style="height: 45px !important;">
-                  <div class="col-lg-8 no-padding">
-                    <h2 class="pull-left" id="faturamento_outros" style="margin-bottom: 7px"></h2>
+              
+              <!-- Card de Outros -->
+              <div class="ibox" style="margin-bottom: 0; flex: 1 0 auto;">
+                <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #9575cd; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,245,252,1) 100%);">
+                  <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                    <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                      <i class="fa fa-cubes pulse-icon" style="color: #9575cd; margin-right: 8px;"></i>Fat. Outros
+                    </h5>
+                    <span class="label label-info pull-right tech-badge" id="competencia_faturamento_outros" style="background-color: #9575cd; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(149,117,205,0.3);"></span>
                   </div>
-                  <div class="col-lg-4 no-padding">
-                    <div class="col-lg-12 no-padding">
-                      <div class="stat-percent font-bold text-danger" id="percentual_faturamento_outros"></div>
+                  <div class="ibox-content padding-5" style="height: 60px !important; border-top: 1px solid rgba(0,0,0,0.05);">
+                    <div class="col-lg-8 no-padding">
+                      <h2 class="pull-left highlight-value" id="faturamento_outros" style="margin-bottom: 3px; color: #9575cd; font-weight: 700; font-size: 24px;"></h2>
                     </div>
-                    <div class="col-lg-12 no-padding">
-                      <div class="pull-right">
-                        <small id="faturamento_outros_anterior"></small>
+                    <div class="col-lg-4 no-padding">
+                      <div class="col-lg-12 no-padding">
+                        <div class="stat-percent font-bold text-danger glow-text" id="percentual_faturamento_outros" style="font-size: 13px;"></div>
+                      </div>
+                      <div class="col-lg-12 no-padding">
+                        <div class="pull-right">
+                          <small id="faturamento_outros_anterior" style="color: #888888;"></small>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-7 padding-5">
-          <div class="ibox">
-            <div class="ibox-content product-box">
-              <div class="ibox-title ibox-title-without-border-style">
-                <span class="label label-info pull-right">Anual</span>
-                <h5>Faturamento</h5>
-              </div>
-              <div class="ibox-content padding-2">
-                <div id="faturamento_12_meses" style="height: 271px !important; width: 100%;"></div>
               </div>
             </div>
           </div>
           
-          <!-- Visualização discreta do faturamento total do ano -->
-          <div class="ibox" style="margin-top: 10px;">
-            <div class="ibox-content product-box" style="border-radius: 6px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); overflow: hidden; position: relative;">
-              <!-- Fundo com gradiente e efeito -->
-              <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(26,179,148,0.03) 0%, rgba(26,179,148,0.08) 100%); z-index: 0;"></div>
-              
-              <div class="row" style="position: relative; z-index: 1;">
-                <div class="col-xs-8">
-                  <h3 class="no-margins" style="font-size: 16px; color: #676a6c; font-weight: 600;">
-                    <i class="fa fa-line-chart" style="margin-right: 5px; color: #1ab394;"></i> 
-                    FATURAMENTO TOTAL <span id="ano-atual-faturamento" style="font-weight: 700;"></span>
-                  </h3>
-                  
-                  <!-- Div separadora para criar espaço visual -->
-                  <div style="height: 30px;"></div>
-                  
-                  <h2 id="total-ano-faturamento" class="no-margins" style="font-size: 24px; color: #1ab394; font-weight: 700; letter-spacing: -0.5px;"></h2>
-                  
-                  <div class="row" style="margin-top: 8px;">
-                    <div class="col-xs-12">
-                      <div style="display: flex; align-items: center;">
-                        <div class="progress" style="height: 8px; margin-bottom: 0; flex-grow: 1; border-radius: 4px; background-color: rgba(220,220,220,0.3); box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
-                          <div id="progresso-faturamento" class="progress-bar" style="width: 0%; border-radius: 4px; background: linear-gradient(90deg, #1ab394 0%, #21d8b5 100%);"></div>
+          <!-- Coluna central - Gráfico principal -->
+          <div class="col-md-6 padding-5" style="display: flex; flex-direction: column; height: 100%;">
+            <!-- Div com altura fixa para o gráfico principal -->
+            <div class="ibox" style="margin-bottom: 15px; flex: 3;">
+              <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); height: 100%;">
+                <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                  <span class="label label-info pull-right tech-badge" style="background-color: #1ab394; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(26,179,148,0.3);">Anual</span>
+                  <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                    <i class="fa fa-bar-chart pulse-icon" style="color: #1ab394; margin-right: 8px;"></i>Faturamento
+                  </h5>
+                </div>
+                <div class="ibox-content padding-2" style="border-top: 1px solid rgba(0,0,0,0.05); height: calc(100% - 45px);">
+                  <div id="faturamento_12_meses" style="height: 100%; width: 100%;"></div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Visualização discreta do faturamento total do ano -->
+            <div class="ibox" style="margin-top: 15px; margin-bottom: 0; flex: 1; max-height: 150px;">
+              <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); overflow: hidden; position: relative; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); height: 100%;">
+                <!-- Fundo com gradiente e efeito -->
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(26,179,148,0.03) 0%, rgba(26,179,148,0.08) 100%); z-index: 0;"></div>
+                <div class="animated-background"></div>
+                
+                <div class="row" style="position: relative; z-index: 1; height: 100%;">
+                  <div class="col-xs-8">
+                    <h3 class="no-margins" style="font-size: 16px; color: #676a6c; font-weight: 600;">
+                      <i class="fa fa-line-chart pulse-icon" style="margin-right: 5px; color: #1ab394;"></i> 
+                      FATURAMENTO TOTAL <span id="ano-atual-faturamento" style="font-weight: 700;"></span>
+                    </h3>
+                    
+                    <!-- Div separadora para criar espaço visual -->
+                    <div style="height: 15px;"></div>
+                    
+                    <h2 id="total-ano-faturamento" class="no-margins highlight-value" style="font-size: 28px; color: #1ab394; font-weight: 700; letter-spacing: -0.5px;"></h2>
+                    
+                    <div class="row" style="margin-top: 12px;">
+                      <div class="col-xs-12">
+                        <div style="display: flex; align-items: center;">
+                          <div class="progress" style="height: 10px; margin-bottom: 0; flex-grow: 1; border-radius: 20px; background-color: rgba(220,220,220,0.3); box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
+                            <div id="progresso-faturamento" class="progress-bar progress-animated" style="width: 0%; border-radius: 20px; background: linear-gradient(90deg, #1ab394 0%, #21d8b5 100%);"></div>
+                          </div>
+                          <span id="porcentagem-meta" style="margin-left: 8px; font-size: 12px; color: #676a6c; min-width: 40px; text-align: right;"></span>
                         </div>
-                        <span id="porcentagem-meta" style="margin-left: 8px; font-size: 12px; color: #676a6c; min-width: 40px; text-align: right;"></span>
                       </div>
                     </div>
                   </div>
-                </div>
-                
-                <div class="col-xs-4 text-right">
-                  <div id="goal-indicator" style="background-color: rgba(100,149,237,0.1); padding: 8px; border-radius: 5px; margin-bottom: 5px;">
-                    <div style="font-size: 12px; color: #676a6c;">META <span id="ano-meta"></span></div>
-                    <div id="valor-meta" style="font-size: 14px; font-weight: 600; color: #4682B4;"></div>
-                    <div style="margin-top: 5px; display: flex; align-items: center; justify-content: flex-end;">
-                      <div style="font-size: 11px; color: #676a6c; margin-right: 5px;">Probabilidade:</div>
-                      <div id="probabilidade-meta" style="font-size: 13px; font-weight: 600;"></div>
+                  
+                  <div class="col-xs-4 text-right">
+                    <div id="goal-indicator" style="background-color: rgba(100,149,237,0.1); padding: 10px; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);">
+                      <div style="font-size: 12px; color: #676a6c;">META <span id="ano-meta"></span></div>
+                      <div id="valor-meta" class="highlight-value" style="font-size: 14px; font-weight: 600; color: #4682B4;"></div>
+                      <div style="margin-top: 5px; display: flex; align-items: center; justify-content: flex-end;">
+                        <div style="font-size: 11px; color: #676a6c; margin-right: 5px;">Probabilidade:</div>
+                        <div id="probabilidade-meta" class="glow-text" style="font-size: 13px; font-weight: 600;"></div>
+                      </div>
                     </div>
+                    <div style="font-size: 12px; margin-bottom: 3px;">
+                      <span id="valor-ano-anterior" style="color: #676a6c;"></span>
+                    </div>
+                    <p id="comparativo-ano-faturamento" class="glow-text" style="font-size: 12px; margin-bottom: 0;"></p>
                   </div>
-                  <div style="font-size: 12px; margin-bottom: 3px;">
-                    <span id="valor-ano-anterior" style="color: #676a6c;"></span>
-                  </div>
-                  <p id="comparativo-ano-faturamento" style="font-size: 12px; margin-bottom: 0;"></p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-2 padding-5">
-          <div class="ibox">
-            <div class="ibox-content product-box">
-              <div class="ibox-title ibox-title-without-border-style">
-                <span class="label label-info pull-right" id="compentencia_faturamento_tipo"></span>
-                <h5>Faturamento</h5>
+          
+          <!-- Coluna direita - Tabela de sistemas e gráfico de pizza -->
+          <div class="col-md-3 padding-5" style="display: flex; flex-direction: column; height: 100%;">
+            <!-- Div com altura fixa para o gráfico de pizza -->
+            <div class="ibox" style="margin-bottom: 15px; flex: 3;">
+              <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); height: 100%;">
+                <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                  <span class="label label-info pull-right tech-badge" id="compentencia_faturamento_tipo" style="background-color: #23c6c8; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(35,198,200,0.3);"></span>
+                  <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                    <i class="fa fa-pie-chart pulse-icon" style="color: #1ab394; margin-right: 8px;"></i>Faturamento
+                  </h5>
+                </div>
+                <div class="ibox-content padding-5" style="border-top: 1px solid rgba(0,0,0,0.05); height: calc(100% - 45px);">
+                  <div id="faturamento_por_tipo" style="height: 100%; width: 100%;"></div>
+                </div>
               </div>
-              <div class="ibox-content padding-5">
-                <div id="faturamento_por_tipo"  style="height: 271px !important;"></div>
+            </div>
+            
+            <!-- Tabela de faturamento por sistema -->
+            <div class="ibox" style="margin-top: 15px; margin-bottom: 0; flex: 1; max-height: 150px;">
+              <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); height: 100%;">
+                <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                  <span class="label label-info pull-right tech-badge" id="competencia_tabela_sistemas" style="background-color: #23c6c8; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(35,198,200,0.3);"></span>
+                  <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                    <i class="fa fa-table pulse-icon" style="color: #1ab394; margin-right: 8px;"></i>Por sistema
+                  </h5>
+                </div>
+                <div class="ibox-content padding-5" style="border-top: 1px solid rgba(0,0,0,0.05); height: calc(100% - 45px); overflow: hidden;">
+                  <div class="table-responsive" id="tabela_faturamento_sistemas" style="height: 100%; overflow-y: auto;">
+                    <!-- O conteúdo da tabela será preenchido pelo JavaScript -->
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -198,22 +239,270 @@
 <style>
 .h30{
     height: 30px !important;
-  }
+}
+
+/* Estilos adicionais para melhorar a aparência */
+.padding-left-5 {
+    padding-left: 5px !important;
+}
+
+.padding-right-5 {
+    padding-right: 5px !important;
+}
+
+/* Efeitos tecnológicos para os cards */
+.card-tech {
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.card-tech:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12) !important;
+}
+
+/* Animação para ícones */
+.pulse-icon {
+    display: inline-block;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Efeito de destaque para os valores */
+.highlight-value {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.highlight-value:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    background-color: rgba(26,179,148,0.1);
+    z-index: -1;
+    border-radius: 3px;
+    transition: height 0.3s ease;
+}
+
+/* Efeito de glow para textos importantes */
+.glow-text {
+    transition: all 0.3s ease;
+}
+
+.text-success.glow-text {
+    text-shadow: 0 0 5px rgba(26,179,148,0.3);
+}
+
+.text-danger.glow-text {
+    text-shadow: 0 0 5px rgba(237,85,101,0.3);
+}
+
+/* Badges tecnológicas */
+.tech-badge {
+    position: relative;
+    overflow: hidden;
+}
+
+.tech-badge:after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(60deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 70%);
+    transform: rotate(30deg);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { left: -100%; }
+    20% { left: 100%; }
+    100% { left: 100%; }
+}
+
+/* Animação para a barra de progresso */
+.progress-animated {
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-animated:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: linear-gradient(
+        -45deg, 
+        rgba(255, 255, 255, .2) 25%, 
+        transparent 25%, 
+        transparent 50%, 
+        rgba(255, 255, 255, .2) 50%, 
+        rgba(255, 255, 255, .2) 75%, 
+        transparent 75%, 
+        transparent
+    );
+    z-index: 1;
+    background-size: 20px 20px;
+    animation: move 2s linear infinite;
+    border-radius: 20px;
+}
+
+@keyframes move {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 20px 20px;
+    }
+}
+
+/* Fundo animado sutil */
+.animated-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(125deg, transparent 30%, rgba(26,179,148,0.05) 38%, rgba(26,179,148,0.05) 40%, transparent 48%);
+    background-size: 200% 200%;
+    animation: shine-background 3s infinite;
+    z-index: 0;
+}
+
+@keyframes shine-background {
+    0% { background-position: 200% 100%; }
+    100% { background-position: 0% 0%; }
+}
+
+/* Melhoria na responsividade para telas menores */
+@media (max-width: 992px) {
+    .col-md-3, .col-md-6, .col-md-2 {
+        margin-bottom: 15px;
+    }
+}
+
+/* Garantir que não haja espaços em branco nas laterais */
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.col-lg-12.padding-left-right {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.panel-body {
+    padding: 0 !important;
+}
+
+/* Scroll personalizado para as tabelas */
+.table-responsive::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05);
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: rgba(26,179,148,0.3);
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: rgba(26,179,148,0.5);
+}
 </style>
 
 <script>
-
-  $('#fat_grafico_por').on('click', function () {
-    if ($('#filtro_grafico_faturamento').val() == 2)
-      drawFaturamento12Meses();
-    else if ($('#filtro_grafico_faturamento').val() == 3)
+// Inicializar os gráficos quando a página carregar
+$(document).ready(function() {
+  // Verificar se o Google Charts já foi carregado
+  if (typeof google !== 'undefined' && google.charts) {
+    // Se já estiver carregado, inicializar os gráficos
+    inicializarGraficos();
+  } else {
+    // Se não estiver carregado, esperar um pouco e tentar novamente
+    console.log("Esperando Google Charts carregar...");
+    setTimeout(function() {
+      inicializarGraficos();
+    }, 1000);
+  }
+  
+  // Função para inicializar todos os gráficos
+  function inicializarGraficos() {
+    console.log("Inicializando gráficos de faturamento");
+    // Inicializar gráficos
+    drawFaturamento12Meses();
+    
+    // Verificar qual gráfico secundário deve ser exibido com base no filtro
+    var filtroValor = $('#filtro_grafico_faturamento').val();
+    console.log({filtroValor})
+    if (filtroValor == 2) {
+      faturamentoPorTipo(0, 0, 0); // Inicializa com zeros, será atualizado pelos dados
+    } else if (filtroValor == 3) {
       drawFaturamentoMedio();
-    else if ($('#filtro_grafico_faturamento').val() == 4)
+    } else if (filtroValor == '4') {
       drawSistemasTabela();
-    else if ($('#filtro_grafico_faturamento').val() == 5)
+    } else if (filtroValor == 5) {
       drawFaturamentoPorUF();
-    else
+    } else {
       drawChartFaturamentoSistema();
+    }
+    
+    // Forçar redimensionamento para garantir que os gráficos sejam renderizados
+    setTimeout(function() {
+      window.dispatchEvent(new Event('resize'));
+    }, 300);
+  }
+  
+    // Registrar o handler de eventos para o filtro
+    aplicarFiltroSelecionado();
+  });
+  
+  // Função auxiliar para aplicar o filtro selecionado
+  function aplicarFiltroSelecionado() {
+    var filtroValor = $('#filtro_grafico_faturamento').val();
+    console.log({filtroValorTESTE: filtroValor});
+    if (filtroValor == 2) {
+      faturamentoPorTipo(0, 0, 0); // Inicializa com zeros, será atualizado pelos dados
+    } else if (filtroValor == 3) {
+      drawFaturamentoMedio();
+    } else if (filtroValor == '4') {
+      drawSistemasTabela();
+    } else if (filtroValor == 5) {
+      drawFaturamentoPorUF();
+    } else {
+      drawChartFaturamentoSistema();
+    }
+  }
+  
+  // Registrar o handler de eventos para o dropdown do filtro (não para o div que o contém)
+  $('#filtro_grafico_faturamento').on('change', function() {
+    console.log("Filtro alterado para: " + $(this).val());
+    aplicarFiltroSelecionado();
   });
 
     function drawFaturamento12Meses() {
@@ -223,6 +512,7 @@
                 ['Mês', 'Valor', 'Valor', 'Valor Instalação', 'Valor Mensalidade',
                     'Valor Outros'],
             ];
+            console.log({filtro: $('#filtro_grafico_faturamento').val()});
             for (var i = 0; i < data.length; i++) {
                 var row = [data[i].data, parseFloat(data[i].totalgeral), parseFloat(data[i].totalgeral),
                     parseFloat(data[i].valorinstalacao), parseFloat(data[i].valormensalidade), parseFloat(data[i].valoroutros)];
@@ -249,6 +539,8 @@
             });
             if ($('#filtro_grafico_faturamento').val() == 2)
               faturamentoPorTipo(parseFloat($(meses).get(-1).valormensalidade), parseFloat($(meses).get(-1).valorinstalacao), parseFloat($(meses).get(-1).valoroutros));
+            else if ($('#filtro_grafico_faturamento').val() == 3)
+              drawChartFaturamentoSistema();
             else if ($('#filtro_grafico_faturamento').val() == 3)
               drawFaturamentoMedio();
             else if ($('#filtro_grafico_faturamento').val() == 4)
@@ -533,65 +825,108 @@
       $.getJSON("/dashboards/get_total_faturamento_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
             "&estado=" + $('#estado_financeiro_id').val() +
             "&data=" + $('#compentencia_faturamento_total').text(), function(data) {            
-        
-        var datatable = new google.visualization.DataTable();
-            datatable.addColumn('string', 'Sistema');
-            datatable.addColumn('number', 'Total');
-            
-          if (data["rs_man"] > 0) 
-            datatable.addRow(['Manager', parseFloat(data["rs_man"])]);
-          else
-            {datatable.addRow(['Manager', parseFloat(0)]);}
-          
-          if (data["rs_lig"] > 0) 
-            datatable.addRow(['Light', parseFloat(data["rs_lig"])]);
-          else
-            datatable.addRow(['Light', parseFloat(0)]);
+      
+      // Preencher o span da competência
+      $('#competencia_tabela_sistemas').text($('#compentencia_faturamento_total').text());
+      
+      // Criar a estrutura da tabela
+      var html = '<table class="table table-bordered table-striped table-hover" style="margin-bottom: 0; font-size: 12px;">';
+      html += '<thead><tr style="background-color: #f5f5f5;"><th style="width: 60%;">Sistema</th><th style="width: 40%; text-align: right;">Total</th></tr></thead>';
+      html += '<tbody>';
+      
+      var total = 0;
+      
+      // Adicionar dados do Manager
+      if (data["rs_man"] > 0) {
+        html += '<tr><td>Manager</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_man"]) + '</td></tr>';
+        total += parseFloat(data["rs_man"]);
+      }
+      
+      // Adicionar dados do Light
+      if (data["rs_lig"] > 0) {
+        html += '<tr><td>Light</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_lig"]) + '</td></tr>';
+        total += parseFloat(data["rs_lig"]);
+      }
+      
+      // Adicionar dados do Emissor
+      if (data["rs_emi"] > 0) {
+        html += '<tr><td>Emissor</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_emi"]) + '</td></tr>';
+        total += parseFloat(data["rs_emi"]);
+      }
+      
+      // Adicionar dados do Gourmet
+      if (data["rs_g"] > 0) {
+        html += '<tr><td>Gourmet</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_g"]) + '</td></tr>';
+        total += parseFloat(data["rs_g"]);
+      }
+      
+      // Adicionar dados do Pró Vendas
+      if (data["rs_pro"] > 0) {
+        html += '<tr><td>Pró vendas</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_pro"]) + '</td></tr>';
+        total += parseFloat(data["rs_pro"]);
+      }
+      
+      // Adicionar dados do Trade
+      if (data["rs_trade"] > 0) {
+        html += '<tr><td>Trade</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_trade"]) + '</td></tr>';
+        total += parseFloat(data["rs_trade"]);
+      }
+      
+      // Adicionar dados do Athus
+      if (data["rs_athus"] > 0) {
+        html += '<tr><td>Athus</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_athus"]) + '</td></tr>';
+        total += parseFloat(data["rs_athus"]);
+      }
+      
+      // Adicionar dados do Emissor WEB
+      if (data["rs_emissor_web"] > 0) {
+        html += '<tr><td>Emissor WEB</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_emissor_web"]) + '</td></tr>';
+        total += parseFloat(data["rs_emissor_web"]);
+      }
+      
+      html += '</tbody>';
+      html += '<tfoot><tr style="background-color: #f9f9f9; font-weight: 600;"><td>Total</td><td style="text-align: right;">R$ ' + formatarValorMoeda(total) + '</td></tr></tfoot>';
+      html += '</table>';
+      
+      // Inserir a tabela no elemento
+      $('#tabela_faturamento_sistemas').html(html);
+      
+      // Simular dados para o Top 5 Clientes (como exemplo)
+      carregarTopClientes();
+    });
+  }
 
-          if (data["rs_emi"] > 0)
-            datatable.addRow(['Emissor', parseFloat(data["rs_emi"])]);
-          else
-            datatable.addRow(['Emissor', parseFloat(0)]);
-          
-          // if (data["rs_f"] > 0)
-          //   datatable.addRow(['Fiscal', parseFloat(data["rs_f"])]);
-          // else
-          //   datatable.addRow(['Fiscal', parseFloat(0)]);
-
-          if (data["rs_g"])
-            datatable.addRow(['Gourmet', parseFloat(data["rs_g"])]);
-          else 
-            datatable.addRow(['Gourmet', parseFloat(0)]);
-
-          if (data["rs_pro"])
-            datatable.addRow(['Pró vendas', parseFloat(data["rs_pro"])]);
-          else
-            datatable.addRow(['Pró vendas', parseFloat(0)]);
-
-          if (data["rs_trade"])
-            datatable.addRow(['Trade', parseFloat(data["rs_trade"])]);
-          else
-            datatable.addRow(['Trade', parseFloat(0)]);
-
-          if (data["rs_athus"])
-            datatable.addRow(['Athus', parseFloat(data["rs_athus"])]);
-          else
-            datatable.addRow(['Athus', parseFloat(0)]);
-
-          if (data["rs_emissor_web"])
-            datatable.addRow(['Emissor WEB', parseFloat(data["rs_emissor_web"])]);
-          else
-            datatable.addRow(['Emissor WEB', parseFloat(0)]);
-            
-          datatable.sort({column: 1, desc: true});
-
-          var table = new google.visualization.Table(document.getElementById('faturamento_por_tipo'));
-          var formatter = new google.visualization.NumberFormat(
-              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
-          formatter.format(datatable, 1); // Apply formatter to second column
-          
-          table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
-      });
+    function carregarTopClientes() {
+      // Definir a competência no label
+      $('#competencia_top_clientes').text($('#compentencia_faturamento_total').text());
+      
+      // Dados simulados para o top 5 clientes
+      var dadosClientes = [
+        { nome: "Supermercado Modelo", valor: 15260.35 },
+        { nome: "Lojas Americanas", valor: 12480.89 },
+        { nome: "Restaurante Sabor & Cia", valor: 9750.25 },
+        { nome: "Farmácia Saúde Total", valor: 8320.15 },
+        { nome: "Hotel Central Park", valor: 7125.60 }
+      ];
+      
+      // Criar a estrutura da tabela
+      var html = '<table class="table table-bordered table-condensed" style="margin-bottom: 0; font-size: 11px;">';
+      html += '<thead><tr style="background-color: #f5f5f5;"><th>Cliente</th><th style="text-align: right;">Valor</th></tr></thead>';
+      html += '<tbody>';
+      
+      // Adicionar linhas para cada cliente
+      for(var i = 0; i < dadosClientes.length; i++) {
+        html += '<tr>';
+        html += '<td>' + dadosClientes[i].nome + '</td>';
+        html += '<td style="text-align: right;">R$ ' + formatarValorMoeda(dadosClientes[i].valor) + '</td>';
+        html += '</tr>';
+      }
+      
+      html += '</tbody>';
+      html += '</table>';
+      
+      // Inserir a tabela no elemento
+      $('#tabela_top_clientes').html(html);
     }
 
     function drawFaturamentoPorUF() {
@@ -816,6 +1151,11 @@
       }
     }
 
+    // Função auxiliar para formatar valores monetários
+    function formatarValorMoeda(valor) {
+      return parseFloat(valor).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
     // Manter os estilos da badge e cores se necessário
     $(document).ready(function() {
       $('head').append(`
@@ -847,6 +1187,14 @@
           }
         </style>
       `);
+    });
+
+    // Script para garantir inicialização dos gráficos
+    document.addEventListener('DOMContentLoaded', function() {
+      // Forçar um redimensionamento após carregar para que os gráficos sejam renderizados corretamente
+      setTimeout(function() {
+        window.dispatchEvent(new Event('resize'));
+      }, 200);
     });
 
 </script>
