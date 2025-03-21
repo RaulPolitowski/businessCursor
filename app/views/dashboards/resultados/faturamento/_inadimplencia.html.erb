@@ -1,30 +1,30 @@
 <div class="col-lg-12 no-padding">
-  <div class="panel panel-default" style="margin-bottom: 10px !important;">
-    <div class="panel-heading">
-      Inadimplência
+  <div class="panel panel-default" style="margin-bottom: 10px !important; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+    <div class="panel-heading" style="border-top-left-radius: 6px; border-top-right-radius: 6px; background: linear-gradient(to right, #f3f3f4, #ffffff); border-bottom: 1px solid #e7eaec; padding: 12px 15px;">
+      <span style="font-weight: 600; color: #333333;"><i class="fa fa-exclamation-circle" style="color: #ed5565; margin-right: 8px;"></i>Inadimplência</span>
     </div>
     <div class="panel-body no-padding">
       <div class="col-lg-12 padding-left-right">
         <div class="col-md-3 padding-5">
           <div class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Inadimplência</h5>
-                  <span class="label label-info pull-right" id="competencia_inadimplencia"></span>
+            <div class="ibox-content product-box card-tech" style="margin-bottom: 15px; flex: 1 0 auto; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #ed5565; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(252,245,245,1) 100%);">
+              <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                  <i class="fa fa-exclamation-circle pulse-icon" style="color: #ed5565; margin-right: 8px;"></i>Inadimplência
+                </h5>
+                <span class="label label-info pull-right tech-badge" id="competencia_inadimplencia" style="background-color: #ed5565; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(237,85,101,0.3);"></span>
+              </div>
+              <div class="ibox-content padding-5" style="height: 60px !important; border-top: 1px solid rgba(0,0,0,0.05);">
+                <div class="col-lg-8 no-padding">
+                  <h2 class="pull-left highlight-value" id="inadimplencia_total" style="margin-bottom: 3px; color: #ed5565; font-weight: 700; font-size: 24px;"></h2>
                 </div>
-                <div class="ibox-content padding-5" style="height: 45px !important;">
-                  <div class="col-lg-8 no-padding">
-                    <h2 class="pull-left" id="inadimplencia_total" style="margin-bottom: 3px"></h2>
+                <div class="col-lg-4 no-padding">
+                  <div class="col-lg-12 no-padding">
+                    <div class="stat-percent font-bold text-danger glow-text" id="percentual_inadimplencia" style="font-size: 13px;"></div>
                   </div>
-                  <div class="col-lg-4 no-padding">
-                    <div class="col-lg-12 no-padding">
-                      <div class="stat-percent font-bold text-danger" id="percentual_inadimplencia"></div>
-                    </div>
-                    <div class="col-lg-12 no-padding">
-                      <div class="pull-right">
-                        <small id="inadimplencia_total_anterior"></small>
-                      </div>
+                  <div class="col-lg-12 no-padding">
+                    <div class="pull-right">
+                      <small id="inadimplencia_total_anterior" style="color: #888888;"></small>
                     </div>
                   </div>
                 </div>
@@ -32,24 +32,24 @@
             </div>
           </div>
           <div class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Inad. Mensalidade</h5>
-                  <span class="label label-info pull-right" id="competencia_inadimplencia_mensalidade"></span>
+            <div class="ibox-content product-box card-tech" style="margin-bottom: 15px; flex: 1 0 auto; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #1c84c6; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(249,245,252,1) 100%);">
+              <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                  <i class="fa fa-calendar-times-o pulse-icon" style="color: #1c84c6; margin-right: 8px;"></i>Inad. Mensalidade
+                </h5>
+                <span class="label label-info pull-right tech-badge" id="competencia_inadimplencia_mensalidade" style="background-color: #1c84c6; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(28,132,198,0.3);"></span>
+              </div>
+              <div class="ibox-content padding-5" style="height: 60px !important; border-top: 1px solid rgba(0,0,0,0.05);">
+                <div class="col-lg-8 no-padding">
+                  <h2 class="pull-left highlight-value" id="inadimplencia_mensalidade" style="margin-bottom: 3px; color: #1c84c6; font-weight: 700; font-size: 24px;"></h2>
                 </div>
-                <div class="ibox-content padding-5" style="height: 45px !important;">
-                  <div class="col-lg-8 no-padding">
-                    <h2 class="pull-left" id="inadimplencia_mensalidade" style="margin-bottom: 3px"></h2>
+                <div class="col-lg-4 no-padding">
+                  <div class="col-lg-12 no-padding">
+                    <div class="stat-percent font-bold text-danger glow-text" id="percentual_inadimplencia_mensalidade" style="font-size: 13px;"></div>
                   </div>
-                  <div class="col-lg-4 no-padding">
-                    <div class="col-lg-12 no-padding">
-                      <div class="stat-percent font-bold text-danger" id="percentual_inadimplencia_mensalidade"></div>
-                    </div>
-                    <div class="col-lg-12 no-padding">
-                      <div class="pull-right">
-                        <small id="inadimplencia_mensalidade_anterior"></small>
-                      </div>
+                  <div class="col-lg-12 no-padding">
+                    <div class="pull-right">
+                      <small id="inadimplencia_mensalidade_anterior" style="color: #888888;"></small>
                     </div>
                   </div>
                 </div>
@@ -57,24 +57,24 @@
             </div>
           </div>
           <div class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Inad. Instalação</h5>
-                  <span class="label label-info pull-right" id="competencia_inadimplencia_instalacao"></span>
+            <div class="ibox-content product-box card-tech" style="margin-bottom: 15px; flex: 1 0 auto; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #f8ac59; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(252,248,245,1) 100%);">
+              <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                  <i class="fa fa-plug pulse-icon" style="color: #f8ac59; margin-right: 8px;"></i>Inad. Instalação
+                </h5>
+                <span class="label label-info pull-right tech-badge" id="competencia_inadimplencia_instalacao" style="background-color: #f8ac59; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(248,172,89,0.3);"></span>
+              </div>
+              <div class="ibox-content padding-5" style="height: 60px !important; border-top: 1px solid rgba(0,0,0,0.05);">
+                <div class="col-lg-8 no-padding">
+                  <h2 class="pull-left highlight-value" id="inadimplencia_instalacao" style="margin-bottom: 3px; color: #f8ac59; font-weight: 700; font-size: 24px;"></h2>
                 </div>
-                <div class="ibox-content padding-5" style="height: 45px !important;">
-                  <div class="col-lg-8 no-padding">
-                    <h2 class="pull-left" id="inadimplencia_instalacao" style="margin-bottom: 3px"></h2>
+                <div class="col-lg-4 no-padding">
+                  <div class="col-lg-12 no-padding">
+                    <div class="stat-percent font-bold text-danger glow-text" id="percentual_inadimplencia_instalacao" style="font-size: 13px;"></div>
                   </div>
-                  <div class="col-lg-4 no-padding">
-                    <div class="col-lg-12 no-padding">
-                      <div class="stat-percent font-bold text-danger" id="percentual_inadimplencia_instalacao"></div>
-                    </div>
-                    <div class="col-lg-12 no-padding">
-                      <div class="pull-right">
-                        <small id="inadimplencia_instalacao_anterior"></small>
-                      </div>
+                  <div class="col-lg-12 no-padding">
+                    <div class="pull-right">
+                      <small id="inadimplencia_instalacao_anterior" style="color: #888888;"></small>
                     </div>
                   </div>
                 </div>
@@ -82,24 +82,24 @@
             </div>
           </div>
           <div class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Inad. Outros</h5>
-                  <span class="label label-info pull-right" id="competencia_inadimplencia_outros"></span>
+            <div class="ibox-content product-box card-tech" style="margin-bottom: 0; flex: 1 0 auto; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #9575cd; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,245,252,1) 100%);">
+              <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                  <i class="fa fa-cubes pulse-icon" style="color: #9575cd; margin-right: 8px;"></i>Inad. Outros
+                </h5>
+                <span class="label label-info pull-right tech-badge" id="competencia_inadimplencia_outros" style="background-color: #9575cd; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(149,117,205,0.3);"></span>
+              </div>
+              <div class="ibox-content padding-5" style="height: 60px !important; border-top: 1px solid rgba(0,0,0,0.05);">
+                <div class="col-lg-8 no-padding">
+                  <h2 class="pull-left highlight-value" id="inadimplencia_outros" style="margin-bottom: 3px; color: #9575cd; font-weight: 700; font-size: 24px;"></h2>
                 </div>
-                <div class="ibox-content padding-5" style="height: 45px !important;">
-                  <div class="col-lg-8 no-padding">
-                    <h2 class="pull-left" id="inadimplencia_outros" style="margin-bottom: 3px"></h2>
+                <div class="col-lg-4 no-padding">
+                  <div class="col-lg-12 no-padding">
+                    <div class="stat-percent font-bold text-danger glow-text" id="percentual_outros_instalacao" style="font-size: 13px;"></div>
                   </div>
-                  <div class="col-lg-4 no-padding">
-                    <div class="col-lg-12 no-padding">
-                      <div class="stat-percent font-bold text-danger" id="percentual_outros_instalacao"></div>
-                    </div>
-                    <div class="col-lg-12 no-padding">
-                      <div class="pull-right">
-                        <small id="inadimplencia_outros_anterior"></small>
-                      </div>
+                  <div class="col-lg-12 no-padding">
+                    <div class="pull-right">
+                      <small id="inadimplencia_outros_anterior" style="color: #888888;"></small>
                     </div>
                   </div>
                 </div>
@@ -108,15 +108,15 @@
           </div>
         </div>
         <div class="col-md-9 padding-5">
-          <div class="ibox">
-            <div class="ibox-content product-box">
-              <div class="ibox-title ibox-title-without-border-style">
-                <span class="label label-info pull-right">Anual</span>
-                <h5>Inadimplência</h5>
-              </div>
-              <div class="ibox-content padding-5">
-                <div id="inadimplencia" style="height: 271px !important;"></div>
-              </div>
+          <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%);">
+            <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+              <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                <i class="fa fa-line-chart pulse-icon" style="color: #ed5565; margin-right: 8px;"></i>Inadimplência
+              </h5>
+              <span class="label label-info pull-right tech-badge" style="background-color: #ed5565; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(237,85,101,0.3);">Anual</span>
+            </div>
+            <div class="ibox-content padding-5" style="border-top: 1px solid rgba(0,0,0,0.05);">
+              <div id="inadimplencia" style="height: 363px !important;"></div>
             </div>
           </div>
         </div>
@@ -124,8 +124,61 @@
     </div>
   </div>
 </div>
+
+<style>
+.pulse-icon {
+    animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.highlight-value {
+    position: relative;
+    display: inline-block;
+}
+
+.glow-text {
+    position: relative;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 2px rgba(100, 100, 100, 0.1);
+    }
+    to {
+        text-shadow: 0 0 4px rgba(50, 50, 50, 0.2);
+    }
+}
+
+.tech-badge {
+    font-size: 11px; 
+    padding: 2px 8px; 
+    border-radius: 20px; 
+    box-shadow: 0 2px 5px rgba(26,179,148,0.3);
+}
+</style>
 <script>
     function drawInadimplencia12Meses() {
+        // Verificar se o elemento do gráfico existe no DOM
+        if (!document.getElementById('inadimplencia')) {
+            console.warn('Elemento inadimplencia não encontrado no DOM');
+            return;
+        }
+        
         $.getJSON("/dashboards/get_inadimplencia_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
             "&estado=" + $('#estado_financeiro_id').val(), function(data) {
             var dataArray = [

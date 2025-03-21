@@ -126,6 +126,14 @@
             document.getElementById("desc_compt_eft_dest").innerHTML = $('#compentencia_cliente_desativacoes').text();
             google.charts.setOnLoadCallback(drawEfetivacoesDesativacoesReal);
             google.charts.setOnLoadCallback(drawTabelaEfetivacoesDesistenciasReal("ATIVAS")); 
+            
+            // Inicialização dos gráficos da aba Faturamento
+            google.charts.setOnLoadCallback(drawFaturamento12Meses);
+            google.charts.setOnLoadCallback(drawPrimeiraParcela12Meses);
+            google.charts.setOnLoadCallback(drawInadimplencia12Meses);
+            google.charts.setOnLoadCallback(function() {
+                drawPrimeiraParcelaPorUF('Mensalidade');
+            });
         }, 200);
 
         $('#tabClientes').on('click', function () {
@@ -146,11 +154,13 @@
                 exibirWarning('Selecione pelo menos uma empresa');
                 return false;
             }
-            drawFaturamento12Meses();
-            drawPrimeiraParcela12Meses();
-            //drawTableFaturamentoCidades();
-            drawInadimplencia12Meses();
-            drawPrimeiraParcelaPorUF('Mensalidade');
+            google.charts.setOnLoadCallback(drawFaturamento12Meses);
+            google.charts.setOnLoadCallback(drawPrimeiraParcela12Meses);
+            //google.charts.setOnLoadCallback(drawTableFaturamentoCidades);
+            google.charts.setOnLoadCallback(drawInadimplencia12Meses);
+            google.charts.setOnLoadCallback(function() {
+                drawPrimeiraParcelaPorUF('Mensalidade');
+            });
         });
 
         $('#tabComercial').on('click', function () {
