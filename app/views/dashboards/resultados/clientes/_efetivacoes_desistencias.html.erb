@@ -1900,7 +1900,7 @@
     });
 
     // Função para calcular projeção linear baseada em dados históricos
-    function calcularProjecao(dadosHistoricos) {
+    function calcularProjecao(dadosHistoricos, valorParcialAtual) {
       // Precisamos de pelo menos 2 pontos para fazer uma projeção linear
       if (!dadosHistoricos || dadosHistoricos.length < 2) {
         return { projecao: null, r2: 0, explicacao: "Dados insuficientes para projeção" };
@@ -1933,7 +1933,7 @@
       var b = denominadorB !== 0 ? numeradorB / denominadorB : 0;
       var a = mediaY - b * mediaX;
       
-      // Calcular a projeção para o próximo ponto (n)
+      // Calcular a projeção para o mês atual (último ponto + 1)
       var projecao = a + b * n;
       
       // Calcular R² (coeficiente de determinação) para avaliar a qualidade da regressão
@@ -1954,23 +1954,27 @@
       if (b > 0.5) tendencia = "crescente";
       else if (b < -0.5) tendencia = "decrescente";
       
-      // Calcular a variação em relação ao último valor
-      var ultimoValor = dadosHistoricos[dadosHistoricos.length - 1];
-      var variacaoPrevista = projecao - ultimoValor;
+      // Calcular a diferença entre o valor atual parcial e o projetado
+      var diferencaAtualProjetado = valorParcialAtual - projecao;
+      
+      // Avaliar o desempenho do mês atual em relação à projeção
+      var statusDesempenho = "conforme esperado";
+      if (diferencaAtualProjetado >= 2) statusDesempenho = "acima do esperado";
+      else if (diferencaAtualProjetado <= -2) statusDesempenho = "abaixo do esperado";
       
       var confiabilidade = "baixa";
       if (r2 > 0.7) confiabilidade = "alta";
       else if (r2 > 0.4) confiabilidade = "média";
       
       // Preparar explicação para o tooltip
-      var explicacao = "Com base nos " + n + " meses analisados, a tendência é " + tendencia + 
-                      " com uma variação prevista de " + variacaoPrevista.toFixed(1) + 
-                      "% para o próximo mês. A confiabilidade desta projeção é " + confiabilidade + ".";
+      var explicacao = "Com base nos " + n + " meses anteriores, o valor projetado para o mês atual é " + 
+                       projecao.toFixed(1) + "%. O valor parcial atual está " + statusDesempenho + ".";
       
       return {
         projecao: projecao,
-        variacaoPrevista: variacaoPrevista,
+        diferencaAtualProjetado: diferencaAtualProjetado,
         tendencia: tendencia,
+        statusDesempenho: statusDesempenho,
         confiabilidade: confiabilidade,
         r2: r2,
         coeficienteAngular: b,
@@ -1978,21 +1982,23 @@
       };
     }
 
-    // Função para atualizar a tendência do comparativo (agora com projeção)
+    // Função para atualizar a tendência do comparativo (agora com projeção para o mês atual)
     function atualizarTendenciaComparativo(taxasRetencao) {
-      if (taxasRetencao.length < 2) return;
+      if (taxasRetencao.length < 3) return; // Precisamos de pelo menos 3 meses para projetar o 4º (atual)
       
-      // Obter o valor do mês atual
-      var mesAtual = taxasRetencao[taxasRetencao.length - 1];
+      // Obter o valor do mês atual (valor parcial até o momento)
+      var valorAtual = taxasRetencao[taxasRetencao.length - 1];
       var texto = "";
       var icone = "";
       var classe = "";
       
-      // Calcular projeção baseada nos dados disponíveis
-      // Se tivermos muitos meses, usar os últimos 4 para a projeção (mês atual + 3 anteriores)
-      var dadosParaProjecao = taxasRetencao.length > 4 ? taxasRetencao.slice(-4) : taxasRetencao;
+      // Calcular projeção baseada apenas nos meses anteriores (excluindo o atual)
+      // Se tivermos muitos meses, usar apenas os 3 anteriores para a projeção
+      var dadosParaProjecao = taxasRetencao.length > 4 
+                              ? taxasRetencao.slice(-4, -1) // Últimos 3 meses completos, excluindo o atual
+                              : taxasRetencao.slice(0, -1); // Todos os meses anteriores, excluindo o atual
       
-      var resultadoProjecao = calcularProjecao(dadosParaProjecao);
+      var resultadoProjecao = calcularProjecao(dadosParaProjecao, valorAtual);
       var projecao = resultadoProjecao.projecao;
       
       // Se não conseguimos calcular a projeção, mostrar mensagem
@@ -2001,31 +2007,31 @@
         icone = "fa-question-circle";
         classe = "#f8ac59";
       } else {
-        // Determinar texto e estilo com base na projeção
-        var variacaoPrevista = resultadoProjecao.variacaoPrevista;
+        // Determinar texto e estilo com base na comparação entre valor atual e projeção
+        var diferencaAtualProjetado = resultadoProjecao.diferencaAtualProjetado;
         
-        if (variacaoPrevista >= 2) {
-          texto = "Projeção: alta de " + variacaoPrevista.toFixed(1) + "% no próximo mês";
+        if (diferencaAtualProjetado >= 2) {
+          texto = "Mês atual " + Math.abs(diferencaAtualProjetado).toFixed(1) + "% acima da projeção";
           icone = "fa-line-chart";
           classe = "#5cb85c";
-        } else if (variacaoPrevista <= -2) {
-          texto = "Projeção: queda de " + Math.abs(variacaoPrevista).toFixed(1) + "% no próximo mês";
+        } else if (diferencaAtualProjetado <= -2) {
+          texto = "Mês atual " + Math.abs(diferencaAtualProjetado).toFixed(1) + "% abaixo da projeção";
           icone = "fa-line-chart";
           classe = "#ed5565";
         } else {
-          texto = "Projeção: estável (" + variacaoPrevista.toFixed(1) + "%) no próximo mês";
+          texto = "Mês atual conforme projeção (" + diferencaAtualProjetado.toFixed(1) + "%)";
           icone = "fa-line-chart";
           classe = "#f8ac59";
         }
       }
       
       // Criar a explicação detalhada para o tooltip
-      var explicacaoHTML = "<div class='tooltip-titulo'>Projeção para o próximo mês</div>";
+      var explicacaoHTML = "<div class='tooltip-titulo'>Projeção para o mês atual</div>";
       
       // Dados atuais
       explicacaoHTML += "<div class='tooltip-linha'>" +
-                        "<span>Taxa de retenção atual:</span>" +
-                        "<strong>" + mesAtual.toFixed(1) + "%</strong>" +
+                        "<span>Taxa de retenção atual (parcial):</span>" +
+                        "<strong>" + valorAtual.toFixed(1) + "%</strong>" +
                         "</div>";
       
       // Se temos projeção
@@ -2035,7 +2041,7 @@
         
         for (var i = 0; i < dadosParaProjecao.length; i++) {
           var mesIndex = dadosParaProjecao.length - 1 - i;
-          var rotulo = i === 0 ? "Mês atual" : (i === 1 ? "Mês anterior" : i + " meses atrás");
+          var rotulo = (i === 0) ? "Mês anterior" : (i + 1) + " meses atrás";
           
           explicacaoHTML += "<div class='tooltip-linha'>" +
                             "<span>" + rotulo + ":</span>" +
@@ -2048,14 +2054,18 @@
         
         // Mostrar projeção
         explicacaoHTML += "<div class='tooltip-linha'>" +
-                        "<span>Valor projetado para o próximo mês:</span>" +
+                        "<span>Valor projetado para o mês atual:</span>" +
                         "<strong class='projecao-valor' style='color:" + classe + "'>" + projecao.toFixed(1) + "%</strong>" +
                         "</div>";
         
-        // Variação prevista
+        // Variação entre valor atual e projetado
+        var corDiferenca = "#f8ac59"; // neutro
+        if (resultadoProjecao.diferencaAtualProjetado >= 2) corDiferenca = "#5cb85c"; // positivo
+        else if (resultadoProjecao.diferencaAtualProjetado <= -2) corDiferenca = "#ed5565"; // negativo
+        
         explicacaoHTML += "<div class='tooltip-linha'>" +
-                        "<span>Variação prevista:</span>" +
-                        "<strong style='color:" + classe + "'>" + (resultadoProjecao.variacaoPrevista >= 0 ? "+" : "") + resultadoProjecao.variacaoPrevista.toFixed(1) + "%</strong>" +
+                        "<span>Comparação com o projetado:</span>" +
+                        "<strong style='color:" + corDiferenca + "'>" + (resultadoProjecao.diferencaAtualProjetado >= 0 ? "+" : "") + resultadoProjecao.diferencaAtualProjetado.toFixed(1) + "%</strong>" +
                         "</div>";
         
         // Detalhes da confiabilidade
@@ -2070,24 +2080,25 @@
                         
         // Descrição
         explicacaoHTML += "<div class='tooltip-descricao'>" +
-                        "Esta projeção utiliza regressão linear nos dados dos " + dadosParaProjecao.length + " meses mais recentes. " +
-                        "A tendência " + resultadoProjecao.tendencia + " foi identificada com base na inclinação " + 
-                        resultadoProjecao.coeficienteAngular.toFixed(2) + " da curva histórica." +
+                        "Esta projeção utiliza regressão linear com base nos dados dos " + dadosParaProjecao.length + " meses anteriores. " +
+                        "A tendência histórica é " + resultadoProjecao.tendencia + " com inclinação de " + 
+                        resultadoProjecao.coeficienteAngular.toFixed(2) + ". " +
+                        "O valor atual está " + resultadoProjecao.statusDesempenho + " em relação à projeção para este mês." +
                         "</div>";
       } else {
         explicacaoHTML += "<div class='tooltip-descricao'>" +
                           "Não há dados suficientes para fazer uma projeção confiável. " +
-                          "São necessários pelo menos 2 meses de dados para calcular uma tendência." +
+                          "São necessários pelo menos 2 meses anteriores completos para projetar o mês atual." +
                           "</div>";
       }
       
       // Container com estilo para indicar que há informação adicional disponível
       var htmlTendencia = '<div class="tendencia-container" style="display: inline-block; padding: 5px 10px; border-radius: 4px; border: 1px dashed rgba(0,0,0,0.1); background-color: rgba(255,255,255,0.3); transition: all 0.2s ease;">' +
-                          '<span style="font-size: 12px; color: ' + classe + '; font-weight: 500;">' +
-                          '<i class="fa ' + icone + '" style="margin-right: 5px; font-size: 10px;"></i>' + texto + 
-                          '</span>' +
-                          '<i class="fa fa-info-circle projecao-info-icon" style="margin-left: 5px; font-size: 12px; opacity: 0.7; cursor: pointer;" data-html="true" data-content="' + explicacaoHTML + '"></i>' +
-                          '</div>';
+                         '<span style="font-size: 12px; color: ' + classe + '; font-weight: 500;">' +
+                         '<i class="fa ' + icone + '" style="margin-right: 5px; font-size: 10px;"></i>' + texto + 
+                         '</span>' +
+                         '<i class="fa fa-info-circle projecao-info-icon" style="margin-left: 5px; font-size: 12px; opacity: 0.7; cursor: pointer;" data-html="true" data-content="' + explicacaoHTML + '"></i>' +
+                         '</div>';
                           
       // Atualizar o elemento de tendência
       $('.monthly-chart').next().find('span, div.tendencia-container').remove();
