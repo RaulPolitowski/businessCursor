@@ -128,6 +128,54 @@
               </div>
             </div>
           </div>
+          
+          <!-- Visualização discreta do faturamento total do ano -->
+          <div class="ibox" style="margin-top: 10px;">
+            <div class="ibox-content product-box" style="border-radius: 6px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); overflow: hidden; position: relative;">
+              <!-- Fundo com gradiente e efeito -->
+              <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(26,179,148,0.03) 0%, rgba(26,179,148,0.08) 100%); z-index: 0;"></div>
+              
+              <div class="row" style="position: relative; z-index: 1;">
+                <div class="col-xs-8">
+                  <h3 class="no-margins" style="font-size: 16px; color: #676a6c; font-weight: 600;">
+                    <i class="fa fa-line-chart" style="margin-right: 5px; color: #1ab394;"></i> 
+                    FATURAMENTO TOTAL <span id="ano-atual-faturamento" style="font-weight: 700;"></span>
+                  </h3>
+                  
+                  <!-- Div separadora para criar espaço visual -->
+                  <div style="height: 30px;"></div>
+                  
+                  <h2 id="total-ano-faturamento" class="no-margins" style="font-size: 24px; color: #1ab394; font-weight: 700; letter-spacing: -0.5px;"></h2>
+                  
+                  <div class="row" style="margin-top: 8px;">
+                    <div class="col-xs-12">
+                      <div style="display: flex; align-items: center;">
+                        <div class="progress" style="height: 8px; margin-bottom: 0; flex-grow: 1; border-radius: 4px; background-color: rgba(220,220,220,0.3); box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
+                          <div id="progresso-faturamento" class="progress-bar" style="width: 0%; border-radius: 4px; background: linear-gradient(90deg, #1ab394 0%, #21d8b5 100%);"></div>
+                        </div>
+                        <span id="porcentagem-meta" style="margin-left: 8px; font-size: 12px; color: #676a6c; min-width: 40px; text-align: right;"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-xs-4 text-right">
+                  <div id="goal-indicator" style="background-color: rgba(100,149,237,0.1); padding: 8px; border-radius: 5px; margin-bottom: 5px;">
+                    <div style="font-size: 12px; color: #676a6c;">META <span id="ano-meta"></span></div>
+                    <div id="valor-meta" style="font-size: 14px; font-weight: 600; color: #4682B4;"></div>
+                    <div style="margin-top: 5px; display: flex; align-items: center; justify-content: flex-end;">
+                      <div style="font-size: 11px; color: #676a6c; margin-right: 5px;">Probabilidade:</div>
+                      <div id="probabilidade-meta" style="font-size: 13px; font-weight: 600;"></div>
+                    </div>
+                  </div>
+                  <div style="font-size: 12px; margin-bottom: 3px;">
+                    <span id="valor-ano-anterior" style="color: #676a6c;"></span>
+                  </div>
+                  <p id="comparativo-ano-faturamento" style="font-size: 12px; margin-bottom: 0;"></p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="col-md-2 padding-5">
           <div class="ibox">
@@ -195,6 +243,9 @@
                     parseFloat($(result).get(-1).valorinstalacao),
                     parseFloat($(meses).get(-1).valoroutros),
                     parseFloat($(result).get(-1).valoroutros));
+                    
+                // Adicionar chamada para atualizar indicadores de crescimento do faturamento
+                calcularEExibirIndicadoresCrescimentoFaturamento(meses);
             });
             if ($('#filtro_grafico_faturamento').val() == 2)
               faturamentoPorTipo(parseFloat($(meses).get(-1).valormensalidade), parseFloat($(meses).get(-1).valorinstalacao), parseFloat($(meses).get(-1).valoroutros));
@@ -568,5 +619,234 @@
           table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
       });
     }
+
+    // Função para calcular e exibir o faturamento total do ano atual
+    function calcularEExibirIndicadoresCrescimentoFaturamento(dados) {
+      if (!dados || dados.length < 2) {
+        console.log("Dados insuficientes para calcular faturamento total");
+        $('#total-ano-faturamento').html("Dados insuficientes");
+        return;
+      }
+      
+      console.log("Calculando faturamento total do ano");
+      
+      // Usando os dados do último mês disponível
+      var mesAtual = dados[dados.length - 1];
+      
+      // Dados para comparação anual
+      var partesMesAtual = mesAtual.data.split('/');
+      if (partesMesAtual.length === 2) {
+        var nomeMesAtual = partesMesAtual[0];
+        var anoAtual = partesMesAtual[1];
+        var anoAnterior = (parseInt(anoAtual) - 1).toString();
+        
+        // Organizar dados por mês e ano para cálculo do total do ano
+        var dadosPorData = {};
+        for (var i = 0; i < dados.length; i++) {
+          var mes = dados[i];
+          var partes = mes.data.split('/');
+          if (partes.length === 2) {
+            var nomeMes = partes[0];
+            var ano = partes[1];
+            
+            if (!dadosPorData[ano]) {
+              dadosPorData[ano] = {};
+              dadosPorData[ano].meses = [];
+            }
+            
+            dadosPorData[ano][nomeMes] = mes;
+            dadosPorData[ano].meses.push(mes);
+          }
+        }
+        
+        // Calcular o faturamento acumulado e comparar com o ano passado
+        calcularFaturamentoAcumulado(dadosPorData, anoAtual, anoAnterior);
+      }
+    }
+
+    // Nova função simplificada para calcular o faturamento acumulado
+    function calcularFaturamentoAcumulado(dadosPorData, anoAtual, anoAnterior) {
+      // Exibir o ano atual no título
+      $('#ano-atual-faturamento').text(anoAtual);
+      $('#ano-meta').text(anoAtual);
+      
+      // Inicializar totais
+      var totalGeralAnoAtual = 0;
+      var totalGeralAnoAnterior = 0;
+      
+      // Obter o mês atual
+      var dataAtual = new Date();
+      var mesAtualNumero = dataAtual.getMonth() + 1; // JavaScript conta meses de 0-11
+      
+      // Mapear nome do mês para número
+      var mesesMap = {
+        'Janeiro': 1, 'Fevereiro': 2, 'Março': 3, 'Abril': 4, 'Maio': 5, 'Junho': 6,
+        'Julho': 7, 'Agosto': 8, 'Setembro': 9, 'Outubro': 10, 'Novembro': 11, 'Dezembro': 12
+      };
+      
+      // Mapear número para nome do mês (para logs)
+      var numeroParaMes = {};
+      for (var mes in mesesMap) {
+        numeroParaMes[mesesMap[mes]] = mes;
+      }
+      
+      // Arrays para armazenar valores mensais (para projeção)
+      var valoresMensaisCompletos = [];
+      var mesesCompletos = 0;
+      
+      // Calcular totais do ano atual
+      if (dadosPorData[anoAtual] && dadosPorData[anoAtual].meses) {
+        var mesesAnoAtual = dadosPorData[anoAtual].meses;
+        for (var i = 0; i < mesesAnoAtual.length; i++) {
+          var mes = mesesAnoAtual[i];
+          var nomeMes = mes.data.split('/')[0];
+          var numeroMes = mesesMap[nomeMes];
+          
+          // Adicionar ao total geral do ano
+          totalGeralAnoAtual += parseFloat(mes.totalgeral) || 0;
+          
+          // Para projeção, considerar apenas meses completos (anteriores ao atual)
+          if (numeroMes < mesAtualNumero) {
+            valoresMensaisCompletos.push(parseFloat(mes.totalgeral) || 0);
+            mesesCompletos++;
+            console.log("Mês completo considerado para projeção:", nomeMes, parseFloat(mes.totalgeral));
+          }
+        }
+      }
+      
+      // Calcular totais do ano anterior (para comparação e meta)
+      if (dadosPorData[anoAnterior] && dadosPorData[anoAnterior].meses) {
+        var mesesAnoAnterior = dadosPorData[anoAnterior].meses;
+        for (var i = 0; i < mesesAnoAnterior.length; i++) {
+          var mes = mesesAnoAnterior[i];
+          totalGeralAnoAnterior += parseFloat(mes.totalgeral) || 0;
+        }
+      }
+      
+      // Calcular a meta de 10% a mais que o ano anterior
+      var metaAnual = totalGeralAnoAnterior * 1.10; // Meta de 10% acima do ano anterior
+      
+      // Calcular projeção anual baseada nos meses completos
+      var projecaoAnual = 0;
+      var probabilidadeMeta = 0;
+      
+      if (mesesCompletos > 0) {
+        // Calcular média mensal baseada apenas em meses completos
+        var mediaMensal = valoresMensaisCompletos.reduce((a, b) => a + b, 0) / mesesCompletos;
+        
+        // Projetar para o ano inteiro
+        var mesesRestantes = 12 - mesesCompletos;
+        var valorMesesCompletos = valoresMensaisCompletos.reduce((a, b) => a + b, 0);
+        projecaoAnual = valorMesesCompletos + (mediaMensal * mesesRestantes);
+        
+        // Calcular probabilidade de atingir a meta
+        probabilidadeMeta = (projecaoAnual / metaAnual) * 100;
+        probabilidadeMeta = Math.min(100, probabilidadeMeta); // Limitar a 100%
+        
+        console.log("Projeção baseada em " + mesesCompletos + " meses completos:");
+        console.log("Média mensal: R$" + mediaMensal.toFixed(2));
+        console.log("Projeção anual: R$" + projecaoAnual.toFixed(2));
+        console.log("Meta anual: R$" + metaAnual.toFixed(2));
+        console.log("Probabilidade de atingir meta: " + probabilidadeMeta.toFixed(1) + "%");
+      } else {
+        // Fallback: se não houver meses completos, usar os dados atuais para uma estimativa básica
+        // Quantos meses já se passaram (pelo menos parcialmente)
+        var mesesPassadosParcialmente = dadosPorData[anoAtual] ? dadosPorData[anoAtual].meses.length : 0;
+        
+        if (mesesPassadosParcialmente > 0 && totalGeralAnoAtual > 0) {
+          // Estimar com base na proporção do ano já passada
+          var proporcaoAnoPassada = mesAtualNumero / 12;
+          var estimativaAnual = totalGeralAnoAtual / proporcaoAnoPassada;
+          
+          // Calcular probabilidade
+          probabilidadeMeta = (estimativaAnual / metaAnual) * 100;
+          probabilidadeMeta = Math.min(100, probabilidadeMeta);
+          
+          console.log("Estimativa baseada na proporção do ano (sem meses completos):");
+          console.log("Proporção do ano passada: " + (proporcaoAnoPassada * 100).toFixed(1) + "%");
+          console.log("Estimativa anual: R$" + estimativaAnual.toFixed(2));
+          console.log("Meta anual: R$" + metaAnual.toFixed(2));
+          console.log("Probabilidade de atingir meta: " + probabilidadeMeta.toFixed(1) + "%");
+        } else {
+          console.log("Sem dados suficientes para calcular projeção");
+        }
+      }
+      
+      // Exibir o valor total com formatação BR
+      $('#total-ano-faturamento').text('R$ ' + totalGeralAnoAtual.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+      
+      // Exibir o valor da meta com formatação BR
+      $('#valor-meta').text('R$ ' + metaAnual.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+      
+      // Exibir o valor do ano anterior
+      $('#valor-ano-anterior').text(anoAnterior + ': R$ ' + totalGeralAnoAnterior.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+      
+      // Exibir probabilidade de atingir a meta
+      if (mesesCompletos > 0 || (probabilidadeMeta > 0 && mesesPassadosParcialmente > 0)) {
+        var classeProbabilidade = probabilidadeMeta >= 90 ? 'text-success' : 
+                                 (probabilidadeMeta >= 70 ? 'text-warning' : 'text-danger');
+                                 
+        var mensagemBase = probabilidadeMeta.toFixed(0) + '%';
+        var mensagemMeses = mesesCompletos > 0 
+          ? ' (com base em ' + mesesCompletos + ' ' + (mesesCompletos === 1 ? 'mês' : 'meses') + ')'
+          : ' (estimativa)';
+        
+        $('#probabilidade-meta').html('<span class="' + classeProbabilidade + '">' + mensagemBase + '</span>' + mensagemMeses);
+      } else {
+        $('#probabilidade-meta').text('Aguardando dados');
+      }
+      
+      // Calcular e exibir a variação percentual em relação ao ano anterior
+      if (totalGeralAnoAnterior > 0) {
+        var variacaoGeral = ((totalGeralAnoAtual - totalGeralAnoAnterior) / totalGeralAnoAnterior) * 100;
+        var sinalGeral = variacaoGeral >= 0 ? '+' : '';
+        
+        // Definir classe de cor baseada no valor
+        var classeComparativo = variacaoGeral >= 0 ? 'text-success' : 'text-danger';
+        
+        // Adicionar texto de comparação com ano anterior
+        $('#comparativo-ano-faturamento').html('<span class="' + classeComparativo + '">' + sinalGeral + variacaoGeral.toFixed(1) + '%</span> vs ' + anoAnterior);
+        
+        // Atualizar barra de progresso em relação à meta
+        if (metaAnual > 0) {
+          var porcentagemConcluida = Math.min(100, (totalGeralAnoAtual / metaAnual) * 100);
+          $('#progresso-faturamento').css('width', porcentagemConcluida + '%');
+          $('#porcentagem-meta').text(porcentagemConcluida.toFixed(0) + '%');
+        }
+      }
+    }
+
+    // Manter os estilos da badge e cores se necessário
+    $(document).ready(function() {
+      $('head').append(`
+        <style>
+          .progress-bar {
+            transition: width 1.5s ease-in-out;
+          }
+          
+          .text-success {
+            color: #1ab394;
+          }
+          
+          .text-danger {
+            color: #ed5565;
+          }
+          
+          .text-warning {
+            color: #f8ac59;
+          }
+          
+          /* Adicionar animação para os números */
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          
+          #total-ano-faturamento, #valor-meta, #valor-ano-anterior, #probabilidade-meta {
+            animation: fadeIn 0.8s ease-out;
+          }
+        </style>
+      `);
+    });
 
 </script>

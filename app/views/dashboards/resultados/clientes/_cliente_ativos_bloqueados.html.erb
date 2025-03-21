@@ -244,11 +244,11 @@
   }
   
   .value-increase {
-    color: #1ab394;
+    color: #336699;
   }
   
   .value-decrease {
-    color: #ed5565;
+    color: #993333;
   }
   
   .stat-badge {
@@ -267,6 +267,24 @@
   .badge-decrease {
     background-color: rgba(237, 85, 101, 0.15);
     color: #ed5565;
+  }
+  
+  .badge-increase-subtle {
+    background-color: rgba(72, 126, 176, 0.2);
+    color: #336699;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-weight: bold;
+  }
+  
+  .badge-decrease-subtle {
+    background-color: rgba(192, 96, 96, 0.2);
+    color: #993333;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-weight: bold;
   }
 </style>
 
@@ -833,7 +851,14 @@
       var classClientes = dados.clientes.variacao >= 0 ? 'value-increase' : 'value-decrease';
       var simboloClientes = dados.clientes.variacao >= 0 ? '▲' : '▼';
       var percentualClientes = Math.abs(dados.clientes.variacao).toFixed(1) + '%';
-      var badgeClientes = '<span class="stat-badge ' + (dados.clientes.variacao >= 0 ? 'badge-increase' : 'badge-decrease') + '">' + simboloClientes + ' ' + percentualClientes + '</span>';
+      
+      // Calcular a diferença absoluta de clientes
+      var diferencaAbsolutaClientes = dados.clientes.atual - dados.clientes.anterior;
+      
+      // Criar badge com cores mais sutis
+      var badgeClientes = '<span class="stat-badge ' + (dados.clientes.variacao >= 0 ? 'badge-increase-subtle' : 'badge-decrease-subtle') + '">' + 
+                          simboloClientes + ' ' + percentualClientes + 
+                          ' (' + (diferencaAbsolutaClientes >= 0 ? '+' : '') + diferencaAbsolutaClientes + ')</span>';
       
       var textoClientes = dados.clientes.anterior + ' → ' + dados.clientes.atual + ' ' + badgeClientes;
       elementClientes.html(textoClientes);
@@ -843,7 +868,15 @@
       var classValor = dados.valor.variacao >= 0 ? 'value-increase' : 'value-decrease';
       var simboloValor = dados.valor.variacao >= 0 ? '▲' : '▼';
       var percentualValor = Math.abs(dados.valor.variacao).toFixed(1) + '%';
-      var badgeValor = '<span class="stat-badge ' + (dados.valor.variacao >= 0 ? 'badge-increase' : 'badge-decrease') + '">' + simboloValor + ' ' + percentualValor + '</span>';
+      
+      // Calcular a diferença absoluta de valor
+      var diferencaAbsolutaValor = dados.valor.atual - dados.valor.anterior;
+      var diferencaFormatada = Math.abs(diferencaAbsolutaValor).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      
+      // Criar badge com cores mais sutis
+      var badgeValor = '<span class="stat-badge ' + (dados.valor.variacao >= 0 ? 'badge-increase-subtle' : 'badge-decrease-subtle') + '">' + 
+                       simboloValor + ' ' + percentualValor + 
+                       ' (' + (diferencaAbsolutaValor >= 0 ? '+' : '-') + 'R$ ' + diferencaFormatada + ')</span>';
       
       var valorAnteriorFormatado = 'R$ ' + dados.valor.anterior.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       var valorAtualFormatado = 'R$ ' + dados.valor.atual.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
