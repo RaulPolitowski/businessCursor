@@ -5,11 +5,10 @@
       <div class="col-sm-3 pull-right" style="margin-top: -6px !important;" id="fat_grafico_por">
         <%= select_tag  'filtro_grafico_faturamento', options_for_select([
                                                               ['Por sistema', 1],
-                                                              ['Por sistema - Tabela', 4],
                                                               ['Por tipo', 2],
                                                               ['Ticket Médio', 3],
                                                               ['Por UF', 5]
-                                                              ], 4), {:class => "form-control input-sm chosen-select", style: "border-radius: 4px;"} %>
+                                                              ], 1), {:class => "form-control input-sm chosen-select", style: "border-radius: 4px;"} %>
       </div>
     </div>
     <div class="panel-body no-padding" style="padding: 0 !important;">
@@ -434,96 +433,213 @@
 .table-responsive::-webkit-scrollbar-thumb:hover {
     background: rgba(26,179,148,0.5);
 }
+
+/* Estilos para a tabela de UF */
+.google-table-header {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  font-size: 12px;
+  height: 32px;
+}
+
+.google-table-row, .google-table-row-odd {
+  height: 30px;
+  font-size: 12px;
+}
+
+.google-table-cell {
+  padding: 4px 8px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.google-visualization-table-div-page {
+  text-align: center !important;
+  padding: 5px 0 !important;
+  height: 30px !important;
+  overflow: hidden !important;
+}
+
+/* Fixar a altura da área de visualização */
+#faturamento_por_tipo {
+  max-height: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Garantir que a tabela de visualização do Google não ultrapasse o container */
+.google-visualization-table {
+  max-height: 100% !important;
+  height: auto !important;
+  overflow: hidden !important;
+}
+
+/* Ajustar a tabela interna */
+.google-visualization-table-table {
+  width: 100% !important;
+  table-layout: fixed !important;
+}
 </style>
 
 <script>
-// Inicializar os gráficos quando a página carregar
-$(document).ready(function() {
-  // Verificar se o Google Charts já foi carregado
-  if (typeof google !== 'undefined' && google.charts) {
-    // Se já estiver carregado, inicializar os gráficos
-    inicializarGraficos();
-  } else {
-    // Se não estiver carregado, esperar um pouco e tentar novamente
-    console.log("Esperando Google Charts carregar...");
-    setTimeout(function() {
+  // Inicializar os gráficos quando a página carregar
+  $(document).ready(function() {
+    console.log("Documento pronto, inicializando faturamento...");
+    
+    // Verificar se o Google Charts já foi carregado
+    if (typeof google !== 'undefined' && google.charts) {
+      // Se já estiver carregado, inicializar os gráficos
       inicializarGraficos();
-    }, 1000);
-  }
-  
-  // Função para inicializar todos os gráficos
-  function inicializarGraficos() {
-    console.log("Inicializando gráficos de faturamento");
-    // Inicializar gráficos
-    drawFaturamento12Meses();
-    
-    // Verificar qual gráfico secundário deve ser exibido com base no filtro
-    var filtroValor = $('#filtro_grafico_faturamento').val();
-    console.log({filtroValor})
-    if (filtroValor == 2) {
-      faturamentoPorTipo(0, 0, 0); // Inicializa com zeros, será atualizado pelos dados
-    } else if (filtroValor == 3) {
-      drawFaturamentoMedio();
-    } else if (filtroValor == '4') {
-      drawSistemasTabela();
-    } else if (filtroValor == 5) {
-      drawFaturamentoPorUF();
     } else {
-      drawChartFaturamentoSistema();
+      // Se não estiver carregado, esperar um pouco e tentar novamente
+      console.log("Esperando Google Charts carregar...");
+      setTimeout(function() {
+        inicializarGraficos();
+      }, 1000);
     }
     
-    // Forçar redimensionamento para garantir que os gráficos sejam renderizados
-    setTimeout(function() {
-      window.dispatchEvent(new Event('resize'));
-    }, 300);
-  }
-  
-    // Registrar o handler de eventos para o filtro
-    aplicarFiltroSelecionado();
-  });
-  
-  // Função auxiliar para aplicar o filtro selecionado
-  function aplicarFiltroSelecionado() {
-    var filtroValor = $('#filtro_grafico_faturamento').val();
-    console.log({filtroValorTESTE: filtroValor});
-    if (filtroValor == 2) {
-      faturamentoPorTipo(0, 0, 0); // Inicializa com zeros, será atualizado pelos dados
-    } else if (filtroValor == 3) {
-      drawFaturamentoMedio();
-    } else if (filtroValor == '4') {
+    // Função para inicializar todos os gráficos
+    function inicializarGraficos() {
+      console.log("Inicializando gráficos de faturamento");
+      // Inicializar gráfico principal
+      drawFaturamento12Meses();
+      
+      // Carregar a tabela de sistemas independente do filtro selecionado
       drawSistemasTabela();
-    } else if (filtroValor == 5) {
-      drawFaturamentoPorUF();
-    } else {
-      drawChartFaturamentoSistema();
+      
+      // Aplicar o filtro selecionado inicialmente
+      aplicarFiltroSelecionado();
+      
+      // Forçar redimensionamento para garantir que os gráficos sejam renderizados
+      setTimeout(function() {
+        window.dispatchEvent(new Event('resize'));
+      }, 300);
     }
-  }
-  
-  // Registrar o handler de eventos para o dropdown do filtro (não para o div que o contém)
-  $('#filtro_grafico_faturamento').on('change', function() {
-    console.log("Filtro alterado para: " + $(this).val());
-    aplicarFiltroSelecionado();
+    
+    // Função auxiliar para aplicar o filtro selecionado
+    function aplicarFiltroSelecionado() {
+      var filtroValor = parseInt($('#filtro_grafico_faturamento').val());
+      console.log("Aplicando filtro: ", filtroValor);
+      
+      if (filtroValor === 2) {
+        faturamentoPorTipo(0, 0, 0); // Inicializa com zeros, será atualizado pelos dados
+      } else if (filtroValor === 3) {
+        drawFaturamentoMedio();
+      } else if (filtroValor === 5) {
+        drawFaturamentoPorUF();
+      } else {
+        drawChartFaturamentoSistema();
+      }
+    }
+    
+    // Registrar o handler de eventos para o dropdown do filtro
+    $('#filtro_grafico_faturamento').on('change', function() {
+      console.log("Filtro alterado para: " + $(this).val() + " (tipo: " + typeof $(this).val() + ")");
+      aplicarFiltroSelecionado();
+    });
   });
 
-    function drawFaturamento12Meses() {
-        $.getJSON("/dashboards/get_total_faturamento_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
-            "&estado=" + $('#estado_financeiro_id').val(), function(data) {
-            var dataArray = [
-                ['Mês', 'Valor', 'Valor', 'Valor Instalação', 'Valor Mensalidade',
-                    'Valor Outros'],
-            ];
-            console.log({filtro: $('#filtro_grafico_faturamento').val()});
-            for (var i = 0; i < data.length; i++) {
-                var row = [data[i].data, parseFloat(data[i].totalgeral), parseFloat(data[i].totalgeral),
-                    parseFloat(data[i].valorinstalacao), parseFloat(data[i].valormensalidade), parseFloat(data[i].valoroutros)];
-                dataArray.push(row);
+  function drawFaturamento12Meses() {
+    $.getJSON("/dashboards/get_total_faturamento_12_meses?empresa=" + $('#empresas_financeiro_id').val() +
+        "&estado=" + $('#estado_financeiro_id').val(), function(data) {
+        var dataArray = [
+            ['Mês', 'Valor', 'Valor', 'Valor Instalação', 'Valor Mensalidade',
+                'Valor Outros'],
+        ];
+        console.log("Filtro atual: ", parseInt($('#filtro_grafico_faturamento').val()));
+        for (var i = 0; i < data.length; i++) {
+            var row = [data[i].data, parseFloat(data[i].totalgeral), parseFloat(data[i].totalgeral),
+                parseFloat(data[i].valorinstalacao), parseFloat(data[i].valormensalidade), parseFloat(data[i].valoroutros)];
+            dataArray.push(row);
+        }
+
+        var meses = data;
+        var result = null;
+        $.getJSON("/dashboards/get_total_faturamento_mes_anterior?empresa=" + $('#empresas_financeiro_id').val() +
+            "&estado=" + $('#estado_financeiro_id').val(), function(ret) {
+            result = ret;
+            preencherPainelFaturamentoTotal(  parseFloat($(meses).get(-1).totalgeral),
+                $(meses).get(-1).data,
+                parseFloat($(result).get(-1).totalgeral),
+                parseFloat($(meses).get(-1).valormensalidade),
+                parseFloat($(result).get(-1).valormensalidade),
+                parseFloat($(meses).get(-1).valorinstalacao),
+                parseFloat($(result).get(-1).valorinstalacao),
+                parseFloat($(meses).get(-1).valoroutros),
+                parseFloat($(result).get(-1).valoroutros));
+                
+            // Adicionar chamada para atualizar indicadores de crescimento do faturamento
+            calcularEExibirIndicadoresCrescimentoFaturamento(meses);
+            
+            // Após preencher os painéis, também aplicar o filtro novamente
+            var filtroValor = parseInt($('#filtro_grafico_faturamento').val());
+            console.log("Aplicando filtro após drawFaturamento12Meses: ", filtroValor);
+            
+            // Garantir que a tabela de sistemas esteja sempre atualizada
+            drawSistemasTabela();
+            
+            if (filtroValor === 2) {
+              faturamentoPorTipo(parseFloat($(meses).get(-1).valormensalidade), 
+                               parseFloat($(meses).get(-1).valorinstalacao), 
+                               parseFloat($(meses).get(-1).valoroutros));
+            } else if (filtroValor === 3) {
+              drawFaturamentoMedio();
+            } else if (filtroValor === 5) {
+              drawFaturamentoPorUF();
+            } else {
+              drawChartFaturamentoSistema();
             }
+        });
+        
+        $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+        
+        var options = {
+            'chartArea': {'width': '80%', 'height': '60%'},
+            hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
+            seriesType: 'bars',
+            series: {1: {type: 'line', color: 'black', format: 'short'}},
+            legend: 'none',
+            vAxis: {viewWindowMode: "explicit", viewWindow: {min: 0}, format: 'short'},
+            animation: { easing: 'in', duration: 500, startup: true, displayLegendValues: false}
+        };
+        var chart = new google.visualization.ComboChart(document.getElementById('faturamento_12_meses'));
 
-            var meses = data;
-            var result = null;
-            $.getJSON("/dashboards/get_total_faturamento_mes_anterior?empresa=" + $('#empresas_financeiro_id').val() +
-                "&estado=" + $('#estado_financeiro_id').val(), function(ret) {
-                result = ret;
+        function selectHandler() {
+            var selectedItem = chart.getSelection()[0];
+            if (selectedItem) {
+                var ultimo = selectedItem.row-1;
+                if(ultimo == -1)
+                    ultimo = 0;
+
+                preencherPainelFaturamentoTotal(parseFloat(data.getValue(selectedItem.row, 1)),
+                    data.getValue(selectedItem.row, 0),
+                    parseFloat(data.getValue(ultimo, 1)),
+                    parseFloat(data.getValue(selectedItem.row, 4)),
+                    parseFloat(data.getValue(ultimo, 4)),
+                    parseFloat(data.getValue(selectedItem.row, 3)),
+                    parseFloat(data.getValue(ultimo, 3)),
+                    parseFloat(data.getValue(selectedItem.row, 5)),
+                    parseFloat(data.getValue(ultimo, 5)));
+                
+                var filtroValor = parseInt($('#filtro_grafico_faturamento').val());
+                if (filtroValor === 2) {
+                  faturamentoPorTipo(parseFloat(data.getValue(selectedItem.row, 4)), 
+                                   parseFloat(data.getValue(selectedItem.row, 3)), 
+                                   parseFloat(data.getValue(selectedItem.row, 5)));
+                } else if (filtroValor === 3) {
+                  drawFaturamentoMedio();
+                } else if (filtroValor === 5) {
+                  drawFaturamentoPorUF();
+                } else {
+                  drawChartFaturamentoSistema();
+                }
+                
+                // Atualizar a tabela de sistemas com os dados do mês selecionado
+                drawSistemasTabela(data.getValue(selectedItem.row, 0));
+                
+                $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês inteiro."});
+            } else {
                 preencherPainelFaturamentoTotal(  parseFloat($(meses).get(-1).totalgeral),
                     $(meses).get(-1).data,
                     parseFloat($(result).get(-1).totalgeral),
@@ -533,668 +649,724 @@ $(document).ready(function() {
                     parseFloat($(result).get(-1).valorinstalacao),
                     parseFloat($(meses).get(-1).valoroutros),
                     parseFloat($(result).get(-1).valoroutros));
-                    
-                // Adicionar chamada para atualizar indicadores de crescimento do faturamento
-                calcularEExibirIndicadoresCrescimentoFaturamento(meses);
-            });
-            if ($('#filtro_grafico_faturamento').val() == 2)
-              faturamentoPorTipo(parseFloat($(meses).get(-1).valormensalidade), parseFloat($(meses).get(-1).valorinstalacao), parseFloat($(meses).get(-1).valoroutros));
-            else if ($('#filtro_grafico_faturamento').val() == 3)
-              drawChartFaturamentoSistema();
-            else if ($('#filtro_grafico_faturamento').val() == 3)
-              drawFaturamentoMedio();
-            else if ($('#filtro_grafico_faturamento').val() == 4)
-              drawSistemasTabela();
-            else
-              drawChartFaturamentoSistema();
-            
-            $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
-            
-            var options = {
-                'chartArea': {'width': '80%', 'height': '60%'},
-                hAxis: {title: 'Mês',  textStyle: {fontSize: 9, color: 'blue'}},
-                seriesType: 'bars',
-                series: {1: {type: 'line', color: 'black', format: 'short'}},
-                legend: 'none',
-                vAxis: {viewWindowMode: "explicit", viewWindow: {min: 0}, format: 'short'},
-                animation: { easing: 'in', duration: 500, startup: true, displayLegendValues: false}
-            };
-            var chart = new google.visualization.ComboChart(document.getElementById('faturamento_12_meses'));
-
-            function selectHandler() {
-                var selectedItem = chart.getSelection()[0];
-                if (selectedItem) {
-                    var ultimo = selectedItem.row-1;
-                    if(ultimo == -1)
-                        ultimo = 0;
-
-                    preencherPainelFaturamentoTotal(parseFloat(data.getValue(selectedItem.row, 1)),
-                        data.getValue(selectedItem.row, 0),
-                        parseFloat(data.getValue(ultimo, 1)),
-                        parseFloat(data.getValue(selectedItem.row, 4)),
-                        parseFloat(data.getValue(ultimo, 4)),
-                        parseFloat(data.getValue(selectedItem.row, 3)),
-                        parseFloat(data.getValue(ultimo, 3)),
-                        parseFloat(data.getValue(selectedItem.row, 5)),
-                        parseFloat(data.getValue(ultimo, 5)));
-                    
-                    if ($('#filtro_grafico_faturamento').val() == 2)
-                      faturamentoPorTipo(parseFloat(data.getValue(selectedItem.row, 4)), parseFloat(data.getValue(selectedItem.row, 3)), parseFloat(data.getValue(selectedItem.row, 5)));
-                    else if ($('#filtro_grafico_faturamento').val() == 3)
-                      drawFaturamentoMedio();
-                    else if ($('#filtro_grafico_faturamento').val() == 4)
-                      drawSistemasTabela();
-                    else if ($('#filtro_grafico_faturamento').val() == 5)
-                      drawFaturamentoPorUF();
-                    else
-                      drawChartFaturamentoSistema();
-                    
-                    $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês inteiro."});
-                }else{
-
-                    preencherPainelFaturamentoTotal(  parseFloat($(meses).get(-1).totalgeral),
-                        $(meses).get(-1).data,
-                        parseFloat($(result).get(-1).totalgeral),
-                        parseFloat($(meses).get(-1).valormensalidade),
-                        parseFloat($(result).get(-1).valormensalidade),
-                        parseFloat($(meses).get(-1).valorinstalacao),
-                        parseFloat($(result).get(-1).valorinstalacao),
-                        parseFloat($(meses).get(-1).valoroutros),
-                        parseFloat($(result).get(-1).valoroutros));
-                    
-                    if ($('#filtro_grafico_faturamento').val() == 2)
-                      faturamentoPorTipo(parseFloat($(meses).get(-1).valormensalidade), parseFloat($(meses).get(-1).valorinstalacao), parseFloat($(meses).get(-1).valoroutros));
-                    else if ($('#filtro_grafico_faturamento').val() == 3)
-                      drawFaturamentoMedio();
-                    else if ($('#filtro_grafico_faturamento').val() == 4)
-                      drawSistemasTabela();
-                    else if ($('#filtro_grafico_faturamento').val() == 5)
-                      drawFaturamentoPorUF();
-                    else
-                      drawChartFaturamentoSistema();
-                    
-                    $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
+                
+                var filtroValor = parseInt($('#filtro_grafico_faturamento').val());
+                if (filtroValor === 2) {
+                  faturamentoPorTipo(parseFloat($(meses).get(-1).valormensalidade), 
+                                   parseFloat($(meses).get(-1).valorinstalacao), 
+                                   parseFloat($(meses).get(-1).valoroutros));
+                } else if (filtroValor === 3) {
+                  drawFaturamentoMedio();
+                } else if (filtroValor === 5) {
+                  drawFaturamentoPorUF();
+                } else {
+                  drawChartFaturamentoSistema();
                 }
+                
+                // Garantir que a tabela de sistemas esteja sempre atualizada
+                drawSistemasTabela();
+                
+                $('#fatDiv').attr({title: "Dados aos quais comparam o fechamento do mês passado com o resultado até o dia atual."});
             }
-
-            google.visualization.events.addListener(chart, 'select', selectHandler);
-
-            var data = google.visualization.arrayToDataTable(dataArray);
-
-            var formatter = new google.visualization.NumberFormat(
-                {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
-            formatter.format(data, 1); // Apply formatter to second column
-
-            chart.draw(data, options);
-
-            view = new google.visualization.DataView(data);
-            view.hideColumns([3,4,5]);
-            chart.draw(view, options);
-        });
-    }
-
-    function preencherPainelFaturamentoTotal(valorFaturamento, competencia, valorAnterior, valorMensalidade, mensalidadeAnterior,
-                                             valorInstalacao, instalacaoAnterior, valorOutros, outrosAnterior) {
-        $('#compentencia_faturamento_total').text(competencia);
-        $('#compentencia_faturamento_tipo').text(competencia);
-        $('#competencia_faturamento_mensalidade').text(competencia);
-        $('#competencia_faturamento_instalacao').text(competencia);
-        $('#competencia_faturamento_outros').text(competencia);
-        $('#faturamento_total').text(mascaraValor(valorFaturamento.toFixed(2)));
-        $('#faturamento_anterior').text('Ant. ' + mascaraValor(valorAnterior.toFixed(2)));
-
-        var valor = ((valorFaturamento*100 / valorAnterior)-100);
-        $('#percentual_faturamento_total').text('');
-        if(valor > 0){
-            $('#percentual_faturamento_total').removeClass('text-danger').addClass('text-info');
-            $('#percentual_faturamento_total').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
-        }else{
-            $('#percentual_faturamento_total').removeClass('text-info').addClass('text-danger');
-            $('#percentual_faturamento_total').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
         }
 
-        $('#faturamento_mensalidade').text(mascaraValor(valorMensalidade.toFixed(2)));
-        $('#faturamento_mensalidade_anterior').text('Ant. ' + mascaraValor(mensalidadeAnterior.toFixed(2)));
-        var valor = ((valorMensalidade*100 / mensalidadeAnterior)-100);
-        $('#percentual_faturamento_mensalidade').text('');
-        if(mensalidadeAnterior == 0){
-            $('#percentual_faturamento_outros').removeClass('text-danger').addClass('text-info');
-            $('#percentual_faturamento_outros').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
-        }else if(valor > 0){
-            $('#percentual_faturamento_mensalidade').removeClass('text-danger').addClass('text-info');
-            $('#percentual_faturamento_mensalidade').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
-        }else{
-            $('#percentual_faturamento_mensalidade').removeClass('text-info').addClass('text-danger');
-            $('#percentual_faturamento_mensalidade').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
-        }
+        google.visualization.events.addListener(chart, 'select', selectHandler);
 
-        $('#faturamento_instalacao').text(mascaraValor(valorInstalacao.toFixed(2)));
-        $('#faturamento_instalacao_anterior').text('Ant. ' + mascaraValor(instalacaoAnterior.toFixed(2)));
-        var valor = ((valorInstalacao*100 / instalacaoAnterior)-100);
-        $('#percentual_faturamento_instalacao').text('');
-        if(instalacaoAnterior == 0){
-            $('#percentual_faturamento_instalacao').removeClass('text-danger').addClass('text-info');
-            $('#percentual_faturamento_instalacao').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
-        }else if(valor > 0){
-            $('#percentual_faturamento_instalacao').removeClass('text-danger').addClass('text-info');
-            $('#percentual_faturamento_instalacao').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
-        }else{
-            $('#percentual_faturamento_instalacao').removeClass('text-info').addClass('text-danger');
-            $('#percentual_faturamento_instalacao').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
-        }
-
-        $('#faturamento_outros').text(mascaraValor(valorOutros.toFixed(2)));
-        $('#faturamento_outros_anterior').text('Ant. ' + mascaraValor(outrosAnterior.toFixed(2)));
-        var valor = ((valorOutros*100 / outrosAnterior)-100);
-        $('#percentual_faturamento_outros').text('');
-        if(outrosAnterior == 0){
-            $('#percentual_faturamento_outros').removeClass('text-danger').addClass('text-info');
-            $('#percentual_faturamento_outros').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
-        }else if(valor > 0){
-            $('#percentual_faturamento_outros').removeClass('text-danger').addClass('text-info');
-            $('#percentual_faturamento_outros').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
-        }else{
-            $('#percentual_faturamento_outros').removeClass('text-info').addClass('text-danger');
-            $('#percentual_faturamento_outros').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
-        }
-    }
-
-    function faturamentoPorTipo(mensalidade, instalacao, outros) {
-        var dataArray = [
-            ['Tipo', 'Valor'],
-        ];
-        dataArray.push(['Mensalidade', parseFloat(mensalidade)]);
-        dataArray.push(['Instalação', parseFloat(instalacao)]);
-        dataArray.push(['Outros', parseFloat(outros)]);
-        var options = {
-            'chartArea': {'width': '100%', 'height': '80%'},
-            pieStartAngle: 50,
-            legend: {position: 'bottom'},
-            is3D: true
-        };
-
-        var chart = new google.visualization.PieChart(document.getElementById('faturamento_por_tipo'));
-        var data = google.visualization.arrayToDataTable(dataArray);
-
-        chart.draw(data, options);
-    }
-
-    function drawChartFaturamentoSistema() {
-      $.getJSON("/dashboards/get_total_faturamento_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
-            "&estado=" + $('#estado_financeiro_id').val() +
-            "&data=" + $('#compentencia_faturamento_total').text(), function(data) {
-            
-        var dataArray = [
-            ['Sistema', 'Total'],
-        ];
-        dataArray.push(['Manager', parseInt(data["rs_man"])]);
-        dataArray.push(['Light', parseInt(data["rs_lig"])]);
-        dataArray.push(['Emissor', parseInt(data["rs_emi"])]);
-        //dataArray.push(['Fiscal', parseInt(data["rs_f"])]);
-        dataArray.push(['Gourmet', parseInt(data["rs_g"])]);
-        dataArray.push(['Pró vendas', parseInt(data["rs_pro"])]);
-        dataArray.push(['Athus', parseInt(data["rs_athus"])]);
-        dataArray.push(['Trade', parseInt(data["rs_trade"])]);
-        dataArray.push(['Emissor WEB', parseInt(data["rs_emissor_web"])]);
-        dataArray.push(['Sem sistemas', parseInt(data["rs_sem_sistema"])]); 
-
-        var options = {
-            'chartArea': {'width': '100%', 'height': '80%'},
-            pieStartAngle: 50,
-            legend: {position: 'bottom'},
-            is3D: true
-        };
-
-        var chart = new google.visualization.PieChart(document.getElementById('faturamento_por_tipo'));
         var data = google.visualization.arrayToDataTable(dataArray);
 
         var formatter = new google.visualization.NumberFormat(
-          {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+            {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
         formatter.format(data, 1); // Apply formatter to second column
 
         chart.draw(data, options);
-      });
-    }
 
-    function drawFaturamentoMedio() {
-      $.getJSON("/dashboards/get_total_faturamento_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
-            "&estado=" + $('#estado_financeiro_id').val() +
-            "&data=" + $('#compentencia_faturamento_total').text(), function(data) {         
-        
-        var datatable = new google.visualization.DataTable();
-            datatable.addColumn('string', 'Sistema');
-            datatable.addColumn('number', 'Ticket médio');
-            
-          if (data["media_man"] > 0) 
-            datatable.addRow(['Manager', parseFloat(data["media_man"])]);
-          else
-            {datatable.addRow(['Manager', parseFloat(0)]);}
-          
-          if (data["media_lig"] > 0) 
-            datatable.addRow(['Light', parseFloat(data["media_lig"])]);
-          else
-            datatable.addRow(['Light', parseFloat(0)]);
-
-          if (data["media_emi"] > 0)
-            datatable.addRow(['Emissor', parseFloat(data["media_emi"])]);
-          else
-            datatable.addRow(['Emissor', parseFloat(0)]);
-          
-          // if (data["media_f"] > 0)
-          //   datatable.addRow(['Fiscal', parseFloat(data["media_f"])]);
-          // else
-          //   datatable.addRow(['Fiscal', parseFloat(0)]);
-
-          if (data["media_g"])
-            datatable.addRow(['Gourmet', parseFloat(data["media_g"])]);
-          else 
-            datatable.addRow(['Gourmet', parseFloat(0)]);
-
-          if (data["media_trade"])
-            datatable.addRow(['Trade', parseFloat(data["media_trade"])]);
-          else 
-            datatable.addRow(['Trade', parseFloat(0)]);
-
-          if (data["media_pro"])
-            datatable.addRow(['Pró vendas', parseFloat(data["media_pro"])]);
-          else
-            datatable.addRow(['Pró vendas', parseFloat(0)]);
-
-          if (data["media_athus"])
-            datatable.addRow(['Athus', parseFloat(data["media_athus"])]);
-          else
-            datatable.addRow(['Athus', parseFloat(0)]);
-
-          if (data["media_emissor_web"])
-            datatable.addRow(['Emissor WEB', parseFloat(data["media_emissor_web"])]);
-          else 
-            datatable.addRow(['Emissor WEB', parseFloat(0)]);
-            
-          datatable.sort({column: 1, desc: true});
-
-          var table = new google.visualization.Table(document.getElementById('faturamento_por_tipo'));
-          var formatter = new google.visualization.NumberFormat(
-              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
-          formatter.format(datatable, 1); // Apply formatter to second column
-          
-          table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
-      });
-    }
-
-    function drawSistemasTabela() {
-      $.getJSON("/dashboards/get_total_faturamento_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
-            "&estado=" + $('#estado_financeiro_id').val() +
-            "&data=" + $('#compentencia_faturamento_total').text(), function(data) {            
-      
-      // Preencher o span da competência
-      $('#competencia_tabela_sistemas').text($('#compentencia_faturamento_total').text());
-      
-      // Criar a estrutura da tabela
-      var html = '<table class="table table-bordered table-striped table-hover" style="margin-bottom: 0; font-size: 12px;">';
-      html += '<thead><tr style="background-color: #f5f5f5;"><th style="width: 60%;">Sistema</th><th style="width: 40%; text-align: right;">Total</th></tr></thead>';
-      html += '<tbody>';
-      
-      var total = 0;
-      
-      // Adicionar dados do Manager
-      if (data["rs_man"] > 0) {
-        html += '<tr><td>Manager</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_man"]) + '</td></tr>';
-        total += parseFloat(data["rs_man"]);
-      }
-      
-      // Adicionar dados do Light
-      if (data["rs_lig"] > 0) {
-        html += '<tr><td>Light</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_lig"]) + '</td></tr>';
-        total += parseFloat(data["rs_lig"]);
-      }
-      
-      // Adicionar dados do Emissor
-      if (data["rs_emi"] > 0) {
-        html += '<tr><td>Emissor</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_emi"]) + '</td></tr>';
-        total += parseFloat(data["rs_emi"]);
-      }
-      
-      // Adicionar dados do Gourmet
-      if (data["rs_g"] > 0) {
-        html += '<tr><td>Gourmet</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_g"]) + '</td></tr>';
-        total += parseFloat(data["rs_g"]);
-      }
-      
-      // Adicionar dados do Pró Vendas
-      if (data["rs_pro"] > 0) {
-        html += '<tr><td>Pró vendas</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_pro"]) + '</td></tr>';
-        total += parseFloat(data["rs_pro"]);
-      }
-      
-      // Adicionar dados do Trade
-      if (data["rs_trade"] > 0) {
-        html += '<tr><td>Trade</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_trade"]) + '</td></tr>';
-        total += parseFloat(data["rs_trade"]);
-      }
-      
-      // Adicionar dados do Athus
-      if (data["rs_athus"] > 0) {
-        html += '<tr><td>Athus</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_athus"]) + '</td></tr>';
-        total += parseFloat(data["rs_athus"]);
-      }
-      
-      // Adicionar dados do Emissor WEB
-      if (data["rs_emissor_web"] > 0) {
-        html += '<tr><td>Emissor WEB</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_emissor_web"]) + '</td></tr>';
-        total += parseFloat(data["rs_emissor_web"]);
-      }
-      
-      html += '</tbody>';
-      html += '<tfoot><tr style="background-color: #f9f9f9; font-weight: 600;"><td>Total</td><td style="text-align: right;">R$ ' + formatarValorMoeda(total) + '</td></tr></tfoot>';
-      html += '</table>';
-      
-      // Inserir a tabela no elemento
-      $('#tabela_faturamento_sistemas').html(html);
-      
-      // Simular dados para o Top 5 Clientes (como exemplo)
-      carregarTopClientes();
+        view = new google.visualization.DataView(data);
+        view.hideColumns([3,4,5]);
+        chart.draw(view, options);
     });
+}
+
+function preencherPainelFaturamentoTotal(valorFaturamento, competencia, valorAnterior, valorMensalidade, mensalidadeAnterior,
+                                         valorInstalacao, instalacaoAnterior, valorOutros, outrosAnterior) {
+    $('#compentencia_faturamento_total').text(competencia);
+    $('#compentencia_faturamento_tipo').text(competencia);
+    $('#competencia_faturamento_mensalidade').text(competencia);
+    $('#competencia_faturamento_instalacao').text(competencia);
+    $('#competencia_faturamento_outros').text(competencia);
+    $('#faturamento_total').text(mascaraValor(valorFaturamento.toFixed(2)));
+    $('#faturamento_anterior').text('Ant. ' + mascaraValor(valorAnterior.toFixed(2)));
+
+    var valor = ((valorFaturamento*100 / valorAnterior)-100);
+    $('#percentual_faturamento_total').text('');
+    if(valor > 0){
+        $('#percentual_faturamento_total').removeClass('text-danger').addClass('text-info');
+        $('#percentual_faturamento_total').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+    }else{
+        $('#percentual_faturamento_total').removeClass('text-info').addClass('text-danger');
+        $('#percentual_faturamento_total').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+    }
+
+    $('#faturamento_mensalidade').text(mascaraValor(valorMensalidade.toFixed(2)));
+    $('#faturamento_mensalidade_anterior').text('Ant. ' + mascaraValor(mensalidadeAnterior.toFixed(2)));
+    var valor = ((valorMensalidade*100 / mensalidadeAnterior)-100);
+    $('#percentual_faturamento_mensalidade').text('');
+    if(mensalidadeAnterior == 0){
+        $('#percentual_faturamento_outros').removeClass('text-danger').addClass('text-info');
+        $('#percentual_faturamento_outros').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+    }else if(valor > 0){
+        $('#percentual_faturamento_mensalidade').removeClass('text-danger').addClass('text-info');
+        $('#percentual_faturamento_mensalidade').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+    }else{
+        $('#percentual_faturamento_mensalidade').removeClass('text-info').addClass('text-danger');
+        $('#percentual_faturamento_mensalidade').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+    }
+
+    $('#faturamento_instalacao').text(mascaraValor(valorInstalacao.toFixed(2)));
+    $('#faturamento_instalacao_anterior').text('Ant. ' + mascaraValor(instalacaoAnterior.toFixed(2)));
+    var valor = ((valorInstalacao*100 / instalacaoAnterior)-100);
+    $('#percentual_faturamento_instalacao').text('');
+    if(instalacaoAnterior == 0){
+        $('#percentual_faturamento_instalacao').removeClass('text-danger').addClass('text-info');
+        $('#percentual_faturamento_instalacao').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+    }else if(valor > 0){
+        $('#percentual_faturamento_instalacao').removeClass('text-danger').addClass('text-info');
+        $('#percentual_faturamento_instalacao').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+    }else{
+        $('#percentual_faturamento_instalacao').removeClass('text-info').addClass('text-danger');
+        $('#percentual_faturamento_instalacao').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+    }
+
+    $('#faturamento_outros').text(mascaraValor(valorOutros.toFixed(2)));
+    $('#faturamento_outros_anterior').text('Ant. ' + mascaraValor(outrosAnterior.toFixed(2)));
+    var valor = ((valorOutros*100 / outrosAnterior)-100);
+    $('#percentual_faturamento_outros').text('');
+    if(outrosAnterior == 0){
+        $('#percentual_faturamento_outros').removeClass('text-danger').addClass('text-info');
+        $('#percentual_faturamento_outros').append(parseFloat(100).toFixed(2)+'% <i class="fa fa-level-up"></i>');
+    }else if(valor > 0){
+        $('#percentual_faturamento_outros').removeClass('text-danger').addClass('text-info');
+        $('#percentual_faturamento_outros').append(valor.toFixed(2)+'% <i class="fa fa-level-up"></i>');
+    }else{
+        $('#percentual_faturamento_outros').removeClass('text-info').addClass('text-danger');
+        $('#percentual_faturamento_outros').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
+    }
+}
+
+function faturamentoPorTipo(mensalidade, instalacao, outros) {
+    console.log("Chamando faturamentoPorTipo com valores:", mensalidade, instalacao, outros);
+    
+    // Assegurar que estamos trabalhando com números
+    mensalidade = parseFloat(mensalidade) || 0;
+    instalacao = parseFloat(instalacao) || 0;
+    outros = parseFloat(outros) || 0;
+    
+    var dataArray = [
+        ['Tipo', 'Valor'],
+    ];
+    
+    // Apenas adicionar valores positivos (maiores que zero)
+    if (mensalidade > 0) {
+        dataArray.push(['Mensalidade', mensalidade]);
+    } else {
+        dataArray.push(['Mensalidade', 0.01]); // Valor mínimo para mostrar no gráfico
+    }
+    
+    if (instalacao > 0) {
+        dataArray.push(['Instalação', instalacao]);
+    } else {
+        dataArray.push(['Instalação', 0.01]); // Valor mínimo para mostrar no gráfico
+    }
+    
+    if (outros > 0) {
+        dataArray.push(['Outros', outros]);
+    } else {
+        dataArray.push(['Outros', 0.01]); // Valor mínimo para mostrar no gráfico
+    }
+    
+    console.log("Dados para o gráfico por tipo:", dataArray);
+    
+    var options = {
+        'chartArea': {'width': '100%', 'height': '80%'},
+        pieStartAngle: 50,
+        legend: {position: 'bottom'},
+        is3D: true,
+        slices: {
+            0: { color: '#1c84c6' },  // Mensalidade - Azul
+            1: { color: '#f8ac59' },  // Instalação - Laranja
+            2: { color: '#9575cd' }   // Outros - Roxo
+        }
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('faturamento_por_tipo'));
+    var data = google.visualization.arrayToDataTable(dataArray);
+    
+    // Formatador para valores monetários
+    var formatter = new google.visualization.NumberFormat({
+        prefix: 'R$ ', 
+        negativeColor: 'red', 
+        negativeParens: true,
+        fractionDigits: 2
+    });
+    formatter.format(data, 1); // Aplicar formatador à coluna de valores
+    
+    chart.draw(data, options);
+}
+
+function drawChartFaturamentoSistema() {
+  console.log("Iniciando drawChartFaturamentoSistema");
+  
+  $.getJSON("/dashboards/get_total_faturamento_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
+        "&estado=" + $('#estado_financeiro_id').val() +
+        "&data=" + $('#compentencia_faturamento_total').text(), function(data) {
+        
+    console.log("Dados recebidos para o gráfico por sistema:", data);
+    
+    var dataArray = [
+        ['Sistema', 'Total'],
+    ];
+    dataArray.push(['Manager', parseInt(data["rs_man"] || 0)]);
+    dataArray.push(['Light', parseInt(data["rs_lig"] || 0)]);
+    dataArray.push(['Emissor', parseInt(data["rs_emi"] || 0)]);
+    //dataArray.push(['Fiscal', parseInt(data["rs_f"])]);
+    dataArray.push(['Gourmet', parseInt(data["rs_g"] || 0)]);
+    dataArray.push(['Pró vendas', parseInt(data["rs_pro"] || 0)]);
+    dataArray.push(['Athus', parseInt(data["rs_athus"] || 0)]);
+    dataArray.push(['Trade', parseInt(data["rs_trade"] || 0)]);
+    dataArray.push(['Emissor WEB', parseInt(data["rs_emissor_web"] || 0)]);
+    dataArray.push(['Sem sistemas', parseInt(data["rs_sem_sistema"] || 0)]); 
+    
+    console.log("Array de dados preparado para o gráfico:", dataArray);
+
+    var options = {
+        'chartArea': {'width': '100%', 'height': '80%'},
+        pieStartAngle: 50,
+        legend: {position: 'bottom'},
+        is3D: true,
+        colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22']
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('faturamento_por_tipo'));
+    var data = google.visualization.arrayToDataTable(dataArray);
+
+    var formatter = new google.visualization.NumberFormat(
+      {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+    formatter.format(data, 1); // Apply formatter to second column
+
+    chart.draw(data, options);
+    
+    console.log("Gráfico por sistema desenhado");
+    
+    // Verificar se o gráfico foi renderizado corretamente
+    setTimeout(function() {
+      if ($('#faturamento_por_tipo:empty').length) {
+        console.error("O gráfico por sistema parece vazio mesmo após renderização");
+        // Tentar renderizar novamente
+        chart.draw(data, options);
+      }
+    }, 500);
+  }).fail(function(jqXHR, textStatus, errorThrown) {
+    console.error("Erro ao carregar dados do gráfico por sistema:", textStatus, errorThrown);
+  });
+}
+
+function drawFaturamentoMedio() {
+  $.getJSON("/dashboards/get_total_faturamento_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
+        "&estado=" + $('#estado_financeiro_id').val() +
+        "&data=" + $('#compentencia_faturamento_total').text(), function(data) {         
+    
+    var datatable = new google.visualization.DataTable();
+        datatable.addColumn('string', 'Sistema');
+        datatable.addColumn('number', 'Ticket médio');
+        
+      if (data["media_man"] > 0) 
+        datatable.addRow(['Manager', parseFloat(data["media_man"])]);
+      else
+        {datatable.addRow(['Manager', parseFloat(0)]);}
+      
+      if (data["media_lig"] > 0) 
+        datatable.addRow(['Light', parseFloat(data["media_lig"])]);
+      else
+        datatable.addRow(['Light', parseFloat(0)]);
+
+      if (data["media_emi"] > 0)
+        datatable.addRow(['Emissor', parseFloat(data["media_emi"])]);
+      else
+        datatable.addRow(['Emissor', parseFloat(0)]);
+      
+      // if (data["media_f"] > 0)
+      //   datatable.addRow(['Fiscal', parseFloat(data["media_f"])]);
+      // else
+      //   datatable.addRow(['Fiscal', parseFloat(0)]);
+
+      if (data["media_g"])
+        datatable.addRow(['Gourmet', parseFloat(data["media_g"])]);
+      else 
+        datatable.addRow(['Gourmet', parseFloat(0)]);
+
+      if (data["media_trade"])
+        datatable.addRow(['Trade', parseFloat(data["media_trade"])]);
+      else 
+        datatable.addRow(['Trade', parseFloat(0)]);
+
+      if (data["media_pro"])
+        datatable.addRow(['Pró vendas', parseFloat(data["media_pro"])]);
+      else
+        datatable.addRow(['Pró vendas', parseFloat(0)]);
+
+      if (data["media_athus"])
+        datatable.addRow(['Athus', parseFloat(data["media_athus"])]);
+      else
+        datatable.addRow(['Athus', parseFloat(0)]);
+
+      if (data["media_emissor_web"])
+        datatable.addRow(['Emissor WEB', parseFloat(data["media_emissor_web"])]);
+      else 
+        datatable.addRow(['Emissor WEB', parseFloat(0)]);
+        
+      datatable.sort({column: 1, desc: true});
+
+      var table = new google.visualization.Table(document.getElementById('faturamento_por_tipo'));
+      var formatter = new google.visualization.NumberFormat(
+          {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+      formatter.format(datatable, 1); // Apply formatter to second column
+      
+      table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
+  });
+}
+
+function drawSistemasTabela(competencia) {
+  // Se a competência não for fornecida, usar a atual
+  if (!competencia) {
+    competencia = $('#compentencia_faturamento_total').text();
   }
+  
+  console.log("Carregando tabela de sistemas para competência:", competencia);
+  
+  $.getJSON("/dashboards/get_total_faturamento_12_meses_sistema?empresa=" + $('#empresas_financeiro_id').val() +
+        "&estado=" + $('#estado_financeiro_id').val() +
+        "&data=" + competencia, function(data) {
+  
+  // Preencher o span da competência
+  $('#competencia_tabela_sistemas').text(competencia);
+  
+  // Criar a estrutura da tabela
+  var html = '<table class="table table-bordered table-striped table-hover" style="margin-bottom: 0; font-size: 12px;">';
+  html += '<thead><tr style="background-color: #f5f5f5;"><th style="width: 60%;">Sistema</th><th style="width: 40%; text-align: right;">Total</th></tr></thead>';
+  html += '<tbody>';
+  
+  var total = 0;
+  
+  // Adicionar dados do Manager
+  if (data["rs_man"] > 0) {
+    html += '<tr><td>Manager</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_man"]) + '</td></tr>';
+    total += parseFloat(data["rs_man"]);
+  }
+  
+  // Adicionar dados do Light
+  if (data["rs_lig"] > 0) {
+    html += '<tr><td>Light</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_lig"]) + '</td></tr>';
+    total += parseFloat(data["rs_lig"]);
+  }
+  
+  // Adicionar dados do Emissor
+  if (data["rs_emi"] > 0) {
+    html += '<tr><td>Emissor</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_emi"]) + '</td></tr>';
+    total += parseFloat(data["rs_emi"]);
+  }
+  
+  // Adicionar dados do Gourmet
+  if (data["rs_g"] > 0) {
+    html += '<tr><td>Gourmet</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_g"]) + '</td></tr>';
+    total += parseFloat(data["rs_g"]);
+  }
+  
+  // Adicionar dados do Pró Vendas
+  if (data["rs_pro"] > 0) {
+    html += '<tr><td>Pró vendas</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_pro"]) + '</td></tr>';
+    total += parseFloat(data["rs_pro"]);
+  }
+  
+  // Adicionar dados do Trade
+  if (data["rs_trade"] > 0) {
+    html += '<tr><td>Trade</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_trade"]) + '</td></tr>';
+    total += parseFloat(data["rs_trade"]);
+  }
+  
+  // Adicionar dados do Athus
+  if (data["rs_athus"] > 0) {
+    html += '<tr><td>Athus</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_athus"]) + '</td></tr>';
+    total += parseFloat(data["rs_athus"]);
+  }
+  
+  // Adicionar dados do Emissor WEB
+  if (data["rs_emissor_web"] > 0) {
+    html += '<tr><td>Emissor WEB</td><td style="text-align: right;">R$ ' + formatarValorMoeda(data["rs_emissor_web"]) + '</td></tr>';
+    total += parseFloat(data["rs_emissor_web"]);
+  }
+  
+  html += '</tbody>';
+  html += '<tfoot><tr style="background-color: #f9f9f9; font-weight: 600;"><td>Total</td><td style="text-align: right;">R$ ' + formatarValorMoeda(total) + '</td></tr></tfoot>';
+  html += '</table>';
+  
+  // Inserir a tabela no elemento
+  $('#tabela_faturamento_sistemas').html(html);
+  
+  // Simular dados para o Top 5 Clientes (como exemplo)
+  carregarTopClientes();
+});
+}
 
-    function carregarTopClientes() {
-      // Definir a competência no label
-      $('#competencia_top_clientes').text($('#compentencia_faturamento_total').text());
-      
-      // Dados simulados para o top 5 clientes
-      var dadosClientes = [
-        { nome: "Supermercado Modelo", valor: 15260.35 },
-        { nome: "Lojas Americanas", valor: 12480.89 },
-        { nome: "Restaurante Sabor & Cia", valor: 9750.25 },
-        { nome: "Farmácia Saúde Total", valor: 8320.15 },
-        { nome: "Hotel Central Park", valor: 7125.60 }
-      ];
-      
-      // Criar a estrutura da tabela
-      var html = '<table class="table table-bordered table-condensed" style="margin-bottom: 0; font-size: 11px;">';
-      html += '<thead><tr style="background-color: #f5f5f5;"><th>Cliente</th><th style="text-align: right;">Valor</th></tr></thead>';
-      html += '<tbody>';
-      
-      // Adicionar linhas para cada cliente
-      for(var i = 0; i < dadosClientes.length; i++) {
-        html += '<tr>';
-        html += '<td>' + dadosClientes[i].nome + '</td>';
-        html += '<td style="text-align: right;">R$ ' + formatarValorMoeda(dadosClientes[i].valor) + '</td>';
-        html += '</tr>';
-      }
-      
-      html += '</tbody>';
-      html += '</table>';
-      
-      // Inserir a tabela no elemento
-      $('#tabela_top_clientes').html(html);
+function carregarTopClientes() {
+  // Definir a competência no label
+  $('#competencia_top_clientes').text($('#compentencia_faturamento_total').text());
+  
+  // Dados simulados para o top 5 clientes
+  var dadosClientes = [
+    { nome: "Supermercado Modelo", valor: 15260.35 },
+    { nome: "Lojas Americanas", valor: 12480.89 },
+    { nome: "Restaurante Sabor & Cia", valor: 9750.25 },
+    { nome: "Farmácia Saúde Total", valor: 8320.15 },
+    { nome: "Hotel Central Park", valor: 7125.60 }
+  ];
+  
+  // Criar a estrutura da tabela
+  var html = '<table class="table table-bordered table-condensed" style="margin-bottom: 0; font-size: 11px;">';
+  html += '<thead><tr style="background-color: #f5f5f5;"><th>Cliente</th><th style="text-align: right;">Valor</th></tr></thead>';
+  html += '<tbody>';
+  
+  // Adicionar linhas para cada cliente
+  for(var i = 0; i < dadosClientes.length; i++) {
+    html += '<tr>';
+    html += '<td>' + dadosClientes[i].nome + '</td>';
+    html += '<td style="text-align: right;">R$ ' + formatarValorMoeda(dadosClientes[i].valor) + '</td>';
+    html += '</tr>';
+  }
+  
+  html += '</tbody>';
+  html += '</table>';
+  
+  // Inserir a tabela no elemento
+  $('#tabela_top_clientes').html(html);
+}
+
+function drawFaturamentoPorUF() {
+  $.getJSON("/dashboards/get_total_faturamento_UF?empresa=" + $('#empresas_financeiro_id').val() +
+        "&estado=" + $('#estado_financeiro_id').val() +
+        "&data=" + $('#compentencia_faturamento_total').text(), function(data) {         
+    
+    var datatable = new google.visualization.DataTable();
+        datatable.addColumn('string', 'Estado');
+        datatable.addColumn('number', 'Total');
+
+    for (var i = 0; i < data.length; i++) {
+      datatable.addRow([data[i].sigla, parseFloat(data[i].faturamento)]);
     }
-
-    function drawFaturamentoPorUF() {
-      $.getJSON("/dashboards/get_total_faturamento_UF?empresa=" + $('#empresas_financeiro_id').val() +
-            "&estado=" + $('#estado_financeiro_id').val() +
-            "&data=" + $('#compentencia_faturamento_total').text(), function(data) {         
-        
-        var datatable = new google.visualization.DataTable();
-            datatable.addColumn('string', 'Estado');
-            datatable.addColumn('number', 'Total');
-
-        for (var i = 0; i < data.length; i++) {
-          datatable.addRow([data[i].sigla, parseFloat(data[i].faturamento)]);
-        }
-        for (var i=0; i< data.length; i++){
-          datatable.setRowProperty(i, 'className', 'h30');
-        }
-        
-        var table = new google.visualization.Table(document.getElementById('faturamento_por_tipo'));
-
-          var formatter = new google.visualization.NumberFormat(
-              {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
-          formatter.format(datatable, 1); // Apply formatter to second column
-          
-          table.draw(datatable, {allowHtml: true, width: '100%', height: '100%',});
-      });
+    
+    // Ordenar por valor total (do maior para o menor)
+    datatable.sort({column: 1, desc: true});
+    
+    // Definir classes para as linhas
+    for (var i=0; i < datatable.getNumberOfRows(); i++){
+      datatable.setRowProperty(i, 'className', 'h30');
     }
+    
+    var table = new google.visualization.Table(document.getElementById('faturamento_por_tipo'));
 
-    // Função para calcular e exibir o faturamento total do ano atual
-    function calcularEExibirIndicadoresCrescimentoFaturamento(dados) {
-      if (!dados || dados.length < 2) {
-        console.log("Dados insuficientes para calcular faturamento total");
-        $('#total-ano-faturamento').html("Dados insuficientes");
-        return;
+    var formatter = new google.visualization.NumberFormat(
+        {prefix: 'R$ ', negativeColor: 'red', negativeParens: true});
+    formatter.format(datatable, 1); // Apply formatter to second column
+    
+    // Adicionar opções para garantir que a tabela respeite o tamanho do container
+    var options = {
+      allowHtml: true,
+      width: '100%',
+      height: '100%',
+      page: 'enable',
+      pageSize: 8,
+      cssClassNames: {
+        headerRow: 'google-table-header',
+        tableRow: 'google-table-row',
+        oddTableRow: 'google-table-row-odd',
+        selectedTableRow: 'google-table-row-selected',
+        headerCell: 'google-table-header-cell',
+        tableCell: 'google-table-cell',
+        rowNumberCell: 'google-table-row-number-cell'
       }
-      
-      console.log("Calculando faturamento total do ano");
-      
-      // Usando os dados do último mês disponível
-      var mesAtual = dados[dados.length - 1];
-      
-      // Dados para comparação anual
-      var partesMesAtual = mesAtual.data.split('/');
-      if (partesMesAtual.length === 2) {
-        var nomeMesAtual = partesMesAtual[0];
-        var anoAtual = partesMesAtual[1];
-        var anoAnterior = (parseInt(anoAtual) - 1).toString();
+    };
+    
+    // Desenhar a tabela com opções definidas
+    table.draw(datatable, options);
+    
+    // Ajustar CSS da visualização da tabela após desenho
+    setTimeout(function() {
+      // Aplicar estilos diretamente na tabela gerada pelo Google Visualization
+      var tableWrapper = $('#faturamento_por_tipo').find('.google-visualization-table');
+      if (tableWrapper.length > 0) {
+        tableWrapper.css({
+          'max-height': 'calc(100% - 10px)',
+          'overflow-y': 'auto',
+          'overflow-x': 'hidden',
+          'height': '100%'
+        });
         
-        // Organizar dados por mês e ano para cálculo do total do ano
-        var dadosPorData = {};
-        for (var i = 0; i < dados.length; i++) {
-          var mes = dados[i];
-          var partes = mes.data.split('/');
-          if (partes.length === 2) {
-            var nomeMes = partes[0];
-            var ano = partes[1];
-            
-            if (!dadosPorData[ano]) {
-              dadosPorData[ano] = {};
-              dadosPorData[ano].meses = [];
-            }
-            
-            dadosPorData[ano][nomeMes] = mes;
-            dadosPorData[ano].meses.push(mes);
-          }
-        }
-        
-        // Calcular o faturamento acumulado e comparar com o ano passado
-        calcularFaturamentoAcumulado(dadosPorData, anoAtual, anoAnterior);
+        // Ajustar tamanho da tabela interna
+        tableWrapper.find('table').css({
+          'width': '100%',
+          'table-layout': 'fixed'
+        });
       }
-    }
+    }, 100);
+  });
+}
 
-    // Nova função simplificada para calcular o faturamento acumulado
-    function calcularFaturamentoAcumulado(dadosPorData, anoAtual, anoAnterior) {
-      // Exibir o ano atual no título
-      $('#ano-atual-faturamento').text(anoAtual);
-      $('#ano-meta').text(anoAtual);
-      
-      // Inicializar totais
-      var totalGeralAnoAtual = 0;
-      var totalGeralAnoAnterior = 0;
-      
-      // Obter o mês atual
-      var dataAtual = new Date();
-      var mesAtualNumero = dataAtual.getMonth() + 1; // JavaScript conta meses de 0-11
-      
-      // Mapear nome do mês para número
-      var mesesMap = {
-        'Janeiro': 1, 'Fevereiro': 2, 'Março': 3, 'Abril': 4, 'Maio': 5, 'Junho': 6,
-        'Julho': 7, 'Agosto': 8, 'Setembro': 9, 'Outubro': 10, 'Novembro': 11, 'Dezembro': 12
-      };
-      
-      // Mapear número para nome do mês (para logs)
-      var numeroParaMes = {};
-      for (var mes in mesesMap) {
-        numeroParaMes[mesesMap[mes]] = mes;
-      }
-      
-      // Arrays para armazenar valores mensais (para projeção)
-      var valoresMensaisCompletos = [];
-      var mesesCompletos = 0;
-      
-      // Calcular totais do ano atual
-      if (dadosPorData[anoAtual] && dadosPorData[anoAtual].meses) {
-        var mesesAnoAtual = dadosPorData[anoAtual].meses;
-        for (var i = 0; i < mesesAnoAtual.length; i++) {
-          var mes = mesesAnoAtual[i];
-          var nomeMes = mes.data.split('/')[0];
-          var numeroMes = mesesMap[nomeMes];
-          
-          // Adicionar ao total geral do ano
-          totalGeralAnoAtual += parseFloat(mes.totalgeral) || 0;
-          
-          // Para projeção, considerar apenas meses completos (anteriores ao atual)
-          if (numeroMes < mesAtualNumero) {
-            valoresMensaisCompletos.push(parseFloat(mes.totalgeral) || 0);
-            mesesCompletos++;
-            console.log("Mês completo considerado para projeção:", nomeMes, parseFloat(mes.totalgeral));
-          }
+// Função para calcular e exibir o faturamento total do ano atual
+function calcularEExibirIndicadoresCrescimentoFaturamento(dados) {
+  if (!dados || dados.length < 2) {
+    console.log("Dados insuficientes para calcular faturamento total");
+    $('#total-ano-faturamento').html("Dados insuficientes");
+    return;
+  }
+  
+  console.log("Calculando faturamento total do ano");
+  
+  // Usando os dados do último mês disponível
+  var mesAtual = dados[dados.length - 1];
+  
+  // Dados para comparação anual
+  var partesMesAtual = mesAtual.data.split('/');
+  if (partesMesAtual.length === 2) {
+    var nomeMesAtual = partesMesAtual[0];
+    var anoAtual = partesMesAtual[1];
+    var anoAnterior = (parseInt(anoAtual) - 1).toString();
+    
+    // Organizar dados por mês e ano para cálculo do total do ano
+    var dadosPorData = {};
+    for (var i = 0; i < dados.length; i++) {
+      var mes = dados[i];
+      var partes = mes.data.split('/');
+      if (partes.length === 2) {
+        var nomeMes = partes[0];
+        var ano = partes[1];
+        
+        if (!dadosPorData[ano]) {
+          dadosPorData[ano] = {};
+          dadosPorData[ano].meses = [];
         }
-      }
-      
-      // Calcular totais do ano anterior (para comparação e meta)
-      if (dadosPorData[anoAnterior] && dadosPorData[anoAnterior].meses) {
-        var mesesAnoAnterior = dadosPorData[anoAnterior].meses;
-        for (var i = 0; i < mesesAnoAnterior.length; i++) {
-          var mes = mesesAnoAnterior[i];
-          totalGeralAnoAnterior += parseFloat(mes.totalgeral) || 0;
-        }
-      }
-      
-      // Calcular a meta de 10% a mais que o ano anterior
-      var metaAnual = totalGeralAnoAnterior * 1.10; // Meta de 10% acima do ano anterior
-      
-      // Calcular projeção anual baseada nos meses completos
-      var projecaoAnual = 0;
-      var probabilidadeMeta = 0;
-      
-      if (mesesCompletos > 0) {
-        // Calcular média mensal baseada apenas em meses completos
-        var mediaMensal = valoresMensaisCompletos.reduce((a, b) => a + b, 0) / mesesCompletos;
         
-        // Projetar para o ano inteiro
-        var mesesRestantes = 12 - mesesCompletos;
-        var valorMesesCompletos = valoresMensaisCompletos.reduce((a, b) => a + b, 0);
-        projecaoAnual = valorMesesCompletos + (mediaMensal * mesesRestantes);
-        
-        // Calcular probabilidade de atingir a meta
-        probabilidadeMeta = (projecaoAnual / metaAnual) * 100;
-        probabilidadeMeta = Math.min(100, probabilidadeMeta); // Limitar a 100%
-        
-        console.log("Projeção baseada em " + mesesCompletos + " meses completos:");
-        console.log("Média mensal: R$" + mediaMensal.toFixed(2));
-        console.log("Projeção anual: R$" + projecaoAnual.toFixed(2));
-        console.log("Meta anual: R$" + metaAnual.toFixed(2));
-        console.log("Probabilidade de atingir meta: " + probabilidadeMeta.toFixed(1) + "%");
-      } else {
-        // Fallback: se não houver meses completos, usar os dados atuais para uma estimativa básica
-        // Quantos meses já se passaram (pelo menos parcialmente)
-        var mesesPassadosParcialmente = dadosPorData[anoAtual] ? dadosPorData[anoAtual].meses.length : 0;
-        
-        if (mesesPassadosParcialmente > 0 && totalGeralAnoAtual > 0) {
-          // Estimar com base na proporção do ano já passada
-          var proporcaoAnoPassada = mesAtualNumero / 12;
-          var estimativaAnual = totalGeralAnoAtual / proporcaoAnoPassada;
-          
-          // Calcular probabilidade
-          probabilidadeMeta = (estimativaAnual / metaAnual) * 100;
-          probabilidadeMeta = Math.min(100, probabilidadeMeta);
-          
-          console.log("Estimativa baseada na proporção do ano (sem meses completos):");
-          console.log("Proporção do ano passada: " + (proporcaoAnoPassada * 100).toFixed(1) + "%");
-          console.log("Estimativa anual: R$" + estimativaAnual.toFixed(2));
-          console.log("Meta anual: R$" + metaAnual.toFixed(2));
-          console.log("Probabilidade de atingir meta: " + probabilidadeMeta.toFixed(1) + "%");
-        } else {
-          console.log("Sem dados suficientes para calcular projeção");
-        }
-      }
-      
-      // Exibir o valor total com formatação BR
-      $('#total-ano-faturamento').text('R$ ' + totalGeralAnoAtual.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-      
-      // Exibir o valor da meta com formatação BR
-      $('#valor-meta').text('R$ ' + metaAnual.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-      
-      // Exibir o valor do ano anterior
-      $('#valor-ano-anterior').text(anoAnterior + ': R$ ' + totalGeralAnoAnterior.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-      
-      // Exibir probabilidade de atingir a meta
-      if (mesesCompletos > 0 || (probabilidadeMeta > 0 && mesesPassadosParcialmente > 0)) {
-        var classeProbabilidade = probabilidadeMeta >= 90 ? 'text-success' : 
-                                 (probabilidadeMeta >= 70 ? 'text-warning' : 'text-danger');
-                                 
-        var mensagemBase = probabilidadeMeta.toFixed(0) + '%';
-        var mensagemMeses = mesesCompletos > 0 
-          ? ' (com base em ' + mesesCompletos + ' ' + (mesesCompletos === 1 ? 'mês' : 'meses') + ')'
-          : ' (estimativa)';
-        
-        $('#probabilidade-meta').html('<span class="' + classeProbabilidade + '">' + mensagemBase + '</span>' + mensagemMeses);
-      } else {
-        $('#probabilidade-meta').text('Aguardando dados');
-      }
-      
-      // Calcular e exibir a variação percentual em relação ao ano anterior
-      if (totalGeralAnoAnterior > 0) {
-        var variacaoGeral = ((totalGeralAnoAtual - totalGeralAnoAnterior) / totalGeralAnoAnterior) * 100;
-        var sinalGeral = variacaoGeral >= 0 ? '+' : '';
-        
-        // Definir classe de cor baseada no valor
-        var classeComparativo = variacaoGeral >= 0 ? 'text-success' : 'text-danger';
-        
-        // Adicionar texto de comparação com ano anterior
-        $('#comparativo-ano-faturamento').html('<span class="' + classeComparativo + '">' + sinalGeral + variacaoGeral.toFixed(1) + '%</span> vs ' + anoAnterior);
-        
-        // Atualizar barra de progresso em relação à meta
-        if (metaAnual > 0) {
-          var porcentagemConcluida = Math.min(100, (totalGeralAnoAtual / metaAnual) * 100);
-          $('#progresso-faturamento').css('width', porcentagemConcluida + '%');
-          $('#porcentagem-meta').text(porcentagemConcluida.toFixed(0) + '%');
-        }
+        dadosPorData[ano][nomeMes] = mes;
+        dadosPorData[ano].meses.push(mes);
       }
     }
+    
+    // Calcular o faturamento acumulado e comparar com o ano passado
+    calcularFaturamentoAcumulado(dadosPorData, anoAtual, anoAnterior);
+  }
+}
 
-    // Função auxiliar para formatar valores monetários
-    function formatarValorMoeda(valor) {
-      return parseFloat(valor).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+// Nova função simplificada para calcular o faturamento acumulado
+function calcularFaturamentoAcumulado(dadosPorData, anoAtual, anoAnterior) {
+  // Exibir o ano atual no título
+  $('#ano-atual-faturamento').text(anoAtual);
+  $('#ano-meta').text(anoAtual);
+  
+  // Inicializar totais
+  var totalGeralAnoAtual = 0;
+  var totalGeralAnoAnterior = 0;
+  
+  // Obter o mês atual
+  var dataAtual = new Date();
+  var mesAtualNumero = dataAtual.getMonth() + 1; // JavaScript conta meses de 0-11
+  
+  // Mapear nome do mês para número
+  var mesesMap = {
+    'Janeiro': 1, 'Fevereiro': 2, 'Março': 3, 'Abril': 4, 'Maio': 5, 'Junho': 6,
+    'Julho': 7, 'Agosto': 8, 'Setembro': 9, 'Outubro': 10, 'Novembro': 11, 'Dezembro': 12
+  };
+  
+  // Mapear número para nome do mês (para logs)
+  var numeroParaMes = {};
+  for (var mes in mesesMap) {
+    numeroParaMes[mesesMap[mes]] = mes;
+  }
+  
+  // Arrays para armazenar valores mensais (para projeção)
+  var valoresMensaisCompletos = [];
+  var mesesCompletos = 0;
+  
+  // Calcular totais do ano atual
+  if (dadosPorData[anoAtual] && dadosPorData[anoAtual].meses) {
+    var mesesAnoAtual = dadosPorData[anoAtual].meses;
+    for (var i = 0; i < mesesAnoAtual.length; i++) {
+      var mes = mesesAnoAtual[i];
+      var nomeMes = mes.data.split('/')[0];
+      var numeroMes = mesesMap[nomeMes];
+      
+      // Adicionar ao total geral do ano
+      totalGeralAnoAtual += parseFloat(mes.totalgeral) || 0;
+      
+      // Para projeção, considerar apenas meses completos (anteriores ao atual)
+      if (numeroMes < mesAtualNumero) {
+        valoresMensaisCompletos.push(parseFloat(mes.totalgeral) || 0);
+        mesesCompletos++;
+        console.log("Mês completo considerado para projeção:", nomeMes, parseFloat(mes.totalgeral));
+      }
     }
+  }
+  
+  // Calcular totais do ano anterior (para comparação e meta)
+  if (dadosPorData[anoAnterior] && dadosPorData[anoAnterior].meses) {
+    var mesesAnoAnterior = dadosPorData[anoAnterior].meses;
+    for (var i = 0; i < mesesAnoAnterior.length; i++) {
+      var mes = mesesAnoAnterior[i];
+      totalGeralAnoAnterior += parseFloat(mes.totalgeral) || 0;
+    }
+  }
+  
+  // Calcular a meta de 10% a mais que o ano anterior
+  var metaAnual = totalGeralAnoAnterior * 1.10; // Meta de 10% acima do ano anterior
+  
+  // Calcular projeção anual baseada nos meses completos
+  var projecaoAnual = 0;
+  var probabilidadeMeta = 0;
+  
+  if (mesesCompletos > 0) {
+    // Calcular média mensal baseada apenas em meses completos
+    var mediaMensal = valoresMensaisCompletos.reduce((a, b) => a + b, 0) / mesesCompletos;
+    
+    // Projetar para o ano inteiro
+    var mesesRestantes = 12 - mesesCompletos;
+    var valorMesesCompletos = valoresMensaisCompletos.reduce((a, b) => a + b, 0);
+    projecaoAnual = valorMesesCompletos + (mediaMensal * mesesRestantes);
+    
+    // Calcular probabilidade de atingir a meta
+    probabilidadeMeta = (projecaoAnual / metaAnual) * 100;
+    probabilidadeMeta = Math.min(100, probabilidadeMeta); // Limitar a 100%
+    
+    console.log("Projeção baseada em " + mesesCompletos + " meses completos:");
+    console.log("Média mensal: R$" + mediaMensal.toFixed(2));
+    console.log("Projeção anual: R$" + projecaoAnual.toFixed(2));
+    console.log("Meta anual: R$" + metaAnual.toFixed(2));
+    console.log("Probabilidade de atingir meta: " + probabilidadeMeta.toFixed(1) + "%");
+  } else {
+    // Fallback: se não houver meses completos, usar os dados atuais para uma estimativa básica
+    // Quantos meses já se passaram (pelo menos parcialmente)
+    var mesesPassadosParcialmente = dadosPorData[anoAtual] ? dadosPorData[anoAtual].meses.length : 0;
+    
+    if (mesesPassadosParcialmente > 0 && totalGeralAnoAtual > 0) {
+      // Estimar com base na proporção do ano já passada
+      var proporcaoAnoPassada = mesAtualNumero / 12;
+      var estimativaAnual = totalGeralAnoAtual / proporcaoAnoPassada;
+      
+      // Calcular probabilidade
+      probabilidadeMeta = (estimativaAnual / metaAnual) * 100;
+      probabilidadeMeta = Math.min(100, probabilidadeMeta);
+      
+      console.log("Estimativa baseada na proporção do ano (sem meses completos):");
+      console.log("Proporção do ano passada: " + (proporcaoAnoPassada * 100).toFixed(1) + "%");
+      console.log("Estimativa anual: R$" + estimativaAnual.toFixed(2));
+      console.log("Meta anual: R$" + metaAnual.toFixed(2));
+      console.log("Probabilidade de atingir meta: " + probabilidadeMeta.toFixed(1) + "%");
+    } else {
+      console.log("Sem dados suficientes para calcular projeção");
+    }
+  }
+  
+  // Exibir o valor total com formatação BR
+  $('#total-ano-faturamento').text('R$ ' + totalGeralAnoAtual.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+  
+  // Exibir o valor da meta com formatação BR
+  $('#valor-meta').text('R$ ' + metaAnual.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+  
+  // Exibir o valor do ano anterior
+  $('#valor-ano-anterior').text(anoAnterior + ': R$ ' + totalGeralAnoAnterior.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+  
+  // Exibir probabilidade de atingir a meta
+  if (mesesCompletos > 0 || (probabilidadeMeta > 0 && mesesPassadosParcialmente > 0)) {
+    var classeProbabilidade = probabilidadeMeta >= 90 ? 'text-success' : 
+                             (probabilidadeMeta >= 70 ? 'text-warning' : 'text-danger');
+                                
+    var mensagemBase = probabilidadeMeta.toFixed(0) + '%';
+    var mensagemMeses = mesesCompletos > 0 
+      ? ' (com base em ' + mesesCompletos + ' ' + (mesesCompletos === 1 ? 'mês' : 'meses') + ')'
+      : ' (estimativa)';
+    
+    $('#probabilidade-meta').html('<span class="' + classeProbabilidade + '">' + mensagemBase + '</span>' + mensagemMeses);
+  } else {
+    $('#probabilidade-meta').text('Aguardando dados');
+  }
+  
+  // Calcular e exibir a variação percentual em relação ao ano anterior
+  if (totalGeralAnoAnterior > 0) {
+    var variacaoGeral = ((totalGeralAnoAtual - totalGeralAnoAnterior) / totalGeralAnoAnterior) * 100;
+    var sinalGeral = variacaoGeral >= 0 ? '+' : '';
+    
+    // Definir classe de cor baseada no valor
+    var classeComparativo = variacaoGeral >= 0 ? 'text-success' : 'text-danger';
+    
+    // Adicionar texto de comparação com ano anterior
+    $('#comparativo-ano-faturamento').html('<span class="' + classeComparativo + '">' + sinalGeral + variacaoGeral.toFixed(1) + '%</span> vs ' + anoAnterior);
+    
+    // Atualizar barra de progresso em relação à meta
+    if (metaAnual > 0) {
+      var porcentagemConcluida = Math.min(100, (totalGeralAnoAtual / metaAnual) * 100);
+      $('#progresso-faturamento').css('width', porcentagemConcluida + '%');
+      $('#porcentagem-meta').text(porcentagemConcluida.toFixed(0) + '%');
+    }
+  }
+}
 
-    // Manter os estilos da badge e cores se necessário
-    $(document).ready(function() {
-      $('head').append(`
-        <style>
-          .progress-bar {
-            transition: width 1.5s ease-in-out;
-          }
-          
-          .text-success {
-            color: #1ab394;
-          }
-          
-          .text-danger {
-            color: #ed5565;
-          }
-          
-          .text-warning {
-            color: #f8ac59;
-          }
-          
-          /* Adicionar animação para os números */
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          
-          #total-ano-faturamento, #valor-meta, #valor-ano-anterior, #probabilidade-meta {
-            animation: fadeIn 0.8s ease-out;
-          }
-        </style>
-      `);
-    });
+// Função auxiliar para formatar valores monetários
+function formatarValorMoeda(valor) {
+  return parseFloat(valor).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
 
-    // Script para garantir inicialização dos gráficos
-    document.addEventListener('DOMContentLoaded', function() {
-      // Forçar um redimensionamento após carregar para que os gráficos sejam renderizados corretamente
-      setTimeout(function() {
-        window.dispatchEvent(new Event('resize'));
-      }, 200);
-    });
+// Manter os estilos da badge e cores se necessário
+$(document).ready(function() {
+  $('head').append(`
+    <style>
+      .progress-bar {
+        transition: width 1.5s ease-in-out;
+      }
+      
+      .text-success {
+        color: #1ab394;
+      }
+      
+      .text-danger {
+        color: #ed5565;
+      }
+      
+      .text-warning {
+        color: #f8ac59;
+      }
+      
+      /* Adicionar animação para os números */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      #total-ano-faturamento, #valor-meta, #valor-ano-anterior, #probabilidade-meta {
+        animation: fadeIn 0.8s ease-out;
+      }
+    </style>
+  `);
+});
 
+// Script para garantir inicialização dos gráficos
+document.addEventListener('DOMContentLoaded', function() {
+  // Forçar um redimensionamento após carregar para que os gráficos sejam renderizados corretamente
+  setTimeout(function() {
+    window.dispatchEvent(new Event('resize'));
+  }, 200);
+});
+
+// Adicionar isto antes do final do script para ajudar a diagnosticar o problema
+$('#filtro_grafico_faturamento').on('change', function() {
+  var valorSelecionado = $(this).val();
+  console.log("Valor do filtro alterado para:", valorSelecionado, "Tipo:", typeof valorSelecionado);
+  
+  // Limpar o container atual para evitar sobreposições
+  $('#faturamento_por_tipo').empty();
+});
 </script>
