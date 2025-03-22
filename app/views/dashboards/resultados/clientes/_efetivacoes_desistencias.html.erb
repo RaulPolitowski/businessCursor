@@ -1,15 +1,19 @@
 <div class="col-lg-12 no-padding">
-  <div class="panel panel-default" style="margin-bottom: 10px !important;">
-    <div class="panel-heading" style="height: 39px">
-      <div class="col-sm-2  pull" style="margin-top: -6px !important; padding-left: 0px" id="tipo_grafico">
+  <div class="panel panel-default dashboard-main-panel" style="margin-bottom: 15px !important; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(248,250,252,0.95) 100%); overflow: hidden;">
+    <div class="panel-heading" style="height: 50px; background: linear-gradient(to right, #f3f3f4, #ffffff); border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; padding: 0 15px;">
+      <span style="font-weight: 600; color: #333; display: flex; align-items: center;">
+        <i class="fa fa-users" style="color: #1ab394; margin-right: 8px; font-size: 16px;"></i>
+        <span style="text-transform: uppercase; letter-spacing: 0.5px;">GESTÃO DE CLIENTES</span>
+      </span>
+      <div class="col-sm-2 pull" style="margin-left: 20px;" id="tipo_grafico">
         <%= select_tag  'filtro_tipo_grafico', options_for_select([
                                                               ['Efetivações x Desistências', 1],
                                                               ['Pgto. 2º honorário', 3],
                                                               ['Pgto. 3º honorário', 4],
                                                               ['Novos honorários x honorários baixados', 2]
-                                                              ], 1), {:class => "form-control input-sm chosen-select"} %>
+                                                              ], 1), {:class => "form-control input-sm chosen-select", style: "border-radius: 20px; border: none; background: rgba(255,255,255,0.8); box-shadow: 0 2px 5px rgba(0,0,0,0.05);"} %>
       </div>
-      <div class="col-sm-2  pull-right" style="margin-top: -6px !important;" id="grafico_por_efet_des">
+      <div class="col-sm-2 pull-right" id="grafico_por_efet_des">
         <%= select_tag  'filtro_grafico_efet_des', options_for_select([
                                                               ['Por cidade', 1],
                                                               ['Por UF', 6],
@@ -17,7 +21,7 @@
                                                               ['Desistências por sistema', 3],
                                                               ['Efetivações por sis. - Tabela', 4],
                                                               ['Desativações. por sis. - Tabela', 5]
-                                                              ], 4), {:class => "form-control input-sm chosen-select"} %>
+                                                              ], 4), {:class => "form-control input-sm chosen-select", style: "border-radius: 20px; border: none; background: rgba(255,255,255,0.8); box-shadow: 0 2px 5px rgba(0,0,0,0.05);"} %>
       </div>
     </div>
     <div class="panel-body no-padding">
@@ -25,18 +29,20 @@
         <div class="col-md-3 padding-5">
           <div class="col-lg-12 padding-left-right">
             <div class="ibox" style="cursor: pointer" onclick="carregarInfoEfetivacoesFinanceiro()">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Efetivações</h5>
-                  <span class="label label-info pull-right" id="compentencia_cliente_efetivacoes"></span>
+              <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #1ab394; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(245,249,250,1) 100%);">
+                <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                  <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                    <i class="fa fa-check-circle pulse-icon" style="color: #1ab394; margin-right: 8px;"></i>EFETIVAÇÕES
+                  </h5>
+                  <span class="label label-info pull-right tech-badge" id="compentencia_cliente_efetivacoes" style="background-color: #1ab394; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(26,179,148,0.3);"></span>
                 </div>
-                <div class="ibox-content padding-5" style="height: 55px !important;">
+                <div class="ibox-content padding-5" style="height: 55px !important; border-top: 1px solid rgba(0,0,0,0.05);">
                   <div class="col-lg-6 no-padding">
-                    <h2 class="pull-left" id="efetivacoes_quantidade"></h2>
+                    <h2 class="pull-left highlight-value" id="efetivacoes_quantidade"></h2>
                   </div>
                   <div class="col-lg-6 no-padding">
-                    <h2 class="pull-right" id="efetivacoes_valor" style="margin-bottom: 3px"></h2>
-                    <small class="pull-right" id="media_efetivacoes"></small>
+                    <h2 class="pull-right highlight-value" id="efetivacoes_valor" style="margin-bottom: 3px; color: #1ab394;"></h2>
+                    <small class="pull-right" id="media_efetivacoes" style="color: #888888;"></small>
                   </div>
                 </div>
               </div>
@@ -44,37 +50,20 @@
           </div>
           <div class="col-lg-12 padding-left-right">
             <div class="ibox" style="cursor: pointer" onclick="carregarInfoDesistenciasFinanceiro()">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Desistências</h5>
-                  <span class="label label-info pull-right" id="compentencia_cliente_desativacoes"></span>
+              <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #ed5565; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(250,245,245,1) 100%);">
+                <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                  <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                    <i class="fa fa-times-circle pulse-icon" style="color: #ed5565; margin-right: 8px;"></i>DESISTÊNCIAS
+                  </h5>
+                  <span class="label label-info pull-right tech-badge" id="compentencia_cliente_desativacoes" style="background-color: #ed5565; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(237,85,101,0.3);"></span>
                 </div>
-                <div class="ibox-content padding-5" style="height: 55px !important;">
+                <div class="ibox-content padding-5" style="height: 55px !important; border-top: 1px solid rgba(0,0,0,0.05);">
                   <div class="col-lg-6 no-padding">
-                    <h2 class="pull-left" id="desativacoes_quantidade"></h2>
+                    <h2 class="pull-left highlight-value" id="desativacoes_quantidade"></h2>
                   </div>
                   <div class="col-lg-6 no-padding">
-                    <h2 class="pull-right" id="desativacoes_valor" style="margin-bottom: 3px"></h2>
-                    <small class="pull-right" id="desativacoes_valor_media"></small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Saldo</h5>
-                  <span class="label label-info pull-right" id="compentencia_cliente_saldo"></span>
-                </div>
-                <div class="ibox-content padding-5" style="height: 55px !important;">
-                  <div class="col-lg-6 no-padding">
-                    <h2 class="pull-left" id="saldo_quantidade"></h2>
-                  </div>
-                  <div class="col-lg-6 no-padding">
-                    <h2 class="pull-right" id="saldo_valor" style="margin-bottom: 3px"></h2>
-                    <small class="pull-right" id="saldo_media"></small>
+                    <h2 class="pull-right highlight-value" id="desativacoes_valor" style="margin-bottom: 3px; color: #ed5565;"></h2>
+                    <small class="pull-right" id="desativacoes_valor_media" style="color: #888888;"></small>
                   </div>
                 </div>
               </div>
@@ -82,13 +71,36 @@
           </div>
           <div class="col-lg-12 padding-left-right">
             <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
+              <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #1c84c6; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%);">
+                <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                  <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                    <i class="fa fa-balance-scale pulse-icon" style="color: #1c84c6; margin-right: 8px;"></i>SALDO
+                  </h5>
+                  <span class="label label-info pull-right tech-badge" id="compentencia_cliente_saldo" style="background-color: #1c84c6; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(28,132,198,0.3);"></span>
+                </div>
+                <div class="ibox-content padding-5" style="height: 55px !important; border-top: 1px solid rgba(0,0,0,0.05);">
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-left highlight-value" id="saldo_quantidade"></h2>
+                  </div>
+                  <div class="col-lg-6 no-padding">
+                    <h2 class="pull-right highlight-value" id="saldo_valor" style="margin-bottom: 3px; color: #1c84c6;"></h2>
+                    <small class="pull-right" id="saldo_media" style="color: #888888;"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox">
+              <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #f8ac59; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(252,248,245,1) 100%);">
+                <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
                   <div class="col-lg-7 no-padding">
-                    <h5>Saldo Acumulado</h5>
+                    <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                      <i class="fa fa-line-chart pulse-icon" style="color: #f8ac59; margin-right: 8px;"></i>SALDO ACUMULADO
+                    </h5>
                   </div>
                   <div class="col-lg-5 no-padding">
-                    <select id="filtro_periodo_saldo" class="form-control input-sm">
+                    <select id="filtro_periodo_saldo" class="form-control input-sm" style="border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: none; background: rgba(255,255,255,0.8);">
                       <option value="ano_atual" selected>Ano atual</option>
                       <option value="3">3 meses</option>
                       <option value="6">6 meses</option>
@@ -98,13 +110,13 @@
                   </div>
                   <div class="clearfix"></div>
                 </div>
-                <div class="ibox-content padding-5" style="height: 55px !important;">
+                <div class="ibox-content padding-5" style="height: 55px !important; border-top: 1px solid rgba(0,0,0,0.05);">
                   <div class="col-lg-6 no-padding">
-                    <h2 class="pull-left" id="saldo_acumulado_quantidade">Total 0</h2>
+                    <h2 class="pull-left highlight-value" id="saldo_acumulado_quantidade">Total 0</h2>
                   </div>
                   <div class="col-lg-6 no-padding">
-                    <h2 class="pull-right" id="saldo_acumulado_valor" style="margin-bottom: 3px">R$0,00</h2>
-                    <small class="pull-right" id="saldo_acumulado_media">Média R$0,00</small>
+                    <h2 class="pull-right highlight-value" id="saldo_acumulado_valor" style="margin-bottom: 3px; color: #f8ac59;">R$0,00</h2>
+                    <small class="pull-right" id="saldo_acumulado_media" style="color: #888888;">Média R$0,00</small>
                   </div>
                 </div>
               </div>
@@ -113,12 +125,15 @@
         </div>
         <div class="col-md-7 padding-5">
           <div class="ibox">
-            <div class="ibox-content product-box">
-              <div class="ibox-title ibox-title-without-border-style">
-                <span class="label label-info pull-right">Anual</span>
-                <h5 id="titulo_grafico_bars">Efetivações x Desistências</h5>
+            <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); height: 100%;">
+              <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                  <i class="fa fa-bar-chart pulse-icon" style="color: #1ab394; margin-right: 8px;"></i>
+                  <span id="titulo_grafico_bars" style="text-transform: uppercase; letter-spacing: 0.5px;">Efetivações x Desistências</span>
+                </h5>
+                <span class="label label-info pull-right tech-badge" style="background-color: #1ab394; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(26,179,148,0.3);">Anual</span>
               </div>
-              <div class="ibox-content padding-5">
+              <div class="ibox-content padding-5" style="border-top: 1px solid rgba(0,0,0,0.05);">
                 <div id="efetivacoes_desistencias_12_meses" style="height: 300px !important;"></div>
               </div>
             </div>
@@ -126,12 +141,15 @@
         </div>
         <div class="col-md-2 padding-5">
           <div class="ibox">
-            <div class="ibox-content product-box">
-              <div class="ibox-title ibox-title-without-border-style">
-                  <span class="label label-info pull-right" id="desc_compt_eft_dest">Atual </span>
-                  <h5 id="titulo_grafico">Clientes por Cidade</h5>
+            <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); height: 100%;">
+              <div class="ibox-title ibox-title-without-border-style" style="padding-bottom: 10px;">
+                <h5 style="font-weight: 600; position: relative; z-index: 1;">
+                  <i class="fa fa-pie-chart pulse-icon" style="color: #1c84c6; margin-right: 8px;"></i>
+                  <span id="titulo_grafico" style="text-transform: uppercase; letter-spacing: 0.5px;">Clientes por Cidade</span>
+                </h5>
+                <span class="label label-info pull-right tech-badge" id="desc_compt_eft_dest" style="background-color: #1c84c6; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(28,132,198,0.3);">Atual</span>
               </div>
-              <div class="ibox-content padding-5">
+              <div class="ibox-content padding-5" style="border-top: 1px solid rgba(0,0,0,0.05);">
                 <div id="cliente_cidade" style="height: 300px !important;"></div>
               </div>
             </div>
@@ -181,19 +199,25 @@
       
       <!-- Métrica: Taxa de Desistência -->
       <div class="metric-container" style="flex: 1; min-width: 300px; margin: 0 10px 15px; position: relative;">
-        <div class="metric-card" style="background: rgba(255,255,255,0.7); border-radius: 8px; padding: 0; height: 140px; position: relative; overflow: hidden; backdrop-filter: blur(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
-          <!-- Barra superior colorida -->
-          <div style="height: 5px; background: linear-gradient(90deg, #ed5565 0%, #ff9a9a 100%);"></div>
+        <div class="metric-card ibox-content product-box card-tech" style="background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(250,245,245,1) 100%); border-radius: 10px; padding: 0; height: 140px; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #ed5565; transition: all 0.3s ease; display: flex; flex-direction: column;">
+          <!-- Barra superior colorida - removida pois usaremos estilo da borda esquerda como nos cards de faturamento -->
           
-          <div style="display: flex; flex: 1; padding: 15px;">
-            <!-- Lado esquerdo: título e indicadores -->
+          <div class="ibox-title ibox-title-without-border-style" style="padding: 10px 15px;">
+            <h5 style="font-weight: 600; position: relative; z-index: 1;">
+              <i class="fa fa-exclamation-triangle pulse-icon" style="color: #ed5565; margin-right: 8px;"></i>
+              <span style="text-transform: uppercase; letter-spacing: 0.5px;">Taxa de Desistência</span>
+            </h5>
+            <div style="font-size: 12px; color: #888;">% clientes que desistiram vs. total</div>
+          </div>
+          
+          <div class="ibox-content padding-5" style="display: flex; flex: 1; padding: 0 15px 15px; border-top: 1px solid rgba(0,0,0,0.05);">
+            <!-- Lado esquerdo: valor e tendência -->
             <div style="flex: 1.5; display: flex; flex-direction: column; justify-content: space-between;">
-              <div>
+              <div class="value-container" style="position: relative;">
                 <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                  <i class="fa fa-exclamation-triangle" style="color: #ed5565; margin-right: 8px; font-size: 16px;"></i>
-                  <span style="font-size: 14px; color: #333; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Taxa de Desistência</span>
+                  <span style="font-size: 28px; font-weight: 700; color: #ed5565; margin-bottom: 5px; line-height: 1;" id="taxa_desistencia" class="highlight-value">17.8%</span>
+                  <span style="font-size: 13px; font-weight: 600; color: #5cb85c; margin-left: 10px; background: rgba(92, 184, 92, 0.1); padding: 2px 6px; border-radius: 4px;" id="variacao_desistencia" class="glow-text">-5.6%</span>
                 </div>
-                <div style="font-size: 12px; color: #888; margin-bottom: 10px;">% clientes que desistiram vs. total</div>
               </div>
               
               <div class="status-indicator" style="margin-top: auto; display: flex; align-items: center;">
@@ -202,26 +226,16 @@
               </div>
             </div>
             
-            <!-- Lado direito: valor e tendência -->
+            <!-- Lado direito: status e progresso -->
             <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between;">
-              <div class="value-container" style="position: relative; text-align: right;">
-                <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                  <span style="font-size: 36px; font-weight: 700; color: #ed5565; margin-bottom: 5px; line-height: 1;" id="taxa_desistencia">17.8%</span>
-                  <span style="font-size: 14px; font-weight: 600; color: #5cb85c; margin-left: 10px; background: rgba(92, 184, 92, 0.1); padding: 2px 6px; border-radius: 4px;" id="variacao_desistencia">-5.6%</span>
-                </div>
-                <div class="shine-effect" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden;">
-                  <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%); transform: skewX(-20deg); animation: shine 3s infinite;"></div>
-                </div>
+              <div id="trend_desistencia" style="display: inline-flex; align-items: center; padding: 3px 8px; background: rgba(92,184,92,0.1); border-radius: 4px; margin-bottom: 8px; font-size: 13px; color: #5cb85c; font-weight: 600;">
+                <i class="fa fa-check-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta atingida
               </div>
               
-              <div style="display: flex; flex-direction: column; align-items: flex-end;">
-                <div id="trend_desistencia" style="display: inline-flex; align-items: center; padding: 3px 8px; background: rgba(92,184,92,0.1); border-radius: 4px; margin-bottom: 8px; font-size: 13px; color: #5cb85c; font-weight: 600;">
-                  <i class="fa fa-check-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta atingida
-                </div>
-                
+              <div style="display: flex; flex-direction: column; align-items: flex-end; width: 100%;">
                 <div style="display: flex; align-items: center; width: 100%;">
-                  <div style="flex: 1; height: 4px; background: rgba(0,0,0,0.05); border-radius: 2px; margin-right: 8px; position: relative; overflow: hidden;">
-                    <div id="fill_desistencia" style="position: absolute; top: 0; left: 0; height: 100%; width: 74%; background: linear-gradient(90deg, #ed5565 0%, #ff9a9a 100%); border-radius: 2px;"></div>
+                  <div style="flex: 1; height: 10px; background: rgba(0,0,0,0.05); border-radius: 20px; margin-right: 8px; position: relative; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
+                    <div id="fill_desistencia" style="position: absolute; top: 0; left: 0; height: 100%; width: 74%; background: linear-gradient(90deg, #ed5565 0%, #ff9a9a 100%); border-radius: 20px;"></div>
                   </div>
                   <div style="font-size: 12px; color: #333; white-space: nowrap;">Meta: <span style="font-weight: 600;">&lt;40%</span></div>
                 </div>
@@ -233,19 +247,25 @@
       
       <!-- Métrica: Taxa de Retenção -->
       <div class="metric-container" style="flex: 1; min-width: 300px; margin: 0 10px 15px; position: relative;">
-        <div class="metric-card" style="background: rgba(255,255,255,0.7); border-radius: 8px; padding: 0; height: 140px; position: relative; overflow: hidden; backdrop-filter: blur(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
-          <!-- Barra superior colorida -->
-          <div style="height: 5px; background: linear-gradient(90deg, #1ab394 0%, #6be3c8 100%);"></div>
+        <div class="metric-card ibox-content product-box card-tech" style="background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(245,249,250,1) 100%); border-radius: 10px; padding: 0; height: 140px; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #1ab394; transition: all 0.3s ease; display: flex; flex-direction: column;">
+          <!-- Barra superior colorida - removida pois usaremos estilo da borda esquerda como nos cards de faturamento -->
           
-          <div style="display: flex; flex: 1; padding: 15px;">
-            <!-- Lado esquerdo: título e indicadores -->
+          <div class="ibox-title ibox-title-without-border-style" style="padding: 10px 15px;">
+            <h5 style="font-weight: 600; position: relative; z-index: 1;">
+              <i class="fa fa-users pulse-icon" style="color: #1ab394; margin-right: 8px;"></i>
+              <span style="text-transform: uppercase; letter-spacing: 0.5px;">Taxa de Retenção</span>
+            </h5>
+            <div style="font-size: 12px; color: #888;">% clientes que permaneceram ativos</div>
+          </div>
+          
+          <div class="ibox-content padding-5" style="display: flex; flex: 1; padding: 0 15px 15px; border-top: 1px solid rgba(0,0,0,0.05);">
+            <!-- Lado esquerdo: valor e tendência -->
             <div style="flex: 1.5; display: flex; flex-direction: column; justify-content: space-between;">
-              <div>
+              <div class="value-container" style="position: relative;">
                 <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                  <i class="fa fa-users" style="color: #1ab394; margin-right: 8px; font-size: 16px;"></i>
-                  <span style="font-size: 14px; color: #333; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Taxa de Retenção</span>
+                  <span style="font-size: 28px; font-weight: 700; color: #1ab394; margin-bottom: 5px; line-height: 1;" id="taxa_retencao" class="highlight-value">82.2%</span>
+                  <span style="font-size: 13px; font-weight: 600; color: #5cb85c; margin-left: 10px; background: rgba(92, 184, 92, 0.1); padding: 2px 6px; border-radius: 4px;" id="variacao_retencao" class="glow-text">+5.6%</span>
                 </div>
-                <div style="font-size: 12px; color: #888; margin-bottom: 10px;">% clientes que permaneceram ativos</div>
               </div>
               
               <div class="status-indicator" style="margin-top: auto; display: flex; align-items: center;">
@@ -254,26 +274,16 @@
               </div>
             </div>
             
-            <!-- Lado direito: valor e tendência -->
+            <!-- Lado direito: status e progresso -->
             <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between;">
-              <div class="value-container" style="position: relative; text-align: right;">
-                <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                  <span style="font-size: 36px; font-weight: 700; color: #1ab394; margin-bottom: 5px; line-height: 1;" id="taxa_retencao">82.2%</span>
-                  <span style="font-size: 14px; font-weight: 600; color: #5cb85c; margin-left: 10px; background: rgba(92, 184, 92, 0.1); padding: 2px 6px; border-radius: 4px;" id="variacao_retencao">+5.6%</span>
-                </div>
-                <div class="shine-effect" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden;">
-                  <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%); transform: skewX(-20deg); animation: shine 3s infinite;"></div>
-                </div>
+              <div id="trend_retencao" style="display: inline-flex; align-items: center; padding: 3px 8px; background: rgba(92,184,92,0.1); border-radius: 4px; margin-bottom: 8px; font-size: 13px; color: #5cb85c; font-weight: 600;">
+                <i class="fa fa-check-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta atingida
               </div>
               
-              <div style="display: flex; flex-direction: column; align-items: flex-end;">
-                <div id="trend_retencao" style="display: inline-flex; align-items: center; padding: 3px 8px; background: rgba(92,184,92,0.1); border-radius: 4px; margin-bottom: 8px; font-size: 13px; color: #5cb85c; font-weight: 600;">
-                  <i class="fa fa-check-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta atingida
-                </div>
-                
+              <div style="display: flex; flex-direction: column; align-items: flex-end; width: 100%;">
                 <div style="display: flex; align-items: center; width: 100%;">
-                  <div style="flex: 1; height: 4px; background: rgba(0,0,0,0.05); border-radius: 2px; margin-right: 8px; position: relative; overflow: hidden;">
-                    <div id="fill_retencao" style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: linear-gradient(90deg, #1ab394 0%, #6be3c8 100%); border-radius: 2px;"></div>
+                  <div style="flex: 1; height: 10px; background: rgba(0,0,0,0.05); border-radius: 20px; margin-right: 8px; position: relative; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
+                    <div id="fill_retencao" style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: linear-gradient(90deg, #1ab394 0%, #6be3c8 100%); border-radius: 20px;"></div>
                   </div>
                   <div style="font-size: 12px; color: #333; white-space: nowrap;">Meta: <span style="font-weight: 600;">&gt;70%</span></div>
                 </div>
@@ -285,19 +295,20 @@
       
       <!-- Métrica: Comparativo Mensal -->
       <div class="metric-container" style="flex: 1; min-width: 300px; margin: 0 10px 15px; position: relative;">
-        <div class="metric-card" style="background: rgba(255,255,255,0.7); border-radius: 8px; padding: 0; height: 140px; position: relative; overflow: hidden; backdrop-filter: blur(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
-          <!-- Barra superior colorida -->
-          <div style="height: 5px; background: linear-gradient(90deg, #1c84c6 0%, #54b2e5 100%);"></div>
+        <div class="metric-card ibox-content product-box card-tech" style="background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); border-radius: 10px; padding: 0; height: 140px; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-left: 4px solid #1c84c6; transition: all 0.3s ease; display: flex; flex-direction: column;">
+          <!-- Barra superior colorida - removida pois usaremos estilo da borda esquerda como nos cards de faturamento -->
           
-          <div style="padding: 15px; display: flex; flex-direction: column; height: 100%;">
-            <div style="display: flex; align-items: center; margin-bottom: 10px;">
-              <i class="fa fa-area-chart" style="color: #1c84c6; margin-right: 8px; font-size: 16px;"></i>
-              <span style="font-size: 14px; color: #333; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Comparativo Mensal</span>
-              <span style="margin-left: auto; font-size: 12px; color: #1c84c6; background: rgba(28,132,198,0.1); padding: 2px 8px; border-radius: 10px;">Taxas de Retenção</span>
-            </div>
-            
+          <div class="ibox-title ibox-title-without-border-style" style="padding: 10px 15px;">
+            <h5 style="font-weight: 600; position: relative; z-index: 1;">
+              <i class="fa fa-area-chart pulse-icon" style="color: #1c84c6; margin-right: 8px;"></i>
+              <span style="text-transform: uppercase; letter-spacing: 0.5px;">Comparativo Mensal</span>
+            </h5>
+            <span class="label label-info pull-right tech-badge" style="background-color: #1c84c6; font-size: 11px; padding: 2px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(28,132,198,0.3);">Taxas de Retenção</span>
+          </div>
+          
+          <div class="ibox-content padding-2" style="padding: 0 15px 15px; border-top: 1px solid rgba(0,0,0,0.05); height: calc(100% - 45px);">
             <!-- Gráfico de barras elegante -->
-            <div class="monthly-chart" style="display: flex; align-items: flex-end; height: 60px; margin-top: 5px; margin-bottom: 5px;">
+            <div class="monthly-chart" style="display: flex; align-items: flex-end; height: 55px; margin-top: 5px; margin-bottom: 5px;">
               <!-- Mês atual -->
               <div class="month-column" style="flex: 1; display: flex; flex-direction: column; align-items: center; position: relative;">
                 <div style="text-align: center; width: 100%; position: absolute; bottom: 100%; margin-bottom: 5px;">
@@ -362,7 +373,7 @@
             <div style="display: flex; align-items: center; justify-content: center; margin-top: auto;">
               <div style="padding: 3px 12px; border-radius: 12px; background: rgba(92,184,92,0.1); margin-top: 5px;">
                 <span style="font-size: 12px; color: #5cb85c; font-weight: 500;">
-                  <i class="fa fa-arrow-up" style="margin-right: 5px; font-size: 10px;"></i>Tendência positiva: +5.6% por mês
+                  <i class="fa fa-arrow-up" style="margin-right: 5px; font-size: 10px;"></i>Tendência positiva: <span id="tendencia_valor" class="glow-text">+5.6%</span> por mês
                 </span>
               </div>
             </div>
@@ -399,6 +410,126 @@
     left: 100%;
   }
   100% {
+    left: 100%;
+  }
+}
+
+/* Animação para ícones com efeito de pulso */
+.pulse-icon {
+  position: relative;
+}
+
+.pulse-icon:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  animation: pulse-icon 2s infinite;
+  z-index: -1;
+}
+
+@keyframes pulse-icon {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0.7;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Estilo para destacar valores principais */
+.highlight-value {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+  background: transparent !important; /* Garantir que não tenha background */
+}
+
+.highlight-value:after {
+  display: none; /* Ocultar o pseudo-elemento que cria o fundo verde */
+}
+
+/* Estilo para texto brilhante */
+.glow-text {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 0px rgba(0, 0, 0, 0);
+  }
+  to {
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Animação para cards */
+.card-tech {
+  transition: all 0.3s ease;
+}
+
+.card-tech:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.12) !important;
+}
+
+/* Background animado */
+.animated-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  background: linear-gradient(-45deg, rgba(240,240,240,0) 48%, rgba(255,255,255,0.4) 50%, rgba(240,240,240,0) 52%);
+  background-size: 200% 200%;
+  animation: background-animation 5s ease infinite;
+}
+
+@keyframes background-animation {
+  0% {
+    background-position: 200% 200%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/* Estilo para badges tech */
+.tech-badge {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.tech-badge:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: badge-shine 3s infinite;
+  z-index: -1;
+}
+
+@keyframes badge-shine {
+  0% {
+    left: -100%;
+  }
+  20%, 100% {
     left: 100%;
   }
 }
@@ -505,6 +636,17 @@
 .projecao-info-icon:hover {
   opacity: 1 !important;
   transform: scale(1.2);
+}
+
+/* Remover todos os ::before */
+.panel::before, 
+.panel-body::before, 
+.panel-heading::before, 
+.row::before,
+.panel-default::before,
+div::before,
+*::before {
+  content: none !important;
 }
 </style>
 
