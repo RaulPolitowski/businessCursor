@@ -323,22 +323,7 @@
 </style>
 
 <script>
-  // Inicializar os gráficos quando a página carregar
-  $(document).ready(function() {
-    // Garantir que a biblioteca do Google Charts esteja carregada
-    if (typeof google !== 'undefined' && google.charts) {
-      google.charts.load('current', {'packages':['corechart', 'table']});
-      google.charts.setOnLoadCallback(function() {
-        console.log("Google Charts carregado, iniciando drawClientes12Meses");
-        drawClientes12Meses();
-      });
-    } else {
-      console.log("Esperando Google Charts carregar...");
-      setTimeout(function() {
-        drawClientes12Meses();
-      }, 1000);
-    }
-  });
+ 
 
   $('#grafico_por').on('change', function () {
     if ($('#filtro_grafico').val() == 2)
