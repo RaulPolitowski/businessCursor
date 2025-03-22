@@ -8,7 +8,7 @@
             <div class="ibox">
               <div class="ibox-content product-box">
                 <div class="ibox-content padding-5">
-                  <div id="despesas_com_pessoal"  style="height: 250px !important;"></div>
+                  <div id="despesas_com_pessoal"></div>
                 </div>
               </div>
             </div>
@@ -75,7 +75,7 @@ function drawTableDespesasComPessoal2(){
             parseFloat(data[5].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[6].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[7].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[8].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[9].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}), parseFloat(data[10].valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})]);
         //As informações dessa linha serão acrescentadas no 'for' abaixo, porém para se utilizar o setCell a célula já precisa existir
         //portanto essa linha apenas insere uma linha na tabela
-        datatable.addRow(['POORCENTAGEM','','','','', '','','','' ,'' ,'' ,'' ]);
+        datatable.addRow(['PORCENTAGEM','','','','', '','','','' ,'' ,'' ,'' ]);
 
         for  (var x = 0; x < 11; x++) {
             if (valorPorCento[x] >= 50) {
