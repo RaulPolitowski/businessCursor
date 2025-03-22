@@ -2257,7 +2257,7 @@
     }
     
     // Atualizar tendências
-    function atualizarTendencias(variacaoDesistencia, variacaoRetencao) {
+    function atualizarTendencias(variacaoDesistencia, variacaoRetencao, mesEmAndamento) {
       // Obter valores atuais
       var taxaDesistenciaAtual = parseFloat($('#taxa_desistencia').text()) || 0;
       var taxaRetencaoAtual = parseFloat($('#taxa_retencao').text()) || 0;
@@ -2280,24 +2280,49 @@
         $('#variacao_retencao').css('color', '#ed5565').css('background', 'rgba(237, 85, 101, 0.1)');
       }
       
+      // Se mesEmAndamento não for fornecido, assumir verdadeiro (mês em andamento)
+      if (mesEmAndamento === undefined) {
+        mesEmAndamento = true;
+      }
+      
       // Atualizar indicador de meta para desistência
       $('#trend_desistencia').removeClass('trend-neutral trend-negative trend-positive');
       if (taxaDesistenciaAtual < 40) {
         $('#trend_desistencia').addClass('trend-positive');
-        $('#trend_desistencia').html('<i class="fa fa-check-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta atingida');
+        
+        if (mesEmAndamento) {
+          $('#trend_desistencia').html('<i class="fa fa-hourglass-half" style="margin-right: 5px; font-size: 11px;"></i>Meta parcialmente atingida');
+        } else {
+          $('#trend_desistencia').html('<i class="fa fa-check-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta atingida');
+        }
       } else {
         $('#trend_desistencia').addClass('trend-negative');
-        $('#trend_desistencia').html('<i class="fa fa-times-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta não atingida');
+        
+        if (mesEmAndamento) {
+          $('#trend_desistencia').html('<i class="fa fa-hourglass-half" style="margin-right: 5px; font-size: 11px;"></i>Meta ainda não atingida');
+        } else {
+          $('#trend_desistencia').html('<i class="fa fa-times-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta não atingida');
+        }
       }
       
       // Atualizar indicador de meta para retenção
       $('#trend_retencao').removeClass('trend-neutral trend-negative trend-positive');
       if (taxaRetencaoAtual > 70) {
         $('#trend_retencao').addClass('trend-positive');
-        $('#trend_retencao').html('<i class="fa fa-check-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta atingida');
+        
+        if (mesEmAndamento) {
+          $('#trend_retencao').html('<i class="fa fa-hourglass-half" style="margin-right: 5px; font-size: 11px;"></i>Meta parcialmente atingida');
+        } else {
+          $('#trend_retencao').html('<i class="fa fa-check-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta atingida');
+        }
       } else {
         $('#trend_retencao').addClass('trend-negative');
-        $('#trend_retencao').html('<i class="fa fa-times-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta não atingida');
+        
+        if (mesEmAndamento) {
+          $('#trend_retencao').html('<i class="fa fa-hourglass-half" style="margin-right: 5px; font-size: 11px;"></i>Meta ainda não atingida');
+        } else {
+          $('#trend_retencao').html('<i class="fa fa-times-circle" style="margin-right: 5px; font-size: 11px;"></i>Meta não atingida');
+        }
       }
     }
 
@@ -2556,7 +2581,7 @@
           
           // Atualizar tendências apenas se não estamos usando média
           if (!usarMediaNoLugarDeUltimoMes) {
-            atualizarTendencias(variacaoDesistencia, variacaoRetencao);
+            atualizarTendencias(variacaoDesistencia, variacaoRetencao, true); // true indica mês em andamento
             // Não atualizamos mais aqui, pois agora é feito na função atualizarComparativoMensal
             // atualizarStatusProgresso(variacaoRetencao);
           } else {
