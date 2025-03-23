@@ -1,19 +1,25 @@
 <div class="col-lg-12 no-padding">
-  <div class="panel panel-default" style="margin-bottom: 10px !important;">
-    <div class="panel-heading" style="height: 39px">
-      <div class="col-sm-2  pull" style="margin-top: -6px !important; padding-left: 0px" id="categoria_tabela">
+  <div class="panel panel-default dashboard-panel" style="margin-bottom: 10px !important; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 10px rgba(0,0,0,0.05);">
+    <div class="panel-heading modern-heading" style="height: 39px; background: linear-gradient(120deg, #f8f9fa, #ffffff); border-bottom: 1px solid #e7eaec;">
+      <div class="col-sm-2 pull" style="margin-top: -6px !important; padding-left: 0px" id="categoria_tabela">
         <%= select_tag  'filtro_categoria', options_for_select([
                                                               ['Receitas', 1],
                                                               ['Despesas', 2],
                                                               ['Resultado', 3]
                                                               ], 3), {:class => "form-control input-sm chosen-select"} %>
       </div>
+      <div style="display: inline-block; margin-left: 15px;">
+        <span id="categoria_icone" style="font-weight: 600; color: #333; font-size: 15px;">
+          <i class="fa fa-calculator" style="color: #f8ac59; margin-right: 5px;"></i>
+          <span id="categoria_titulo">Resultado</span>
+        </span>
+      </div>
     </div>
     <div class="panel-body no-padding">
       <div class="col-lg-12 padding-left-right">
         <div id="fatReceita" class="col-md-12 padding-5">
           <div class="ibox">
-            <div class="ibox-content product-box">            
+            <div class="ibox-content product-box modern-box receita-box" style="border-radius: 6px; overflow: hidden; transition: all 0.3s ease; border-top: 2px solid #1ab394;">            
               <div class="ibox-content padding-5">
                 <div id="desc_receitas"  style="height: 350px !important;"></div>
               </div>
@@ -22,7 +28,7 @@
         </div>
         <div id="fatSistema" class="col-md-12 padding-5">
           <div class="ibox">
-            <div class="ibox-content product-box">            
+            <div class="ibox-content product-box modern-box receita-box" style="border-radius: 6px; overflow: hidden; transition: all 0.3s ease; border-top: 2px solid #1ab394;">            
               <div class="ibox-content padding-5">
                 <div id="sistema_receitas"  style="height: 510px !important;"></div>
               </div>
@@ -31,7 +37,7 @@
         </div>
         <div id="fatDespesa" class="col-md-12 padding-5">
           <div class="ibox">
-            <div class="ibox-content product-box">            
+            <div class="ibox-content product-box modern-box despesa-box" style="border-radius: 6px; overflow: hidden; transition: all 0.3s ease; border-top: 2px solid #ed5565;">            
               <div class="ibox-content padding-5"  style="Font:10px">
                 <div id="desc_despesas"  style="height: 930px !important;"></div>
               </div>
@@ -40,7 +46,7 @@
         </div>
         <div id="fatResultado" class="col-md-12 padding-5">
           <div class="ibox">
-            <div class="ibox-content product-box">            
+            <div class="ibox-content product-box modern-box resultado-box" style="border-radius: 6px; overflow: hidden; transition: all 0.3s ease; border-top: 2px solid #f8ac59;">            
               <div class="ibox-content padding-5"  style="Font:10px">
                 <div id="resultado"  style="height: 300px !important;"></div>
               </div>
@@ -54,7 +60,7 @@
 
 <style>
   .greencolor{
-    color: green;
+    color: #1ab394;
   }
   .google-visualization-table-table {
     font-size: 11px !important;
@@ -65,7 +71,7 @@
 
   .bold-green-font {
       font-weight: bold;
-      color: green;
+      color: #1ab394;
       background: #f7f7cb;
   }
 
@@ -90,6 +96,55 @@
       font-weight: bold !important;
        background-color: #f7f7cb;
   }
+  
+  /* Estilos base modernos */
+  .dashboard-panel {
+    transition: all 0.3s ease;
+  }
+
+  .dashboard-panel:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  }
+
+  .modern-heading {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .modern-box {
+    background: #ffffff;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .modern-box:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  }
+  
+  /* Estilos específicos por tipo */
+  .receita-box:hover {
+    border-top-color: #1ab394;
+    box-shadow: 0 5px 15px rgba(26,179,148,0.1);
+  }
+  
+  .despesa-box:hover {
+    border-top-color: #ed5565;
+    box-shadow: 0 5px 15px rgba(237,85,101,0.1);
+  }
+  
+  .resultado-box:hover {
+    border-top-color: #f8ac59;
+    box-shadow: 0 5px 15px rgba(248,172,89,0.1);
+  }
+  
+  /* Estilização para tabelas */
+  .table-bordered {
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(58,123,213,0.03);
+  }
 </style>
 
 <script>
@@ -100,18 +155,27 @@ $('#categoria_tabela').on('click', function () {
     $('#fatSistema').hide();
     $('#fatReceita').show();
     drawTable12MesesReceita();    
+    $('#categoria_icone i').attr('class', 'fa fa-line-chart');
+    $('#categoria_icone i').css('color', '#1ab394');
+    $('#categoria_titulo').text('Receitas');
   }else if ($('#filtro_categoria').val() == 2){    
     $('#fatReceita').hide();
     $('#fatResultado').hide();
     $('#fatSistema').hide();
     $('#fatDespesa').show();    
     drawTable12MesesDespesa();
+    $('#categoria_icone i').attr('class', 'fa fa-money');
+    $('#categoria_icone i').css('color', '#ed5565');
+    $('#categoria_titulo').text('Despesas');
   }else if ($('#filtro_categoria').val() == 3){    
     $('#fatReceita').hide();
     $('#fatDespesa').hide();    
     $('#fatSistema').hide();
     $('#fatResultado').show();
     drawTable12MesesResultado();
+    $('#categoria_icone i').attr('class', 'fa fa-calculator');
+    $('#categoria_icone i').css('color', '#f8ac59');
+    $('#categoria_titulo').text('Resultado');
   }
 });
 

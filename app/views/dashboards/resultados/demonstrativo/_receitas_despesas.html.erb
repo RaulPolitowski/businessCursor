@@ -1,8 +1,8 @@
 <div class="col-lg-12 no-padding">
-  <div class="panel panel-default" style="margin-bottom: 10px !important;">
-    <div class="panel-heading">
-      Receitas x Despesas
-      <div class="col-sm-2  pull-right" style="margin-top: -6px !important;" id="dem_grafico_por">
+  <div class="panel panel-default dashboard-panel" style="margin-bottom: 10px !important; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 10px rgba(0,0,0,0.05);">
+    <div class="panel-heading modern-heading" style="padding: 15px; background: linear-gradient(120deg, #f8f9fa, #ffffff); border-bottom: 1px solid #e7eaec;">
+      <span style="font-weight: 600; color: #333; font-size: 16px;"><i class="fa fa-exchange" style="color: #3a7bd5; margin-right: 8px;"></i>Receitas x Despesas</span>
+      <div class="col-sm-2 pull-right" style="margin-top: -6px !important;" id="dem_grafico_por">
         <%= select_tag  'filtro_grafico_demonstrativo', options_for_select([
                                                               ['Receitas', 1],
                                                               ['Despesas', 2]
@@ -12,75 +12,83 @@
     <div class="panel-body no-padding">
       <div class="col-lg-12 padding-left-right">
         <div id="fatDiv" class="col-md-3 padding-5">
-          <div id="fatDiv" class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Faturamento total</h5>
-                  <span class="label label-info pull-right" id="compentencia"></span>
-                </div>
-                <div class="ibox-content padding-5" style="height: 55px !important;">
-                  <div class="col-lg-8 no-padding">
-                    <h2 class="pull-left" id="receitas_total" style="margin-bottom: 3px"></h2>
-                  </div>
-                  <div class="col-lg-4 no-padding">
-                    <div class="col-lg-12 no-padding">
-                      <div class="stat-percent font-bold text-danger" id="percentual_receitas_total"></div>
+          <!-- Card de Faturamento -->
+          <div class="col-lg-12 padding-left-right" style="margin-bottom: 10px;">
+            <div class="ibox float-e-margins">
+              <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); padding: 15px; height: 100px; border-top: 3px solid #1ab394; position: relative; overflow: hidden;">
+                <!-- Efeito de brilho de fundo -->
+                <div class="animated-background"></div>
+                
+                <div style="position: relative; z-index: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center;">
+                      <i class="fa fa-line-chart" style="color: #1ab394; font-size: 16px; margin-right: 8px;"></i>
+                      <h5 style="margin: 0; font-weight: 600; color: #333; font-size: 14px;">Faturamento total</h5>
                     </div>
-                    <div class="col-lg-12 no-padding">
-                      <div class="pull-right">
-                        <small id="receita_anterior"></small>
-                      </div>
-                    </div>
+                    <span class="label label-success" style="font-size: 10px; padding: 3px 5px; border-radius: 3px;" id="compentencia"></span>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="fatDiv" class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Despesas total</h5>
-                  <span class="label label-info pull-right" id="competencia_des"></span>
-                </div>
-                <div class="ibox-content padding-5" style="height: 55px !important;">
-                  <div class="col-lg-8 no-padding">
-                    <h2 class="pull-left" id="despesas_total" style="margin-bottom: 3px"></h2>
-                  </div>
-                  <div class="col-lg-4 no-padding">
-                    <div class="col-lg-12 no-padding">
-                      <div class="stat-percent font-bold text-danger" id="percentual_despesas"></div>
-                    </div>
-                    <div class="col-lg-12 no-padding">
-                      <div class="pull-right">
-                        <small id="despesas_anterior"></small>
-                      </div>
+                  
+                  <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <h2 class="count-animation" id="receitas_total" style="margin: 0; font-size: 24px; font-weight: 700; color: #1ab394;"></h2>
+                    <div style="text-align: right;">
+                      <div class="stat-percent font-bold" id="percentual_receitas_total" style="font-size: 12px;"></div>
+                      <small id="receita_anterior" style="display: block; font-size: 11px; color: #888;"></small>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div id="fatDiv" class="col-lg-12 padding-left-right">
-            <div class="ibox">
-              <div class="ibox-content product-box">
-                <div class="ibox-title ibox-title-without-border-style">
-                  <h5>Resultado</h5>
-                  <span class="label label-info pull-right" id="competencia_rec"></span>
-                </div>
-                <div class="ibox-content padding-5" style="height: 55px !important;">
-                  <div class="col-lg-8 no-padding">
-                    <h2 class="pull-left" id="resultado_total" style="margin-bottom: 7px"></h2>
-                  </div>
-                  <div class="col-lg-4 no-padding">
-                    <div class="col-lg-12 no-padding">
-                      <div class="stat-percent font-bold text-danger" id="percentual_resultado"></div>
+          
+          <!-- Card de Despesas -->
+          <div class="col-lg-12 padding-left-right" style="margin-bottom: 10px;">
+            <div class="ibox float-e-margins">
+              <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); padding: 15px; height: 100px; border-top: 3px solid #ed5565; position: relative; overflow: hidden;">
+                <!-- Efeito de brilho de fundo -->
+                <div class="animated-background"></div>
+                
+                <div style="position: relative; z-index: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center;">
+                      <i class="fa fa-money" style="color: #ed5565; font-size: 16px; margin-right: 8px;"></i>
+                      <h5 style="margin: 0; font-weight: 600; color: #333; font-size: 14px;">Despesas total</h5>
                     </div>
-                    <div class="col-lg-12 no-padding">
-                      <div class="pull-right">
-                        <small id="resultado_anterior"></small>
-                      </div>
+                    <span class="label label-danger" style="font-size: 10px; padding: 3px 5px; border-radius: 3px;" id="competencia_des"></span>
+                  </div>
+                  
+                  <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <h2 class="count-animation" id="despesas_total" style="margin: 0; font-size: 24px; font-weight: 700; color: #ed5565;"></h2>
+                    <div style="text-align: right;">
+                      <div class="stat-percent font-bold" id="percentual_despesas" style="font-size: 12px;"></div>
+                      <small id="despesas_anterior" style="display: block; font-size: 11px; color: #888;"></small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Card de Resultado -->
+          <div class="col-lg-12 padding-left-right">
+            <div class="ibox float-e-margins">
+              <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); padding: 15px; height: 100px; border-top: 3px solid #f8ac59; position: relative; overflow: hidden;">
+                <!-- Efeito de brilho de fundo -->
+                <div class="animated-background"></div>
+                
+                <div style="position: relative; z-index: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center;">
+                      <i class="fa fa-calculator" style="color: #f8ac59; font-size: 16px; margin-right: 8px;"></i>
+                      <h5 style="margin: 0; font-weight: 600; color: #333; font-size: 14px;">Resultado</h5>
+                    </div>
+                    <span class="label label-warning" style="font-size: 10px; padding: 3px 5px; border-radius: 3px;" id="competencia_rec"></span>
+                  </div>
+                  
+                  <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <h2 class="count-animation" id="resultado_total" style="margin: 0; font-size: 24px; font-weight: 700; color: #f8ac59;"></h2>
+                    <div style="text-align: right;">
+                      <div class="stat-percent font-bold" id="percentual_resultado" style="font-size: 12px;"></div>
+                      <small id="resultado_anterior" style="display: block; font-size: 11px; color: #888;"></small>
                     </div>
                   </div>
                 </div>
@@ -88,28 +96,30 @@
             </div>
           </div>
         </div>
+        
         <div class="col-md-6 padding-5">
           <div class="ibox">
-            <div class="ibox-content product-box">
-              <div class="ibox-title ibox-title-without-border-style">
-                <span class="label label-info pull-right">Anual</span>
-                <h5>Receitas x Despesas</h5>
+            <div class="ibox-content product-box modern-box" style="border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); padding: 0; overflow: hidden;">
+              <div class="ibox-title" style="background: transparent; border-bottom: 1px solid #f1f1f1; padding: 15px;">
+                <span class="label label-primary pull-right" style="font-size: 10px; padding: 3px 5px; border-radius: 3px;">Anual</span>
+                <h5 style="margin: 0; font-weight: 600; color: #333; font-size: 14px;"><i class="fa fa-bar-chart" style="color: #3a7bd5; margin-right: 8px;"></i>Receitas x Despesas</h5>
               </div>
-              <div class="ibox-content padding-5">
+              <div style="padding: 15px;">
                 <div id="demonstrativo_12_meses" style="height: 222px !important;"></div>
               </div>
             </div>
           </div>
         </div>
+        
         <div class="col-md-3 padding-5">
           <div class="ibox">
-            <div class="ibox-content product-box">
-              <div class="ibox-title ibox-title-without-border-style">
-                <span class="label label-info pull-right" id="competencia_tabela"></span>
-                <h5 id="titulo_tabela">Receitas</h5>
+            <div class="ibox-content product-box modern-box" style="border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); padding: 0; overflow: hidden;">
+              <div class="ibox-title" style="background: transparent; border-bottom: 1px solid #f1f1f1; padding: 15px;">
+                <span class="label label-primary pull-right" style="font-size: 10px; padding: 3px 5px; border-radius: 3px;" id="competencia_tabela"></span>
+                <h5 id="titulo_tabela" style="margin: 0; font-weight: 600; color: #333; font-size: 14px;"><i class="fa fa-list" style="color: #3a7bd5; margin-right: 8px;"></i>Receitas</h5>
               </div>
-              <div class="ibox-content padding-5">
-                <div id="demonstrativo_por_tipo"  style="height: 222px !important;"></div>
+              <div style="padding: 15px;">
+                <div id="demonstrativo_por_tipo" style="height: 222px !important;"></div>
               </div>
             </div>
           </div>
@@ -120,7 +130,89 @@
 </div>
 <style>
   .redcolor{
-    color: red;
+    color: #ed5565;
+  }
+  
+  /* Estilos base aprimorados */
+  .dashboard-panel {
+    transition: all 0.3s ease;
+  }
+
+  .dashboard-panel:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  }
+
+  .modern-heading {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .modern-box {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .modern-box:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  }
+  
+  /* Efeitos nos cards */
+  .card-tech {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card-tech:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  
+  /* Animação do background */
+  .animated-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255,255,255,0) 20%, 
+        rgba(255,255,255,0.15) 40%, 
+        rgba(255,255,255,0) 60%);
+    animation: shine 4s infinite;
+    z-index: 0;
+  }
+
+  @keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  
+  /* Animação de contagem */
+  .count-animation {
+    position: relative;
+    animation: fadeIn 0.8s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Estilização para tabelas */
+  .table-bordered {
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(58,123,213,0.03);
+  }
+  
+  /* Cores para diferentes tipos */
+  .text-info {
+    color: #1ab394 !important;
+  }
+  
+  .text-danger {
+    color: #ed5565 !important;
   }
 </style>
 

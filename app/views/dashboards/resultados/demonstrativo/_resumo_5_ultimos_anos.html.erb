@@ -1,12 +1,12 @@
 <div class="col-lg-12 no-padding">
-  <div class="panel panel-default" style="margin-bottom: 10px !important">
-  <div class="panel-heading" style="margin-top: -6px !important; padding-left: 10px" id="categoria_tabela">
-        Resultado Anual
+  <div class="panel panel-default dashboard-panel" style="margin-bottom: 10px !important; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 10px rgba(0,0,0,0.05);">
+  <div class="panel-heading modern-heading" style="margin-top: -6px !important; padding: 15px; background: linear-gradient(120deg, #f8f9fa, #ffffff); border-bottom: 1px solid #e7eaec;" id="categoria_tabela">
+        <span style="font-weight: 600; color: #333; font-size: 16px;"><i class="fa fa-line-chart" style="color: #3a7bd5; margin-right: 8px;"></i>Resultado Anual</span>
     <div class="panel-body no-padding">
       <div class="col-lg-12 padding-left-right">
         <div id="fatReceitaAnos" class="col-md-12 padding-5">
           <div class="ibox">
-            <div class="ibox-content product-box">            
+            <div class="ibox-content product-box modern-box" style="border-radius: 6px; overflow: hidden; transition: all 0.3s ease;">            
               <div class="ibox-content padding-5">
                   <div id="desc_receitas_anos"></div>
                 </div>
@@ -14,7 +14,7 @@
             </div>
           </div>
           
-          <!-- Início do bloco de indicadores visuais -->
+          <!-- Início do bloco de indicadores visuais - Estilização melhorada -->
           <div id="indicadoresVisuais" class="col-md-12 padding-5" style="display:none; margin-top: 20px;">
             <div class="ibox" style="margin-top: 15px; margin-bottom: 0; max-height: 150px;">
               <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); overflow: hidden; position: relative; transition: all 0.3s ease; background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); height: 100%;">
@@ -25,7 +25,7 @@
                 <div class="row" style="position: relative; z-index: 1; height: 100%;">
                   <div class="col-xs-8">
                     <h3 class="no-margins" style="font-size: 16px; color: #676a6c; font-weight: 600;">
-                      <i class="fa fa-line-chart pulse-icon" style="margin-right: 5px; color: #1ab394;"></i> 
+                      <i class="fa fa-line-chart pulse-icon" style="margin-right: 5px; color: #3a7bd5;"></i> 
                       RESULTADO ANUAL <span id="ano-atual-resultado" style="font-weight: 700;"></span>
                       <span class="tooltip-info" data-toggle="modal" data-target="#modalResultadoAnual">
                         <i class="fa fa-info-circle" style="color: #3a7bd5; font-size: 14px; margin-left: 5px; cursor: help;"></i>
@@ -35,20 +35,20 @@
                     <!-- Div separadora para criar espaço visual -->
                     <div style="height: 15px;"></div>
                     
-                    <h2 id="resultadoPrevia" class="no-margins highlight-value" style="font-size: 28px; color: #1ab394; font-weight: 700; letter-spacing: -0.5px;"></h2>
+                    <h2 id="resultadoPrevia" class="no-margins highlight-value" style="font-size: 28px; color: #3a7bd5; font-weight: 700; letter-spacing: -0.5px;"></h2>
                     
                     <div class="row" style="margin-top: 12px;">
                       <div class="col-xs-12">
                         <div style="display: flex; align-items: center;">
                           <div class="progress-container" style="position: relative; flex-grow: 1; height: 10px; border-radius: 20px; background-color: rgba(220,220,220,0.3); box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); overflow: hidden;">
-                            <div id="progressoMeta" class="progress-bar progress-animated" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; border-radius: 20px; background: linear-gradient(90deg, #1ab394 0%, #21d8b5 100%);">
+                            <div id="progressoMeta" class="progress-bar progress-animated" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; border-radius: 20px; background: linear-gradient(90deg, #3a7bd5 0%, #00d2ff 100%);">
                               <!-- Efeito de brilho na barra -->
                               <div class="progress-glow"></div>
                             </div>
                             <!-- Marcador de meta (linha vertical) -->
                             <div id="marcadorMeta" style="position: absolute; top: -4px; right: 0; height: 18px; width: 2px; background-color: #3a7bd5; z-index: 3; box-shadow: 0 0 5px rgba(58,123,213,0.7);"></div>
                           </div>
-                          <span id="porcentagem-meta" style="margin-left: 8px; font-size: 12px; font-weight: 600; color: #1ab394; min-width: 40px; text-align: right;"></span>
+                          <span id="porcentagem-meta" style="margin-left: 8px; font-size: 12px; font-weight: 600; color: #3a7bd5; min-width: 40px; text-align: right;"></span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 11px; color: #888888;">
                           <span id="progresso-atual-info">Progresso</span>
@@ -82,19 +82,21 @@
           </div>
           <!-- Fim do bloco de indicadores visuais -->
           
-          <!-- Início da seção de insights avançados -->
+          <!-- Início da seção de insights avançados - Estilização melhorada -->
           <div id="insightsAvancados" class="col-md-12 padding-5" style="display:none; margin-top: 15px;">
             <div class="row">
               <!-- Taxa de conversão receita/resultado -->
               <div class="col-md-4">
                 <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); padding: 15px; height: 130px;">
-                  <div style="font-size: 12px; color: #676a6c; margin-bottom: 8px;">
-                    <i class="fa fa-exchange" style="color: #1ab394; margin-right: 5px;"></i> Eficiência Financeira
+                  <div style="font-size: 12px; color: #676a6c; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                      <i class="fa fa-exchange" style="color: #3a7bd5; margin-right: 5px;"></i> Eficiência Financeira
+                    </div>
                     <span class="tooltip-info" data-toggle="modal" data-target="#modalEficienciaFinanceira">
                       <i class="fa fa-info-circle" style="color: #3a7bd5; font-size: 12px; cursor: help;"></i>
                     </span>
                   </div>
-                  <div id="taxaConversaoValor" style="font-size: 22px; font-weight: 600; color: #1ab394; text-align: center; margin-bottom: 2px;"></div>
+                  <div id="taxaConversaoValor" style="font-size: 22px; font-weight: 600; color: #3a7bd5; text-align: center; margin-bottom: 2px;" class="count-animation"></div>
                   <div style="font-size: 11px; color: #676a6c; text-align: center; margin-bottom: 2px;">da receita vira resultado</div>
                   <div id="valorEficienciaFinanceira" style="font-size: 10px; color: #676a6c; text-align: center; margin-bottom: 3px;"></div>
                   <div id="taxaConversaoComp" style="font-size: 11px; text-align: center;"></div>
@@ -104,13 +106,15 @@
               <!-- Velocidade de crescimento -->
               <div class="col-md-4">
                 <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); padding: 15px; height: 130px;">
-                  <div style="font-size: 12px; color: #676a6c; margin-bottom: 8px;">
-                    <i class="fa fa-tachometer" style="color: #1ab394; margin-right: 5px;"></i> Ritmo de Crescimento
+                  <div style="font-size: 12px; color: #676a6c; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                      <i class="fa fa-tachometer" style="color: #3a7bd5; margin-right: 5px;"></i> Ritmo de Crescimento
+                    </div>
                     <span class="tooltip-info" data-toggle="modal" data-target="#modalRitmoCrescimento">
                       <i class="fa fa-info-circle" style="color: #3a7bd5; font-size: 12px; cursor: help;"></i>
                     </span>
                   </div>
-                  <div id="velocidadeCrescimentoValor" style="font-size: 22px; font-weight: 600; text-align: center; margin-bottom: 2px;"></div>
+                  <div id="velocidadeCrescimentoValor" style="font-size: 22px; font-weight: 600; text-align: center; margin-bottom: 2px;" class="count-animation"></div>
                   <div style="font-size: 11px; color: #676a6c; text-align: center; margin-bottom: 2px;">vs ano anterior</div>
                   <div id="valoresRitmoCrescimento" style="font-size: 10px; color: #676a6c; text-align: center; margin-bottom: 3px;"></div>
                   <div id="velocidadeCrescimentoInfo" style="font-size: 11px; text-align: center;"></div>
@@ -120,13 +124,15 @@
               <!-- Índice de resiliência financeira -->
               <div class="col-md-4">
                 <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); padding: 15px; height: 130px;">
-                  <div style="font-size: 12px; color: #676a6c; margin-bottom: 8px;">
-                    <i class="fa fa-shield" style="color: #1ab394; margin-right: 5px;"></i> Estabilidade Financeira
+                  <div style="font-size: 12px; color: #676a6c; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                      <i class="fa fa-shield" style="color: #3a7bd5; margin-right: 5px;"></i> Estabilidade Financeira
+                    </div>
                     <span class="tooltip-info" data-toggle="modal" data-target="#modalEstabilidadeFinanceira">
                       <i class="fa fa-info-circle" style="color: #3a7bd5; font-size: 12px; cursor: help;"></i>
                     </span>
                   </div>
-                  <div id="indiceResilienciaValor" style="font-size: 22px; font-weight: 600; color: #1ab394; text-align: center; margin-bottom: 2px;"></div>
+                  <div id="indiceResilienciaValor" style="font-size: 22px; font-weight: 600; color: #3a7bd5; text-align: center; margin-bottom: 2px;" class="count-animation"></div>
                   <div style="font-size: 11px; color: #676a6c; text-align: center; margin-bottom: 2px;">nível de previsibilidade</div>
                   <div id="valorEstabilidadeFinanceira" style="font-size: 10px; color: #676a6c; text-align: center; margin-bottom: 3px;"></div>
                   <div id="indiceResilienciaInfo" style="font-size: 11px; text-align: center;"></div>
@@ -801,11 +807,49 @@ $(document).ready(function() {
 
 </script>
 
-<!-- Adiciona estilos CSS para os indicadores visuais -->
+<!-- Atualizar os estilos CSS para melhorar a aparência -->
 <style>
-/* Estilo para números animados */
-.animated-number {
+/* Estilos base aprimorados */
+.dashboard-panel {
+  transition: all 0.3s ease;
+}
+
+.dashboard-panel:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.modern-heading {
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.modern-box {
+  background: #ffffff;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.modern-box:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* Estilo para números animados - melhorado */
+.animated-number, .count-animation {
     animation: fadeIn 0.8s ease-out;
+    position: relative;
+    display: inline-block;
+}
+
+.count-animation::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 25%;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        rgba(58,123,213,0.1) 0%, 
+        rgba(58,123,213,0.6) 50%, 
+        rgba(58,123,213,0.1) 100%);
 }
 
 @keyframes fadeIn {
@@ -813,7 +857,7 @@ $(document).ready(function() {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Animação do background */
+/* Animação do background - aprimorada */
 .animated-background {
     position: absolute;
     top: 0;
@@ -824,16 +868,16 @@ $(document).ready(function() {
         rgba(255,255,255,0) 20%, 
         rgba(255,255,255,0.15) 40%, 
         rgba(255,255,255,0) 60%);
-    animation: shine 3s infinite;
+    animation: shine 4s infinite;
     z-index: 0;
 }
 
 @keyframes shine {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(100%); }
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
-/* Efeito de brilho na barra de progresso */
+/* Efeito de brilho na barra de progresso - aprimorado */
 .progress-glow {
     position: absolute;
     top: 0;
@@ -841,20 +885,20 @@ $(document).ready(function() {
     width: 60px;
     background: linear-gradient(90deg,
         rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0.4) 50%,
+        rgba(255,255,255,0.5) 50%,
         rgba(255,255,255,0) 100%);
-    animation: progressShine 1.5s infinite;
+    animation: progressShine 2s infinite;
     z-index: 2;
 }
 
 @keyframes progressShine {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(400%); }
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
 }
 
-/* Cores para textos */
+/* Cores para textos - alinhadas com esquema de cores atualizado */
 .text-success {
-    color: #1ab394;
+    color: #3a7bd5;
 }
 
 .text-danger {
@@ -862,49 +906,51 @@ $(document).ready(function() {
 }
 
 .text-warning {
-    color: #3a7bd5;
+    color: #f8ac59;
 }
 
-/* Estilo para o ícone pulsante */
+/* Estilo para o ícone pulsante - suavizado */
 .pulse-icon {
-    animation: pulse 2s infinite;
+    animation: pulse 3s infinite;
     display: inline-block;
 }
 
 @keyframes pulse {
     0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    50% { transform: scale(1.05); }
     100% { transform: scale(1); }
 }
 
-/* Estilo para animação da barra de progresso */
+/* Estilo para animação da barra de progresso - suavizado */
 .progress-animated {
-    transition: width 1.5s ease-in-out;
+    transition: width 1.8s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     overflow: hidden;
 }
 
-/* Estilos para cards com hover */
+/* Estilos para cards com hover - aprimorado */
 .card-tech {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.02);
 }
 
 .card-tech:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    border-color: rgba(58,123,213,0.1);
 }
 
-/* Efeito de brilho para textos */
+/* Efeito de brilho para textos - aprimorado */
 .glow-text {
     display: inline-block;
     transition: all 0.3s ease;
 }
 
 .glow-text:hover {
-    text-shadow: 0 0 5px rgba(26,179,148,0.5);
+    text-shadow: 0 0 5px rgba(58,123,213,0.5);
 }
 
-/* Highlight para valores principais */
+/* Highlight para valores principais - alinhado com esquema de cores */
 .highlight-value {
     position: relative;
     display: inline-block;
@@ -918,15 +964,16 @@ $(document).ready(function() {
     width: 100%;
     height: 2px;
     background: linear-gradient(90deg, 
-        rgba(26,179,148,0.2) 0%, 
-        rgba(26,179,148,0.8) 50%, 
-        rgba(26,179,148,0.2) 100%);
+        rgba(58,123,213,0.2) 0%, 
+        rgba(58,123,213,0.8) 50%, 
+        rgba(58,123,213,0.2) 100%);
 }
 
-/* Estilos para os cards de insights */
+/* Estilos para os cards de insights - aprimorado */
 #insightsAvancados .card-tech {
     transition: all 0.3s ease;
     overflow: hidden;
+    position: relative;
 }
 
 #insightsAvancados .card-tech:hover {
@@ -934,27 +981,39 @@ $(document).ready(function() {
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
-/* Animação para o sparkline */
-@keyframes drawLine {
-    from { stroke-dashoffset: 1000; }
-    to { stroke-dashoffset: 0; }
-}
-
-#sparklineTendencia polyline {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-    animation: drawLine 1.5s ease-in-out forwards;
-}
-
-#sparklineTendencia circle {
-    animation: fadeIn 1.5s ease-in-out forwards;
+#insightsAvancados .card-tech::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #3a7bd5, #00d2ff);
     opacity: 0;
-    animation-delay: 0.8s;
+    transition: opacity 0.3s ease;
 }
 
-#sparklineTendencia text {
-    animation: fadeIn 1s ease-in-out forwards;
-    opacity: 0;
-    animation-delay: 1s;
+#insightsAvancados .card-tech:hover::before {
+    opacity: 1;
+}
+
+/* Animação para tooltips e modais */
+.tooltip-info i {
+    transition: all 0.3s ease;
+}
+
+.tooltip-info:hover i {
+    transform: scale(1.2);
+    color: #00d2ff;
+}
+
+/* Estilização para tabelas */
+.table-bordered {
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(58,123,213,0.03);
 }
 </style>

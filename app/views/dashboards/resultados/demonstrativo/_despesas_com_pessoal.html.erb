@@ -1,12 +1,12 @@
 <div class="col-lg-12 no-padding">
-  <div class="panel panel-default" style="margin-bottom: 10px !important">
-    <div class="panel-heading" style="margin-top: -6px !important; padding-left: 10px" id="categoria_tabela">
-      Despesas com Pessoal
+  <div class="panel panel-default dashboard-panel" style="margin-bottom: 10px !important; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 10px rgba(0,0,0,0.05);">
+    <div class="panel-heading modern-heading" style="margin-top: -6px !important; padding: 15px; background: linear-gradient(120deg, #f8f9fa, #ffffff); border-bottom: 1px solid #e7eaec;" id="categoria_tabela">
+      <span style="font-weight: 600; color: #333; font-size: 16px;"><i class="fa fa-users" style="color: #ed5565; margin-right: 8px;"></i>Despesas com Pessoal</span>
       <div class="panel-body no-padding">
         <div class="col-lg-12 padding-left-right">
           <div id="DespesasComPessoal" class="col-md-12 padding-5">
             <div class="ibox">
-              <div class="ibox-content product-box">
+              <div class="ibox-content product-box modern-box despesa-box" style="border-radius: 6px; overflow: hidden; transition: all 0.3s ease; border-top: 2px solid #ed5565;">
                 <div class="ibox-content padding-5">
                   <div id="despesas_com_pessoal"></div>
                 </div>
@@ -21,13 +21,52 @@
 
 <style>
   .greencolor{
-    color: green;
+    color: #1ab394;
   }
   .redcolor{
-    color: red;
+    color: #ed5565;
   }
   .bold{
     font-weight: bold;
+  }
+  
+  /* Estilos base modernos */
+  .dashboard-panel {
+    transition: all 0.3s ease;
+  }
+
+  .dashboard-panel:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  }
+
+  .modern-heading {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .modern-box {
+    background: #ffffff;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .modern-box:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  }
+  
+  /* Estilos específicos por tipo */
+  .despesa-box:hover {
+    border-top-color: #ed5565;
+    box-shadow: 0 5px 15px rgba(237,85,101,0.1);
+  }
+  
+  /* Estilização para tabelas */
+  .table-bordered {
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(237,85,101,0.03);
   }
 </style>
 
