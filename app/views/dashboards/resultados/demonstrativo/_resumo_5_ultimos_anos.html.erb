@@ -534,7 +534,6 @@ function renderizarIndicadoresVisuais(data) {
             sinalTaxa + diferencaTaxas.toFixed(1) + 'pp</span> vs ano anterior');
         
         // 3. Velocidade de crescimento
-        // Calcular a aceleração do crescimento usando apenas meses completos (período equivalente)
         var mesAtual = new Date().getMonth() + 1; // Mês atual (1-12)
         var mesesCompletos = mesAtual - 1; // Exclui o mês atual que ainda está em andamento
 
@@ -544,15 +543,26 @@ function renderizarIndicadoresVisuais(data) {
             $('#velocidadeCrescimentoInfo').html('<span style="font-style: italic; color: #888;">Primeiro mês em andamento</span>');
             $('#valoresRitmoCrescimento').html('');
         } else {
-            // Calcular resultado apenas para meses completos
-            var resultadoMesesCompletosAtual = (resultadoAtual / mesAtual) * mesesCompletos;
+            // Usar os resultados acumulados sem o mês atual
+            // Em vez de calcular com base no resultado total, usar o campo resultadosemmesatual que já existe
+            var resultadoMesesCompletosAtual = parseFloat(data[indexAnoAtual].resultadosemmesatual || 0);
+            
+            // Se não existir o campo, fazer o cálculo aproximado
+            if (resultadoMesesCompletosAtual === 0) {
+                // Calcular aproximado (proporção com base na média, mas só para meses completos)
+                // Estimar quanto do resultado total corresponde ao mês atual
+                var mediaMensalEstimada = resultadoAtual / mesAtual;
+                // Subtrair a estimativa do mês atual do total
+                resultadoMesesCompletosAtual = resultadoAtual - mediaMensalEstimada;
+            }
             
             // Obter dados dos mesmos meses do ano anterior
             var resultadoMesesCompletosAnterior = (resultadoAnterior / 12) * mesesCompletos;
             
-            // Adicionar valores monetários
+            // Adicionar valores monetários com clareza sobre o período
             $('#valoresRitmoCrescimento').html(formatter.format(resultadoMesesCompletosAtual) + 
-                ' vs ' + formatter.format(resultadoMesesCompletosAnterior) + ' no mesmo período');
+                ' vs ' + formatter.format(resultadoMesesCompletosAnterior) + 
+                ' <span style="white-space: nowrap;">(' + mesesCompletos + ' ' + (mesesCompletos === 1 ? 'mês completo' : 'meses completos') + ')</span>');
             
             // Calcular a variação percentual entre períodos equivalentes
             var crescimentoAtual = ((resultadoMesesCompletosAtual / resultadoMesesCompletosAnterior) - 1) * 100;
@@ -571,25 +581,25 @@ function renderizarIndicadoresVisuais(data) {
             var sinalVelocidade = aceleracao >= 0 ? '+' : '';
             
             $('#velocidadeCrescimentoValor').html('<span class="' + classeVelocidade + '">' + 
-                sinalVelocidade + aceleracao.toFixed(1) + '%</span>');
+                sinalVelocidade + crescimentoAtual.toFixed(1) + '%</span>');
             
             var mensagemVelocidade = '';
             
-            if (aceleracao > 10) {
+            if (crescimentoAtual > 30) {
                 mensagemVelocidade = 'Aceleração forte';
-            } else if (aceleracao > 3) {
+            } else if (crescimentoAtual > 10) {
                 mensagemVelocidade = 'Aceleração moderada';
-            } else if (aceleracao >= -3) {
-                mensagemVelocidade = 'Ritmo constante';
-            } else if (aceleracao >= -10) {
+            } else if (crescimentoAtual >= 0) {
+                mensagemVelocidade = 'Crescimento estável';
+            } else if (crescimentoAtual >= -10) {
                 mensagemVelocidade = 'Desaceleração moderada';
             } else {
                 mensagemVelocidade = 'Desaceleração forte';
             }
             
             $('#velocidadeCrescimentoInfo').html(mensagemVelocidade + 
-                '<span style="display: block; font-size: 10px; color: #888; margin-top: 3px;">Comparando ' + 
-                mesesCompletos + ' meses completos</span>');
+                '<span style="display: block; font-size: 10px; color: #888; margin-top: 3px;">Comparando apenas ' + 
+                mesesCompletos + ' ' + (mesesCompletos === 1 ? 'mês completo' : 'meses completos') + '</span>');
         }
         
         // 4. Índice de resiliência financeira será calculado pela função separada
