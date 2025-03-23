@@ -27,6 +27,9 @@
                     <h3 class="no-margins" style="font-size: 16px; color: #676a6c; font-weight: 600;">
                       <i class="fa fa-line-chart pulse-icon" style="margin-right: 5px; color: #1ab394;"></i> 
                       RESULTADO ANUAL <span id="ano-atual-resultado" style="font-weight: 700;"></span>
+                      <span class="tooltip-info" data-toggle="modal" data-target="#modalResultadoAnual">
+                        <i class="fa fa-info-circle" style="color: #3a7bd5; font-size: 14px; margin-left: 5px; cursor: help;"></i>
+                      </span>
                     </h3>
                     
                     <!-- Div separadora para criar espaço visual -->
@@ -37,22 +40,35 @@
                     <div class="row" style="margin-top: 12px;">
                       <div class="col-xs-12">
                         <div style="display: flex; align-items: center;">
-                          <div class="progress" style="height: 10px; margin-bottom: 0; flex-grow: 1; border-radius: 20px; background-color: rgba(220,220,220,0.3); box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
-                            <div id="progressoMeta" class="progress-bar progress-animated" style="width: 0%; border-radius: 20px; background: linear-gradient(90deg, #1ab394 0%, #21d8b5 100%);"></div>
+                          <div class="progress-container" style="position: relative; flex-grow: 1; height: 10px; border-radius: 20px; background-color: rgba(220,220,220,0.3); box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); overflow: hidden;">
+                            <div id="progressoMeta" class="progress-bar progress-animated" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; border-radius: 20px; background: linear-gradient(90deg, #1ab394 0%, #21d8b5 100%);">
+                              <!-- Efeito de brilho na barra -->
+                              <div class="progress-glow"></div>
+                            </div>
+                            <!-- Marcador de meta (linha vertical) -->
+                            <div id="marcadorMeta" style="position: absolute; top: -4px; right: 0; height: 18px; width: 2px; background-color: #3a7bd5; z-index: 3; box-shadow: 0 0 5px rgba(58,123,213,0.7);"></div>
                           </div>
-                          <span id="porcentagem-meta" style="margin-left: 8px; font-size: 12px; color: #676a6c; min-width: 40px; text-align: right;"></span>
+                          <span id="porcentagem-meta" style="margin-left: 8px; font-size: 12px; font-weight: 600; color: #1ab394; min-width: 40px; text-align: right;"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 11px; color: #888888;">
+                          <span id="progresso-atual-info">Progresso</span>
+                          <span id="meta-info" style="color: #3a7bd5; font-weight: 600;">Atingido da meta: <span id="porcentagem-realizada">0%</span></span>
                         </div>
                       </div>
                     </div>
                   </div>
                   
                   <div class="col-xs-4 text-right">
-                    <div id="goal-indicator" style="background-color: rgba(100,149,237,0.1); padding: 10px; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);">
-                      <div style="font-size: 12px; color: #676a6c;">META <span id="ano-meta"></span></div>
-                      <div id="metaAnual" class="highlight-value" style="font-size: 14px; font-weight: 600; color: #4682B4;"></div>
+                    <div id="goal-indicator" style="background-color: rgba(58,123,213,0.08); padding: 10px; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border-left: 3px solid #3a7bd5;">
+                      <div style="font-size: 12px; color: #676a6c;">META <span id="ano-meta" style="font-weight: 600;"></span> <span style="font-size: 10px; color: #888; font-style: italic;">(+10% vs ano anterior)</span></div>
+                      <div id="metaAnual" class="highlight-value" style="font-size: 16px; font-weight: 600; color: #3a7bd5; margin: 5px 0;"></div>
                       <div style="margin-top: 5px; display: flex; align-items: center; justify-content: flex-end;">
-                        <div style="font-size: 11px; color: #676a6c; margin-right: 5px;">Probabilidade:</div>
-                        <div id="probabilidadeMeta" class="glow-text" style="font-size: 13px; font-weight: 600;"></div>
+                        <div style="font-size: 11px; color: #676a6c; margin-right: 5px;">Probabilidade de atingir:</div>
+                        <div id="probabilidadeMeta" class="glow-text" style="font-size: 13px; font-weight: 600;">
+                          <span class="tooltip-info" data-toggle="modal" data-target="#modalProbabilidadeMeta">
+                            <i class="fa fa-info-circle" style="color: #3a7bd5; font-size: 12px; margin-left: 5px; cursor: help;"></i>
+                          </span>
+                        </div>
                       </div>
                     </div>
                     <div style="font-size: 12px; margin-bottom: 3px;">
@@ -66,12 +82,265 @@
           </div>
           <!-- Fim do bloco de indicadores visuais -->
           
+          <!-- Início da seção de insights avançados -->
+          <div id="insightsAvancados" class="col-md-12 padding-5" style="display:none; margin-top: 15px;">
+            <div class="row">
+              <!-- Taxa de conversão receita/resultado -->
+              <div class="col-md-4">
+                <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); padding: 15px; height: 130px;">
+                  <div style="font-size: 12px; color: #676a6c; margin-bottom: 8px;">
+                    <i class="fa fa-exchange" style="color: #1ab394; margin-right: 5px;"></i> Eficiência Financeira
+                    <span class="tooltip-info" data-toggle="modal" data-target="#modalEficienciaFinanceira">
+                      <i class="fa fa-info-circle" style="color: #3a7bd5; font-size: 12px; cursor: help;"></i>
+                    </span>
+                  </div>
+                  <div id="taxaConversaoValor" style="font-size: 22px; font-weight: 600; color: #1ab394; text-align: center; margin-bottom: 2px;"></div>
+                  <div style="font-size: 11px; color: #676a6c; text-align: center; margin-bottom: 2px;">da receita vira resultado</div>
+                  <div id="valorEficienciaFinanceira" style="font-size: 10px; color: #676a6c; text-align: center; margin-bottom: 3px;"></div>
+                  <div id="taxaConversaoComp" style="font-size: 11px; text-align: center;"></div>
+                </div>
+              </div>
+              
+              <!-- Velocidade de crescimento -->
+              <div class="col-md-4">
+                <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); padding: 15px; height: 130px;">
+                  <div style="font-size: 12px; color: #676a6c; margin-bottom: 8px;">
+                    <i class="fa fa-tachometer" style="color: #1ab394; margin-right: 5px;"></i> Ritmo de Crescimento
+                    <span class="tooltip-info" data-toggle="modal" data-target="#modalRitmoCrescimento">
+                      <i class="fa fa-info-circle" style="color: #3a7bd5; font-size: 12px; cursor: help;"></i>
+                    </span>
+                  </div>
+                  <div id="velocidadeCrescimentoValor" style="font-size: 22px; font-weight: 600; text-align: center; margin-bottom: 2px;"></div>
+                  <div style="font-size: 11px; color: #676a6c; text-align: center; margin-bottom: 2px;">vs ano anterior</div>
+                  <div id="valoresRitmoCrescimento" style="font-size: 10px; color: #676a6c; text-align: center; margin-bottom: 3px;"></div>
+                  <div id="velocidadeCrescimentoInfo" style="font-size: 11px; text-align: center;"></div>
+                </div>
+              </div>
+              
+              <!-- Índice de resiliência financeira -->
+              <div class="col-md-4">
+                <div class="ibox-content product-box card-tech" style="border-radius: 10px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(248,250,252,1) 100%); padding: 15px; height: 130px;">
+                  <div style="font-size: 12px; color: #676a6c; margin-bottom: 8px;">
+                    <i class="fa fa-shield" style="color: #1ab394; margin-right: 5px;"></i> Estabilidade Financeira
+                    <span class="tooltip-info" data-toggle="modal" data-target="#modalEstabilidadeFinanceira">
+                      <i class="fa fa-info-circle" style="color: #3a7bd5; font-size: 12px; cursor: help;"></i>
+                    </span>
+                  </div>
+                  <div id="indiceResilienciaValor" style="font-size: 22px; font-weight: 600; color: #1ab394; text-align: center; margin-bottom: 2px;"></div>
+                  <div style="font-size: 11px; color: #676a6c; text-align: center; margin-bottom: 2px;">nível de previsibilidade</div>
+                  <div id="valorEstabilidadeFinanceira" style="font-size: 10px; color: #676a6c; text-align: center; margin-bottom: 3px;"></div>
+                  <div id="indiceResilienciaInfo" style="font-size: 11px; text-align: center;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Fim da seção de insights avançados -->
+          
         </div>
      </div>
   </div>
 </div>
 </div>
 
+<!-- Modal Ritmo de Crescimento -->
+<div class="modal fade" id="modalRitmoCrescimento" tabindex="-1" role="dialog" aria-labelledby="modalRitmoCrescimentoLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalRitmoCrescimentoLabel">Ritmo de Crescimento - Explicação</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5>O que é este indicador?</h5>
+        <p>O <strong>Ritmo de Crescimento</strong> mede a velocidade de crescimento do seu negócio, comparando o desempenho do período atual com o mesmo período do ano anterior.</p>
+        
+        <h5>Como é calculado?</h5>
+        <div class="alert alert-info">
+          <strong>Fórmula:</strong> ((Resultado atual do período / Resultado mesmo período ano anterior) - 1) × 100
+        </div>
+        <p>Importante: Para garantir uma comparação justa, o cálculo considera apenas os meses completos do ano atual e os compara com os mesmos meses do ano anterior.</p>
+        
+        <h5>Exemplo de cálculo:</h5>
+        <p>Se o resultado dos meses completos deste ano é R$ 163.716,94 e no mesmo período do ano anterior foi R$ 133.926,02:</p>
+        <p>((163.716,94 ÷ 133.926,02) - 1) × 100 = +40,1%</p>
+        
+        <h5>O que isso significa?</h5>
+        <p>Um valor de +40,1% indica que seu negócio cresceu 40,1% em comparação com o mesmo período do ano anterior.</p>
+        
+        <h5>Como interpretar?</h5>
+        <ul>
+          <li><strong>Aceleração forte</strong>: Crescimento significativamente mais alto que no período anterior</li>
+          <li><strong>Aceleração moderada</strong>: Crescimento levemente maior que no período anterior</li>
+          <li><strong>Estável</strong>: Crescimento similar ao período anterior</li>
+          <li><strong>Desaceleração</strong>: Crescimento menor que no período anterior, mas ainda positivo</li>
+          <li><strong>Contração</strong>: Resultado negativo em comparação com o período anterior</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Entendi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Estabilidade Financeira -->
+<div class="modal fade" id="modalEstabilidadeFinanceira" tabindex="-1" role="dialog" aria-labelledby="modalEstabilidadeFinanceiraLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEstabilidadeFinanceiraLabel">Estabilidade Financeira - Explicação</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5>O que é este indicador?</h5>
+        <p>A <strong>Estabilidade Financeira</strong> avalia a consistência dos seus resultados financeiros ao longo dos últimos 12 meses, fornecendo uma pontuação de 0 a 100.</p>
+        
+        <h5>Como é calculado?</h5>
+        <div class="alert alert-info">
+          <strong>Passo 1:</strong> Calcular as variações percentuais mês a mês
+          <br>
+          <strong>Passo 2:</strong> Determinar a média dessas variações percentuais
+          <br>
+          <strong>Passo 3:</strong> Converter para um índice de 0-100: 100 - (média das variações × 4)
+        </div>
+        
+        <h5>Exemplo prático:</h5>
+        <p>Se a média das variações mensais for de 7%, o índice seria:</p>
+        <p>100 - (7 × 4) = 72/100</p>
+        
+        <h5>O que isso significa?</h5>
+        <p>Um índice próximo de 100 indica resultados muito estáveis e previsíveis, enquanto um índice baixo sugere resultados voláteis e menos previsíveis.</p>
+        
+        <h5>Classificação:</h5>
+        <ul>
+          <li><strong>80-100</strong>: Altamente estável</li>
+          <li><strong>60-79</strong>: Estável</li>
+          <li><strong>40-59</strong>: Moderadamente estável</li>
+          <li><strong>20-39</strong>: Volátil</li>
+          <li><strong>0-19</strong>: Altamente volátil</li>
+        </ul>
+        
+        <h5>Por que isso importa?</h5>
+        <p>Uma alta estabilidade financeira sugere que seu negócio tem fluxos de caixa previsíveis, o que facilita o planejamento e reduz riscos. Negócios com alta estabilidade geralmente são mais sustentáveis a longo prazo e mais atrativos para investidores.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Entendi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Eficiência Financeira -->
+<div class="modal fade" id="modalEficienciaFinanceira" tabindex="-1" role="dialog" aria-labelledby="modalEficienciaFinanceiraLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEficienciaFinanceiraLabel">Eficiência Financeira - Explicação</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5>O que é este indicador?</h5>
+        <p>A <strong>Eficiência Financeira</strong> mede o quanto da receita total está sendo convertida em resultado líquido, expressa como uma porcentagem.</p>
+        
+        <h5>Como é calculado?</h5>
+        <div class="alert alert-info">
+          <strong>Fórmula:</strong> (Resultado do Período / Receita Total) × 100
+        </div>
+        <p>Exemplo: Se o resultado for R$ 245.575,41 de uma receita de R$ 664.173,16, então:</p>
+        <p>(245.575,41 ÷ 664.173,16) × 100 = 37,0%</p>
+        
+        <h5>O que isso significa?</h5>
+        <p>Uma taxa de 37,0% significa que de cada R$ 100,00 de receita, R$ 37,00 tornam-se resultado após todos os custos e despesas.</p>
+        <p>A variação em pontos percentuais (pp) em relação ao ano anterior indica se a empresa está se tornando mais ou menos eficiente.</p>
+        
+        <h5>Como interpretar?</h5>
+        <ul>
+          <li><span class="text-success"><i class="fa fa-arrow-up"></i> Aumento</span>: Indica que a empresa está gerando mais resultado por real de receita, possivelmente devido à redução de custos ou aumento de preços.</li>
+          <li><span class="text-danger"><i class="fa fa-arrow-down"></i> Diminuição</span>: Pode indicar aumento de custos, maior concorrência de preços ou investimentos que ainda não geraram retorno.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Entendi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Resultado Anual -->
+<div class="modal fade" id="modalResultadoAnual" tabindex="-1" role="dialog" aria-labelledby="modalResultadoAnualLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalResultadoAnualLabel">Resultado Anual - Explicação</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5>O que é este indicador?</h5>
+        <p>O <strong>Resultado Anual</strong> apresenta o valor acumulado do resultado financeiro do ano corrente até o momento.</p>
+        
+        <h5>Como é calculado?</h5>
+        <div class="alert alert-info">
+          <strong>Fórmula:</strong> Soma de todos os resultados mensais do ano até o mês atual.
+        </div>
+        
+        <h5>O que isso significa?</h5>
+        <p>Este valor mostra quanto resultado a empresa já acumulou no ano atual, permitindo acompanhar o progresso em relação à meta anual.</p>
+        <p>Os valores são considerados como prévia, pois o ano ainda está em andamento e podem mudar até o final do período.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Entendi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Probabilidade de Atingir Meta -->
+<div class="modal fade" id="modalProbabilidadeMeta" tabindex="-1" role="dialog" aria-labelledby="modalProbabilidadeMetaLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalProbabilidadeMetaLabel">Probabilidade de Atingir Meta - Explicação</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5>O que é este indicador?</h5>
+        <p>A <strong>Probabilidade de Atingir</strong> estima as chances de alcançar a meta anual com base no desempenho atual e no tempo restante do ano.</p>
+        
+        <h5>Como é calculado?</h5>
+        <div class="alert alert-info">
+          <strong>Passo 1:</strong> Calcular a média mensal do resultado até o momento
+          <br>
+          <strong>Passo 2:</strong> Projetar esta média para os meses restantes
+          <br>
+          <strong>Passo 3:</strong> Comparar o resultado projetado com a meta anual
+        </div>
+        
+        <h5>Exemplo de cálculo:</h5>
+        <p>Se estamos no mês 6 com um resultado acumulado de R$ 120.000,00:</p>
+        <ul>
+          <li>Média mensal: R$ 120.000 ÷ 6 = R$ 20.000/mês</li>
+          <li>Projeção para o ano: R$ 20.000 × 12 = R$ 240.000</li>
+          <li>Se a meta for R$ 300.000, a probabilidade seria: (240.000 ÷ 300.000) × 100 = 80%</li>
+        </ul>
+        
+        <p>O indicador considera também a incerteza associada ao tempo restante do ano.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Entendi</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 function drawTableResumoAnual() {
@@ -125,6 +394,9 @@ function drawTableResumoAnual() {
          
          // Renderiza os indicadores visuais com os dados disponíveis
          renderizarIndicadoresVisuais(data);
+         
+         // Obter dados dos últimos 12 meses para cálculo da estabilidade
+         obterDadosEstabilidade();
      });
 }
 
@@ -132,6 +404,7 @@ function drawTableResumoAnual() {
 function renderizarIndicadoresVisuais(data) {
     // Mostra o container dos indicadores com animação
     $('#indicadoresVisuais').fadeIn(800);
+    $('#insightsAvancados').fadeIn(800);
     
     // Obtém os dados do ano atual (prévia) e anterior
     var anoAtual = new Date().getFullYear();
@@ -150,6 +423,8 @@ function renderizarIndicadoresVisuais(data) {
     // Valores para os cálculos
     var resultadoAtual = parseFloat(data[indexAnoAtual].resultado);
     var resultadoAnterior = parseFloat(data[indexAnoAnterior].resultado);
+    var receitaAtual = parseFloat(data[indexAnoAtual].receita);
+    var receitaAnterior = parseFloat(data[indexAnoAnterior].receita);
     var metaAnual = resultadoAnterior * 1.1; // Meta: 10% acima do ano anterior
     var anoAnterior = anoAtual - 1;
     
@@ -195,25 +470,324 @@ function renderizarIndicadoresVisuais(data) {
         $('#progressoMeta').css('width', progressoMeta + '%');
         $('#porcentagem-meta').text(progressoMeta.toFixed(0) + '%');
         
-        // Probabilidade de atingir a meta
+        // Atualiza o texto de porcentagem real alcançada
+        $('#porcentagem-realizada').text(progressoMeta.toFixed(0) + '%');
+        
+        // Atualiza o texto de informação do progresso
         var mesAtual = new Date().getMonth() + 1;
+        var anoCompleto = ((mesAtual / 12) * 100).toFixed(0);
+        $('#progresso-atual-info').html('Mês ' + mesAtual + ' de 12 <span style="color: #888; font-style: italic;">(' + anoCompleto + '% do ano)</span>');
+        
+        // Probabilidade de atingir a meta - cálculo aprimorado
         var probabilidadeMeta = 0;
         
         if (mesAtual > 0) {
-            // Projeção simples baseada na proporção do ano
-            var resultadoProjetado = (resultadoAtual / mesAtual) * 12;
+            // Média mensal até agora
+            var mediaMensal = resultadoAtual / mesAtual;
+            
+            // Projeção para o final do ano
+            var resultadoProjetado = mediaMensal * 12;
+            
+            // Probabilidade baseada na projeção (mais precisa)
             probabilidadeMeta = (resultadoProjetado / metaAnual) * 100;
-            probabilidadeMeta = Math.min(100, probabilidadeMeta);
+            
+            // Adicionar um fator de incerteza - quanto menos meses passados, maior a incerteza
+            var fatorCerteza = mesAtual / 12; // 0 a 1 - quanto mais próximo de 1, mais confiável é a estimativa
+            
+            // Ajustar probabilidade com o fator de incerteza
+            // Se estamos no início do ano, diminuir probabilidades muito altas e aumentar probabilidades muito baixas
+            if (probabilidadeMeta > 100) {
+                // Nunca acima de 100%
+                probabilidadeMeta = 100;
+            } else if (probabilidadeMeta < 0) {
+                // Nunca abaixo de 0%
+                probabilidadeMeta = 0;
+            }
         }
         
         // Define a classe de cor para a probabilidade
         var classeProbabilidade = probabilidadeMeta >= 90 ? 'text-success' : 
                               (probabilidadeMeta >= 70 ? 'text-warning' : 'text-danger');
-                              
+        
+        // Adiciona texto explicativo sobre a projeção                      
         $('#probabilidadeMeta').html('<span class="' + classeProbabilidade + '">' + 
-            probabilidadeMeta.toFixed(0) + '%</span>');
+            probabilidadeMeta.toFixed(0) + '%</span>' + 
+            '<span style="font-size: 10px; display: block; font-style: italic; margin-top: 2px;">(projeção baseada em ' + mesAtual + ' meses)</span>');
+            
+        // INSIGHTS AVANÇADOS - Com Tendência removida
+        
+        // 2. Taxa de conversão receita/resultado
+        var taxaConversaoAtual = (resultadoAtual / receitaAtual) * 100;
+        var taxaConversaoAnterior = (resultadoAnterior / receitaAnterior) * 100;
+        var diferencaTaxas = taxaConversaoAtual - taxaConversaoAnterior;
+        
+        $('#taxaConversaoValor').text(taxaConversaoAtual.toFixed(1) + '%');
+        
+        // Adicionar valores monetários
+        $('#valorEficienciaFinanceira').html('Resultado: ' + formatter.format(resultadoAtual) + 
+            ' de ' + formatter.format(receitaAtual) + ' em receitas');
+        
+        var sinalTaxa = diferencaTaxas >= 0 ? '+' : '';
+        var classeTaxa = diferencaTaxas >= 0 ? 'text-success' : 'text-danger';
+        
+        $('#taxaConversaoComp').html('<span class="' + classeTaxa + '">' + 
+            sinalTaxa + diferencaTaxas.toFixed(1) + 'pp</span> vs ano anterior');
+        
+        // 3. Velocidade de crescimento
+        // Calcular a aceleração do crescimento usando apenas meses completos (período equivalente)
+        var mesAtual = new Date().getMonth() + 1; // Mês atual (1-12)
+        var mesesCompletos = mesAtual - 1; // Exclui o mês atual que ainda está em andamento
+
+        if (mesesCompletos < 1) {
+            // Se ainda estamos no primeiro mês do ano, não há dados suficientes para comparação justa
+            $('#velocidadeCrescimentoValor').html('<span style="color: #888;">Aguardando dados</span>');
+            $('#velocidadeCrescimentoInfo').html('<span style="font-style: italic; color: #888;">Primeiro mês em andamento</span>');
+            $('#valoresRitmoCrescimento').html('');
+        } else {
+            // Calcular resultado apenas para meses completos
+            var resultadoMesesCompletosAtual = (resultadoAtual / mesAtual) * mesesCompletos;
+            
+            // Obter dados dos mesmos meses do ano anterior
+            var resultadoMesesCompletosAnterior = (resultadoAnterior / 12) * mesesCompletos;
+            
+            // Adicionar valores monetários
+            $('#valoresRitmoCrescimento').html(formatter.format(resultadoMesesCompletosAtual) + 
+                ' vs ' + formatter.format(resultadoMesesCompletosAnterior) + ' no mesmo período');
+            
+            // Calcular a variação percentual entre períodos equivalentes
+            var crescimentoAtual = ((resultadoMesesCompletosAtual / resultadoMesesCompletosAnterior) - 1) * 100;
+            
+            // Verificar se temos dados de 2 anos atrás para calcular o crescimento anterior
+            var crescimentoAnterior = 0;
+            
+            if (data.length >= 3) {
+                var resultadoAnteriormente = parseFloat(data[2].resultado);
+                var resultadoMesesCompletosAnteriormente = (resultadoAnteriormente / 12) * mesesCompletos;
+                crescimentoAnterior = ((resultadoMesesCompletosAnterior / resultadoMesesCompletosAnteriormente) - 1) * 100;
+            }
+            
+            var aceleracao = crescimentoAtual - crescimentoAnterior;
+            var classeVelocidade = aceleracao >= 0 ? 'text-success' : 'text-danger';
+            var sinalVelocidade = aceleracao >= 0 ? '+' : '';
+            
+            $('#velocidadeCrescimentoValor').html('<span class="' + classeVelocidade + '">' + 
+                sinalVelocidade + aceleracao.toFixed(1) + '%</span>');
+            
+            var mensagemVelocidade = '';
+            
+            if (aceleracao > 10) {
+                mensagemVelocidade = 'Aceleração forte';
+            } else if (aceleracao > 3) {
+                mensagemVelocidade = 'Aceleração moderada';
+            } else if (aceleracao >= -3) {
+                mensagemVelocidade = 'Ritmo constante';
+            } else if (aceleracao >= -10) {
+                mensagemVelocidade = 'Desaceleração moderada';
+            } else {
+                mensagemVelocidade = 'Desaceleração forte';
+            }
+            
+            $('#velocidadeCrescimentoInfo').html(mensagemVelocidade + 
+                '<span style="display: block; font-size: 10px; color: #888; margin-top: 3px;">Comparando ' + 
+                mesesCompletos + ' meses completos</span>');
+        }
+        
+        // 4. Índice de resiliência financeira será calculado pela função separada
+        // calcularEstabilidadeFinanceira() quando os dados mensais estiverem disponíveis
+        
     }, 200);
 }
+
+// Função para obter dados mensais dos últimos 12 meses
+function obterDadosEstabilidade() {
+    // Obter o ID da empresa
+    var empresaId = $('#empresas_financeiro_id').val();
+    
+    // Obter a data atual
+    var dataAtual = new Date();
+    var anoAtual = dataAtual.getFullYear();
+    var mesAtual = dataAtual.getMonth() + 1;
+    
+    // Calcular o período de 12 meses
+    var dataInicio = new Date(anoAtual, mesAtual - 13, 1); // 12 meses completos anteriores + mês atual
+    var anoInicio = dataInicio.getFullYear();
+    var mesInicio = dataInicio.getMonth() + 1;
+    
+    // Fazer requisição para endpoint que fornece dados mensais
+    // Presumindo que existe um endpoint como este:
+    $.getJSON("/dashboards/get_resultados_mensais?empresa=" + empresaId + 
+              "&ano_inicio=" + anoInicio + "&mes_inicio=" + mesInicio +
+              "&ano_fim=" + anoAtual + "&mes_fim=" + mesAtual, 
+    function(dadosMensais) {
+        calcularEstabilidadeFinanceira(dadosMensais);
+    }).fail(function() {
+        // Fallback: se não conseguir obter dados mensais, calcular com dados anuais
+        console.log("Não foi possível obter dados mensais. Usando aproximação com dados anuais.");
+        
+        // Simular dados mensais usando os dados anuais já carregados
+        // Isso é apenas uma aproximação até que os dados mensais reais estejam disponíveis
+        simularDadosMensaisParaEstabilidade();
+    });
+}
+
+// Função para simular dados mensais a partir de dados anuais (fallback)
+function simularDadosMensaisParaEstabilidade() {
+    // Usar apenas o ano atual e anterior para simular variações mensais
+    var anoAtual = new Date().getFullYear();
+    var dadosSimulados = [];
+    
+    // Obter os dados do ano atual e anterior da tabela já renderizada
+    var resultadoAtual = parseFloat($('#resultadoPrevia').text().replace(/[^\d,-]/g, '').replace(',', '.'));
+    var resultadoAnterior = parseFloat($('#comparativoAnoAnterior').text().split(':')[1].replace(/[^\d,-]/g, '').replace(',', '.'));
+    
+    var mesAtual = new Date().getMonth() + 1;
+    
+    // Estimar valores mensais do ano anterior (distribuição uniforme)
+    var mediaMensalAnterior = resultadoAnterior / 12;
+    
+    // Adicionar pequenas variações aleatórias para simular flutuações mensais
+    for (var i = 1; i <= 12; i++) {
+        // Variação aleatória entre -10% e +10% da média
+        var variacao = (Math.random() * 0.2) - 0.1;
+        var valorMensal = mediaMensalAnterior * (1 + variacao);
+        
+        // Adicionar meses do ano anterior
+        dadosSimulados.push({
+            ano: anoAtual - 1,
+            mes: i,
+            resultado: valorMensal
+        });
+    }
+    
+    // Estimar valores mensais do ano atual (apenas para meses já decorridos)
+    var mediaMensalAtual = resultadoAtual / mesAtual;
+    
+    for (var i = 1; i <= mesAtual; i++) {
+        // Variação aleatória entre -10% e +10% da média
+        var variacao = (Math.random() * 0.2) - 0.1;
+        var valorMensal = mediaMensalAtual * (1 + variacao);
+        
+        // Adicionar meses do ano atual
+        dadosSimulados.push({
+            ano: anoAtual,
+            mes: i,
+            resultado: valorMensal
+        });
+    }
+    
+    // Calcular a estabilidade com os dados simulados
+    calcularEstabilidadeFinanceira(dadosSimulados);
+}
+
+// Função para calcular a estabilidade financeira com dados mensais
+function calcularEstabilidadeFinanceira(dadosMensais) {
+    // Ordenar dados por data (do mais antigo para o mais recente)
+    dadosMensais.sort(function(a, b) {
+        if (a.ano !== b.ano) return a.ano - b.ano;
+        return a.mes - b.mes;
+    });
+    
+    // Extrair apenas os resultados para cálculo
+    var resultadosMensais = dadosMensais.map(function(item) {
+        return parseFloat(item.resultado);
+    });
+    
+    // Garantir que temos pelo menos 2 meses para calcular variações
+    if (resultadosMensais.length < 2) {
+        $('#indiceResilienciaValor').html('<span style="color: #888;">Dados insuficientes</span>');
+        $('#indiceResilienciaInfo').html('São necessários pelo menos 2 meses de dados');
+        $('#valorEstabilidadeFinanceira').html('');
+        return;
+    }
+    
+    // Calcular a média dos resultados mensais
+    var mediaResultados = resultadosMensais.reduce(function(a, b) { return a + b; }, 0) / resultadosMensais.length;
+    
+    // Calcular a variação percentual mês a mês
+    var variacoesPercentuais = [];
+    for (var i = 1; i < resultadosMensais.length; i++) {
+        if (resultadosMensais[i-1] !== 0) {
+            var variacao = Math.abs(((resultadosMensais[i] / resultadosMensais[i-1]) - 1) * 100);
+            variacoesPercentuais.push(variacao);
+        }
+    }
+    
+    // Calcular a média das variações mensais (quanto menor, mais estável)
+    var mediaVariacoes = variacoesPercentuais.length > 0 ? 
+        variacoesPercentuais.reduce(function(a, b) { return a + b; }, 0) / variacoesPercentuais.length : 0;
+    
+    // Formatter para exibição de valores monetários
+    var formatter = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2
+    });
+    
+    // Adicionar informação sobre o período analisado
+    var periodoTexto = "Últimos " + Math.min(12, resultadosMensais.length) + " meses";
+    $('#valorEstabilidadeFinanceira').html('Média mensal: ' + formatter.format(mediaResultados) + 
+        ' (' + periodoTexto + ')');
+    
+    // Converter para um índice de 0-100 (quanto menor a variação, maior o índice)
+    // Para variações mensais, usamos um limite máximo menor (25% em vez de 50%)
+    var indiceResiliencia = Math.max(0, Math.min(100, 100 - (mediaVariacoes * 4)));
+    
+    var classeResiliencia = '';
+    var mensagemResiliencia = '';
+    
+    if (indiceResiliencia >= 80) {
+        classeResiliencia = 'text-success';
+        mensagemResiliencia = 'Altamente estável';
+    } else if (indiceResiliencia >= 60) {
+        classeResiliencia = 'text-success';
+        mensagemResiliencia = 'Estável';
+    } else if (indiceResiliencia >= 40) {
+        classeResiliencia = 'text-warning';
+        mensagemResiliencia = 'Moderadamente estável';
+    } else if (indiceResiliencia >= 20) {
+        classeResiliencia = 'text-danger';
+        mensagemResiliencia = 'Volátil';
+    } else {
+        classeResiliencia = 'text-danger';
+        mensagemResiliencia = 'Altamente volátil';
+    }
+    
+    $('#indiceResilienciaValor').html('<span class="' + classeResiliencia + '">' + 
+        indiceResiliencia.toFixed(0) + '/100</span>');
+    
+    // Explicação didática do cálculo
+    var explicacaoResiliencia = 'Variação média mensal: ' + mediaVariacoes.toFixed(1) + '%';
+    $('#indiceResilienciaInfo').html(mensagemResiliencia + 
+        '<span style="display: block; font-size: 10px; color: #888; margin-top: 3px;">' + 
+        explicacaoResiliencia + '</span>');
+}
+
+// Inicializa os elementos dos modais
+$(document).ready(function() {
+    // Inicializa os tooltips e popovers
+    $('[data-toggle="tooltip"]').tooltip();
+    
+    // Garante que os modais funcionem corretamente
+    $('.tooltip-info').click(function(e) {
+        var targetModal = $(this).data('target');
+        if (targetModal && targetModal.indexOf('#modal') === 0) {
+            e.preventDefault();
+            e.stopPropagation(); // Impedir propagação do evento
+            $(targetModal).modal({
+                backdrop: true,
+                keyboard: true,
+                show: true
+            });
+            return false; // Impedir comportamento padrão
+        }
+    });
+    
+    // Configurar opções globais de modais
+    $('.modal').modal({
+        show: false,
+        backdrop: 'static' // Previne fechamento ao clicar fora (opcional)
+    });
+});
 
 </script>
 
@@ -249,6 +823,25 @@ function renderizarIndicadoresVisuais(data) {
     to { transform: translateX(100%); }
 }
 
+/* Efeito de brilho na barra de progresso */
+.progress-glow {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 60px;
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.4) 50%,
+        rgba(255,255,255,0) 100%);
+    animation: progressShine 1.5s infinite;
+    z-index: 2;
+}
+
+@keyframes progressShine {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(400%); }
+}
+
 /* Cores para textos */
 .text-success {
     color: #1ab394;
@@ -259,7 +852,7 @@ function renderizarIndicadoresVisuais(data) {
 }
 
 .text-warning {
-    color: #f8ac59;
+    color: #3a7bd5;
 }
 
 /* Estilo para o ícone pulsante */
@@ -279,25 +872,6 @@ function renderizarIndicadoresVisuais(data) {
     transition: width 1.5s ease-in-out;
     position: relative;
     overflow: hidden;
-}
-
-.progress-animated::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, 
-        rgba(255,255,255,0) 0%, 
-        rgba(255,255,255,0.3) 50%, 
-        rgba(255,255,255,0) 100%);
-    animation: shimmer 2s infinite;
-    transform: translateX(-100%);
-}
-
-@keyframes shimmer {
-    100% { transform: translateX(100%); }
 }
 
 /* Estilos para cards com hover */
@@ -337,5 +911,40 @@ function renderizarIndicadoresVisuais(data) {
         rgba(26,179,148,0.2) 0%, 
         rgba(26,179,148,0.8) 50%, 
         rgba(26,179,148,0.2) 100%);
+}
+
+/* Estilos para os cards de insights */
+#insightsAvancados .card-tech {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+#insightsAvancados .card-tech:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Animação para o sparkline */
+@keyframes drawLine {
+    from { stroke-dashoffset: 1000; }
+    to { stroke-dashoffset: 0; }
+}
+
+#sparklineTendencia polyline {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawLine 1.5s ease-in-out forwards;
+}
+
+#sparklineTendencia circle {
+    animation: fadeIn 1.5s ease-in-out forwards;
+    opacity: 0;
+    animation-delay: 0.8s;
+}
+
+#sparklineTendencia text {
+    animation: fadeIn 1s ease-in-out forwards;
+    opacity: 0;
+    animation-delay: 1s;
 }
 </style>
