@@ -43,12 +43,37 @@
       </div>
     </div>
     <div class="tabs-container" >
-      <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tab-1" id="tabClientes"> Clientes</a></li>
-        <li class=""><a data-toggle="tab" href="#tab-2" id="tabFechamento"> Faturamento</a></li>
-        <li class=""><a data-toggle="tab" href="#tab-5" id="tabDemonstrativo"> Demonstrativos</a></li>
-        <li class=""><a data-toggle="tab" href="#tab-3" id="tabComercial"> Comercial</a></li>
-        <li class=""><a data-toggle="tab" href="#tab-4" id="tabProjecao"> Projeções</a></li>
+      <ul class="nav nav-tabs premium-tabs">
+        <li class="active">
+          <a data-toggle="tab" href="#tab-1" id="tabClientes" class="premium-tab-link">
+            <span class="tab-icon"><i class="fa fa-users"></i></span>
+            <span class="tab-label">Clientes</span>
+          </a>
+        </li>
+        <li class="">
+          <a data-toggle="tab" href="#tab-2" id="tabFechamento" class="premium-tab-link">
+            <span class="tab-icon"><i class="fa fa-line-chart"></i></span>
+            <span class="tab-label">Faturamento</span>
+          </a>
+        </li>
+        <li class="">
+          <a data-toggle="tab" href="#tab-5" id="tabDemonstrativo" class="premium-tab-link">
+            <span class="tab-icon"><i class="fa fa-bar-chart"></i></span>
+            <span class="tab-label">Demonstrativos</span>
+          </a>
+        </li>
+        <li class="">
+          <a data-toggle="tab" href="#tab-3" id="tabComercial" class="premium-tab-link">
+            <span class="tab-icon"><i class="fa fa-handshake-o"></i></span>
+            <span class="tab-label">Comercial</span>
+          </a>
+        </li>
+        <li class="">
+          <a data-toggle="tab" href="#tab-4" id="tabProjecao" class="premium-tab-link">
+            <span class="tab-icon"><i class="fa fa-area-chart"></i></span>
+            <span class="tab-label">Projeções</span>
+          </a>
+        </li>
       </ul>
       <div class="tab-content" style="margin-bottom: 50px">
         <div id="tab-1" class="tab-pane active">
@@ -111,6 +136,86 @@
    }
   .google-visualization-table-td {
     text-align: center !important;
+  }
+  
+  /* Estilos para abas - versão simplificada */
+  .premium-tabs {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    overflow: visible;
+    border-bottom: 1px solid #e7eaec;
+    padding: 0;
+    margin: 0 0 15px 0;
+    background: #fff;
+  }
+  
+  .premium-tabs > li {
+    float: left;
+    margin-right: 2px;
+    position: relative;
+  }
+  
+  .premium-tabs > li > a.premium-tab-link {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 10px 15px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    color: #676a6c;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  
+  .premium-tabs > li > a.premium-tab-link:hover,
+  .premium-tabs > li > a.premium-tab-link:focus {
+    background: rgba(58, 123, 213, 0.05);
+    color: #333;
+    border-bottom: 3px solid #e7eaec;
+  }
+  
+  .premium-tabs > li.active > a.premium-tab-link,
+  .premium-tabs > li.active > a.premium-tab-link:hover,
+  .premium-tabs > li.active > a.premium-tab-link:focus {
+    background: transparent;
+    color: #3a7bd5;
+    border-bottom: 3px solid #3a7bd5;
+    font-weight: 600;
+  }
+  
+  .tab-icon {
+    font-size: 14px;
+    margin-right: 5px;
+    display: inline-block;
+  }
+  
+  .premium-tabs > li.active .tab-icon {
+    color: #3a7bd5;
+  }
+  
+  .tab-label {
+    font-weight: 500;
+    font-size: 13px;
+  }
+  
+  /* Resetar estilos que possam estar interferindo */
+  .nav-tabs {
+    border-bottom: 1px solid #e7eaec;
+  }
+  
+  .nav-tabs > li {
+    float: left;
+  }
+  
+  .tabs-container ul.nav-tabs {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
   }
 </style>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
