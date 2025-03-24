@@ -809,4 +809,11 @@ BusinessManager::Application.routes.draw do
   root to: 'dashboards#painel_vendas'
   # mount ExceptionLogger::Engine => "/exception_logger"
 
+  get 'notificacoes/get_notificacoes'
+  get 'notificacoes/contador'
+  get 'notificacoes/notificacoes_nao_lidas'
+  post 'notificacoes/marcar_lido'
+  post 'notificacoes/marcar_todas_lidas'
+  post 'notificacoes/criar_notificacao_arquivo_retorno'
+
 end

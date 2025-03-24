@@ -127,6 +127,28 @@ class NotificacoesController < ApplicationController
     render json: @notificacao
   end
 
+  def marcar_todas_lidas
+    tipo = params[:tipo]
+    
+    if tipo.present?
+      # Marcar todas as notificações do tipo específico como lidas
+      notificacoes = Notificacao.where(tipo: tipo).notificacoes_user(current_user).nao_lidas
+      
+      # Para o caso especial de FECHAMENTO, incluir também notificações de outras empresas
+      if tipo == 'FECHAMENTO'
+        notificacoes += Notificacao.notificacoes_user(current_user).where("tipo = 'FECHAMENTO' and empresa_id != ?", current_empresa.id).nao_lidas
+      end
+    else
+      # Marcar todas as notificações como lidas (exceto tipos específicos que têm seus próprios ícones)
+      notificacoes = Notificacao.where.not(tipo: ['IMPLANTACAO', 'IMPLANTACAO_ATRASADA_20', 'IMPLANTACAO_ATRASADA_30', 'IMPLANTACAO_ALTERACAO', 'FECHAMENTO', 'EFETIVACAO', 'DESATIVACAO', 'IMPLANTACAO', 'ARQUIVO_RETORNO', 'CENTRO_DISTRIBUICAO', 'NUMERO_DESCONECTADO', 'SOLICITACAO_DESATIVACAO']).notificacoes_user(current_user).nao_lidas
+    end
+    
+    # Atualizar todas as notificações encontradas
+    notificacoes.update_all(lido: true)
+    
+    render json: { success: true, count: notificacoes.count }
+  end
+
   def criar_notificacao_arquivo_retorno
     Notificacao.criar_notificacao_arquivo_retorno(params[:empresa_desc], params[:empresa_id])
 

@@ -67,7 +67,48 @@ function carregarNotificacoes(tipo){
             $("#alerts_arquivo_retorno").empty();
             $("#alerts_centro_distribuicao").empty();
             $("#alerts_numeros_desconectados").empty();
+            
+            var targetAlerts;
+            switch(tipo) {
+                case 'FECHAMENTO':
+                    targetAlerts = '#alerts_fechamento';
+                    break;
+                case 'EFETIVACAO':
+                    targetAlerts = '#alerts_efetivacoes';
+                    break;
+                case 'DESATIVACAO':
+                    targetAlerts = '#alerts_desativacoes';
+                    break;
+                case 'SOLICITACAO_DESATIVACAO':
+                    targetAlerts = '#alerts_notificacao_desativacoes';
+                    break;
+                case 'IMPLANTACAO':
+                    targetAlerts = '#alerts_implantacoes';
+                    break;
+                case 'ARQUIVO_RETORNO':
+                    targetAlerts = '#alerts_arquivo_retorno';
+                    break;
+                case 'CENTRO_DISTRIBUICAO':
+                    targetAlerts = '#alerts_centro_distribuicao';
+                    break;
+                case 'NUMERO_DESCONECTADO':
+                    targetAlerts = '#alerts_numeros_desconectados';
+                    break;
+                default:
+                    targetAlerts = '#alerts';
+            }
+            
+            // Adicionar o botão "Marcar todas como lidas" somente se houver notificações
             if(data.length > 0){
+                // Adicionar botão para marcar todas como lidas no topo do dropdown
+                $('<li class="no-padding-left-right">')
+                    .prepend('<div style="text-align: center; background-color: #f8f8f8; padding: 8px; cursor: pointer; font-weight: bold; color: #1c84c6;" class="marcar-todas-lidas" data-tipo="' + (tipo || '') + '">' +
+                            'Marcar todas como lidas <i class="fa fa-check-circle"></i>' +
+                            '</div>' +
+                            '<li class="divider"></li>')
+                    .appendTo(targetAlerts);
+                
+                // Adicionar as notificações individuais
                 $.map(data, function (item) {
                     if(item.tipo == 'FECHAMENTO'){
                         $('<li id="'+ item.id +'" class="no-padding-left-right">')
@@ -84,7 +125,7 @@ function carregarNotificacoes(tipo){
                                 '<div style="text-align: center; cursor: pointer;" OnClick="marcar_lido(' + item.id + ', false)">Marcar lido <i class="fa fa-check-circle"></i></div>' +
                                 '</li>' +
                                 '<li class="divider"></li>')
-                            .appendTo('#alerts_fechamento');
+                            .appendTo(targetAlerts);
                     }else if(item.tipo == 'AGENDA_CANCELADA') {
                         $('<li id="' + item.id + '" class="no-padding-left-right">')
                             .prepend('<a href="#" class="notificacao" OnClick="marcar_lido(' + item.id + ', true)">' +
@@ -100,7 +141,7 @@ function carregarNotificacoes(tipo){
                             '<div style="text-align: center; cursor: pointer;" OnClick="marcar_lido(' + item.id + ', false)">Marcar lido <i class="fa fa-check-circle"></i></div>' +
                             '</li>' +
                             '<li class="divider"></li>')
-                            .appendTo('#alerts');
+                            .appendTo(targetAlerts);
                     } else if(item.tipo == 'EFETIVACAO'){
                             $('<li id="'+ item.id +'" class="no-padding-left-right">')
                                 .prepend('<a href="#" class="notificacao" OnClick="marcar_lido(' + item.id + ', true)">' +
@@ -116,7 +157,7 @@ function carregarNotificacoes(tipo){
                                 '<div style="text-align: center; cursor: pointer;" OnClick="marcar_lido(' + item.id + ', false)">Marcar lido <i class="fa fa-check-circle"></i></div>' +
                                 '</li>' +
                                 '<li class="divider"></li>')
-                                .appendTo('#alerts_efetivacoes');
+                                .appendTo(targetAlerts);
                     }else if(item.tipo == 'DESATIVACAO'){
                         $('<li id="'+ item.id +'" class="no-padding-left-right">')
                             .prepend('<a href="#" class="notificacao" OnClick="marcar_lido(' + item.id + ', true)">' +
@@ -132,7 +173,7 @@ function carregarNotificacoes(tipo){
                             '<div style="text-align: center; cursor: pointer;" OnClick="marcar_lido(' + item.id + ', false)">Marcar lido <i class="fa fa-check-circle"></i></div>' +
                             '</li>' +
                             '<li class="divider"></li>')
-                            .appendTo('#alerts_desativacoes');
+                            .appendTo(targetAlerts);
                     }else if(item.tipo == 'SOLICITACAO_DESATIVACAO') {
                         $('<li id="' + item.id + '" class="no-padding-left-right">')
                             .prepend('<a href="#" class="notificacao" OnClick="marcar_lido(' + item.id + ', true)">' +
@@ -148,7 +189,7 @@ function carregarNotificacoes(tipo){
                                 '<div style="text-align: center; cursor: pointer;" OnClick="marcar_lido(' + item.id + ', false)">Marcar lido <i class="fa fa-check-circle"></i></div>' +
                                 '</li>' +
                                 '<li class="divider"></li>')
-                            .appendTo('#alerts_notificacao_desativacoes');
+                            .appendTo(targetAlerts);
                     }else if(item.tipo == 'IMPLANTACAO'){
                             $('<li id="'+ item.id +'" class="no-padding-left-right">')
                                 .prepend('<a href="#" class="notificacao" OnClick="marcar_lido(' + item.id + ', true)">' +
@@ -164,7 +205,7 @@ function carregarNotificacoes(tipo){
                                 '<div style="text-align: center; cursor: pointer;" OnClick="marcar_lido(' + item.id + ', false)">Marcar lido <i class="fa fa-check-circle"></i></div>' +
                                 '</li>' +
                                 '<li class="divider"></li>')
-                                .appendTo('#alerts_implantacoes');
+                                .appendTo(targetAlerts);
                     }else if(item.tipo == 'CENTRO_DISTRIBUICAO'){
                             $('<li id="'+ item.id +'" class="no-padding-left-right">')
                             .prepend('<a href="#" class="notificacao" OnClick="marcar_lido(' + item.id + ', true)">' +
@@ -181,55 +222,8 @@ function carregarNotificacoes(tipo){
                             '<div style="text-align: center; cursor: pointer;" OnClick="marcar_lido(' + item.id + ', false)">Marcar lido <i class="fa fa-check-circle"></i></div>' +
                             '</li>' +
                             '<li class="divider"></li>')
-                            .appendTo('#alerts_centro_distribuicao');
-                }else if(item.tipo == 'ARQUIVO_RETORNO'){
-                    $('<li id="'+ item.id +'" class="no-padding-left-right">')
-                        .prepend('<a href="#" class="notificacao" OnClick="marcar_lido(' + item.id + ', true)">' +
-                        '<div class="col-lg-12 no-padding-left-right">' +
-                        '<div class="col-lg-7 no-padding-left-right"><i class="fa fa-bell fa-fw"></i> <b>' + item.title + '</b></div>' +
-                        '<div class="col-lg-5 no-padding-left-right"> <span>'+ item.data_hora_formatada +'</span></div>' +
-                        '<span>' + processarMsgLinha1(item) + '</span><br>' +
-                        '<span>' + processarMsgLinha2(item) + '</span>' +
-                        '<span class="pull-right text-muted small"> ' + humanDate(item.data_hora) + '</span>' +
-                        '</div>'+
-                        '</a>' +
-                        '<div style="text-align: center; cursor: pointer;" OnClick="marcar_lido(' + item.id + ', false)">Marcar lido <i class="fa fa-check-circle"></i></div>' +
-                        '</li>' +
-                        '<li class="divider"></li>')
-                        .appendTo('#alerts_arquivo_retorno');
-                } else if(item.tipo == 'NUMERO_DESCONECTADO'){
-                    $('<li id="'+ item.id +'" class="no-padding-left-right">')
-                        .prepend('<a href="#" class="notificacao" OnClick="marcar_lido(' + item.id + ', true)">' +
-                        '<div class="col-lg-12 no-padding-left-right">' +
-                        '<div class="col-lg-7 no-padding-left-right"><i class="fa fa-bell fa-fw"></i> <b>' + item.title + '</b></div>' +
-                        '<div class="col-lg-5 no-padding-left-right"> <span>'+ item.data_hora_formatada +'</span></div>' +
-                        '<span>' + processarMsgLinha1(item) + '</span><br>' +
-                        '<span>' + processarMsgLinha2(item) + '</span>' +
-                        '<span>' + processarMsgLinha3(item) + '</span>' +
-                        '<span class="pull-right text-muted small"> ' + humanDate(item.data_hora) + '</span>' +
-                        '</div>'+
-                        '</a>' +
-                        '<div style="text-align: center; cursor: pointer;" OnClick="marcar_lido(' + item.id + ', false)">Marcar lido <i class="fa fa-check-circle"></i></div>' +
-                        '</li>' +
-                        '<li class="divider"></li>')
-                        .appendTo('#alerts_numeros_desconectados');
-                } else {
-                        $('<li id="'+ item.id +'" class="no-padding-left-right">')
-                            .prepend('<a href="#" class="notificacao" OnClick="marcar_lido(' + item.id + ')">' +
-                                '<div class="col-lg-12 no-padding-left-right">' +
-                                '<div class="col-lg-7 no-padding-left-right"><i class="fa fa-bell fa-fw"></i> <b>' + item.tipo + '</b></div>' +
-                                '<div class="col-lg-5 no-padding-left-right"> <span>'+ item.data_hora_formatada +'</span></div>' +
-                                '<span>' + processarMsgLinha1(item) + '</span><br>' +
-                                '<span>' + processarMsgLinha2(item) + '</span>' +
-                                processarMsgLinha3(item)  +
-                                processarMsgLinha4(item)  +  '<span class="pull-right text-muted small"> ' + humanDate(item.data_hora) + '</span>' +
-                                '</div>'+
-                                '</a>' +
-                                '</li>' +
-                                '<li class="divider"></li>')
-                            .appendTo('#alerts');
+                            .appendTo(targetAlerts);
                     }
-
                 });
             }else{
                 $('<li class="no-padding-left-right">')
@@ -237,9 +231,14 @@ function carregarNotificacoes(tipo){
                         '<span>Você não possui notificações pendentes!</span>' +
                         '</div>'+
                         '</li>')
-                    .appendTo('#alerts');
+                    .appendTo(targetAlerts);
             }
-
+            
+            // Adicionar evento de clique para o botão "Marcar todas como lidas"
+            $('.marcar-todas-lidas').on('click', function() {
+                var tipoNotificacao = $(this).data('tipo');
+                marcarTodasLidas(tipoNotificacao);
+            });
         }
     });
 }
@@ -783,6 +782,37 @@ function marcar_lido(id, redirect){
                 carregarNotificacoes('NUMERO_DESCONECTADO');
                 $('#notificacoes_numeros_desconectados').click();
             }
+        }
+    });
+}
+
+// Função para marcar todas as notificações como lidas
+function marcarTodasLidas(tipo) {
+    $.ajax({
+        url: '/notificacoes/marcar_todas_lidas',
+        method: 'POST',
+        data: { tipo: tipo },
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                // Atualizar os contadores
+                contador_notificacao(tipo);
+                if (!tipo) {
+                    contador_notificacao();
+                }
+                
+                // Fechar o dropdown e mostrar mensagem de sucesso
+                $('.dropdown.open .dropdown-toggle').dropdown('toggle');
+                toastr.success(response.count + ' notificação(ões) marcada(s) como lida(s).');
+                
+                // Recarregar as notificações após um breve período
+                setTimeout(function() {
+                    carregarNotificacoes(tipo);
+                }, 1000);
+            }
+        },
+        error: function() {
+            toastr.error('Erro ao marcar notificações como lidas.');
         }
     });
 }
