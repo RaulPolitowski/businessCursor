@@ -350,14 +350,18 @@ function preencherPainelDemonstrativo(valorFaturamento, competencia, faturamento
     $('#percentual_despesas').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
   }
   //----------------resultado
-  $('#resultado_total').text(mascaraValor(resultado.toFixed(2)));
+  
+  // Calcular o resultado como a diferença entre valorFaturamento e valorDespesas,
+  // ignorando o valor recebido no parâmetro resultado
+  var resultadoCalculado = valorFaturamento - valorDespesas;
+  
+  $('#resultado_total').text(mascaraValor(resultadoCalculado.toFixed(2)));
   $('#resultado_anterior').text('Ant. ' + mascaraValor(resultadoAnterior.toFixed(2)));
-  if(resultado > 0){
+  
+  if(resultadoCalculado > 0){
     $('#resultado_total').removeClass('text-danger');
-    //$('#resultado_total').append(mascaraValor(resultado.toFixed(2)) + '% <i class="fa fa-level-up"></i>');
   }else{
     $('#resultado_total').addClass('text-danger');
-    //$('#resultado_total').append(mascaraValor(resultado.toFixed(2)) +'% <i class="fa fa-level-down"></i>');
   }
 
   if(resultadoAnterior > 0){
@@ -366,13 +370,12 @@ function preencherPainelDemonstrativo(valorFaturamento, competencia, faturamento
     $('#resultado_anterior').addClass('text-danger');
   }
 
-  if (resultado > 0 && resultadoAnterior < 0) 
-  {
-    var valor = Math.abs(((resultado*100) / resultadoAnterior)-100);    
+  // Calcular a variação percentual correta do resultado
+  if (resultadoCalculado > 0 && resultadoAnterior < 0) {
+    var valor = Math.abs(((resultadoCalculado*100) / resultadoAnterior)-100);    
   }
   else {
-    var valor = (((resultado*100) / resultadoAnterior)-100);
-    
+    var valor = (((resultadoCalculado*100) / resultadoAnterior)-100);
   }
   
   $('#percentual_resultado').text('');
@@ -383,7 +386,6 @@ function preencherPainelDemonstrativo(valorFaturamento, competencia, faturamento
     $('#percentual_resultado').removeClass('text-info').addClass('text-danger');
     $('#percentual_resultado').append(valor.toFixed(2)+'% <i class="fa fa-level-down"></i>');
   }
-  
 }
 
 function drawTableReceitasDespesas(categoria) {
