@@ -101,8 +101,14 @@ function carregarNotificacoes(tipo){
             // Adicionar o botão "Marcar todas como lidas" somente se houver notificações
             if(data.length > 0){
                 // Adicionar botão para marcar todas como lidas no topo do dropdown
+                // Garantir que o tipo seja passado corretamente
+                var tipoBtn = tipo || '';
+                
+                // Exibir no console para debug
+                console.log('Adicionando botão "Marcar todas como lidas" para o tipo:', tipoBtn);
+                
                 $('<li class="no-padding-left-right">')
-                    .prepend('<div style="text-align: center; background-color: #f8f8f8; padding: 8px; cursor: pointer; font-weight: bold; color: #1c84c6;" class="marcar-todas-lidas" data-tipo="' + (tipo || '') + '">' +
+                    .prepend('<div style="text-align: center; background-color: #f8f8f8; padding: 8px; cursor: pointer; font-weight: bold; color: #1c84c6;" class="marcar-todas-lidas" data-tipo="' + tipoBtn + '">' +
                             'Marcar todas como lidas <i class="fa fa-check-circle"></i>' +
                             '</div>' +
                             '<li class="divider"></li>')
@@ -235,9 +241,15 @@ function carregarNotificacoes(tipo){
             }
             
             // Adicionar evento de clique para o botão "Marcar todas como lidas"
-            $('.marcar-todas-lidas').on('click', function() {
+            $('.marcar-todas-lidas').on('click', function(e) {
+                // Evitar a propagação do evento e o comportamento padrão
+                e.preventDefault();
+                e.stopPropagation();
+                
                 var tipoNotificacao = $(this).data('tipo');
+                console.log('Botão "Marcar todas como lidas" clicado. Tipo:', tipoNotificacao);
                 marcarTodasLidas(tipoNotificacao);
+                return false; // Garantia adicional para evitar a propagação
             });
         }
     });
@@ -788,12 +800,25 @@ function marcar_lido(id, redirect){
 
 // Função para marcar todas as notificações como lidas
 function marcarTodasLidas(tipo) {
+    console.log('Enviando requisição para marcar todas as notificações como lidas. Tipo:', tipo);
+    
+    // Mostrar indicador de loading
+    var loadingToast = toastr.info('Processando...');
+    
     $.ajax({
         url: '/notificacoes/marcar_todas_lidas',
         method: 'POST',
-        data: { tipo: tipo },
+        data: { 
+            tipo: tipo,
+            authenticity_token: $('meta[name="csrf-token"]').attr('content')
+        },
         dataType: 'json',
         success: function(response) {
+            console.log('Resposta do servidor:', response);
+            
+            // Fechar toast de loading
+            toastr.clear(loadingToast);
+            
             if (response.success) {
                 // Atualizar os contadores
                 contador_notificacao(tipo);
@@ -803,7 +828,10 @@ function marcarTodasLidas(tipo) {
                 
                 // Fechar o dropdown e mostrar mensagem de sucesso
                 $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-                toastr.success(response.count + ' notificação(ões) marcada(s) como lida(s).');
+                
+                var mensagem = response.count + ' notificação(ões) marcada(s) como lida(s).';
+                console.log(mensagem);
+                toastr.success(mensagem);
                 
                 // Recarregar as notificações após um breve período
                 setTimeout(function() {
@@ -811,7 +839,10 @@ function marcarTodasLidas(tipo) {
                 }, 1000);
             }
         },
-        error: function() {
+        error: function(xhr, status, error) {
+            console.error('Erro ao marcar notificações como lidas:', xhr.responseText);
+            console.error('Status:', status);
+            console.error('Erro:', error);
             toastr.error('Erro ao marcar notificações como lidas.');
         }
     });

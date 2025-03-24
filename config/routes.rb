@@ -337,6 +337,7 @@ BusinessManager::Application.routes.draw do
         get 'marcar_lido'
         get 'notificacoes_nao_lidas'
         post 'criar_notificacao_arquivo_retorno'
+        post 'marcar_todas_lidas'
       end
     end
     # resources :lembretes do

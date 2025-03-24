@@ -1643,14 +1643,27 @@ module DashboardsHelper
         SELECT '#{datainicial}'::DATE AS datainicial,
         '#{datafinal}'::DATE AS datafinal
       )
-      SELECT tags.descricao,
+      SELECT 
+        tags.descricao,
         COUNT(desistencia.id) AS qtd,
-		    tags.id
+        tags.id,
+        SUM(COALESCE(proposta.valor_mensalidade, 0)) AS valor,
+        CONCAT(COUNT(desistencia.id), ' cliente(s) - ', 
+               TRIM(TO_CHAR(SUM(COALESCE(proposta.valor_mensalidade, 0)), 'R$ FM999G999G999D00'))) AS info_completa
       FROM solicitacao_desistencias desistencia
       INNER JOIN parametros ON true
       INNER JOIN tags_solicitacao_desistencias tags ON tags.id::text = ANY(
-		    SELECT jsonb_array_elements_text(desistencia.tags::jsonb)
-	    )
+        SELECT jsonb_array_elements_text(desistencia.tags::jsonb)
+      )
+      LEFT JOIN clientes cliente ON cliente.id = desistencia.cliente_id
+      LEFT JOIN propostas proposta ON proposta.id = (
+        SELECT id 
+        FROM propostas 
+        WHERE propostas.cliente_id = cliente.id 
+          AND propostas.ativa IS true 
+        ORDER BY id DESC 
+        LIMIT 1
+      )
       WHERE desistencia.status = 'DESISTENTE'
       AND desistencia.data_desistencia BETWEEN parametros.datainicial AND parametros.datafinal
       AND user_id IS NULL

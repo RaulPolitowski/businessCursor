@@ -130,23 +130,33 @@ class NotificacoesController < ApplicationController
   def marcar_todas_lidas
     tipo = params[:tipo]
     
+    # Logar para depuração
+    Rails.logger.info "Marcando todas as notificações como lidas - Tipo: #{tipo || 'TODOS'}"
+    
     if tipo.present?
-      # Marcar todas as notificações do tipo específico como lidas
-      notificacoes = Notificacao.where(tipo: tipo).notificacoes_user(current_user).nao_lidas
-      
-      # Para o caso especial de FECHAMENTO, incluir também notificações de outras empresas
       if tipo == 'FECHAMENTO'
-        notificacoes += Notificacao.notificacoes_user(current_user).where("tipo = 'FECHAMENTO' and empresa_id != ?", current_empresa.id).nao_lidas
+        # Para o caso especial de FECHAMENTO, consultar diretamente todas as notificações do tipo
+        Rails.logger.info "Marcando notificações de FECHAMENTO de todas as empresas"
+        notificacoes = Notificacao.where(tipo: 'FECHAMENTO').notificacoes_user(current_user).nao_lidas
+      else
+        # Marcar todas as notificações do tipo específico como lidas
+        notificacoes = Notificacao.where(tipo: tipo).notificacoes_user(current_user).nao_lidas
       end
     else
       # Marcar todas as notificações como lidas (exceto tipos específicos que têm seus próprios ícones)
       notificacoes = Notificacao.where.not(tipo: ['IMPLANTACAO', 'IMPLANTACAO_ATRASADA_20', 'IMPLANTACAO_ATRASADA_30', 'IMPLANTACAO_ALTERACAO', 'FECHAMENTO', 'EFETIVACAO', 'DESATIVACAO', 'IMPLANTACAO', 'ARQUIVO_RETORNO', 'CENTRO_DISTRIBUICAO', 'NUMERO_DESCONECTADO', 'SOLICITACAO_DESATIVACAO']).notificacoes_user(current_user).nao_lidas
     end
     
+    # Obter a contagem antes de atualizar
+    count = notificacoes.count
+    
+    # Logar a quantidade de notificações encontradas
+    Rails.logger.info "Total de notificações a serem marcadas como lidas: #{count}"
+    
     # Atualizar todas as notificações encontradas
     notificacoes.update_all(lido: true)
     
-    render json: { success: true, count: notificacoes.count }
+    render json: { success: true, count: count }
   end
 
   def criar_notificacao_arquivo_retorno

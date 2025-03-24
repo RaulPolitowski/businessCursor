@@ -62,12 +62,16 @@ function buscarQtdDesistentesPorTags(){
 
 function drawPieChartTagsDesistencia(data) {
   let dataArray = [
-    ['Descricao', 'Qtd. Disparo', 'Id'],
+    ['Descricao', 'Qtd. Disparo', { role: 'tooltip', type: 'string' }, 'Id'],
   ];
 
   if (data) {
     for (let i = 0; i < data.length; i++) {
-      let row = [data[i].descricao, parseInt(data[i].qtd), data[i].id];
+      let tooltip = `${data[i].descricao}\n${data[i].info_completa}`;
+      
+      let descricaoFormatada = `${data[i].descricao} (${data[i].info_completa})`;
+      
+      let row = [descricaoFormatada, parseInt(data[i].qtd), tooltip, data[i].id];
       dataArray.push(row);
     }
   }
@@ -76,6 +80,14 @@ function drawPieChartTagsDesistencia(data) {
     width: 500,
     height: 400,
     'chartArea': {'width': '100%', 'height': '70%'},
+    legend: {
+      position: 'right',
+      textStyle: { fontSize: 12 }
+    },
+    tooltip: { 
+      text: 'both' 
+    },
+    pieSliceText: 'percentage'
   };
 
   let chart = new google.visualization.PieChart(document.getElementById('pie_chart_tags_desistencia'));
@@ -90,7 +102,7 @@ function drawPieChartTagsDesistencia(data) {
     const selectedItem = chart.getSelection()[0];
 
     if (selectedItem) {
-      const tags = googleData.getValue(selectedItem.row, 2);
+      const tags = googleData.getValue(selectedItem.row, 3);
       exibirDetalhesDesistentes(tags, false);
     }
   });
